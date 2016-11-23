@@ -31,7 +31,8 @@
 			let component;
 
 			this.refs.child.addEventListener( 'load', () => {
-				const body = this.refs.child.contentDocument.body;
+				const iframe = this.refs.child;
+				const body = iframe.contentDocument.body;
 
 				this.observe( 'compiled', compiled => {
 					if ( !compiled ) return;
@@ -50,6 +51,22 @@
 				this.observe( 'data', data => {
 					if ( component ) component.set( data );
 				});
+
+				// mousemove/mouseup events need to bubble. TODO is this the best way? maybe
+				// we just cover the iframe with a transparent <div> while dragging dividers?
+				function propagate ( event ) {
+					const { top, left } = iframe.getBoundingClientRect();
+
+					const clone = new MouseEvent( event.type, {
+						clientX: event.clientX + left,
+						clientY: event.clientY + top
+					});
+
+					iframe.dispatchEvent( clone );
+				}
+
+				iframe.contentWindow.addEventListener( 'mousemove', propagate, false );
+				iframe.contentWindow.addEventListener( 'mouseup', propagate, false );
 			});
 		}
 	};

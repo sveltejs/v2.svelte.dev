@@ -24,6 +24,10 @@
 <div ref:right class='right' style='width: {{100 - verticalDividerPos}}%;'>
 	<div class='top' style='height: {{horizontalDividerPos}}%;'>
 		<Viewer compiled='{{compiled}}' data='{{data}}'/>
+
+		{{#if dragging}}
+			<div class='mousecatcher'></div>
+		{{/if}}
 	</div>
 
 	<div class='bottom' style='height: {{100 - horizontalDividerPos}}%;'>
@@ -126,6 +130,15 @@
 		top: 50%;
 		transform: translate(0,-50%);
 	}
+
+	.mousecatcher {
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(255,255,255,0.01);
+	}
 </style>
 
 <script>
@@ -226,8 +239,8 @@
 				try {
 					data = JSON.parse( json );
 				} catch ( err ) {
-					// TODO indicate the error
-					console.error( err );
+					// TODO indicate the error in the UI
+					console.error( err.stack );
 				}
 
 				if ( data ) {
@@ -238,12 +251,16 @@
 
 		events: {
 			drag ( node, callback ) {
-				function mousedown ( event ) {
+				const mousedown = event => {
 					if ( event.which !== 1 ) return;
 
 					event.preventDefault();
 
+					this.set({ dragging: true });
+
 					const onmouseup = () => {
+						this.set({ dragging: false });
+
 						window.removeEventListener( 'mousemove', callback, false );
 						window.removeEventListener( 'mouseup', onmouseup, false );
 					};
