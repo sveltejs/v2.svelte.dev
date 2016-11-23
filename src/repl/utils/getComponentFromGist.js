@@ -4,7 +4,7 @@ export default function getComponentFromGist ( id ) {
 	let cancelled = false;
 
 	if ( !cache[ id ] ) {
-		cache[ id ] = fetch( `https://api.github.com/gists/${id}` )
+		cache[ id ] = fetch( `https://api.github.com/gists/${id}`, { mode: 'cors' })
 			.then( r => r.json() )
 			.then( gist => {
 				const sourceFile = gist.files[ 'component.html' ];

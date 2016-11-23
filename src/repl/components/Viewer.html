@@ -1,4 +1,13 @@
-<iframe ref:child srcdoc='{{srcdoc}}'></iframe>
+<iframe ref:child srcdoc='
+	<!doctype html>
+	<html>
+		<head>
+			<link href="https://fonts.googleapis.com/css?family=Rajdhani:300,500,700|Roboto:300,300i,500|Roboto+Mono:300" rel="stylesheet">
+			<link rel="stylesheet" href="/repl-viewer.css">
+		</head>
+		<body></body>
+	</html>
+'></iframe>
 
 <style>
 	iframe {
@@ -11,22 +20,7 @@
 <script>
 	const eval2 = eval;
 
-	const srcdoc = `
-		<!doctype html>
-		<html>
-			<head>
-				<link href="https://fonts.googleapis.com/css?family=Rajdhani:300,500,700|Roboto:300,300i,500|Roboto+Mono:300" rel="stylesheet">
-				<link rel='stylesheet' href='/repl-viewer.css'>
-			</head>
-			<body></body>
-		</html>
-	`;
-
 	export default {
-		data: () => ({
-			srcdoc
-		}),
-
 		onrender () {
 			let component;
 
@@ -51,22 +45,6 @@
 				this.observe( 'data', data => {
 					if ( component ) component.set( data );
 				});
-
-				// mousemove/mouseup events need to bubble. TODO is this the best way? maybe
-				// we just cover the iframe with a transparent <div> while dragging dividers?
-				function propagate ( event ) {
-					const { top, left } = iframe.getBoundingClientRect();
-
-					const clone = new MouseEvent( event.type, {
-						clientX: event.clientX + left,
-						clientY: event.clientY + top
-					});
-
-					iframe.dispatchEvent( clone );
-				}
-
-				iframe.contentWindow.addEventListener( 'mousemove', propagate, false );
-				iframe.contentWindow.addEventListener( 'mouseup', propagate, false );
 			});
 		}
 	};
