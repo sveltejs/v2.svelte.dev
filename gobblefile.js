@@ -59,9 +59,20 @@ module.exports = gobble([
 						metadata[ pair.slice( 0, colonIndex ).trim() ] = pair.slice( colonIndex + 1 );
 					});
 
+					const html = marked( content );
+
+					const subsections = [];
+					const pattern = /<h3 id="(.+?)">(.+?)<\/h3>/g;
+					while ( match = pattern.exec( html ) ) {
+						subsections.push({ slug: match[1], title: match[2] });
+					}
+
+					console.log( `subsections`, subsections )
+
 					return {
-						html: marked( content ),
-						metadata: metadata,
+						html,
+						metadata,
+						subsections,
 						slug: file.replace( /^\d+-/, '' ).replace( /\.md$/, '' )
 					};
 				});
@@ -73,7 +84,13 @@ module.exports = gobble([
 			}).join( '\n' );
 
 			var sidebar = sections.map( section => {
-				return `<li><a href='#${section.slug}'>${section.metadata.title}</a></li>`;
+				return `
+					<li>
+						<a class='section' href='#${section.slug}'>${section.metadata.title}</a>
+						${section.subsections.map( subsection => {
+							return `<a class='subsection' href='#${subsection.slug}'>${subsection.title}</a>`
+						}).join( '\n' )}
+					</li>`;
 			}).join( '\n' );
 
 			var html = templates.index

@@ -36,14 +36,53 @@
 		</div>
 	</main>
 
-	<script src='/curl.js'></script>
+	<!-- CodeMirror JS -->
+	<script src='/codemirror/lib/codemirror.js'></script>
+	<script src='/codemirror/mode/css/css.js'></script>
+	<script src='/codemirror/mode/xml/xml.js'></script>
+	<script src='/codemirror/mode/javascript/javascript.js'></script>
+	<script src='/codemirror/mode/htmlmixed/htmlmixed.js'></script>
+	<script src='/codemirror/mode/shell/shell.js'></script>
 
 	<script>
+		function getReplUrl ( lang, value, next ) {
+			if ( lang !== 'html' ) return null;
+
+			var data = {};
+
+			if ( next && next.localName === 'pre' && next.firstChild.className === 'lang-hidden-data' ) {
+				data = JSON.parse( next.textContent );
+			}
+
+			var state = {
+				gist: null,
+				source: value,
+				data: data
+			};
+
+			return `/repl?shareable=${btoa( encodeURIComponent( JSON.stringify( state ) ) )}`;
+		}
+
 		[].forEach.call( document.querySelectorAll( 'pre' ), function ( pre ) {
 			var value = pre.textContent;
 			var lang = ( pre.querySelector( 'code' ).getAttribute( 'class' ) || '' ).replace( 'lang-', '' );
 
+			var replUrl = getReplUrl( lang, value, pre.nextElementSibling );
+
+			if ( lang === 'hidden-data' ) {
+				pre.parentNode.removeChild( pre );
+				return;
+			}
+
 			var cm = CodeMirror( function ( element ) {
+				if ( replUrl ) {
+					const a = document.createElement( 'a' );
+					a.href = replUrl;
+					a.className = 'open-in-repl';
+
+					pre.parentNode.insertBefore( a, pre );
+				}
+
 				pre.parentNode.replaceChild( element, pre );
 			}, {
 				value: value.trim(),
