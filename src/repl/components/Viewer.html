@@ -23,7 +23,7 @@
 
 				if ( component ) component.teardown();
 
-				component = new SvelteComponent({
+				component = window.component = new SvelteComponent({
 					target: this.refs.container,
 					data: this.get( 'data' )
 				});

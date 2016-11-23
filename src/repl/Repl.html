@@ -1,5 +1,24 @@
 <div class='left' style='width: {{verticalDividerPos}}%;'>
-	<Editor ref:editor bind:source compiled='{{compiled}}'/>
+	<section class='input'>
+		<div class='controls'>
+			<button class='{{showGenerated ? "" : "active"}}' on:click='set({ showGenerated: false })'>input</button>
+			<button class='{{showGenerated ? "active" : ""}}' on:click='set({ showGenerated: true })'>output</button>
+
+			<select bind:value='gist'>
+				<option value='{{null}}' disabled>Select an example</option>
+
+				{{#each examples as example}}
+					<option value='{{example.gist}}'>{{example.title}}</option>
+				{{/each}}
+			</select>
+		</div>
+
+		{{#if showGenerated}}
+			<CodeMirror ref:editor mode='javascript' code='{{compiled.code}}' readonly/>
+		{{else}}
+			<CodeMirror ref:editor mode='htmlmixed' bind:code='source'/>
+		{{/if}}
+	</section>
 </div>
 
 <div ref:right class='right' style='width: {{100 - verticalDividerPos}}%;'>
@@ -8,7 +27,7 @@
 	</div>
 
 	<div class='bottom' style='height: {{100 - horizontalDividerPos}}%;'>
-		<Console data='{{data}}' on:data='set({ data: event })'/>
+		<CodeMirror ref:data mode='javascript' bind:code='json'/>
 	</div>
 
 	<div class='divider horizontal-divider' style='top: calc({{horizontalDividerPos}}% - 8px)' on:drag='setHorizontal(event)'></div>
@@ -100,21 +119,35 @@
 		background-color: rgb(170,30,30);
 		color: white;
 	}
+
+	select {
+		position: absolute;
+		right: 0.5em;
+		top: 50%;
+		transform: translate(0,-50%);
+	}
 </style>
 
 <script>
-	import Editor from './Editor.html';
-	import Viewer from './Viewer.html';
-	import Console from './Console.html';
+	import CodeMirror from './components/CodeMirror.html';
+	import Viewer from './components/Viewer.html';
+	import examples from './examples.js';
+	import getComponentFromGist from './utils/getComponentFromGist.js';
+	import debounce from './utils/debounce.js';
+
+	const sourceById = {};
 
 	export default {
 		data: () => ({
 			horizontalDividerPos: 50,
 			verticalDividerPos: 50,
 
-			data: {
-				name: 'world'
-			}
+			examples,
+
+			gist: null,
+			source: '',
+			json: null,
+			data: {}
 		}),
 
 		methods: {
@@ -124,6 +157,8 @@
 				this.set({
 					horizontalDividerPos: 100 * ( event.clientY - top ) / ( bottom - top )
 				});
+
+				this.refs.data.resize();
 			},
 
 			setVertical ( event ) {
@@ -132,16 +167,71 @@
 				});
 
 				this.refs.editor.resize();
+				this.refs.data.resize();
 			}
 		},
 
 		onrender () {
+			const updateUrl = debounce( () => {
+				const state = {
+					source: this.get( 'source' ) || '',
+					data: this.get( 'data' ) || {},
+					gist: this.get( 'gist' ) || null
+				};
+
+				history.replaceState( {}, 'x', `/repl?shareable=${btoa( encodeURIComponent( JSON.stringify( state ) ) )}` );
+			}, 250 );
+
+			this.set({ json: JSON.stringify( this.get( 'data' ), null, '  ' ) });
+
+			this.observe( 'gist', gist => {
+				if ( !gist ) return;
+
+				if ( this.promise ) this.promise.cancel();
+
+				this.promise = getComponentFromGist( gist );
+
+				this.promise.then( ({ source, json }) => {
+					sourceById[ gist ] = source;
+					this.set({ source, json });
+				});
+			});
+
 			this.observe( 'source', source => {
+				if ( !source ) return;
+
+				const expectedSource = sourceById[ this.get( 'gist' ) ];
+
+				if ( source && expectedSource && source !== expectedSource ) {
+					this.set({ gist: null });
+				}
+
 				try {
 					const compiled = svelte.compile( source );
 					this.set({ compiled });
 				} catch ( err ) {
+					console.error( err.stack );
+				}
+
+				updateUrl();
+			});
+
+			this.observe( 'data', data => {
+				updateUrl();
+			});
+
+			this.observe( 'json', json => {
+				let data;
+
+				try {
+					data = JSON.parse( json );
+				} catch ( err ) {
+					// TODO indicate the error
 					console.error( err );
+				}
+
+				if ( data ) {
+					this.set({ data });
 				}
 			});
 		},
@@ -173,9 +263,8 @@
 		},
 
 		components: {
-			Editor,
-			Viewer,
-			Console
+			CodeMirror,
+			Viewer
 		}
 	};
 </script>
