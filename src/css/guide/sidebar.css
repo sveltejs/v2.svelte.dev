@@ -18,6 +18,8 @@
 
 	li {
 		list-style: none;
+		font-family: Rajdhani;
+		margin: 0 0 0.5em 0;
 	}
 
 	li::before {
@@ -25,5 +27,16 @@
 		left: -1em;
 		content: '»';
 		color: #ccc;
+	}
+
+	.section {
+		display: block;
+		font-size: 1.2em;
+		font-weight: 500;
+	}
+
+	.subsection {
+		padding: 0 0 0 0;
+		display: block;
 	}
 }

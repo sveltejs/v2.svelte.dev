@@ -70,4 +70,33 @@
 	li {
 		margin: 0;
 	}
+
+	.open-in-repl {
+		position: absolute;
+		z-index: 99;
+		right: 0;
+
+		&::after {
+			position: absolute;
+			content: 'open in repl';
+			text-transform: uppercase;
+			right: 0.5em;
+			top: 0.5em;
+			border: 1px solid rgba(0,0,0,0.1);
+			font-family: Rajdhani;
+			font-weight: 500;
+			text-align: center;
+			white-space: pre;
+			padding: 0.25em 0.5em 0.1em 0.5em;
+			line-height: 1;
+			border-radius: 0.1em;
+			color: rgba(170,30,30,0.8);
+			background-color: rgba(170,30,30,0.05);
+		}
+
+		&:hover::after {
+			color: white;
+			background-color: rgba(170,30,30,1);
+		}
+	}
 }

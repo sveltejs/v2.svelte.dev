@@ -2,8 +2,11 @@
 @import './content.css';
 
 main {
-	padding: 4em 0 0 0;
-	min-height: calc(100vh - 10em);
+	overflow: scroll;
+	height: calc(100vh - 4em);
+	position: absolute;
+	width: 100%;
+	top: 4em;
 }
 
 header {
