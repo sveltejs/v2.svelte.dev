@@ -10,21 +10,5 @@
 }
 
 body {
-	font-family: 'Rajdhani';
-	font-weight: 100;
 	margin: 0;
-	color: #333;
-}
-
-h1, h2 {
-	margin: 0;
-}
-
-a {
-	text-decoration: none;
-	color: #333;
-}
-
-strong {
-	font-weight: 800;
 }

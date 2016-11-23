@@ -6,6 +6,7 @@ header {
 	background: #333;
 	color: #eee;
 	border-bottom: 2px solid rgb(170,30,30);
+	font-family: 'Rajdhani';
 
 	nav:after {
 		content: '';

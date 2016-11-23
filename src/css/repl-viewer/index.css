@@ -1,0 +1,20 @@
+@import '../typography.css';
+
+body {
+	margin: 8px;
+}
+
+pre {
+	background-color: #f9f9f9;
+	padding: 0.5em;
+
+	code {
+		padding: 0;
+	}
+}
+
+code {
+	background-color: #f9f9f9;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+}

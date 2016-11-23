@@ -92,6 +92,12 @@ module.exports = gobble([
 		plugins: postcssPlugins
 	}),
 
+	gobble( 'src/css' ).transform( 'postcss', {
+		src: 'repl-viewer/index.css',
+		dest: 'repl-viewer.css',
+		plugins: postcssPlugins
+	}),
+
 	gobble( 'src/repl' ).transform( 'rollup', {
 		entry: 'main.js',
 		dest: 'repl.js',

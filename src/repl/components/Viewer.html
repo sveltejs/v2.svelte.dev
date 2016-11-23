@@ -1,36 +1,55 @@
-<div ref:container class='viewer'>
-
-</div>
+<iframe ref:child srcdoc='{{srcdoc}}'></iframe>
 
 <style>
-	.viewer {
-		padding: 0.5em;
+	iframe {
+		width: 100%;
+		height: 100%;
+		border: none;
 	}
 </style>
 
 <script>
 	const eval2 = eval;
 
+	const srcdoc = `
+		<!doctype html>
+		<html>
+			<head>
+				<link href="https://fonts.googleapis.com/css?family=Rajdhani:300,500,700|Roboto:300,300i,500|Roboto+Mono:300" rel="stylesheet">
+				<link rel='stylesheet' href='/repl-viewer.css'>
+			</head>
+			<body></body>
+		</html>
+	`;
+
 	export default {
+		data: () => ({
+			srcdoc
+		}),
+
 		onrender () {
 			let component;
 
-			this.observe( 'compiled', compiled => {
-				if ( !compiled ) return;
+			this.refs.child.addEventListener( 'load', () => {
+				const body = this.refs.child.contentDocument.body;
 
-				const code = compiled.code.replace( 'export default ', '' ) + '\n\nreturn SvelteComponent;';
-				const SvelteComponent = eval2( `(function () { ${code} }());` );
+				this.observe( 'compiled', compiled => {
+					if ( !compiled ) return;
 
-				if ( component ) component.teardown();
+					const code = compiled.code.replace( 'export default ', '' ) + '\n\nreturn SvelteComponent;';
+					const SvelteComponent = eval2( `(function () { ${code} }());` );
 
-				component = window.component = new SvelteComponent({
-					target: this.refs.container,
-					data: this.get( 'data' )
+					if ( component ) component.teardown();
+
+					component = window.component = new SvelteComponent({
+						target: body,
+						data: this.get( 'data' )
+					});
 				});
-			});
 
-			this.observe( 'data', data => {
-				if ( component ) component.set( data );
+				this.observe( 'data', data => {
+					if ( component ) component.set( data );
+				});
 			});
 		}
 	};
