@@ -1,0 +1,17 @@
+@font-face{
+	font-family: 'Inconsolata';
+	src: url('fonts/Inconsolata/Inconsolata-Regular.ttf') format('truetype');
+}
+
+@font-face{
+	font-family: 'Inconsolata';
+	src: url('fonts/Inconsolata/Inconsolata-Bold.ttf') format('truetype');
+	font-weight: 500;
+}
+
+code, pre {
+	font-family: 'Roboto Mono';
+	font-weight: 300;
+	font-size: 14px;
+	line-height: 1.2;
+}

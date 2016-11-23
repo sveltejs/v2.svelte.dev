@@ -1,0 +1,15 @@
+@import './sidebar.css';
+@import './content.css';
+
+main {
+	padding: 4em 0 0 0;
+	min-height: calc(100vh - 10em);
+}
+
+header {
+	position: fixed;
+	width: 100%;
+	left: 0;
+	top: 0;
+	z-index: 2;
+}

@@ -1,0 +1,29 @@
+.sidebar {
+	margin: 0;
+	padding: 1em 1em 1em 2em;
+
+	@media (min-width: 45rem) {
+		position: fixed;
+		float: left;
+		width: 12em;
+		border-right: 1px solid #eee;
+		height: calc(100% - 6em);
+		z-index: 2;
+		overflow-y: scroll;
+	}
+
+	a {
+		color: #666;
+	}
+
+	li {
+		list-style: none;
+	}
+
+	li::before {
+		position: absolute;
+		left: -1em;
+		content: '»';
+		color: #ccc;
+	}
+}

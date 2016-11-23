@@ -1,0 +1,42 @@
+{
+  "name": "svelte.technology",
+  "version": "1.0.0",
+  "description": "Docs and examples for Svelte",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "gobble"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sveltejs/svelte.technology.git"
+  },
+  "keywords": [
+    "svelte"
+  ],
+  "author": "Rich Harris",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sveltejs/svelte.technology/issues"
+  },
+  "homepage": "https://github.com/sveltejs/svelte.technology#readme",
+  "devDependencies": {
+    "gobble": "^0.11.3",
+    "gobble-cli": "^0.7.0",
+    "gobble-postcss": "^0.3.0",
+    "gobble-rollup": "^0.36.0",
+    "marked": "^0.3.6",
+    "postcss-clearfix": "^1.0.0",
+    "postcss-import": "^8.2.0",
+    "postcss-nested": "^1.0.0",
+    "rollup-plugin-json": "^2.0.2",
+    "rollup-plugin-svelte": "^0.1.1",
+    "sander": "^0.5.1"
+  },
+  "dependencies": {
+    "codemirror": "^5.21.0",
+    "curl-amd": "^0.8.12",
+    "monaco": "^1.201611220310.0",
+    "svelte": "^0.1.1"
+  }
+}

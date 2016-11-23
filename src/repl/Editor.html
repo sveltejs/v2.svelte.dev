@@ -1,0 +1,58 @@
+<section class='input'>
+	<div class='controls'>
+		<button class='{{showGenerated ? "" : "active"}}' on:click='set({ showGenerated: false })'>input</button>
+		<button class='{{showGenerated ? "active" : ""}}' on:click='set({ showGenerated: true })'>output</button>
+
+		<select bind:value='selectedExample'>
+			<option disabled>Custom</option>
+
+			{{#each examples as example}}
+				<option value='{{example}}'>{{example.title}}</option>
+			{{/each}}
+		</select>
+	</div>
+
+	{{#if showGenerated}}
+		<CodeMirror ref:cm mode='javascript' code='{{compiled.code}}' readonly/>
+	{{else}}
+		<CodeMirror ref:cm mode='htmlmixed' bind:code='source'/>
+	{{/if}}
+</section>
+
+<style>
+	select {
+		position: absolute;
+		right: 0.5em;
+		top: 50%;
+		transform: translate(0,-50%);
+	}
+</style>
+
+<script>
+	import CodeMirror from './CodeMirror.html';
+	import examples from './examples.js';
+
+	export default {
+		data: () => ({
+			examples,
+			showGenerated: false,
+			source: `<h1>Hello {{name}}!</h1>`
+		}),
+
+		onrender () {
+			this.observe( 'selectedExample', example => {
+				console.log( `example`, example )
+			});
+		},
+
+		methods: {
+			resize () {
+				this.refs.cm.resize();
+			}
+		},
+
+		components: {
+			CodeMirror
+		}
+	};
+</script>

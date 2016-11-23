@@ -1,0 +1,73 @@
+.content {
+	width: 100%;
+	padding: 0 1em;
+
+	@media (min-width: 45rem) {
+		padding-left: 13em;
+	}
+
+	h2 {
+		padding: 1rem 0 0 0;
+		margin: 0 0 1rem 0;
+		font-size: 2em;
+		font-weight: 400;
+	}
+
+	h3 {
+		font-size: 1.6em;
+		font-weight: 400;
+	}
+
+	p {
+		margin: 0 0 1em 0;
+		font-family: Roboto;
+		font-weight: 300;
+		color: #555;
+		line-height: 1.5;
+	}
+
+	strong {
+		font-weight: 500;
+	}
+
+	code {
+		background-color: #f9f9f9;
+		padding: 0.2em 0.4em;
+		border-radius: 3px;
+	}
+
+	section:first-child h3 {
+		border: none;
+	}
+
+	section {
+		border-bottom: 1px solid #eee;
+		max-width: 64em;
+		margin: 0 auto 2em auto;
+		padding: 0 0 2em 0;
+	}
+
+	section:last-child {
+		border: none;
+	}
+
+	section > pre, .CodeMirror {
+		background-color: #f9f9f9;
+		border-left: 2px solid #eee;
+		padding: 8px;
+		margin: 0 0 1em 0;
+	}
+
+	section > pre {
+		padding: 12px 8px 12px 12px;
+		border-radius: 3px;
+	}
+
+	p, ul {
+		max-width: 48em;
+	}
+
+	li {
+		margin: 0;
+	}
+}

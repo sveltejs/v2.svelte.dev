@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8'>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Learn Svelte</title>
+
+	<link rel='icon' type='image/png' href='/favicon.png'>
+
+	<!-- CodeMirror styles -->
+	<link rel="stylesheet" href="/codemirror/lib/codemirror.css" media="screen" title="no title" charset="utf-8">
+
+	<!-- our styles -->
+	<link href="https://fonts.googleapis.com/css?family=Rajdhani:300,500,700|Roboto:300,300i,500|Roboto+Mono:300" rel="stylesheet">
+	<link rel='stylesheet' href='/main.css'>
+	<link rel='stylesheet' href='/guide.css'>
+</head>
+
+<body>
+	<header>
+		<ul>
+			<li><a class='active' href='/guide'>Guide</a></li>
+			<li><a href='/repl'>REPL</a></li>
+			<li><a href='/blog'>Blog</a></li>
+			<li><a href='https://github.com/sveltejs/svelte'>GitHub</a></li>
+		</ul>
+	</header>
+
+	<main style='overflow: scroll;'>
+		<ul class='sidebar'>
+			{{>sidebar}}
+		</ul>
+
+		<div class='content'>
+			{{>main}}
+		</div>
+	</main>
+
+	<script src='/curl.js'></script>
+
+	<script>
+		[].forEach.call( document.querySelectorAll( 'pre' ), function ( pre ) {
+			var value = pre.textContent;
+			var lang = ( pre.querySelector( 'code' ).getAttribute( 'class' ) || '' ).replace( 'lang-', '' );
+
+			var cm = CodeMirror( function ( element ) {
+				pre.parentNode.replaceChild( element, pre );
+			}, {
+				value: value.trim(),
+				readOnly: true,
+				mode: { js: 'javascript', html: 'htmlmixed', bash: 'shell' }[ lang ] || lang
+			});
+		});
+	</script>
+
+	<!-- Google Analytics TODO -->
+	<script>
+		// (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		// (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		// m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		// })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+		//
+		// ga('create', 'UA-5602942-9', 'auto');
+		// ga('send', 'pageview');
+	</script>
+</body>
+</html>

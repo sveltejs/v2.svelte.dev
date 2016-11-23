@@ -1,0 +1,37 @@
+<div ref:container class='viewer'>
+
+</div>
+
+<style>
+	.viewer {
+		padding: 0.5em;
+	}
+</style>
+
+<script>
+	const eval2 = eval;
+
+	export default {
+		onrender () {
+			let component;
+
+			this.observe( 'compiled', compiled => {
+				if ( !compiled ) return;
+
+				const code = compiled.code.replace( 'export default ', '' ) + '\n\nreturn SvelteComponent;';
+				const SvelteComponent = eval2( `(function () { ${code} }());` );
+
+				if ( component ) component.teardown();
+
+				component = new SvelteComponent({
+					target: this.refs.container,
+					data: this.get( 'data' )
+				});
+			});
+
+			this.observe( 'data', data => {
+				if ( component ) component.set( data );
+			});
+		}
+	};
+</script>

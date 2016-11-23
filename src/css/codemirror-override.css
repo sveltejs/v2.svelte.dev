@@ -1,0 +1,17 @@
+.CodeMirror {
+	border-radius: 3px;
+	font-family: 'Roboto Mono';
+	font-size: 14px;
+}
+
+.CodeMirror {
+	height: auto;
+}
+
+.CodeMirror-scroll {
+	/*max-height: 80vh;*/
+}
+
+.CodeMirror-gutters {
+	border-right: 1px solid #eee;
+}

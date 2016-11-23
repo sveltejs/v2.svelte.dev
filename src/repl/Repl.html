@@ -1,0 +1,181 @@
+<div class='left' style='width: {{verticalDividerPos}}%;'>
+	<Editor ref:editor bind:source compiled='{{compiled}}'/>
+</div>
+
+<div ref:right class='right' style='width: {{100 - verticalDividerPos}}%;'>
+	<div class='top' style='height: {{horizontalDividerPos}}%;'>
+		<Viewer compiled='{{compiled}}' data='{{data}}'/>
+	</div>
+
+	<div class='bottom' style='height: {{100 - horizontalDividerPos}}%;'>
+		<Console data='{{data}}' on:data='set({ data: event })'/>
+	</div>
+
+	<div class='divider horizontal-divider' style='top: calc({{horizontalDividerPos}}% - 8px)' on:drag='setHorizontal(event)'></div>
+</div>
+
+<div class='divider vertical-divider' style='left: calc({{verticalDividerPos}}% - 8px)' on:drag='setVertical(event)'></div>
+
+<style>
+	.left, .right {
+		position: relative;
+		height: 100%;
+		float: left;
+	}
+
+	.divider {
+		position: absolute;
+		z-index: 10;
+	}
+
+	.divider::after {
+		content: '';
+		position: absolute;
+		background-color: #eee;
+	}
+
+	.vertical-divider {
+		padding: 0 8px;
+		width: 0;
+		height: 100%;
+		cursor: ew-resize;
+	}
+
+	.vertical-divider::after {
+		left: 8px;
+		top: 0;
+		width: 1px;
+		height: 100%;
+	}
+
+	.horizontal-divider {
+		padding: 8px 0;
+		width: 100%;
+		height: 0;
+		cursor: ns-resize;
+	}
+
+	.horizontal-divider::after {
+		top: 8px;
+		left: 0;
+		width: 100%;
+		height: 1px;
+	}
+
+	section {
+		padding: 3em 0 0 0;
+		height: 100%;
+	}
+
+	.controls {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 3em;
+		padding: 0.5em;
+		background-color: #f7f7f7;
+		border-bottom: 1px solid #eee;
+		box-sizing: border-box;
+	}
+
+	.controls button {
+		display: block;
+		float: left;
+		padding: calc(0.5em - 1px) 1em;
+		margin: 0 0.5em 0 0;
+		border-radius: 0.2em;
+		color: rgb(170,30,30);
+		border: 1px solid rgb(170,30,30);
+		font-family: 'Rajdhani';
+		font-weight: 500;
+		font-size: inherit;
+		outline: none;
+		line-height: 1;
+		box-sizing: border-box;
+		background-color: white;
+	}
+
+	.controls button.active {
+		background-color: rgb(170,30,30);
+		color: white;
+	}
+</style>
+
+<script>
+	import Editor from './Editor.html';
+	import Viewer from './Viewer.html';
+	import Console from './Console.html';
+
+	export default {
+		data: () => ({
+			horizontalDividerPos: 50,
+			verticalDividerPos: 50,
+
+			data: {
+				name: 'world'
+			}
+		}),
+
+		methods: {
+			setHorizontal ( event ) {
+				const { top, bottom } = this.refs.right.getBoundingClientRect();
+
+				this.set({
+					horizontalDividerPos: 100 * ( event.clientY - top ) / ( bottom - top )
+				});
+			},
+
+			setVertical ( event ) {
+				this.set({
+					verticalDividerPos: 100 * event.clientX / window.innerWidth
+				});
+
+				this.refs.editor.resize();
+			}
+		},
+
+		onrender () {
+			this.observe( 'source', source => {
+				try {
+					const compiled = svelte.compile( source );
+					this.set({ compiled });
+				} catch ( err ) {
+					console.error( err );
+				}
+			});
+		},
+
+		events: {
+			drag ( node, callback ) {
+				function mousedown ( event ) {
+					if ( event.which !== 1 ) return;
+
+					event.preventDefault();
+
+					const onmouseup = () => {
+						window.removeEventListener( 'mousemove', callback, false );
+						window.removeEventListener( 'mouseup', onmouseup, false );
+					};
+
+					window.addEventListener( 'mousemove', callback, false );
+					window.addEventListener( 'mouseup', onmouseup, false );
+				}
+
+				node.addEventListener( 'mousedown', mousedown, false );
+
+				return {
+					teardown () {
+						node.removeEventListener( 'mousedown', onmousedown, false );
+					}
+				};
+			}
+		},
+
+		components: {
+			Editor,
+			Viewer,
+			Console
+		}
+	};
+</script>
