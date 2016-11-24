@@ -18,8 +18,6 @@
 </style>
 
 <script>
-	const eval2 = eval;
-
 	export default {
 		onrender () {
 			let component;
@@ -27,23 +25,28 @@
 			this.refs.child.addEventListener( 'load', () => {
 				const iframe = this.refs.child;
 				const body = iframe.contentDocument.body;
+				const eval2 = iframe.contentWindow.eval;
 
 				this.observe( 'compiled', compiled => {
 					if ( !compiled ) return;
 
 					const code = compiled.code.replace( 'export default ', '' ) + '\n\nreturn SvelteComponent;';
-					const SvelteComponent = eval2( `(function () { ${code} }());` );
 
 					if ( component ) component.teardown();
 
-					component = window.component = new SvelteComponent({
-						target: body,
-						data: this.get( 'data' )
-					});
+					eval2( `
+						var SvelteComponent = (function () { ${code} }());
+						var component = new SvelteComponent({
+							target: document.body,
+							data: ${this.get( 'json' )}
+						});
+					`);
+
+					component = iframe.contentWindow.component;
 				});
 
-				this.observe( 'data', data => {
-					if ( component ) component.set( data );
+				this.observe( 'json', json => {
+					if ( component ) component.set( JSON.parse( json ) );
 				});
 			});
 		}
