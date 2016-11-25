@@ -87,8 +87,15 @@
 			}, {
 				value: value.trim(),
 				readOnly: true,
+				tabSize: 2,
 				mode: { js: 'javascript', html: 'htmlmixed', bash: 'shell' }[ lang ] || lang
 			});
+
+			// this seems to be necessary to prevent selections looking wonky???
+			// some font loading thing probably
+			setTimeout( function () {
+				cm.refresh();
+			}, 3000 );
 		});
 	</script>
 

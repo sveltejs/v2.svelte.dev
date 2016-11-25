@@ -59,15 +59,18 @@ module.exports = gobble([
 						metadata[ pair.slice( 0, colonIndex ).trim() ] = pair.slice( colonIndex + 1 );
 					});
 
-					const html = marked( content );
+					const html = marked( content.replace( /^\t+/gm, match => match.split( '\t' ).join( '  ' ) ) );
 
 					const subsections = [];
 					const pattern = /<h3 id="(.+?)">(.+?)<\/h3>/g;
 					while ( match = pattern.exec( html ) ) {
-						subsections.push({ slug: match[1], title: match[2] });
-					}
+						const slug = match[1];
+						const title = match[2]
+							.replace( /<\/?code>/g, '' )
+							.replace( /\.(\w+).+/, '.$1' )
 
-					console.log( `subsections`, subsections )
+						subsections.push({ slug, title });
+					}
 
 					return {
 						html,

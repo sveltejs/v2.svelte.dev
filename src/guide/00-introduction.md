@@ -31,7 +31,7 @@ Like Ractive and Vue, Svelte promotes the concept of *single-file components*: a
 
 ```hidden-data
 {
-  "name": "world"
+	"name": "world"
 }
 ```
 
@@ -42,15 +42,8 @@ Svelte turns this into a JavaScript module that you can import into your app:
 import App from './App.html';
 
 const app = new App({
-	// `target` is the only required option – the element
-	// to render the component to
 	target: document.querySelector( 'main' ),
-
-	// `data` is optional. A component can also have
-	// default data – we'll learn about that later.
-	data: {
-		name: 'world'
-	}
+	data: { name: 'world' }
 });
 
 // change the data associated with the template
