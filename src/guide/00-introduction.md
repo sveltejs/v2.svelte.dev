@@ -53,6 +53,4 @@ app.set({ name: 'everybody' });
 app.teardown();
 ```
 
-The `import` keyword is coming to browsers soon – for now, you'll need to use a module bundler like [Rollup](http://rollupjs.org) with [rollup-plugin-svelte](https://github.com/rollup/rollup-plugin-svelte) or [Webpack](https://webpack.js.org/) to turn your app into a `<script>` tag that you can include in a web page.
-
 Congratulations, you've just learned about half of Svelte's API!

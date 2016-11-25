@@ -105,6 +105,68 @@ module.exports = gobble([
 		})
 		.moveTo( 'guide' ),
 
+	// blog
+	gobble( 'src/blog' )
+		.transform( function ( inputdir, outputdir, options, done ) {
+			const read = file => sander.readFileSync( inputdir, file, { encoding: 'utf-8' });
+
+			const templates = {
+				index: read( 'index.html' ),
+				post: read( 'post.html' )
+			};
+
+			const posts = sander.readdirSync( inputdir, 'posts' )
+				.filter( file => /\.md$/.test( file ) )
+				.map( file => {
+					const markdown = read( `posts/${file}` );
+
+					const match = /---\n([\s\S]+?)\n---/.exec( markdown );
+					const frontMatter = match[1];
+					const content = markdown.slice( match[0].length );
+
+					var metadata = {};
+					frontMatter.split( '\n' ).forEach( pair => {
+						var colonIndex = pair.indexOf( ':' );
+						metadata[ pair.slice( 0, colonIndex ).trim() ] = pair.slice( colonIndex + 1 );
+					});
+
+					const html = marked( content.replace( /^\t+/gm, match => match.split( '\t' ).join( '  ' ) ) );
+
+					return {
+						html,
+						metadata,
+						slug: file.replace( /^\d+-/, '' ).replace( /\.md$/, '' )
+					};
+				});
+
+			posts.forEach( post => {
+				const rendered = templates.post.replace( /<@\s*(\w+)\s*@>/g, ( match, key ) => {
+					return key in post.metadata ? post.metadata[ key ] : match;
+				});
+
+				sander.writeFileSync( outputdir, `${post.slug}/index.html`, rendered );
+			});
+
+			const preview = posts.map( post => {
+				return `
+					<article>
+						<a href='/blog/${post.slug}/'>
+							<h2>${post.metadata.title}</h2>
+							<p>${post.metadata.standfirst}</p>
+
+							<span class='continue-reading'>continue reading</span>
+						</a>
+					</article>
+				`;
+			});
+
+			var index = templates.index.replace( '<@posts@>', preview );
+
+			sander.writeFileSync( outputdir, 'index.html', index );
+			done();
+		})
+		.moveTo( 'blog' ),
+
 	// repl
 	gobble( 'src/css' ).transform( 'postcss', {
 		src: 'repl/index.css',
