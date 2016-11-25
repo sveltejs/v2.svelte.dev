@@ -1,7 +1,7 @@
 sudo: false
 language: node_js
 node_js:
-  - "stable"
+  - "6"
 env:
   global:
     - BUILD_TIMEOUT=10000
