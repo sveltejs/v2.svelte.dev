@@ -18,6 +18,55 @@
 </style>
 
 <script>
+	let importCache = {};
+
+	curl.config({
+		dontAddFileExt: /./
+	});
+
+	function fetchImport ( x ) {
+		return curl([ `https://wzrd.in/standalone/${x.source}@latest` ]).then( module => {
+			importCache[ x.source ] = module;
+		});
+	}
+
+	const namespaceSpecifier = /\*\s+as\s+(\w+)/;
+	const namedSpecifiers = /\{(.+)\}/;
+
+	function parseSpecifiers ( specifiers ) {
+		specifiers = specifiers.trim();
+
+		let match = namespaceSpecifier.exec( specifiers );
+		if ( match ) {
+			return {
+				namespace: true,
+				name: match[1]
+			};
+		}
+
+		let names = [];
+
+		specifiers = specifiers.replace( namedSpecifiers, ( match, str ) => {
+			names = str.split( ',' ).map( name => {
+				const split = name.split( 'as' );
+				const exported = split[0].trim();
+				const local = ( split[1] || exported ).trim();
+
+				return { local, exported };
+			});
+
+			return '';
+		});
+
+		match = /\w+/.exec( specifiers );
+
+		return {
+			namespace: false,
+			names,
+			default: match ? match[0] : null
+		};
+	}
+
 	export default {
 		onrender () {
 			let component;
@@ -27,22 +76,69 @@
 				const body = iframe.contentDocument.body;
 				const eval2 = iframe.contentWindow.eval;
 
+				let promise = null;
+
 				this.observe( 'compiled', compiled => {
 					if ( !compiled ) return;
 
-					const code = compiled.code.replace( 'export default ', '' ) + '\n\nreturn SvelteComponent;';
+					if ( promise ) promise.cancel();
 
-					if ( component ) component.teardown();
+					const imports = [];
+					const pattern = /\bimport\s+(?:(.+)\s+from\s+)?[\'"]([^"\']+)["\']/g; // https://gist.github.com/pilwon/ff55634a29bb4456e0dd
 
-					eval2( `
-						var SvelteComponent = (function () { ${code} }());
-						var component = new SvelteComponent({
-							target: document.body,
-							data: ${this.get( 'json' )}
+					const code = compiled.code
+						.replace( pattern, ( match, specifiers, source ) => {
+							imports.push({
+								specifiers: parseSpecifiers( specifiers ),
+								source
+							});
+
+							return '';
+						})
+						.replace( 'export default ', '' ) + '\n\nreturn SvelteComponent;';
+
+					const missingImports = imports.filter( x => !importCache[ x.source ] );
+
+					const createComponent = () => {
+						if ( component ) component.teardown();
+
+						imports.forEach( x => {
+							console.log( `x`, x )
+							const module = importCache[ x.source ];
+
+							if ( x.specifiers.namespace ) {
+								iframe.contentWindow[ x.specifiers.name ] = module;
+							} else {
+								if ( x.specifiers.default ) {
+									iframe.contentWindow[ x.specifiers.default ] = 'default' in module ? module.default : module;
+								}
+
+								x.specifiers.names.forEach( name => {
+									iframe.contentWindow[ name.local ] = module[ name.exported ];
+								});
+							}
 						});
-					`);
 
-					component = iframe.contentWindow.component;
+						eval2( `
+							var SvelteComponent = (function () { ${code} }());
+							var component = new SvelteComponent({
+								target: document.body,
+								data: ${this.get( 'json' )}
+							});
+						`);
+
+						component = iframe.contentWindow.component;
+					};
+
+					if ( missingImports.length ) {
+						let cancelled = false;
+						promise = Promise.all( missingImports.map( fetchImport ) );
+						promise.cancel = () => cancelled = true;
+
+						promise.then( createComponent );
+					} else {
+						createComponent();
+					}
 				});
 
 				this.observe( 'json', json => {
