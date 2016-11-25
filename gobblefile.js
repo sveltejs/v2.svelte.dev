@@ -196,7 +196,7 @@ module.exports = gobble([
 		format: 'iife',
 		plugins: [
 			require( 'rollup-plugin-svelte' )(),
-			require( 'rollup-plugin-json' )()
+			require( 'rollup-plugin-buble' )()
 		],
 		sourceMap: true
 	})

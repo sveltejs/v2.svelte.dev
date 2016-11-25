@@ -106,7 +106,9 @@
 
 @media (min-width: 960px) {
 	.hero {
-		padding: 4em 1em 2em 1em;
+		padding: 6em 1em 2em 1em;
+		max-width: 64em;
+		margin: 0 auto;
 
 		.left {
 			position: relative;

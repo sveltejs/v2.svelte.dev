@@ -1,6 +1,6 @@
 .content {
 	width: 100%;
-	padding: 0 1em;
+	padding: 2em 1em;
 
 	@media (min-width: 45rem) {
 		padding-left: 15em;
