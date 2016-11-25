@@ -5,7 +5,7 @@
 	@media (min-width: 45rem) {
 		position: fixed;
 		float: left;
-		width: 12em;
+		width: 14em;
 		border-right: 1px solid #eee;
 		height: calc(100% - 6em);
 		z-index: 2;

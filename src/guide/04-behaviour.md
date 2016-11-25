@@ -75,7 +75,7 @@ Notice that all we need to do to tell Svelte that `hours`, `minutes` and `second
 
 ### Lifecycle hooks
 
-There are two 'hooks' provided by Svelte for adding control logic:
+There are two 'hooks' provided by Svelte for adding control logic – `onrender` and `onteardown`:
 
 ```html
 <p>
@@ -113,7 +113,7 @@ There are two 'hooks' provided by Svelte for adding control logic:
 
 ### Helpers
 
-Helpers are simple functions that are used in your template. In the example above, we want to ensure that `minutes` and `seconds` are preceded with a `0` if they only have one digit:
+Helpers are simple functions that are used in your template. In the example above, we want to ensure that `minutes` and `seconds` are preceded with a `0` if they only have one digit, so we add a `leftPad` helper:
 
 ```html
 <p>
@@ -154,6 +154,123 @@ Helpers are simple functions that are used in your template. In the example abov
 </script>
 ```
 
-Of course, you could use `leftPad` inside the computed properties instead of in the template – there's no clear rule about when you should use expressions with helpers versus when you should use computed properties. Do whatever makes your component easier for the next developer to understand.
+Of course, you could use `leftPad` inside the computed properties instead of in the template. There's no hard and fast rule about when you should use expressions with helpers versus when you should use computed properties – do whatever makes your component easier for the next developer to understand.
 
 > Helper functions should be *pure* – in other words, they should not have side-effects, and their returned value should only depend on their arguments.
+
+
+### Custom methods
+
+In addition to the [built-in methods](#component-api), you can add methods of your own:
+
+```html
+<button on:click='say("hello")'>say hello!</button>
+
+<script>
+	export default {
+		methods: {
+			say ( message ) {
+				alert( message ); // again, please don't do this
+			}
+		}
+	};
+</script>
+```
+
+Those methods can be called within [event handlers](TK), but they also become part of the component's API:
+
+```js
+component.say( '👋' );
+```
+
+
+### Custom event handlers
+
+Soon, we'll learn about [event handlers](TK) – if you want, skip ahead to that section first then come back here!
+
+Most of the time you can make do with the standard DOM events (the sort you'd add via `element.addEventListener`, such as `click`) but sometimes you might need custom events to handle gestures, for example.
+
+Custom events are just functions that take a node and a callback as their argument, and return an object with a `teardown` method that gets called when the element is removed from the page:
+
+```html
+<button on:longpress='set({ done: true })'>click and hold</button>
+
+{{#if done}}
+	<p>clicked and held</p>
+{{/if}}
+
+<script>
+	export default {
+		events: {
+			longpress ( node, callback ) {
+				function onmousedown ( event ) {
+					const timeout = setTimeout( () => callback( event ), 1000 );
+
+					function cancel () {
+						clearTimeout( timeout );
+						node.removeEventListener( 'mouseup', cancel, false );
+					}
+
+					node.addEventListener( 'mouseup', cancel, false );
+				}
+
+				node.addEventListener( 'mousedown', onmousedown, false );
+
+				return {
+					teardown () {
+						node.removeEventListener( 'mousedown', onmousedown, false );
+					}
+				};
+			}
+		}
+	};
+</script>
+```
+
+
+### Nested components
+
+So far, we've been working with single standalone components. But if you tried to put your entire application in one component it would quickly become unwieldy.
+
+Fortunately, Svelte components can be *nested*:
+
+```html
+<div class='widget-container'>
+	<Widget foo bar='static' baz='{{dynamic}}'/>
+</div>
+
+<script>
+	import Widget from './Widget.html';
+
+	export default {
+		data () {
+			return {
+				dynamic: 'this can change'
+			}
+		},
+
+		components: {
+			Widget
+		}
+	};
+</script>
+```
+
+The example above is equivalent to the following...
+
+```js
+import Widget from './Widget.html';
+
+const widget = new Widget({
+	target: document.querySelector( '.widget-container' ),
+	data: {
+		foo: true,
+		bar: 'static',
+		baz: 'this can change'
+	}
+});
+```
+
+...except that Svelte will ensure that the value of `baz` is kept in sync with the value of `dynamic` in the parent component, and takes care of tearing down the child component when the parent is torn down.
+
+> Component names should be capitalised, following the widely-used JavaScript convention of capitalising constructor names. It's also an easy way to distinguish components from elements in your template.

@@ -6,7 +6,7 @@
 	background-color: white;
 	color: #333;
 	clear: fix;
-	min-height: calc(100vh - 10em);
+	min-height: calc(100vh - 7em);
 	box-sizing: border-box;
 
 	ul {
@@ -19,6 +19,7 @@
 		position: relative;
 		list-style: none;
 		margin: 0 0 1em 0;
+		font-family: Rajdhani;
 	}
 
 	li::before {
@@ -70,6 +71,7 @@
 		padding: 0.5em 2em;
 		border-radius: 0.2em;
 		line-height: 1;
+		font-family: Rajdhani;
 		font-size: 1.2em;
 		font-weight: 800;
 		text-transform: uppercase;
@@ -122,8 +124,8 @@
 
 		h1 {
 			position: relative;
-			right: 2rem;
-			top: 3.6rem;
+			right: 3rem;
+			top: 1.4rem;
 			font-size: 8em;
 			text-align: right;
 		}

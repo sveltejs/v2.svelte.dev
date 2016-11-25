@@ -1,5 +1,5 @@
 header {
-	text-align: center;
+	text-align: right;
 	position: relative;
 	height: 4em;
 	box-sizing: border-box;
@@ -7,6 +7,17 @@ header {
 	color: #eee;
 	border-bottom: 2px solid rgb(170,30,30);
 	font-family: 'Rajdhani';
+	padding: 0 1.5em 0 0;
+
+	.logo {
+		position: absolute;
+		top: 1rem;
+		left: 1.5rem;
+		line-height: 1;
+		text-transform: lowercase;
+		font-size: 2em;
+		color: white;
+	}
 
 	nav:after {
 		content: '';
@@ -15,6 +26,7 @@ header {
 	}
 
 	ul {
+		display: inline-block;
 		margin: 0;
 		padding: 0;
 		clear: fix;
