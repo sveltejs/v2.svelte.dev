@@ -127,8 +127,11 @@ module.exports = gobble([
 					var metadata = {};
 					frontMatter.split( '\n' ).forEach( pair => {
 						var colonIndex = pair.indexOf( ':' );
-						metadata[ pair.slice( 0, colonIndex ).trim() ] = pair.slice( colonIndex + 1 );
+						metadata[ pair.slice( 0, colonIndex ).trim() ] = pair.slice( colonIndex + 1 ).trim();
 					});
+
+					const date = new Date( metadata.pubdate );
+					metadata.dateString = date.toDateString();
 
 					const html = marked( content.replace( /^\t+/gm, match => match.split( '\t' ).join( '  ' ) ) );
 
@@ -141,7 +144,8 @@ module.exports = gobble([
 
 			posts.forEach( post => {
 				const rendered = templates.post.replace( /<@\s*(\w+)\s*@>/g, ( match, key ) => {
-					return key in post.metadata ? post.metadata[ key ] : match;
+					return key in post.metadata ? post.metadata[ key ] :
+					       key in post ? post[ key ] : match;
 				});
 
 				sander.writeFileSync( outputdir, `${post.slug}/index.html`, rendered );
@@ -166,6 +170,12 @@ module.exports = gobble([
 			done();
 		})
 		.moveTo( 'blog' ),
+
+	gobble( 'src/css' ).transform( 'postcss', {
+		src: 'blog/index.css',
+		dest: 'blog/index.css',
+		plugins: postcssPlugins
+	}),
 
 	// repl
 	gobble( 'src/css' ).transform( 'postcss', {
