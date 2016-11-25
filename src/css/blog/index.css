@@ -1,0 +1,63 @@
+main {
+	padding: 2em 1em 0 1em;
+	height: calc(100vh - 4em);
+	overflow: auto;
+	margin: 0 auto;
+
+	.post {
+		max-width: 48em;
+		margin: 0 auto;
+		padding: 0 0 2em 0;
+	}
+
+	p {
+		margin: 0 0 1em 0;
+		line-height: 1.5;
+	}
+
+	.standfirst {
+		font-size: 1.4em;
+		font-family: Rajdhani;
+	}
+
+	.byline {
+		font-size: 0.8em;
+		border-top: 1px solid #eee;
+		padding: 0.5em 0;
+	}
+
+	time {
+		/*float: right;*/
+	}
+
+	blockquote {
+		color: #999;
+		margin: 1em 0;
+		padding: 0.5em 0 0.5em 1em;
+		max-width: 48em;
+		background-color: #f9f9f9;
+		border-left: 2px solid #ddd;
+		/*border-top: 1px solid #eee;
+		border-bottom: 1px solid #eee;*/
+
+		p {
+			color: #666;
+		}
+
+		p:last-child {
+			margin: 0;
+		}
+
+		strong {
+			display: block;
+			font-weight: 500;
+			font-style: italic;
+		}
+	}
+
+	code {
+		background-color: #f9f9f9;
+		padding: 0.2em 0.4em;
+		border-radius: 3px;
+	}
+}
