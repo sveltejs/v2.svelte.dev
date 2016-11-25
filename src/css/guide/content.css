@@ -99,4 +99,38 @@
 			background-color: rgba(170,30,30,1);
 		}
 	}
+
+	blockquote {
+		color: #999;
+		margin: 1em 0;
+		padding: 0.5em 0 0.5em 2em;
+		max-width: 48em;
+		border-top: 1px solid #eee;
+		border-bottom: 1px solid #eee;
+
+		p {
+			color: #666;
+		}
+
+		p:last-child {
+			margin: 0;
+		}
+	}
+
+	blockquote::before {
+		content: '!';
+		position: absolute;
+		left: 0.5em;
+		top: 0.8em;
+		color: rgba(170,0,0, 0.7);
+		font-size: 0.8em;
+		font-weight: 800;
+		width: 1em;
+		height: 1em;
+		text-align: center;
+		line-height: 1;
+		padding: 0.15em 0.1em 0.1em 0.1em;
+		border-radius: 50%;
+		border: 2px solid rgba(170,30,30,0.7);
+	}
 }

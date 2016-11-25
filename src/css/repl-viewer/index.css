@@ -18,3 +18,11 @@ code {
 	padding: 0.2em 0.4em;
 	border-radius: 3px;
 }
+
+a {
+	color: rgb(170,0,0);
+}
+
+a:hover {
+	text-decoration: underline;
+}
