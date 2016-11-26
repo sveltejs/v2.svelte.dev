@@ -192,7 +192,7 @@
 					gist: this.get( 'gist' ) || null
 				};
 
-				history.replaceState( {}, 'x', `/repl?shareable=${btoa( encodeURIComponent( JSON.stringify( state ) ) )}` );
+				history.replaceState( {}, 'x', `/repl/?shareable=${btoa( encodeURIComponent( JSON.stringify( state ) ) )}` );
 			}, 250 );
 
 			this.set({ json: JSON.stringify( this.get( 'data' ), null, '  ' ) });
