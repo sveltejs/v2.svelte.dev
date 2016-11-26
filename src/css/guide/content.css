@@ -1,21 +1,18 @@
 .content {
 	width: 100%;
-	padding: 2em 1em;
-
-	@media (min-width: 45rem) {
-		padding-left: 15em;
-	}
+	padding: 1em;
 
 	h2 {
 		padding: 1rem 0 0 0;
 		margin: 0 0 1rem 0;
-		font-size: 2em;
+		font-size: 2.4em;
 		font-weight: 400;
 	}
 
 	h3 {
-		font-size: 1.6em;
-		font-weight: 400;
+		font-size: 1.2em;
+		font-weight: 800;
+		margin: 2em 0 0 0;
 	}
 
 	p {
@@ -44,7 +41,7 @@
 		border-bottom: 1px solid #eee;
 		max-width: 64em;
 		margin: 0 auto 2em auto;
-		padding: 0 0 2em 0;
+		padding: 0 0 4em 0;
 	}
 
 	section:last-child {
@@ -132,5 +129,11 @@
 		padding: 0.15em 0.1em 0.1em 0.1em;
 		border-radius: 50%;
 		border: 2px solid rgba(170,30,30,0.7);
+	}
+}
+
+@media (min-width: 45rem) {
+	.content {
+		padding: 2em 2em 2em 16em;
 	}
 }

@@ -15,11 +15,6 @@ main {
 		line-height: 1.5;
 	}
 
-	.standfirst {
-		font-size: 1.4em;
-		font-family: Rajdhani;
-	}
-
 	.byline {
 		font-size: 0.8em;
 		border-top: 1px solid #eee;
@@ -59,5 +54,27 @@ main {
 		background-color: #f9f9f9;
 		padding: 0.2em 0.4em;
 		border-radius: 3px;
+	}
+}
+
+.standfirst {
+	font-size: 1.4em;
+	font-family: Rajdhani;
+}
+
+.post {
+	padding: 1em;
+
+	h1, h2 {
+		font-size: 2.4em;
+		margin: 0 0 0 0;
+	}
+
+	h2, p {
+		color: #333;
+	}
+
+	.continue-reading {
+		float: right;
 	}
 }

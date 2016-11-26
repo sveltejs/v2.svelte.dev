@@ -153,13 +153,18 @@ module.exports = gobble([
 
 			const preview = posts.map( post => {
 				return `
-					<article>
+					<article class='post'>
 						<a href='/blog/${post.slug}/'>
 							<h2>${post.metadata.title}</h2>
-							<p>${post.metadata.standfirst}</p>
-
-							<span class='continue-reading'>continue reading</span>
+							<p class='standfirst'>${post.metadata.description}</p>
 						</a>
+
+						<p class='byline'>
+							<a href='${post.metadata.authorURL}'>${post.metadata.author}</a>
+							<time datetime='${post.metadata.pubdate}'>${post.metadata.dateString}</time>
+
+							<a class='continue-reading' href='/blog/${post.slug}/'>continue reading &raquo;</a>
+						</p>
 					</article>
 				`;
 			});

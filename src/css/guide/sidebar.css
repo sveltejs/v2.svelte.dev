@@ -1,16 +1,7 @@
 .sidebar {
 	margin: 0;
 	padding: 2em 1em 2em 2.5em;
-
-	@media (min-width: 45rem) {
-		position: fixed;
-		float: left;
-		width: 14em;
-		border-right: 1px solid #eee;
-		height: calc(100% - 6em);
-		z-index: 2;
-		overflow-y: scroll;
-	}
+	border-bottom: 1px solid #eee;
 
 	a {
 		color: #666;
@@ -38,5 +29,18 @@
 	.subsection {
 		padding: 0 0 0 0;
 		display: block;
+	}
+}
+
+@media (min-width: 45rem) {
+	.sidebar {
+		position: fixed;
+		float: left;
+		width: 14em;
+		border-right: 1px solid #eee;
+		height: calc(100% - 4em);
+		z-index: 2;
+		overflow-y: scroll;
+		border-bottom: none;
 	}
 }
