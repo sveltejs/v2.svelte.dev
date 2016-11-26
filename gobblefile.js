@@ -21,9 +21,20 @@ module.exports = gobble([
 
 	gobble( 'node_modules/curl-amd/dist/curl' ),
 
+	gobble( 'node_modules/codemirror/lib/codemirror.css' ),
 	gobble( 'node_modules/codemirror' )
-		.include([ 'lib/**', 'mode/javascript/**', 'mode/shell/**', 'mode/htmlmixed/**', 'mode/xml/**', 'mode/css/**' ])
-		.moveTo( 'codemirror' ),
+		.transform( 'concat', {
+			dest: 'codemirror-bundle.js',
+			files: [
+				'lib/codemirror.js',
+				'mode/javascript/javascript.js',
+				'mode/shell/shell.js',
+				'mode/htmlmixed/htmlmixed.js',
+				'mode/xml/xml.js',
+				'mode/css/css.js'
+			]
+		})
+		.transformIf( gobble.env() === 'production', 'uglifyjs' ),
 
 	gobble( 'node_modules/svelte/dist' ),
 

@@ -1,14 +1,17 @@
 {
-  "name": "svelte.surge.sh",
+  "name": "svelte.technology",
   "version": "1.0.0",
   "description": "Docs and examples for Svelte",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "gobble",
+    "dev": "gobble",
+    "start": "list dist",
     "build": "gobble build -f dist",
-    "deploy": "surge dist svelte.surge.sh",
-    "predeploy": "npm run build"
+    "deploy": "now && now alias"
+  },
+  "now": {
+    "alias": "svelte.technology"
   },
   "repository": {
     "type": "git",
@@ -27,9 +30,11 @@
     "chalk": "^1.1.3",
     "gobble": "^0.11.3",
     "gobble-cli": "^0.7.0",
+    "gobble-concat": "^0.4.1",
     "gobble-postcss": "^0.3.0",
     "gobble-rollup": "^0.36.0",
     "gobble-uglifyjs": "^0.2.1",
+    "list": "^0.8.2",
     "marked": "^0.3.6",
     "postcss-clearfix": "^1.0.0",
     "postcss-import": "^8.2.0",

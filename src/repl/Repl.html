@@ -202,6 +202,12 @@
 
 				this.refs.editor.resize();
 				this.refs.data.resize();
+			},
+
+			updateData ({ key, value }) {
+				const data = JSON.parse( this.get( 'json' ) );
+				data[ key ] = value;
+				this.set({ json: JSON.stringify( data, null, '  ' ) });
 			}
 		},
 
@@ -280,14 +286,6 @@
 					this.set({ data });
 				}
 			});
-		},
-
-		methods: {
-			updateData ({ key, value }) {
-				const data = JSON.parse( this.get( 'json' ) );
-				data[ key ] = value;
-				this.set({ json: JSON.stringify( data, null, '  ' ) });
-			}
 		},
 
 		events: {
