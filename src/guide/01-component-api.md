@@ -28,7 +28,7 @@ const component = new MyComponent({
 Every Svelte component instance has a small number of methods you can use to control it, in addition to any [custom methods](TK) you add.
 
 
-### component.set( data )
+### component.set(data)
 
 This updates the component's state with the new values provided and causes the DOM to update. `data` must be a POJO. Any properties *not* included in `data` will remain as they were.
 
@@ -46,7 +46,7 @@ component.set({
 > If you've use Ractive in the past, this is very similar to `ractive.set(...)`, except that instead of doing `ractive.set('foo', 'bar')` you must always do `ractive.set({foo: 'bar'})`, and you cannot set nested keypaths directly. It's also very similar to React's `setState`, except that it causes synchronous updates, meaning the DOM is always in a predictable state.
 
 
-### component.get( key )
+### component.get(key)
 
 Returns the current value of `key`:
 
@@ -57,7 +57,7 @@ console.log( component.get( 'answer' ) ); // 'ask your mother'
 This will also retrieve the value of [computed properties](TK).
 
 
-### component.observe( key, callback[, options] )
+### component.observe(key, callback[, options])
 
 This method allows you to respond to changes in state, which is particularly useful when combined with [lifecycle hooks](TK) and [two-way bindings](TK).
 
@@ -107,7 +107,7 @@ drawingApp.observe( 'height', redraw, { defer: true });
 ```
 
 
-### component.on( eventName, callback )
+### component.on(eventName, callback)
 
 Allows you to respond to *events*:
 
@@ -120,7 +120,7 @@ const listener = component.on( 'thingHappened', event => {
 listener.cancel();
 ```
 
-### component.fire( eventName, event )
+### component.fire(eventName, event)
 
 The companion to `component.on(...)`:
 
