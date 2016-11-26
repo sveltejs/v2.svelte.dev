@@ -16,14 +16,14 @@
 		{{#if showGenerated}}
 			<CodeMirror ref:editor mode='javascript' code='{{compiled.code}}' readonly/>
 		{{else}}
-			<CodeMirror ref:editor mode='htmlmixed' bind:code='source'/>
+			<CodeMirror ref:editor mode='htmlmixed' bind:code='source' error='{{sourceError}}'/>
 		{{/if}}
 	</section>
 </div>
 
 <div ref:right class='right' style='width: {{100 - verticalDividerPos}}%;'>
 	<div class='top' style='height: {{horizontalDividerPos}}%;'>
-		<Viewer compiled='{{compiled}}' json='{{json}}'/>
+		<Viewer compiled='{{compiled}}' data='{{data}}' on:change='updateData(event)'/>
 
 		{{#if dragging}}
 			<div class='mousecatcher'></div>
@@ -31,7 +31,7 @@
 	</div>
 
 	<div class='bottom' style='height: {{100 - horizontalDividerPos}}%;'>
-		<CodeMirror ref:data mode='javascript' bind:code='json'/>
+		<CodeMirror ref:data mode='javascript' bind:code='json' error='{{dataError}}'/>
 	</div>
 
 	<div class='divider horizontal-divider' style='top: calc({{horizontalDividerPos}}% - 8px)' on:drag='setHorizontal(event)'></div>
@@ -221,9 +221,13 @@
 
 				try {
 					const compiled = svelte.compile( source );
-					this.set({ compiled });
+					this.set({ compiled, sourceError: null });
 				} catch ( err ) {
 					console.error( err.stack );
+
+					this.set({
+						sourceError: { message: err.shortMessage || err.message, pos: err.pos }
+					});
 				}
 
 				updateUrl();
@@ -238,15 +242,31 @@
 
 				try {
 					data = JSON.parse( json );
+					this.set({ dataError: null });
 				} catch ( err ) {
-					// TODO indicate the error in the UI
 					console.error( err.stack );
+
+					const match = /(.+)in JSON at position (\d+)/.exec( err.message );
+
+					if ( match ) {
+						this.set({
+							dataError: { message: match[1], pos: +match[2] }
+						});
+					}
 				}
 
 				if ( data ) {
 					this.set({ data });
 				}
 			});
+		},
+
+		methods: {
+			updateData ({ key, value }) {
+				const data = JSON.parse( this.get( 'json' ) );
+				data[ key ] = value;
+				this.set({ json: JSON.stringify( data, null, '  ' ) });
+			}
 		},
 
 		events: {

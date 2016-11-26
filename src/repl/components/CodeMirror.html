@@ -1,5 +1,11 @@
 <div class='codemirror-container'>
 	<textarea ref:editor></textarea>
+
+	{{#if error}}
+		<div class='error'>
+			{{error.message}}
+		</div>
+	{{/if}}
 </div>
 
 <style>
@@ -16,6 +22,49 @@
 		width: 100%;
 		height: 100%;
 		border: none;
+	}
+
+	.error {
+		position: absolute;
+		width: 100%;
+		bottom: 0;
+		padding: 0.5em;
+		background-color: rgb(255,220,220);
+		border-top: 1px solid rgb(200,0,0);
+		color: rgb(200,0,0);
+		z-index: 999;
+		opacity: 0;
+		-webkit-animation: fade-in 0.4s 1;
+		-webkit-animation-delay: 0.5s;
+		-webkit-animation-fill-mode: forwards;
+		animation: fade-in 0.4s 1;
+		animation-delay: 0.5s;
+		animation-fill-mode: forwards;
+	}
+
+	.error-loc {
+		position: relative;
+	}
+
+	.error-loc::before {
+		position: absolute;
+		content: '^';
+		display: inline-block;
+		bottom: -1.2em;
+		left: -0.2em;
+		/*background-color: rgb(200,0,0);
+		color: white;*/
+		background-color: white;
+		color: rgb(200,0,0);
+		font-size: 1em;
+		font-weight: 500;
+		/*width: 1em;
+		height: 1em;*/
+		/*padding: 0.1em;
+		text-align: center;*/
+		border-radius: 50%;
+		-webkit-animation: pulse 1s infinite;
+		animation: pulse 1s infinite;
 	}
 </style>
 
@@ -51,6 +100,18 @@
 					updating = true;
 					this.editor.setValue( code );
 					updating = false;
+				}
+			});
+
+			let marker;
+			this.observe( 'error', error => {
+				if ( marker ) marker.clear();
+				if ( error && error.pos ) {
+					const { line, ch } = this.editor.getDoc().posFromIndex( error.pos );
+
+					marker = this.editor.markText({ line, ch }, { line, ch: ch + 1 }, {
+						className: 'error-loc'
+					});
 				}
 			});
 

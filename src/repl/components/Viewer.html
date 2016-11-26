@@ -77,6 +77,8 @@
 				const eval2 = iframe.contentWindow.eval;
 
 				let promise = null;
+				let observers = null;
+				let updating = null;
 
 				this.observe( 'compiled', compiled => {
 					if ( !compiled ) return;
@@ -119,15 +121,27 @@
 							}
 						});
 
+						const data = this.get( 'data' );
+
 						eval2( `
 							var SvelteComponent = (function () { ${code} }());
 							var component = new SvelteComponent({
 								target: document.body,
-								data: ${this.get( 'json' )}
+								data: ${JSON.stringify(data)}
 							});
 						`);
 
 						component = iframe.contentWindow.component;
+
+						observers = Object.keys( data ).map( key => {
+							return component.observe( key, value => {
+								if ( updating ) return;
+
+								updating = true;
+								this.fire( 'change', { key, value });
+								updating = false;
+							}, { init: false });
+						});
 					};
 
 					if ( missingImports.length ) {
@@ -141,8 +155,31 @@
 					}
 				});
 
-				this.observe( 'json', json => {
-					if ( component ) component.set( JSON.parse( json ) );
+				this.observe( 'data', data => {
+					try {
+						if ( observers ) {
+							observers.forEach( observer => observer.cancel() );
+						}
+
+						if ( component ) {
+							updating = true;
+							component.set( data );
+							updating = false;
+
+							observers = Object.keys( data ).map( key => {
+								return component.observe( key, value => {
+									if ( updating ) return;
+
+									updating = true;
+									this.fire( 'change', { key, value });
+									updating = false;
+								}, { init: false });
+							});
+						}
+					} catch ( err ) {
+						// TODO show the error in the UI
+						console.error( err );
+					}
 				});
 			});
 		}
