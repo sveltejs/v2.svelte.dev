@@ -88,7 +88,7 @@
 			line-height: 1;
 			border-radius: 0.1em;
 			color: rgba(170,30,30,0.8);
-			background-color: rgba(170,30,30,0.05);
+			background-color: rgb(253,242,242);
 		}
 
 		&:hover::after {

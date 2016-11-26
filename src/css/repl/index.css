@@ -1,5 +1,11 @@
 main {
-	height: calc(100vh - 7em);
+	/*height: calc(100vh - 7em);*/
+}
+
+@media (min-width: 768px) {
+	main {
+		height: calc(100vh - 7em);
+	}
 }
 
 @keyframes pulse {

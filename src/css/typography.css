@@ -16,6 +16,7 @@ h1, h2, h3 {
 	margin: 0;
 	font-weight: 400;
 	padding: 0.5em 0;
+	line-height: 1.2;
 }
 
 a {

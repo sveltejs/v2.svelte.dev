@@ -39,16 +39,37 @@
 
 <div class='divider vertical-divider' style='left: calc({{verticalDividerPos}}% - 8px)' on:drag='setVertical(event)'></div>
 
+<p class='screen-too-small'>Please open this page on a larger screen!</p>
+
 <style>
+	.screen-too-small {
+		text-align: center;
+		margin: 0;
+		padding: 4em 3em 8em 3em;
+		line-height: 1.5;
+	}
+
 	.left, .right {
 		position: relative;
 		height: 100%;
 		float: left;
+		display: none;
 	}
 
 	.divider {
 		position: absolute;
 		z-index: 10;
+		display: none;
+	}
+
+	@media (min-width: 768px) {
+		.screen-too-small {
+			display: none;
+		}
+
+		.left, .right, .divider {
+			display: block;
+		}
 	}
 
 	.divider::after {

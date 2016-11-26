@@ -2,17 +2,27 @@
 @import './content.css';
 
 main {
-	overflow: scroll;
+	/*overflow: scroll;
 	height: calc(100vh - 4em);
 	position: absolute;
 	width: 100%;
-	top: 4em;
+	top: 4em;*/
 }
 
 header {
-	position: fixed;
+	/*position: fixed;*/
 	width: 100%;
 	left: 0;
 	top: 0;
 	z-index: 2;
+}
+
+@media (min-width: 768px) {
+	main {
+		overflow: scroll;
+		height: calc(100vh - 4em);
+		position: absolute;
+		width: 100%;
+		top: 4em;
+	}
 }

@@ -50,10 +50,12 @@
 		line-height: 1;
 		margin: 0;
 		text-transform: lowercase;
+		padding: 0.5em 0 0 0;
 	}
 
 	.right {
 		padding: 0 0 0 1em;
+		margin: 0 0 2em 0;
 	}
 
 	h2 {
@@ -75,6 +77,10 @@
 		font-size: 1.2em;
 		font-weight: 800;
 		text-transform: uppercase;
+		width: calc(100% - 1em);
+		max-width: 16em;
+		display: block;
+		text-align: center;
 	}
 
 	.learn-svelte:hover {

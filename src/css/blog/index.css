@@ -1,7 +1,7 @@
 main {
 	padding: 2em 1em 0 1em;
-	height: calc(100vh - 4em);
-	overflow: auto;
+	/*height: calc(100vh - 3em);
+	overflow: auto;*/
 	margin: 0 auto;
 
 	.post {
@@ -60,13 +60,14 @@ main {
 .standfirst {
 	font-size: 1.4em;
 	font-family: Rajdhani;
+	line-height: 1.2;
 }
 
 .post {
 	padding: 1em;
 
 	h1, h2 {
-		font-size: 2.4em;
+		font-size: 1.8em;
 		margin: 0 0 0 0;
 	}
 
@@ -76,5 +77,18 @@ main {
 
 	.continue-reading {
 		float: right;
+	}
+}
+
+@media (min-width: 768px) {
+	main {
+		height: calc(100vh - 4em);
+		overflow: auto;
+	}
+
+	.post {
+		h1, h2 {
+			font-size: 2.4em;
+		}
 	}
 }
