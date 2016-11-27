@@ -91,7 +91,7 @@ thermometer.observe( 'temperature', ( newValue, oldValue ) => {
 }, { init: false });
 ```
 
-> or *primitive* values like strings and numbers, observer callbacks are only called when the value changes. But because it's possible to mutate an object or array while preserving *referential equality*, Svelte will err on the side of caution. In other words, if you do `component.set({foo: component.get('foo')})`, and `foo` is an object or array, any `foo` observers will be triggered.
+> For *primitive* values like strings and numbers, observer callbacks are only called when the value changes. But because it's possible to mutate an object or array while preserving *referential equality*, Svelte will err on the side of caution. In other words, if you do `component.set({foo: component.get('foo')})`, and `foo` is an object or array, any `foo` observers will be triggered.
 
 By default, observers are called *before* the DOM updates, giving you a chance to perform any additional updates without touching the DOM more than is necessary. In some cases – for example, if you need to measure an element after the DOM has been updated – use `defer: true`:
 
