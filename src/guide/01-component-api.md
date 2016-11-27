@@ -25,7 +25,7 @@ const component = new MyComponent({
 });
 ```
 
-Every Svelte component instance has a small number of methods you can use to control it, in addition to any [custom methods](TK) you add.
+Every Svelte component instance has a small number of methods you can use to control it, in addition to any [custom methods](#custom-methods) you add.
 
 
 ### component.set(data)
@@ -54,7 +54,7 @@ Returns the current value of `key`:
 console.log( component.get( 'answer' ) ); // 'ask your mother'
 ```
 
-This will also retrieve the value of [computed properties](TK).
+This will also retrieve the value of [computed properties](#computed-properties).
 
 
 ### component.observe(key, callback[, options])

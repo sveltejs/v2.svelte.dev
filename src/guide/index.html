@@ -69,6 +69,10 @@
 				return;
 			}
 
+			if ( lang === 'html-no-repl' ) {
+				lang = 'html';
+			}
+
 			var cm = CodeMirror( function ( element ) {
 				if ( replUrl ) {
 					const a = document.createElement( 'a' );

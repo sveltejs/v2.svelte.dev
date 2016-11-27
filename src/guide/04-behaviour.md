@@ -186,7 +186,7 @@ component.say( '👋' );
 
 ### Custom event handlers
 
-Soon, we'll learn about [event handlers](TK) – if you want, skip ahead to that section first then come back here!
+Soon, we'll learn about [event handlers](#event-handlers) – if you want, skip ahead to that section first then come back here!
 
 Most of the time you can make do with the standard DOM events (the sort you'd add via `element.addEventListener`, such as `click`) but sometimes you might need custom events to handle gestures, for example.
 

@@ -7,7 +7,7 @@ Rather than reinventing the wheel, Svelte templates are built on foundations tha
 
 ### Mustaches
 
-Mustaches allow you to bind data to your template. Whenever your data changes (see TK below), the DOM updates automatically. You can use any JavaScript expression in templates, and it will also automatically update:
+Mustaches allow you to bind data to your template. Whenever your data changes (for example after `component.set(...)`), the DOM updates automatically. You can use any JavaScript expression in templates, and it will also automatically update:
 
 ```html
 <p>{{a}} + {{b}} = {{a + b}}</p>
