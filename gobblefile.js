@@ -2,6 +2,9 @@ const gobble = require( 'gobble' );
 const path = require( 'path' );
 const fs = require( 'fs' );
 const marked = require( 'marked' );
+const Entities = require( 'html-entities' ).AllHtmlEntities;
+
+const entities = new Entities();
 
 const postcssPlugins = [
 	require( 'postcss-import' ),
@@ -156,7 +159,7 @@ module.exports = gobble([
 
 			posts.forEach( post => {
 				const rendered = templates.post.replace( /<@\s*(\w+)\s*@>/g, ( match, key ) => {
-					return key in post.metadata ? post.metadata[ key ] :
+					return key in post.metadata ? entities.encode( post.metadata[ key ] ) :
 					       key in post ? post[ key ] : match;
 				});
 

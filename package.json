@@ -33,6 +33,7 @@
     "gobble-postcss": "^0.3.0",
     "gobble-rollup": "^0.36.0",
     "gobble-uglifyjs": "^0.2.1",
+    "html-entities": "^1.2.0",
     "marked": "^0.3.6",
     "now": "^0.30.0",
     "postcss-clearfix": "^1.0.0",
