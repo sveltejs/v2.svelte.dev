@@ -36,6 +36,7 @@
     "gobble-uglifyjs": "^0.2.1",
     "list": "^0.8.2",
     "marked": "^0.3.6",
+    "now": "^0.30.0",
     "postcss-clearfix": "^1.0.0",
     "postcss-import": "^8.2.0",
     "postcss-nested": "^1.0.0",
