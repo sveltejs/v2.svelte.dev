@@ -1,5 +1,6 @@
 const gobble = require( 'gobble' );
-const sander = require( 'sander' );
+const path = require( 'path' );
+const fs = require( 'fs' );
 const marked = require( 'marked' );
 
 const postcssPlugins = [
@@ -21,7 +22,7 @@ module.exports = gobble([
 
 	gobble( 'node_modules/curl-amd/dist/curl' ),
 
-	gobble( 'node_modules/codemirror/lib/codemirror.css' ),
+	gobble( 'node_modules/codemirror/lib' ).include( 'codemirror.css' ),
 	gobble( 'node_modules/codemirror' )
 		.transform( 'concat', {
 			dest: 'codemirror-bundle.js',
@@ -44,12 +45,12 @@ module.exports = gobble([
 		dest: 'guide.css',
 		plugins: postcssPlugins
 	}),
-
+	//
 	gobble( 'src/guide' )
 		.transform( function ( inputdir, outputdir, options, done ) {
-			var markdownFiles = sander.readdirSync( inputdir ).filter( file => /\.md$/.test( file ) );
+			var markdownFiles = fs.readdirSync( inputdir ).filter( file => /\.md$/.test( file ) );
 
-			const read = file => sander.readFileSync( inputdir, file, { encoding: 'utf-8' });
+			const read = file => fs.readFileSync( path.join( inputdir, file ), 'utf-8' );
 
 			var templates = {
 				index: read( 'index.html' ),
@@ -111,7 +112,7 @@ module.exports = gobble([
 				.replace( '{{>sidebar}}', sidebar )
 				.replace( '{{>main}}', main );
 
-			sander.writeFileSync( outputdir, 'index.html', html );
+			fs.writeFileSync( path.join( outputdir, 'index.html' ), html );
 			done();
 		})
 		.moveTo( 'guide' ),
@@ -119,14 +120,14 @@ module.exports = gobble([
 	// blog
 	gobble( 'src/blog' )
 		.transform( function ( inputdir, outputdir, options, done ) {
-			const read = file => sander.readFileSync( inputdir, file, { encoding: 'utf-8' });
+			const read = file => fs.readFileSync( path.join( inputdir, file ), 'utf-8' );
 
 			const templates = {
 				index: read( 'index.html' ),
 				post: read( 'post.html' )
 			};
 
-			const posts = sander.readdirSync( inputdir, 'posts' )
+			const posts = fs.readdirSync( path.join( inputdir, 'posts' ) )
 				.filter( file => /\.md$/.test( file ) )
 				.map( file => {
 					const markdown = read( `posts/${file}` );
@@ -159,7 +160,8 @@ module.exports = gobble([
 					       key in post ? post[ key ] : match;
 				});
 
-				sander.writeFileSync( outputdir, `${post.slug}/index.html`, rendered );
+				fs.mkdirSync( path.join( outputdir, post.slug ) );
+				fs.writeFileSync( path.join( outputdir, `${post.slug}/index.html` ), rendered );
 			});
 
 			const preview = posts.map( post => {
@@ -182,7 +184,7 @@ module.exports = gobble([
 
 			var index = templates.index.replace( '<@posts@>', preview );
 
-			sander.writeFileSync( outputdir, 'index.html', index );
+			fs.writeFileSync( path.join( outputdir, 'index.html' ), index );
 			done();
 		})
 		.moveTo( 'blog' ),
