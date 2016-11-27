@@ -4,7 +4,6 @@
   "description": "Docs and examples for Svelte",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "gobble",
     "start": "list dist",
     "build": "gobble build -f dist",
