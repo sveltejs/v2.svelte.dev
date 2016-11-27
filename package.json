@@ -8,7 +8,7 @@
     "start": "list dist",
     "build": "gobble build -f dist",
     "deploy": "now && now alias",
-    "deploy:ci": "now --token NOW_TOKEN && now alias --token NOW_TOKEN"
+    "deploy:ci": "now --token $NOW_TOKEN && now alias --token $NOW_TOKEN"
   },
   "now": {
     "alias": "svelte.technology"
