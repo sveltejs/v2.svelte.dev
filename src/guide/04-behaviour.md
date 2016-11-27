@@ -177,7 +177,7 @@ In addition to the [built-in methods](#component-api), you can add methods of yo
 </script>
 ```
 
-Those methods can be called within [event handlers](TK), but they also become part of the component's API:
+Those methods can be called within [event handlers](#event-handlers), but they also become part of the component's API:
 
 ```js
 component.say( '👋' );

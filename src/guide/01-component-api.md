@@ -59,7 +59,7 @@ This will also retrieve the value of [computed properties](#computed-properties)
 
 ### component.observe(key, callback[, options])
 
-This method allows you to respond to changes in state, which is particularly useful when combined with [lifecycle hooks](TK) and [two-way bindings](TK).
+This method allows you to respond to changes in state, which is particularly useful when combined with [lifecycle hooks](#lifecycle-hooks) and [two-way bindings](#two-way-binding).
 
 ```js
 const observer = component.observe( 'answer', answer => {
@@ -131,7 +131,7 @@ component.fire( 'thingHappened', {
 ```
 
 
-At first glance `component.on(...)` and `component.fire(...)` aren't particularly useful, but it'll become more so when we learn about [nested components](TK).
+At first glance `component.on(...)` and `component.fire(...)` aren't particularly useful, but it'll become more so when we learn about [nested components](#nested-components).
 
 > `component.on(...)` and `component.observe(...)` look quite similar, but they have different purposes. Observers are useful for reacting to data flowing through your application and changing continuously over time, whereas events are good for modeling discrete moments such as 'the user made a selection, and this is what it is'.
 

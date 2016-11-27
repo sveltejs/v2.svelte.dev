@@ -150,7 +150,7 @@ You can access the index of the current element with *expression* as *name*, *in
 
 ### Directives
 
-The last place where Svelte template syntax differs from regular HTML: *directives* allow you to add special instructions for adding [event handlers](TK), [two-way bindings](TK), [refs](TK) and so on. We'll cover each of those in later stages of this guide – for now, all you need to know is that directives can be identified by the `:` character:
+The last place where Svelte template syntax differs from regular HTML: *directives* allow you to add special instructions for adding [event handlers](#event-handlers), [two-way bindings](#two-way-binding), [refs](#refs) and so on. We'll cover each of those in later stages of this guide – for now, all you need to know is that directives can be identified by the `:` character:
 
 ```html
 <p>Count: {{count}}</p>
