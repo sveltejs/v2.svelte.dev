@@ -29,7 +29,7 @@
   "homepage": "https://github.com/sveltejs/svelte.technology#readme",
   "devDependencies": {
     "chalk": "^1.1.3",
-    "gobble": "^0.11.3",
+    "gobble": "^0.12.0",
     "gobble-cli": "^0.7.0",
     "gobble-concat": "^0.4.1",
     "gobble-postcss": "^0.3.0",
