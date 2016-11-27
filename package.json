@@ -7,11 +7,10 @@
     "dev": "gobble",
     "start": "list dist",
     "build": "gobble build -f dist",
-    "deploy": "now && now alias",
-    "deploy:ci": "now --token $NOW_TOKEN && now alias --token $NOW_TOKEN"
-  },
-  "now": {
-    "alias": "svelte.technology"
+    "predeploy": "npm run build",
+    "predeploy:ci": "npm run build",
+    "deploy": "cd dist && now && now alias",
+    "deploy:ci": "cd dist && now --token $NOW_TOKEN && now alias --token $NOW_TOKEN"
   },
   "repository": {
     "type": "git",
@@ -34,7 +33,6 @@
     "gobble-postcss": "^0.3.0",
     "gobble-rollup": "^0.36.0",
     "gobble-uglifyjs": "^0.2.1",
-    "list": "^0.8.2",
     "marked": "^0.3.6",
     "now": "^0.30.0",
     "postcss-clearfix": "^1.0.0",
