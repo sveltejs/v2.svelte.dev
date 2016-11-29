@@ -4,8 +4,7 @@
   "description": "Docs and examples for Svelte",
   "main": "index.js",
   "scripts": {
-    "dev": "gobble",
-    "start": "list dist",
+    "start": "gobble",
     "build": "gobble build -f dist",
     "predeploy": "npm run build",
     "predeploy:ci": "npm run build",
