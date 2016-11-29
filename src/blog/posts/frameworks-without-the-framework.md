@@ -40,7 +40,7 @@ It's basically as fast as vanilla JS, which makes sense because it *is* vanilla 
 
 ## But that's not the important thing
 
-Well, it *is* important – performance matters a great deal. What's really exciting about this approach, though, is that it we can finally solve some of the thorniest problems in web development.
+Well, it *is* important – performance matters a great deal. What's really exciting about this approach, though, is that we can finally solve some of the thorniest problems in web development.
 
 Consider interoperability. Want to `npm install cool-calendar-widget` and use it in your app? Previously, you could only do that if you were already using (a correct version of) the framework that the widget was designed for – if `cool-calendar-widget` was built in React and you're using Angular then, well, hard cheese. But if the widget author used Svelte, apps that use it can be built using whatever technology you like. (On the TODO list: a way to convert Svelte components into web components.)
 
