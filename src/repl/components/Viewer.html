@@ -80,79 +80,91 @@
 				let observers = null;
 				let updating = null;
 
+				let toTeardown = null;
+
 				this.observe( 'compiled', compiled => {
 					if ( !compiled ) return;
-
 					if ( promise ) promise.cancel();
 
-					const imports = [];
-					const pattern = /\bimport\s+(?:(.+)\s+from\s+)?[\'"]([^"\']+)["\']/g; // https://gist.github.com/pilwon/ff55634a29bb4456e0dd
+					toTeardown = component;
+					component = null;
 
-					const code = compiled.code
-						.replace( pattern, ( match, specifiers, source ) => {
-							imports.push({
-								specifiers: parseSpecifiers( specifiers ),
-								source
-							});
+					setTimeout( () => { // necessary because `data` is not yet updated. TODO would be nice to fix this
+						const imports = [];
+						const pattern = /\bimport\s+(?:(.+)\s+from\s+)?[\'"]([^"\']+)["\']/g; // https://gist.github.com/pilwon/ff55634a29bb4456e0dd
 
-							return '';
-						})
-						.replace( 'export default ', '' ) + '\n\nreturn SvelteComponent;';
-
-					const missingImports = imports.filter( x => !importCache[ x.source ] );
-
-					const createComponent = () => {
-						if ( component ) component.teardown();
-
-						imports.forEach( x => {
-							console.log( `x`, x )
-							const module = importCache[ x.source ];
-
-							if ( x.specifiers.namespace ) {
-								iframe.contentWindow[ x.specifiers.name ] = module;
-							} else {
-								if ( x.specifiers.default ) {
-									iframe.contentWindow[ x.specifiers.default ] = 'default' in module ? module.default : module;
-								}
-
-								x.specifiers.names.forEach( name => {
-									iframe.contentWindow[ name.local ] = module[ name.exported ];
+						const code = compiled.code
+							.replace( pattern, ( match, specifiers, source ) => {
+								imports.push({
+									specifiers: parseSpecifiers( specifiers ),
+									source
 								});
-							}
-						});
 
-						const data = this.get( 'data' );
+								return '';
+							})
+							.replace( 'export default ', '' ) + '\n\nreturn SvelteComponent;';
 
-						eval2( `
-							var SvelteComponent = (function () { ${code} }());
-							var component = new SvelteComponent({
-								target: document.body,
-								data: ${JSON.stringify(data)}
+						const missingImports = imports.filter( x => !importCache[ x.source ] );
+
+						const createComponent = () => {
+							if ( toTeardown ) toTeardown.teardown();
+
+							imports.forEach( x => {
+								console.log( `x`, x )
+								const module = importCache[ x.source ];
+
+								if ( x.specifiers.namespace ) {
+									iframe.contentWindow[ x.specifiers.name ] = module;
+								} else {
+									if ( x.specifiers.default ) {
+										iframe.contentWindow[ x.specifiers.default ] = 'default' in module ? module.default : module;
+									}
+
+									x.specifiers.names.forEach( name => {
+										iframe.contentWindow[ name.local ] = module[ name.exported ];
+									});
+								}
 							});
-						`);
 
-						component = window.component = iframe.contentWindow.component;
+							const data = this.get( 'data' );
 
-						observers = Object.keys( data ).map( key => {
-							return component.observe( key, value => {
-								if ( updating ) return;
+							try {
+								eval2( `
+									var SvelteComponent = (function () { ${code} }());
+									var component = new SvelteComponent({
+										target: document.body,
+										data: ${JSON.stringify(data)}
+									});
+								`);
 
-								updating = true;
-								this.fire( 'change', { key, value });
-								updating = false;
-							}, { init: false });
-						});
-					};
+								component = window.component = iframe.contentWindow.component;
 
-					if ( missingImports.length ) {
-						let cancelled = false;
-						promise = Promise.all( missingImports.map( fetchImport ) );
-						promise.cancel = () => cancelled = true;
+								observers = Object.keys( data ).map( key => {
+									return component.observe( key, value => {
+										if ( updating ) return;
 
-						promise.then( createComponent );
-					} else {
-						createComponent();
-					}
+										updating = true;
+										this.fire( 'change', { key, value });
+										updating = false;
+									}, { init: false });
+								});
+							} catch ( err ) {
+								// TODO show in UI
+								component = null;
+								observers = null;
+							}
+						};
+
+						if ( missingImports.length ) {
+							let cancelled = false;
+							promise = Promise.all( missingImports.map( fetchImport ) );
+							promise.cancel = () => cancelled = true;
+
+							promise.then( createComponent );
+						} else {
+							createComponent();
+						}
+					});
 				});
 
 				this.observe( 'data', data => {
