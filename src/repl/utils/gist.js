@@ -1,6 +1,6 @@
 const cache = {};
 
-export default function getComponentFromGist ( id ) {
+export function getComponentFromGist ( id ) {
 	let cancelled = false;
 
 	if ( !cache[ id ] ) {
@@ -35,4 +35,23 @@ export default function getComponentFromGist ( id ) {
 	};
 
 	return promise;
+}
+
+export function saveComponentAsGist ( source, json ) {
+	const body = JSON.stringify({
+		description: 'Svelte component',
+		public: true,
+		files: {
+			'component.html': {
+				content: source
+			},
+			'data.json': {
+				content: json
+			}
+		}
+	});
+
+	return fetch( `https://api.github.com/gists`, { method: 'POST', body })
+		.then( r => r.json() )
+		.then( gist => gist.id );
 }

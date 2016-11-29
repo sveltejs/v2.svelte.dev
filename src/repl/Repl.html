@@ -3,8 +3,9 @@
 		<div class='controls'>
 			<button class='{{showGenerated ? "" : "active"}}' on:click='set({ showGenerated: false })'>input</button>
 			<button class='{{showGenerated ? "active" : ""}}' on:click='set({ showGenerated: true })'>output</button>
+			<button class='{{saving ? "active" : ""}}' on:click='save()'>{{saving ? 'saving' : 'save'}}</button>
 
-			<select bind:value='gist'>
+			<select bind:value='selectedGist'>
 				<option value='{{null}}' disabled>Select an example</option>
 
 				{{#each examples as example}}
@@ -166,7 +167,7 @@
 	import CodeMirror from './components/CodeMirror.html';
 	import Viewer from './components/Viewer.html';
 	import examples from './examples.js';
-	import getComponentFromGist from './utils/getComponentFromGist.js';
+	import { getComponentFromGist, saveComponentAsGist } from './utils/gist.js';
 	import debounce from './utils/debounce.js';
 
 	const sourceById = {};
@@ -208,33 +209,40 @@
 				const data = JSON.parse( this.get( 'json' ) );
 				data[ key ] = value;
 				this.set({ json: JSON.stringify( data, null, '  ' ) });
+			},
+
+			save () {
+				this.set({ saving: true });
+
+				saveComponentAsGist( this.get( 'source' ), this.get( 'json' ) ).then( id => {
+					if ( history ) history.replaceState( {}, 'x', `/repl/?gist=${id}` );
+					this.set({ saving: false });
+				});
 			}
 		},
 
 		onrender () {
-			const updateUrl = debounce( () => {
-				const state = {
-					source: this.get( 'source' ) || '',
-					data: this.get( 'data' ) || {},
-					gist: this.get( 'gist' ) || null
-				};
-
-				history.replaceState( {}, 'x', `/repl/?shareable=${btoa( encodeURIComponent( JSON.stringify( state ) ) )}` );
-			}, 250 );
-
-			this.set({ json: JSON.stringify( this.get( 'data' ), null, '  ' ) });
+			this.observe( 'selectedGist', gist => {
+				if ( gist ) this.set({ gist });
+			});
 
 			this.observe( 'gist', gist => {
 				if ( !gist ) return;
 
 				if ( this.promise ) this.promise.cancel();
-
 				this.promise = getComponentFromGist( gist );
 
-				this.promise.then( ({ source, json }) => {
-					sourceById[ gist ] = source;
-					this.set({ source, json });
-				});
+				this.promise
+					.then( ({ source, json }) => {
+						sourceById[ gist ] = source;
+						this.set({ source, json });
+					})
+					.catch( err => {
+						alert( 'Error loading from gist.github.com – please try again later!' );
+						console.error( err.stack );
+					});
+
+				if ( history ) history.replaceState( {}, 'x', `/repl/?gist=${gist}` );
 			});
 
 			this.observe( 'source', source => {
@@ -256,12 +264,6 @@
 						sourceError: { message: err.shortMessage || err.message, pos: err.pos }
 					});
 				}
-
-				updateUrl();
-			});
-
-			this.observe( 'data', data => {
-				updateUrl();
 			});
 
 			this.observe( 'json', json => {
