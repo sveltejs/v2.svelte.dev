@@ -11,7 +11,7 @@ function tryParseData ( encoded ) {
 
 if ( window.svelte ) {
 	const dataMatch = /data=(.+)$/.exec( window.location.search );
-	const { source, data } = tryParseData( dataMatch[1] );
+	const { source, data } = dataMatch ? tryParseData( dataMatch[1] ) : {};
 
 	const gistMatch = /gist=(.+)$/.exec( window.location.search );
 	const gist = gistMatch ? gistMatch[1] : ( source ? null : examples[0].gist );
