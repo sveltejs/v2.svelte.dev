@@ -131,6 +131,7 @@
 							try {
 								eval2( `
 									var SvelteComponent = (function () { ${code} }());
+									document.body.innerHTML = '';
 									var component = new SvelteComponent({
 										target: document.body,
 										data: ${JSON.stringify(data)}
