@@ -72,7 +72,7 @@ Then, create our component file:
 ```bash
 mkdir my-svelte-project
 cd my-svelte-project
-echo "<h1>Hello {{name}}\!</h1>" > HelloWorld.html
+echo "<h1>Hello {{name}}</h1>" > HelloWorld.html
 ```
 
 Compile it:

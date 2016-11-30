@@ -47,6 +47,6 @@
   "dependencies": {
     "codemirror": "^5.21.0",
     "curl-amd": "^0.8.12",
-    "svelte": "^1.0.0"
+    "svelte": "^1.0.2"
   }
 }

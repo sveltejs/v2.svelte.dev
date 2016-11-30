@@ -62,7 +62,7 @@
 				data: data
 			};
 
-			return `/repl/?shareable=${btoa( encodeURIComponent( JSON.stringify( state ) ) )}`;
+			return `/repl/?data=${btoa( encodeURIComponent( JSON.stringify( state ) ) )}`;
 		}
 
 		[].forEach.call( document.querySelectorAll( 'pre' ), function ( pre ) {

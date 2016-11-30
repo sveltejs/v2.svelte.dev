@@ -226,6 +226,10 @@
 				if ( gist ) this.set({ gist });
 			});
 
+			if ( !this.get( 'gist' ) ) {
+				this.set({ json: JSON.stringify( this.get( 'data' ), null, '  ' ) });
+			}
+
 			this.observe( 'gist', gist => {
 				if ( !gist ) return;
 
