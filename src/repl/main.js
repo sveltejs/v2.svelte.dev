@@ -1,13 +1,28 @@
 import Repl from './Repl.html';
 import examples from './examples.js';
 
+function tryParseData ( encoded ) {
+	try {
+		return JSON.parse( decodeURIComponent( atob( encoded ) ) );
+	} catch ( err ) {
+		return {};
+	}
+}
+
 if ( window.svelte ) {
-	const match = /gist=(.+)$/.exec( window.location.search );
-	const gist = match ? match[1] : examples[0].gist;
+	const dataMatch = /data=(.+)$/.exec( window.location.search );
+	const { source, data } = tryParseData( dataMatch[1] );
+
+	const gistMatch = /gist=(.+)$/.exec( window.location.search );
+	const gist = gistMatch ? gistMatch[1] : ( source ? null : examples[0].gist );
 
 	const repl = new Repl({
 		target: document.querySelector( 'main' ),
-		data: { gist }
+		data: {
+			gist,
+			source,
+			data
+		}
 	});
 
 	window.repl = repl;
