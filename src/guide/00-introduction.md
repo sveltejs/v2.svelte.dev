@@ -53,9 +53,9 @@ Congratulations, you've just learned about half of Svelte's API!
 
 ### Getting started
 
-Normally, this is the part where the instructions would tell you to add a `<script>` tag to your page or install something from npm. But because Svelte runs at build time, it works a little bit differently.
+Normally, this is the part where the instructions might tell you to add the framework to your page as a `<script>` tag. But because Svelte runs at build time, it works a little bit differently.
 
-The best way to use Svelte is to integrate it into your build system. You can use Svelte with [Rollup](http://rollupjs.org) via [rollup-plugin-svelte](https://github.com/rollup/rollup-plugin-svelte), with more build tool integrations following soon.
+The best way to use Svelte is to integrate it into your build system – there are plugins for Rollup, Browserify, Gulp and others, with more on the way. See [here](https://github.com/sveltejs/svelte/#svelte) for an up-to-date list.
 
 Right now, for the purposes of demonstration, we'll use [svelte-cli](https://github.com/sveltejs/svelte-cli), the command line interface.
 
@@ -67,12 +67,17 @@ First, install the CLI:
 npm install -g svelte-cli
 ```
 
-Then, create our component file:
+Then, create a directory for the project:
 
 ```bash
 mkdir my-svelte-project
 cd my-svelte-project
-echo "<h1>Hello {{name}}</h1>" > HelloWorld.html
+```
+
+Inside `my-svelte-project`, create a `HelloWorld.html` file with the following contents:
+
+```html
+<h1>Hello {{name}}</h1>
 ```
 
 Compile it:
