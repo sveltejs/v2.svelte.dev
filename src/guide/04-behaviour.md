@@ -38,6 +38,8 @@ Often, it makes sense for a component to have default data. This should be expre
 
 Data supplied at instantiation (i.e. `new Component(...)`) takes priority over defaults.
 
+> The example above, like many of the examples below, uses ES2015 syntax – i.e. `data () {...}` rather than `data: function {...}`. While Svelte will generate ES5 code that runs everywhere, it *won't* convert your ES2015 code into ES5 – so if you use ES2015 and need to support older browsers, you will need an additional transpilation step in your build process using [Babel](https://babeljs.io) or [Bublé](https://buble.surge.sh).
+
 
 ### Computed properties
 
