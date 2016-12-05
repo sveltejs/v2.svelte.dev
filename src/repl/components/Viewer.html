@@ -107,10 +107,15 @@
 						const missingImports = imports.filter( x => !importCache[ x.source ] );
 
 						const createComponent = () => {
-							if ( toTeardown ) toTeardown.teardown();
+							if ( toTeardown ) {
+								const styles = iframe.contentDocument.querySelectorAll( 'style' );
+								let i = styles.length;
+								while ( i-- ) styles[i].parentNode.removeChild( styles[i] );
+
+								toTeardown.teardown();
+							}
 
 							imports.forEach( x => {
-								console.log( `x`, x )
 								const module = importCache[ x.source ];
 
 								if ( x.specifiers.namespace ) {
