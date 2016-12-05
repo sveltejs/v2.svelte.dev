@@ -1,7 +1,10 @@
 .CodeMirror {
 	border-radius: 3px;
-	font-family: 'Roboto Mono';
-	font-size: 14px;
+	font-family: 'Inconsolata';
+	font-size: 16px;
+	line-height: 1.2;
+	font-weight: 400;
+	color: #333;
 }
 
 .CodeMirror {

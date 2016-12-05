@@ -20,6 +20,7 @@
 		list-style: none;
 		margin: 0 0 1em 0;
 		font-family: Rajdhani;
+		color: #666;
 	}
 
 	li::before {
@@ -35,6 +36,7 @@
 	strong {
 		font-family: 'Rajdhani';
 		margin: 0 auto;
+		color: #333;
 	}
 
 	.left {

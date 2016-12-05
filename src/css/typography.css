@@ -1,12 +1,12 @@
 body {
 	font-family: 'Roboto';
-	font-weight: 100;
+	font-weight: 500;
 	color: #333;
 }
 
 code, pre {
-	font-family: 'Roboto Mono';
-	font-weight: 300;
+	font-family: 'Inconsolata';
+	font-weight: 400;
 	font-size: 14px;
 	line-height: 1.2;
 }
@@ -14,7 +14,7 @@ code, pre {
 h1, h2, h3 {
 	font-family: 'Rajdhani';
 	margin: 0;
-	font-weight: 400;
+	font-weight: 300;
 	padding: 0.5em 0;
 	line-height: 1.2;
 }
@@ -26,4 +26,15 @@ a {
 
 strong {
 	font-weight: 800;
+}
+
+@font-face{
+	font-family: 'Inconsolata';
+	src: url('/fonts/Inconsolata/Inconsolata-Regular.ttf') format('truetype');
+}
+
+@font-face{
+	font-family: 'Inconsolata';
+	src: url('/fonts/Inconsolata/Inconsolata-Bold.ttf') format('truetype');
+	font-weight: 500;
 }
