@@ -40,7 +40,8 @@ module.exports = gobble([
 		})
 		.transformIf( gobble.env() === 'production', 'uglifyjs' ),
 
-	gobble( 'node_modules/svelte/dist' ),
+	gobble( 'node_modules/magic-string/dist/magic-string.umd.js' ),
+	gobble( 'node_modules/svelte/compiler' ),
 
 	// guide
 	gobble( 'src/css' ).transform( 'postcss', {
