@@ -5,9 +5,9 @@ title: Template syntax
 Rather than reinventing the wheel, Svelte templates are built on foundations that have stood the test of time: HTML, CSS and JavaScript. There's very little extra stuff to learn.
 
 
-### Mustaches
+### Tags
 
-Mustaches allow you to bind data to your template. Whenever your data changes (for example after `component.set(...)`), the DOM updates automatically. You can use any JavaScript expression in templates, and it will also automatically update:
+Tags allow you to bind data to your template. Whenever your data changes (for example after `component.set(...)`), the DOM updates automatically. You can use any JavaScript expression in templates, and it will also automatically update:
 
 ```html
 <p>{{a}} + {{b}} = {{a + b}}</p>
@@ -20,7 +20,7 @@ Mustaches allow you to bind data to your template. Whenever your data changes (f
 }
 ```
 
-You can also use mustaches in attributes:
+You can also use tags in attributes:
 
 ```html
 <h1 style='color: {{color}};'>{{color}}</h1>
@@ -31,6 +31,8 @@ You can also use mustaches in attributes:
 	"color": "steelblue"
 }
 ```
+
+> While tags are delimited using `{{` and `}}`, Svelte does not use [Mustache](https://mustache.github.io/) syntax. Tags are just JavaScript expressions.
 
 
 ### If blocks

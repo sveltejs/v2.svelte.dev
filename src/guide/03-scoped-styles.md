@@ -36,4 +36,4 @@ This is vastly simpler than achieving the same effect via [Shadow DOM](http://ca
 
 The usual cascading mechanism still applies – any global `.foo` styles would still be applied, and if our template had [nested components](#nested-components) with `class="foo"` elements, they would inherit our styles.
 
-> Scoped styles are *not* dynamic – they are shared between all instances of a component. In other words you can't use `{{mustaches}}` inside your CSS.
+> Scoped styles are *not* dynamic – they are shared between all instances of a component. In other words you can't use `{{tags}}` inside your CSS.
