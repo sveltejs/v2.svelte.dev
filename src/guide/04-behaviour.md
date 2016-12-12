@@ -166,12 +166,10 @@ Of course, you could use `leftPad` inside the computed properties instead of in 
 In addition to the [built-in methods](#component-api), you can add methods of your own:
 
 ```html
-<button on:click='say("hello")'>say hello!</button>
-
 <script>
 	export default {
 		methods: {
-			say ( message ) {
+			say: function ( message ) {
 				alert( message ); // again, please don't do this
 			}
 		}
@@ -179,10 +177,22 @@ In addition to the [built-in methods](#component-api), you can add methods of yo
 </script>
 ```
 
-Those methods can be called within [event handlers](#event-handlers), but they also become part of the component's API:
+These become part of the component's API:
 
 ```js
+import MyComponent from './MyComponent.html';
+
+var component = new MyComponent({
+	target: document.querySelector( 'main' )
+});
+
 component.say( '👋' );
+```
+
+Methods (whether built-in or custom) can also be called inside [event handlers](#event-handlers):
+
+```html
+<button on:click='say("hello")'>say hello!</button>
 ```
 
 
