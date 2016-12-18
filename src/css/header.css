@@ -11,11 +11,11 @@ header {
 
 	.logo {
 		position: absolute;
-		top: 0.7rem;
+		top: 0.9rem;
 		left: 0.7rem;
 		line-height: 1;
 		text-transform: lowercase;
-		font-size: 1.8em;
+		font-size: 1.4em;
 		color: white;
 	}
 
@@ -55,7 +55,7 @@ header {
 		/*color: #666;*/
 		color: #ccc;
 		font-size: 1em;
-		padding: 1.1em 0.5em 0.9em 0.5em;
+		padding: 1.1em 0.3em 0.9em 0.3em;
 		line-height: 1;
 
 		&.active {
@@ -66,6 +66,19 @@ header {
 
 	li a:hover {
 		color: white;
+	}
+}
+
+@media (min-width: 360px) {
+	header {
+		.logo {
+			top: 0.7rem;
+			font-size: 1.8em;
+		}
+
+		li a {
+			padding: 1.1em 0.5em 0.9em 0.5em;
+		}
 	}
 }
 
