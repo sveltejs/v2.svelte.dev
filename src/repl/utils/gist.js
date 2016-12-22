@@ -4,8 +4,14 @@ export function getComponentFromGist ( id ) {
 	let cancelled = false;
 
 	if ( !cache[ id ] ) {
-		cache[ id ] = fetch( `https://api.github.com/gists/${id}`, { mode: 'cors' })
-			.then( r => r.json() )
+		cache[ id ] = new Promise( ( resolve, reject ) => {
+			const request = new XMLHttpRequest();
+			request.open( 'GET', `https://api.github.com/gists/${id}` );
+			request.onload = () => resolve( request );
+			request.onerror = () => reject( new TypeError('Network request failed') );
+			request.send();
+		} )
+			.then( r => JSON.parse(r.responseText) )
 			.then( gist => {
 				const sourceFile = gist.files[ 'component.html' ];
 				const source = sourceFile && sourceFile.content;
@@ -51,7 +57,14 @@ export function saveComponentAsGist ( source, json ) {
 		}
 	});
 
-	return fetch( `https://api.github.com/gists`, { method: 'POST', body })
-		.then( r => r.json() )
+	return new Promise( ( resolve, reject ) => {
+		const request = new XMLHttpRequest();
+		request.withCredentials = true;
+		request.open( 'POST', `https://api.github.com/gists` );
+		request.onload = () => resolve( request );
+		request.onerror = () => reject( new TypeError('Network request failed') );
+		request.send(body);
+	} )
+		.then( r => JSON.parse(r.responseText) )
 		.then( gist => gist.id );
 }
