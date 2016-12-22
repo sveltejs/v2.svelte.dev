@@ -59,7 +59,6 @@ export function saveComponentAsGist ( source, json ) {
 
 	return new Promise( ( resolve, reject ) => {
 		const request = new XMLHttpRequest();
-		request.withCredentials = true;
 		request.open( 'POST', `https://api.github.com/gists` );
 		request.onload = () => resolve( request );
 		request.onerror = () => reject( new TypeError('Network request failed') );
