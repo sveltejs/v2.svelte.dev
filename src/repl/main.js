@@ -9,7 +9,7 @@ function tryParseData ( encoded ) {
 	}
 }
 
-if ( window.svelte ) {
+if ( typeof svelte !== 'undefined' ) {
 	const dataMatch = /data=(.+)$/.exec( window.location.search );
 	const { source, data } = dataMatch ? tryParseData( dataMatch[1] ) : {};
 

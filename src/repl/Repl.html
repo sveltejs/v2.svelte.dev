@@ -173,6 +173,22 @@
 
 	const sourceById = {};
 
+	// determine compiler version
+	const match = /version=([^\&]+)/.exec( window.location.search );
+
+	const version = ( typeof svelte !== 'undefined' && svelte.VERSION ) ?
+		svelte.VERSION :
+		match ? match[1] :
+		null;
+
+	const versionParameter = version ? `version=${version}&` : '';
+
+	if ( version ) {
+		console.log( `running Svelte compiler version %c${version}`, 'font-weight: bold' );
+	} else {
+		console.log( `running unknown version` );
+	}
+
 	export default {
 		data: () => ({
 			horizontalDividerPos: 50,
@@ -216,7 +232,7 @@
 				this.set({ saving: true });
 
 				saveComponentAsGist( this.get( 'source' ), this.get( 'json' ) ).then( id => {
-					if ( history ) history.replaceState( {}, 'x', `/repl/?gist=${id}` );
+					if ( history ) history.replaceState( {}, 'x', `/repl/?${versionParameter}gist=${id}` );
 					this.set({ saving: false });
 				});
 			}
@@ -247,7 +263,7 @@
 						console.error( err.stack );
 					});
 
-				if ( history ) history.replaceState( {}, 'x', `/repl/?gist=${gist}` );
+				if ( history ) history.replaceState( {}, 'x', `/repl/?${versionParameter}gist=${gist}` );
 			});
 
 			this.observe( 'source', source => {
