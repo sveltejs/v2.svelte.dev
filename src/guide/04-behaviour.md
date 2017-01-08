@@ -19,7 +19,7 @@ As well as scoped styles and a template, components can encapsulate *behaviours*
 
 ### Default data
 
-Often, it makes sense for a component to have default data. This should be expressed as a function that returns a plain old JavaScript object (POJO):
+Often, it makes sense for a component to have default data. This should be expressed as a function that returns a POJO:
 
 ```html
 <p>Count: {{count}}</p>

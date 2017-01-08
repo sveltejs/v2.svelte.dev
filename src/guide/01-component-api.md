@@ -30,7 +30,7 @@ Every Svelte component instance has a small number of methods you can use to con
 
 ### component.set(data)
 
-This updates the component's state with the new values provided and causes the DOM to update. `data` must be a POJO. Any properties *not* included in `data` will remain as they were.
+This updates the component's state with the new values provided and causes the DOM to update. `data` must be a plain old JavaScript object (POJO). Any properties *not* included in `data` will remain as they were.
 
 ```js
 component.set({
