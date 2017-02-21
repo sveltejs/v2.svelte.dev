@@ -27,5 +27,20 @@ export default [
 		// https://gist.github.com/Rich-Harris/44e20b4e0224617d228e3c38c119ee76
 		title: 'SVG Clock',
 		gist: '44e20b4e0224617d228e3c38c119ee76'
+	},
+	{
+		// https://gist.github.com/popovichN/a11f4d4b9f83179df7a97fb1d483b6ce
+		title: 'Line chart',
+		gist: 'a11f4d4b9f83179df7a97fb1d483b6ce'
+	},
+	{
+		//https://gist.github.com/popovichN/ef915eefedc2b6220afd43965a1bf168
+		title: 'Area chart',
+		gist: 'ef915eefedc2b6220afd43965a1bf168'
+	},
+	{
+		//https://gist.github.com/popovichN/487174b855b156856dfe9cf454d7bd78
+		title: 'Bar chart',
+		gist: '487174b855b156856dfe9cf454d7bd78'
 	}
 ]
