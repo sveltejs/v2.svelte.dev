@@ -29,9 +29,9 @@ export default [
 		gist: '44e20b4e0224617d228e3c38c119ee76'
 	},
 	{
-		// https://gist.github.com/popovichN/a11f4d4b9f83179df7a97fb1d483b6ce
+		// https://gist.github.com/8c393ef615f58c324f6395e1ba32c52a
 		title: 'Line chart',
-		gist: 'a11f4d4b9f83179df7a97fb1d483b6ce'
+		gist: '8c393ef615f58c324f6395e1ba32c52a'
 	},
 	{
 		//https://gist.github.com/popovichN/ef915eefedc2b6220afd43965a1bf168
@@ -43,4 +43,4 @@ export default [
 		title: 'Bar chart',
 		gist: '487174b855b156856dfe9cf454d7bd78'
 	}
-]
+];
