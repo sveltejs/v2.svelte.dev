@@ -1,0 +1,40 @@
+@media (max-width: 768px) {
+	header {
+		.logo {
+			top: 50% !important;
+			left: 50% !important;
+			transform: translate(-50%, -45%) !important;
+		}
+
+        ul {
+            display: none;
+        }
+
+        .menu-link {
+            display: inline;
+            position: absolute;
+            
+            top: 0;
+            left: 1rem;
+            font-size: 1em;
+            font-family: 'Rajdhani';
+            line-height: 3.1em;
+
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+
+            a {
+                color: #ccc;
+                cursor: pointer;
+
+                transition: color 90ms ease-in-out;
+                will-change: color;
+            }
+
+            &.active a {
+                color: #fff;
+                font-weight: 500;
+            }
+        }
+	}
+}
