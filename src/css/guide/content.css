@@ -136,7 +136,7 @@
 	}
 }
 
-@media (min-width: 45rem) {
+@media (min-width: 768px) {
 	.content {
 		padding: 2em 2em 2em 16em;
 	}
