@@ -1,5 +1,11 @@
 @media (max-width: 768px) {
 	header {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -o-user-select: none;
+        user-select: none;
+
 		.logo {
 			top: 50% !important;
 			left: 50% !important;
