@@ -128,7 +128,7 @@ Refs are a convenient way to store a reference to particular DOM nodes or compon
 
 <script>
 	export default {
-		onrender () {
+		oncreate () {
 			const canvas = this.refs.canvas;
 			const ctx = canvas.getContext( '2d' );
 
