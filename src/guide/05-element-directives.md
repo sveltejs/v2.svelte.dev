@@ -194,3 +194,33 @@ If the attribute and the bound property share a name, you can use this shorthand
 ```html-no-repl
 <CategoryChooser bind:category/>
 ```
+
+## Forms 
+
+Here is a complete example of using two way bindings with a form: 
+
+```html
+<form on:submit="handleSubmit(event, this)">
+  <input bind:value="test" type="text">
+  <button type="submit" >Store</button>
+</form>
+
+<script>
+export default {
+  methods: {
+    handleSubmit: function (e, form) {
+      // do not submit the form the normal way
+      e.preventDefault();
+      // get the value of test
+      var value = this.get('test');
+
+      // or...
+      var value = form.querySelector( 'input' ).value;
+                               
+      console.log( 'value: ', value );
+    },
+  },
+}
+</script>
+
+```
