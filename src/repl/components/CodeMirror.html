@@ -106,7 +106,7 @@
 			let marker;
 			this.observe( 'error', error => {
 				if ( marker ) marker.clear();
-				if ( error && error.pos ) {
+				if ( error && error.pos != null ) {
 					const { line, ch } = this.editor.getDoc().posFromIndex( error.pos );
 
 					marker = this.editor.markText({ line, ch }, { line, ch: ch + 1 }, {
