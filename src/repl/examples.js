@@ -42,5 +42,10 @@ export default [
 		//https://gist.github.com/popovichN/487174b855b156856dfe9cf454d7bd78
 		title: 'Bar chart',
 		gist: '487174b855b156856dfe9cf454d7bd78'
+	},
+	{
+		//https://gist.github.com/7abf24366baf3632d7e299ec307fd623
+		title: 'Self-references',
+		gist: '7abf24366baf3632d7e299ec307fd623'
 	}
 ];
