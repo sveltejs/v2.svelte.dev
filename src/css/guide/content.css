@@ -19,8 +19,12 @@
 		margin: 0 0 1em 0;
 		font-family: Roboto;
 		font-weight: 300;
-		color: #555;
+		color: #181818;
 		line-height: 1.5;
+	}
+
+	a {
+		border-bottom: 1px solid #e3d9d9;
 	}
 
 	strong {
