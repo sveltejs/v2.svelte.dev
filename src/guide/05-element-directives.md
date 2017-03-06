@@ -65,6 +65,12 @@ You can also access the `event` object in the method call:
 </style>
 ```
 
+The target node can be referenced as `this`, meaning you can do this sort of thing:
+
+```html
+<input on:focus='this.select()'>
+```
+
 ### Custom events
 
 You can define your own custom events to handle complex user interactions like dragging and swiping. See the earlier section on [custom event handlers](#custom-event-handlers) for more information.
@@ -195,32 +201,25 @@ If the attribute and the bound property share a name, you can use this shorthand
 <CategoryChooser bind:category/>
 ```
 
-## Forms 
-
 Here is a complete example of using two way bindings with a form: 
 
 ```html
-<form on:submit="handleSubmit(event, this)">
-  <input bind:value="test" type="text">
-  <button type="submit" >Store</button>
+<form on:submit='handleSubmit( event )'>
+	<input bind:value='test' type='text'>
+	<button type='submit'>Store</button>
 </form>
 
 <script>
 export default {
-  methods: {
-    handleSubmit: function (e, form) {
-      // do not submit the form the normal way
-      e.preventDefault();
-      // get the value of test
-      var value = this.get('test');
+	methods: {
+		handleSubmit: function ( event ) {
+			// prevent the page from reloading
+			event.preventDefault();
 
-      // or...
-      var value = form.querySelector( 'input' ).value;
-                               
-      console.log( 'value: ', value );
-    },
-  },
-}
+			var value = this.get( 'test' );
+			console.log( 'value', value );
+		}
+	}
+};
 </script>
-
 ```
