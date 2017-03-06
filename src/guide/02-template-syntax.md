@@ -35,6 +35,26 @@ You can also use tags in attributes:
 > While tags are delimited using `{{` and `}}`, Svelte does not use [Mustache](https://mustache.github.io/) syntax. Tags are just JavaScript expressions.
 
 
+### Triples
+
+Ordinary tags render expressions as plain text. If you need your expression interpreted as HTML, wrap it in triple braces, `{{{` and `}}}`.
+
+```html
+<p>This HTML: {{html}}</p>
+<p>Renders as: {{{html}}}</p>
+```
+
+```hidden-data
+{
+	"html": "Some <b>bold</b> text."
+}
+```
+
+As with tags, you can use any JavaScript expression in triples, and it will automatically update the document when your data changes.
+
+> Triples will **not** sanitize the HTML before rendering it! If you are displaying user input, you are responsible for first sanitizing it. Not doing so opens you up to all sorts of different attacks.
+
+
 ### If blocks
 
 Control whether or not part of your template is rendered by wrapping it in an if block.
