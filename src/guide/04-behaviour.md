@@ -77,7 +77,7 @@ Notice that all we need to do to tell Svelte that `hours`, `minutes` and `second
 
 ### Lifecycle hooks
 
-There are two 'hooks' provided by Svelte for adding control logic – `onrender` and `onteardown`:
+There are two 'hooks' provided by Svelte for adding control logic – `oncreate` and `ondestroy`:
 
 ```html
 <p>
@@ -87,13 +87,13 @@ There are two 'hooks' provided by Svelte for adding control logic – `onrender
 
 <script>
 	export default {
-		onrender () {
+		oncreate () {
 			this.interval = setInterval( () => {
 				this.set({ time: new Date() });
 			}, 1000 );
 		},
 
-		onteardown () {
+		ondestroy () {
 			clearInterval( this.interval );
 		},
 
@@ -131,13 +131,13 @@ Helpers are simple functions that are used in your template. In the example abov
 			leftPad
 		},
 
-		onrender () {
+		oncreate () {
 			this.interval = setInterval( () => {
 				this.set({ time: new Date() });
 			}, 1000 );
 		},
 
-		onteardown () {
+		ondestroy () {
 			clearInterval( this.interval );
 		},
 
