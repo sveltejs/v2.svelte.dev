@@ -1,26 +1,19 @@
 var sidebarOpen = false;
-var animationEnded = true;
-var menuLinkEl = document.getElementsByClassName("menu-link")[0];
-var sidebarEl = document.getElementsByClassName("sidebar")[0];
+var menuLinkText = ["Menu", "Close"];
+var menuLinkEl = document.querySelector(".menu-link");
+var sidebarEl = document.querySelector(".sidebar");
+var headerEl = document.querySelector("header");
 
-menuLinkEl.addEventListener( "click", handleSidebar );
-sidebarEl.addEventListener( "click", handleSidebar );
+menuLinkEl.addEventListener( "click", toggleSidebar, false );
+window.addEventListener( "hashchange", toggleSidebar, false );
 
-function handleSidebar ( event ) {
-    if ( !animationEnded ) return;
-    animationEnded = false;
+function toggleSidebar ( event ) {
+    // Don't toggle when there's nothing to hide.
+    if (event.type === "hashchange" && !sidebarOpen) return;
 
-    if ( sidebarOpen ) {
-        sidebarOpen = false;
-        sidebarEl.classList.remove( "sidebar-open" );
-        menuLinkEl.classList.remove( "active" );
-    } else {
-        sidebarOpen = true;
-        sidebarEl.classList.add( "sidebar-open" );
-        menuLinkEl.classList.add( "active" );
-    }
+    sidebarOpen = (!sidebarOpen);
+    menuLinkEl.textContent = menuLinkText[(sidebarOpen ? 1 : 0)];
 
-    setTimeout( function () {
-        animationEnded = true;
-    }, 90 ); // animation duration
+    sidebarEl.classList.toggle( "sidebar-open" );
+    headerEl.classList.toggle( "hidden" );
 }
