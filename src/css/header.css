@@ -107,3 +107,56 @@ header {
 		}
 	}
 }
+
+@media (max-width: 767px) {
+	header {
+        user-select: none;
+
+		.logo {
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -45%);
+	
+			-webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+		}
+
+        ul {
+            display: none;
+        }
+
+        .menu-link {
+            display: inline;
+            position: absolute;
+            
+            top: 0;
+            left: 1rem;
+            font-size: 1em;
+            font-family: 'Rajdhani';
+            line-height: 3.1em;
+
+			color: #ccc;
+			cursor: pointer;
+			font-weight: 500;
+
+			transition: color 90ms cubic-bezier(0.455, 0.03, 0.515, 0.955); /* easeInOutQuad */
+			will-change: color;
+
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+        }
+
+		&.hidden {
+			background-color: #fff;
+			border-bottom-color: #fff;
+
+			.logo {
+				color: rgb(170,30,30);
+			}
+
+			.menu-link {
+				color: #333;
+			}
+		}
+	}
+}
