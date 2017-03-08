@@ -27,12 +27,24 @@
 		<span class="menu-link"><a>Menu</a></span>
 		<a href='/' class='logo'>Svelte</a>
 
-		{{>navigation}}
+		<ul class="navigation">
+			<li><a class='active' href='/guide'>Guide</a></li>
+			<li><a href='/repl'>REPL</a></li>
+			<li><a href='/blog'>Blog</a></li>
+			<li><a href='https://gitter.im/sveltejs/svelte'>Chat</a></li>
+			<li><a href='https://github.com/sveltejs/svelte'>GitHub</a></li>
+		</ul>
 	</header>
 
-	<main style='overflow: scroll;'>
+	<main>
 		<ul class='sidebar'>
-			{{>navigation}}
+			<ul class="navigation">
+				<li><a class='active' href='/guide'>Guide</a></li>
+				<li><a href='/repl'>REPL</a></li>
+				<li><a href='/blog'>Blog</a></li>
+				<li><a href='https://gitter.im/sveltejs/svelte'>Chat</a></li>
+				<li><a href='https://github.com/sveltejs/svelte'>GitHub</a></li>
+			</ul>
 
 			{{>sidebar}}
 		</ul>

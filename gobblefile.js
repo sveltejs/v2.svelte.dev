@@ -58,8 +58,7 @@ module.exports = gobble([
 
 			var templates = {
 				index: read( 'index.html' ),
-				section: read( 'section.html' ),
-				navigation: read( 'navigation.html' )
+				section: read( 'section.html' )
 			};
 
 			var sections = markdownFiles
@@ -114,7 +113,6 @@ module.exports = gobble([
 			}).join( '\n' );
 
 			var html = templates.index
-				.replace( /{{>navigation}}/gi, templates.navigation)
 				.replace( '{{>sidebar}}', sidebar )
 				.replace( '{{>main}}', main );
 
