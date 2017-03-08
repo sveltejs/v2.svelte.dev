@@ -23,9 +23,10 @@
 
 <body>
 	<header>
+		<span class="menu-link">Menu</span>
 		<a href='/' class='logo'>Svelte</a>
 
-		<ul>
+		<ul class="navigation">
 			<li><a href='/guide'>Guide</a></li>
 			<li><a class='active' href='/repl'>REPL</a></li>
 			<li><a href='/blog'>Blog</a></li>
@@ -34,11 +35,23 @@
 		</ul>
 	</header>
 
-	<main></main>
+	<main>
+		<ul class='sidebar'>
+			<ul class="navigation">
+				<li><a href='/guide'>Guide</a></li>
+				<li><a class='active' href='/repl'>REPL</a></li>
+				<li><a href='/blog'>Blog</a></li>
+				<li><a href='https://gitter.im/sveltejs/svelte'>Chat</a></li>
+				<li><a href='https://github.com/sveltejs/svelte'>GitHub</a></li>
+			</ul>
+		</ul>
 
-	<footer>
-		<p>Copyright &copy; 2016 <a href='https://twitter.com/Rich_Harris'>Rich Harris</a>. Svelte is free and open-source software released under the <a href='https://github.com/sveltejs/svelte/blob/master/LICENSE'>MIT License</a>.</p>
-	</footer>
+		<div class="repl"></div>
+
+		<footer>
+			<p>Copyright &copy; 2016 <a href='https://twitter.com/Rich_Harris'>Rich Harris</a>. Svelte is free and open-source software released under the <a href='https://github.com/sveltejs/svelte/blob/master/LICENSE'>MIT License</a>.</p>
+		</footer>
+	</main>
 
 	<script src='/magic-string.umd.js'></script>
 	<script src='/codemirror-bundle.js'></script>
@@ -84,4 +97,6 @@
 				return loadScript( '/repl.js' );
 			});
 	</script>
+
+	<script src="/navigation.js"></script>
 </body>
