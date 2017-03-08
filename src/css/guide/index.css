@@ -1,26 +1,6 @@
-@import './sidebar.css';
 @import './content.css';
-@import './header.css';
 
-main {
-	overflow: scroll;
-	height: calc(100vh - 4em);
-	position: absolute;
-	width: 100%;
-	top: 4em;
-}
-
-header {
-	position: fixed;
-	width: 100%;
-	left: 0;
-	top: 0;
-	z-index: 200;
-}
-
-@media (max-width: 768px) {
-	main {
-		height: calc(100vh - 3em);
-		top: 3em;
-	}
+.sidebar {
+	/* To avoid flebox-based navigation centering */
+	display: block;
 }
