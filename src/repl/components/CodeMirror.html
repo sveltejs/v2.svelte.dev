@@ -70,7 +70,7 @@
 
 <script>
 	export default {
-		onrender () {
+		oncreate () {
 			let updating = false;
 
 			this.editor = window.CodeMirror.fromTextArea( this.refs.editor, {
@@ -81,7 +81,7 @@
 				readOnly: this.get( 'readonly' )
 			});
 
-			// TODO this is a bug. onrender should only be called once
+			// TODO this is a bug. oncreate should only be called once
 			// the component is actually in the DOM
 			setTimeout( () => {
 				this.editor.refresh();

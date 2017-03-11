@@ -11,10 +11,22 @@ function tryParseData ( encoded ) {
 
 if ( typeof svelte !== 'undefined' ) {
 	const dataMatch = /data=(.+)$/.exec( window.location.search );
-	const { source, data } = dataMatch ? tryParseData( dataMatch[1] ) : {};
-
 	const gistMatch = /gist=(.+)$/.exec( window.location.search );
-	const gist = gistMatch ? gistMatch[1] : ( source ? null : examples[0].gist );
+
+	let gist = null;
+	let source = null;
+	let data = null;
+
+	if ( dataMatch ) {
+		({ source, data } = tryParseData( dataMatch[1] ));
+	}
+	if ( !source ) {
+		if ( gistMatch ) {
+			gist = gistMatch[1];
+		} else {
+			({ source, data } = examples[0]);
+		}
+	}
 
 	const repl = new Repl({
 		target: document.querySelector( 'main' ),
