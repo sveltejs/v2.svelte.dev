@@ -5,11 +5,11 @@
 			<button class='{{showGenerated ? "active" : ""}}' on:click='set({ showGenerated: true })'>output</button>
 			<button class='{{saving ? "active" : ""}}' on:click='save()'>{{saving ? 'saving' : 'save'}}</button>
 
-			<select bind:value='selectedGist'>
+			<select bind:value='selectedExample'>
 				<option value='{{null}}' disabled>Select an example</option>
 
 				{{#each examples as example}}
-					<option value='{{example.gist}}'>{{example.title}}</option>
+					<option value='{{example}}'>{{example.title}}</option>
 				{{/each}}
 			</select>
 		</div>
@@ -238,9 +238,9 @@
 			}
 		},
 
-		onrender () {
-			this.observe( 'selectedGist', gist => {
-				if ( gist ) this.set({ gist });
+		oncreate () {
+			this.observe( 'selectedExample', example => {
+				if ( example ) this.set( { source: example.source, json: JSON.stringify( example.data , null, '  ' ) } );
 			});
 
 			if ( !this.get( 'gist' ) ) {
