@@ -67,6 +67,10 @@ header {
 	li a:hover {
 		color: white;
 	}
+
+	.menu-link {
+		display: none;
+	}
 }
 
 @media (min-width: 360px) {
