@@ -101,3 +101,9 @@
 		transform: translateX(0);
 	}
 }
+
+@media (max-width: 767px) and (orientation: landscape) {
+	.sidebar {
+		width: 36%;
+	}
+} 
