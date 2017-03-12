@@ -1,6 +1,1 @@
 @import './content.css';
-
-.sidebar {
-	/* To avoid flebox-based navigation centering */
-	display: block;
-}
