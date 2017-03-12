@@ -153,14 +153,14 @@ header {
 
 		&.hidden {
 			background-color: #fff;
-			border-bottom-color: #fff;
+			border-bottom-color: rgba(0,0,0,0.09);
 
 			.logo {
 				color: rgb(170,30,30);
 			}
 
 			.menu-link {
-				color: #333;
+				color: #666;
 			}
 		}
 	}
