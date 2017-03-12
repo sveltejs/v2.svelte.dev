@@ -1,10 +1,10 @@
 var sidebarOpen = false;
-var menuLinkText = ["Menu", "Close"];
-var menuLinkEl = document.querySelector(".menu-link");
-var sidebarEl = document.querySelector(".sidebar");
-var headerEl = document.querySelector("header");
+var menuText = ["Menu", "Close"];
+var menuElement = document.querySelector(".menu-link");
+var sidebarElement = document.querySelector(".sidebar");
+var headerElement = document.querySelector("header");
 
-menuLinkEl.addEventListener( "click", toggleSidebar, false );
+menuElement.addEventListener( "click", toggleSidebar, false );
 window.addEventListener( "hashchange", toggleSidebar, false );
 
 function toggleSidebar ( event ) {
