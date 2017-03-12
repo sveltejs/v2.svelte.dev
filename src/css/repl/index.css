@@ -1,3 +1,13 @@
+@media (max-width: 767px) {
+	.repl-container {
+		height: calc(100vh - 6em);
+	}
+}
+
+.repl-container {
+	height: calc(100vh - 7em);
+}
+
 @keyframes pulse {
 	0%   { opacity: 1; transform: scale(1.5); }
 	50%  { opacity: 0; transform: scale(1); }
