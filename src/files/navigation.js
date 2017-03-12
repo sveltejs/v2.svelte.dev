@@ -3,6 +3,7 @@ var menuText = ["Menu", "Close"];
 var menuElement = document.querySelector(".menu-link");
 var sidebarElement = document.querySelector(".sidebar");
 var headerElement = document.querySelector("header");
+var rAF;
 
 menuElement.addEventListener( "click", toggleSidebar, false );
 window.addEventListener( "hashchange", toggleSidebar, false );
@@ -12,8 +13,11 @@ function toggleSidebar ( event ) {
     if (event.type === "hashchange" && !sidebarOpen) return;
 
     sidebarOpen = (!sidebarOpen);
-    menuLinkEl.textContent = menuLinkText[(sidebarOpen ? 1 : 0)];
 
-    sidebarEl.classList.toggle( "sidebar-open" );
-    headerEl.classList.toggle( "hidden" );
+    cancelAnimationFrame(rAF);
+    rAF = requestAnimationFrame(function () {
+        sidebarElement.classList.toggle( "sidebar-open" );
+        headerElement.classList.toggle( "hidden" );
+        menuElement.textContent = menuText[(sidebarOpen ? 1 : 0)];
+    });
 }
