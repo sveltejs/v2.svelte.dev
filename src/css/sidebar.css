@@ -34,7 +34,7 @@
 
 	.active-section {
 		color: rgb(170,30,30);
-		font-weight: bolder;
+		/*font-weight: 600;*/
 	}
 
 	.navigation {
