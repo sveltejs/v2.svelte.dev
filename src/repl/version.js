@@ -5,4 +5,4 @@ export const version = ( typeof svelte !== 'undefined' && svelte.VERSION ) ?
 	match ? match[1] :
 	null;
 
-console.log( `running Svelte compiler version %c${version}`, 'font-weight: bold' );
+console.log( `running Svelte compiler version %c${version}`, 'font-weight: bold' ); // eslint-disable-line no-console
