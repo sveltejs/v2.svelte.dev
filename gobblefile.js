@@ -51,27 +51,27 @@ module.exports = gobble([
 	}),
 	//
 	gobble( 'src/guide' )
-		.transform( function ( inputdir, outputdir, options, done ) {
-			var markdownFiles = fs.readdirSync( inputdir ).filter( file => /\.md$/.test( file ) );
+		.transform( ( inputdir, outputdir, options, done ) => {
+			const markdownFiles = fs.readdirSync( inputdir ).filter( file => /\.md$/.test( file ) );
 
 			const read = file => fs.readFileSync( path.join( inputdir, file ), 'utf-8' );
 
-			var templates = {
+			const templates = {
 				index: read( 'index.html' ),
 				section: read( 'section.html' )
 			};
 
-			var sections = markdownFiles
+			const sections = markdownFiles
 				.map( file => {
-					var markdown = read( file );
+					const markdown = read( file );
 
-					var match = /---\n([\s\S]+?)\n---/.exec( markdown );
-					var frontMatter = match[1];
-					var content = markdown.slice( match[0].length );
+					let match = /---\n([\s\S]+?)\n---/.exec( markdown );
+					const frontMatter = match[1];
+					const content = markdown.slice( match[0].length );
 
-					var metadata = {};
+					const metadata = {};
 					frontMatter.split( '\n' ).forEach( pair => {
-						var colonIndex = pair.indexOf( ':' );
+						const colonIndex = pair.indexOf( ':' );
 						metadata[ pair.slice( 0, colonIndex ).trim() ] = pair.slice( colonIndex + 1 );
 					});
 
@@ -83,7 +83,7 @@ module.exports = gobble([
 						const slug = match[1];
 						const title = match[2]
 							.replace( /<\/?code>/g, '' )
-							.replace( /\.(\w+).+/, '.$1' )
+							.replace( /\.(\w+).+/, '.$1' );
 
 						subsections.push({ slug, title });
 					}
@@ -96,23 +96,23 @@ module.exports = gobble([
 					};
 				});
 
-			var main = sections.map( section => {
-				return templates.section.replace( /\{\{([^\}]+)\}\}/g, function ( match, keypath ) {
-					return section.metadata[ keypath ] || section[ keypath ];
-				});
-			}).join( '\n' );
+			const main = sections.map( section =>
+				templates.section.replace( /\{\{([^\}]+)\}\}/g, ( match, keypath ) =>
+					section.metadata[ keypath ] || section[ keypath ]
+				)
+			).join( '\n' );
 
-			var sidebar = sections.map( section => {
-				return `
+			const sidebar = sections.map( section =>
+				`
 					<li>
 						<a class='section' href='#${section.slug}'>${section.metadata.title}</a>
-						${section.subsections.map( subsection => {
-							return `<a class='subsection' href='#${subsection.slug}'>${subsection.title}</a>`
-						}).join( '\n' )}
-					</li>`;
-			}).join( '\n' );
+						${section.subsections.map( subsection =>
+							`<a class='subsection' href='#${subsection.slug}'>${subsection.title}</a>`
+						).join( '\n' )}
+					</li>`
+			).join( '\n' );
 
-			var html = templates.index
+			const html = templates.index
 				.replace( '{{>sidebar}}', sidebar )
 				.replace( '{{>main}}', main );
 
@@ -123,7 +123,7 @@ module.exports = gobble([
 
 	// blog
 	gobble( 'src/blog' )
-		.transform( function ( inputdir, outputdir, options, done ) {
+		.transform( ( inputdir, outputdir, options, done ) => {
 			const read = file => fs.readFileSync( path.join( inputdir, file ), 'utf-8' );
 
 			const templates = {
@@ -140,9 +140,9 @@ module.exports = gobble([
 					const frontMatter = match[1];
 					const content = markdown.slice( match[0].length );
 
-					var metadata = {};
+					const metadata = {};
 					frontMatter.split( '\n' ).forEach( pair => {
-						var colonIndex = pair.indexOf( ':' );
+						const colonIndex = pair.indexOf( ':' );
 						metadata[ pair.slice( 0, colonIndex ).trim() ] = pair.slice( colonIndex + 1 ).trim();
 					});
 
@@ -159,17 +159,17 @@ module.exports = gobble([
 				});
 
 			posts.forEach( post => {
-				const rendered = templates.post.replace( /<@\s*(\w+)\s*@>/g, ( match, key ) => {
-					return key in post.metadata ? entities.encode( post.metadata[ key ] ) :
-					       key in post ? post[ key ] : match;
-				});
+				const rendered = templates.post.replace( /<@\s*(\w+)\s*@>/g, ( match, key ) =>
+					key in post.metadata ? entities.encode( post.metadata[ key ] ) :
+					       key in post ? post[ key ] : match
+				);
 
 				fs.mkdirSync( path.join( outputdir, post.slug ) );
 				fs.writeFileSync( path.join( outputdir, `${post.slug}/index.html` ), rendered );
 			});
 
-			const preview = posts.map( post => {
-				return `
+			const preview = posts.map( post =>
+				`
 					<article class='post'>
 						<a href='/blog/${post.slug}/'>
 							<h2>${post.metadata.title}</h2>
@@ -183,10 +183,10 @@ module.exports = gobble([
 							<a class='continue-reading' href='/blog/${post.slug}/'>continue reading &raquo;</a>
 						</p>
 					</article>
-				`;
-			});
+				`
+			);
 
-			var index = templates.index.replace( '<@posts@>', preview );
+			const index = templates.index.replace( '<@posts@>', preview );
 
 			fs.writeFileSync( path.join( outputdir, 'index.html' ), index );
 			done();
