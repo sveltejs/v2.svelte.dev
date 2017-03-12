@@ -45,20 +45,14 @@
 @media (max-width: 767px) {
 	.sidebar {
 		height: calc(100% - 3em);
-		width: 100%;
+		width: 63%;
 		padding: 2em 1em;
 		z-index: 100;
 		background: #fff;
-		opacity: 0;
+		transform: translateX(-100%);
+		border-right: 1px solid rgba(0,0,0,0.09);
 
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		text-align: center;	
-
-		pointer-events: none;
-		transition: opacity 90ms cubic-bezier(0.455, 0.03, 0.515, 0.955); /* easeInOutQuad */
-		will-change: opacity;
+		transition: transform 180ms cubic-bezier(0.455, 0.03, 0.515, 0.955); /* easeInOutQuad */
 
 		a {
 			-webkit-tap-highlight-color: transparent;
@@ -70,12 +64,12 @@
 		}
 
 		.section {
-			font-size: 1.3em;
+			font-size: 1.2em;
 			margin-bottom: 0.3em;
 		}
 
 		.subsection {
-			font-size: 1.2em;
+			font-size: 1.1em;
 			margin-bottom: 0.3em;
 		}
 
@@ -92,7 +86,7 @@
 					padding: 0;
 					display: block;
 					color: #727272;
-					font-size: 1.4em;
+					font-size: 1.3em;
 
 					&.active {
 						color: #363636;
@@ -104,7 +98,6 @@
 	}
 
 	.sidebar-open {
-		opacity: 1;
-		pointer-events: initial;
+		transform: translateX(0);
 	}
 }
