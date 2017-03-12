@@ -13,10 +13,6 @@ var activeSidebarSection;
 
 var rAF;
 
-// TODO: Fix guide header
-// TODO: Add rAF-based events (take from portfolio)
-// TODO: Fix REPL size
-
 function getActiveSection () {
   updatePositions();
   var potentialActiveSection = lastActiveSection;
@@ -61,11 +57,14 @@ function getActiveSection () {
   }
 }
 
-function onScroll () {
+function throttle (func) {
   cancelAnimationFrame(rAF);
-  rAF = requestAnimationFrame(function() {
-    var activeSection = getActiveSection();
+  rAF = requestAnimationFrame(func);
+}
 
+function onScroll () {
+  throttle(function () {
+    var activeSection = getActiveSection();
     if (lastActiveSection === activeSection)
       return;
 
@@ -77,6 +76,13 @@ function onScroll () {
 
     updateActiveSidebarSection(activeSection.id);
     lastActiveSection = activeSection;
+  });
+}
+
+function onResize () {
+  throttle(function () {
+    containerElementTop = containerElement.getBoundingClientRect().top;
+    updatePositions();
   });
 }
 
@@ -114,10 +120,4 @@ getSections();
 lastActiveSection = sections[0];
 
 containerElement.addEventListener('scroll', onScroll);
-window.addEventListener('resize', function () {
-  cancelAnimationFrame(rAF);
-  rAF = requestAnimationFrame(function(){
-    containerElementTop = containerElement.getBoundingClientRect().top;
-    updatePositions();
-  });
-});
+window.addEventListener('resize', onResize);
