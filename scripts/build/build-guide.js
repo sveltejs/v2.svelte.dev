@@ -41,3 +41,4 @@ const sections = fs.readdirSync( `${root}/guide` )
 	});
 
 fs.writeFileSync( `${root}/public/guide.json`, JSON.stringify( sections ) );
+fs.writeFileSync( `${root}/shared/components/guide-summary.json`, JSON.stringify( sections ) );

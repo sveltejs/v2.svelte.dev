@@ -2,3 +2,6 @@
 node_modules
 .gobble*
 dist
+public/bundle.js
+public/main.css
+shared/components/guide-summary.json

@@ -2,6 +2,7 @@ const fs = require( 'fs' );
 const path = require( 'path' );
 const rollup = require( 'rollup' );
 const svelte = require( 'rollup-plugin-svelte' );
+const json = require( 'rollup-plugin-json' );
 const { mkdirp } = require( './utils.js' );
 
 const root = path.resolve( __dirname, '../..' );
@@ -11,6 +12,7 @@ const root = path.resolve( __dirname, '../..' );
 	rollup.rollup({
 		entry: `${root}/shared/${entry}.html`,
 		plugins: [
+			json(),
 			svelte({
 				generate: 'ssr',
 				css: false
