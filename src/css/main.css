@@ -16,7 +16,7 @@ body {
 }
 
 main {
-	overflow: scroll;
+	overflow-y: auto;
 	height: calc(100vh - 4em);
 	position: absolute;
 	width: 100%;
