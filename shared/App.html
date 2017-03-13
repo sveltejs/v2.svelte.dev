@@ -1,0 +1,25 @@
+<!-- this component isn't rendered anywhere, but we use it
+     collect all the CSS together into one file -->
+<Nav/>
+<Index/>
+<BlogIndex/>
+<BlogPost/>
+<Guide/>
+
+<script>
+	import Nav from './components/Nav.html';
+	import Index from './routes/Index.html';
+	import BlogIndex from './routes/BlogIndex.html';
+	import BlogPost from './routes/BlogPost.html';
+	import Guide from './routes/Guide.html';
+
+	export default {
+		components: {
+			Nav,
+			Index,
+			BlogIndex,
+			BlogPost,
+			Guide
+		}
+	};
+</script>
