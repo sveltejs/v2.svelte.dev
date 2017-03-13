@@ -165,3 +165,12 @@ header {
 		}
 	}
 }
+
+@media (min-width: 1024px) {
+	header {
+		section {
+			width: 1024px;
+			margin: 0 auto;
+		}
+	}
+}
