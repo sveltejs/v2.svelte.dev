@@ -107,14 +107,14 @@ drawingApp.observe( 'height', redraw, { defer: true });
 ```
 
 To observe on a nested component, use refs:
-```html
+```html-no-repl
 <Widget ref:widget/>
 <script>
-export default {
-    onrender () {
-      this.refs.widget.observe( 'xxx', () => {...});
-    }
-};
+	export default {
+		onrender () {
+			this.refs.widget.observe( 'xxx', () => {...});
+		}
+	};
 </script>
 
 ```
