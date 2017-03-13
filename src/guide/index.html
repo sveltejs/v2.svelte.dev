@@ -24,9 +24,10 @@
 
 <body>
 	<header>
+		<span class="menu-link">Menu</span>
 		<a href='/' class='logo'>Svelte</a>
 
-		<ul>
+		<ul class="navigation">
 			<li><a class='active' href='/guide'>Guide</a></li>
 			<li><a href='/repl'>REPL</a></li>
 			<li><a href='/blog'>Blog</a></li>
@@ -35,8 +36,16 @@
 		</ul>
 	</header>
 
-	<main style='overflow: scroll;'>
+	<main>
 		<ul class='sidebar'>
+			<ul class="navigation">
+				<li><a class='active' href='/guide'>Guide</a></li>
+				<li><a href='/repl'>REPL</a></li>
+				<li><a href='/blog'>Blog</a></li>
+				<li><a href='https://gitter.im/sveltejs/svelte'>Chat</a></li>
+				<li><a href='https://github.com/sveltejs/svelte'>GitHub</a></li>
+			</ul>
+
 			{{>sidebar}}
 		</ul>
 
@@ -105,6 +114,9 @@
 			}, 3000 );
 		});
 	</script>
+
+	<script src="/navigation.js"></script>
+	<script src="/section-highlighting.js"></script>
 
 	<script>
 		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

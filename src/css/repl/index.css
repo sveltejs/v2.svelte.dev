@@ -1,11 +1,11 @@
-main {
-	/*height: calc(100vh - 7em);*/
+@media (max-width: 767px) {
+	.repl-container {
+		height: calc(100vh - 6em);
+	}
 }
 
-@media (min-width: 768px) {
-	main {
-		height: calc(100vh - 7em);
-	}
+.repl-container {
+	height: calc(100vh - 7em);
 }
 
 @keyframes pulse {
