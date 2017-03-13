@@ -106,3 +106,18 @@
 		width: 36%;
 	}
 } 
+
+@media (min-width: 1024px) {
+	.sidebar {
+		position: fixed;
+		top: 4em;
+		width: 14em;
+		height: calc(100% - 4em);
+		z-index: 2;
+		border-bottom: none;
+
+		/* Center wih left + translateX technique */
+		left: calc(50% - 16em); 
+		transform: translateX(calc(-50% - 9em)); /* slightly more than half due to spacing */
+	}
+}

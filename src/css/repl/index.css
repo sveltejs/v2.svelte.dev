@@ -8,6 +8,20 @@
 	height: calc(100vh - 7em);
 }
 
+@media (min-width: 1024px) {
+	header {
+		text-align: left;
+		
+		section {
+			width: 100%;
+		}
+
+		.navigation {			
+			left: 8em;
+		}
+	}
+}
+
 @keyframes pulse {
 	0%   { opacity: 1; transform: scale(1.5); }
 	50%  { opacity: 0; transform: scale(1); }
