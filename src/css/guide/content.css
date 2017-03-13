@@ -141,3 +141,11 @@
 		padding: 2em 2em 2em 16em;
 	}
 }
+
+@media (min-width: 1024px) {
+	.content {
+		width: 1024px;
+		left: 50%;
+		transform: translateX(-50%);
+	}
+}
