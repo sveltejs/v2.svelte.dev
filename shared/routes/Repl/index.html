@@ -220,14 +220,38 @@
 	}
 
 	function loadSvelte () {
-		// return load.script( '/magic-string.umd.js' ).then( () => {
-			const versionMatch = /version=([^&]+)/.exec( window.location.search );
-			const url = versionMatch ?
-				'https://unpkg.com/svelte@' + versionMatch[1] + '/compiler/svelte.js' :
-				'https://unpkg.com/svelte/compiler/svelte.js';
+		const versionMatch = /version=([^&]+)/.exec( window.location.search );
+		const url = versionMatch ?
+			'https://unpkg.com/svelte@' + versionMatch[1] + '/compiler/svelte.js' :
+			'https://unpkg.com/svelte/compiler/svelte.js';
 
-			return curl([ url ]);
-		// });
+		return curl([ url ]);
+	}
+
+	function tryParseData ( encoded ) {
+		try {
+			return JSON.parse( decodeURIComponent( atob( encoded ) ) );
+		} catch ( err ) {
+			return {};
+		}
+	}
+
+	const dataMatch = /data=(.+)$/.exec( window.location.search );
+	const gistMatch = /gist=(.+)$/.exec( window.location.search );
+
+	let gist = null;
+	let source = null;
+	let data = {};
+
+	if ( dataMatch ) {
+		({ source, data } = tryParseData( dataMatch[1] ));
+	}
+	if ( !source ) {
+		if ( gistMatch ) {
+			gist = gistMatch[1];
+		} else {
+			({ source, data } = examples[0]);
+		}
 	}
 
 	export default {
@@ -237,10 +261,10 @@
 
 			examples,
 
-			gist: null,
-			source: '',
+			gist,
+			source,
+			data,
 			json: null,
-			data: {},
 
 			ready: false
 		}),
@@ -282,22 +306,6 @@
 		},
 
 		oncreate () {
-			// determine compiler version
-			const match = /version=([^\&]+)/.exec( window.location.search );
-
-			const version = ( typeof svelte !== 'undefined' && svelte.VERSION ) ?
-				svelte.VERSION :
-				match ? match[1] :
-				null;
-
-			const versionParameter = version ? `version=${version}&` : '';
-
-			if ( version ) {
-				console.log( `running Svelte compiler version %c${version}`, 'font-weight: bold' );
-			} else {
-				console.log( `running unknown version` );
-			}
-
 			loadCodemirror().then( () => {
 				this.set({ ready: true });
 			});
@@ -330,6 +338,8 @@
 			});
 
 			loadSvelte().then( svelte => {
+				console.log( `running Svelte compiler version %c${svelte.VERSION}`, 'font-weight: bold' );
+
 				this.observe( 'source', source => {
 					if ( !source ) return;
 
