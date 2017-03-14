@@ -10,7 +10,7 @@
     "prep": "node scripts/prep",
     "predeploy": "npm run prep",
     "predeploy:ci": "npm run prep",
-    "stage": "npm run prep && now",
+    "stage": "npm run prep && npm run rollup && now",
     "deploy": "now && now alias",
     "deploy:ci": "now --token $NOW_TOKEN && now alias --token $NOW_TOKEN"
   },

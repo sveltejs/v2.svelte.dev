@@ -25,7 +25,6 @@ function redirect ( from, to ) {
 	});
 }
 
-redirect( '/', '' );
 redirect( '/blog/', '/blog' );
 redirect( '/guide/', '/guide' );
 redirect( '/blog:slug/', route => `/blog/${route.params.slug}` );
