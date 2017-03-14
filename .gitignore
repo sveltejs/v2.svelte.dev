@@ -5,3 +5,5 @@ dist
 public/bundle.js
 public/main.css
 shared/components/guide-summary.json
+server/components
+server/routes
