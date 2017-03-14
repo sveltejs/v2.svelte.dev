@@ -107,6 +107,7 @@ drawingApp.observe( 'height', redraw, { defer: true });
 ```
 
 To observe on a nested component, use refs:
+
 ```html-no-repl
 <Widget ref:widget/>
 <script>
@@ -116,8 +117,8 @@ To observe on a nested component, use refs:
 		}
 	};
 </script>
-
 ```
+
 ### component.on(eventName, callback)
 
 Allows you to respond to *events*:
