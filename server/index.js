@@ -8,6 +8,8 @@ const dev = !!process.env.DEV;
 
 const app = express();
 
+const root = path.resolve( __dirname, '..' );
+
 app.use( compression({ threshold: 0 }) );
 app.use( express.static( 'public' ) );
 
@@ -34,7 +36,7 @@ app.get( '/blog', ( req, res ) => {
 	const Nav = loadComponent( 'components/Nav' );
 	const BlogIndex = loadComponent( 'routes/BlogIndex' );
 
-	const posts = require( `${__dirname}/../public/posts.json` );
+	const posts = require( `${root}/public/posts.json` );
 
 	servePage( res, {
 		title: 'Svelte • The magical disappearing UI framework',
@@ -49,7 +51,7 @@ app.get( '/blog/:slug', ( req, res ) => {
 	const Nav = loadComponent( 'components/Nav' );
 	const BlogPost = loadComponent( 'routes/BlogPost' );
 
-	const post = require( `${__dirname}/../public/posts/${req.params.slug}.json` );
+	const post = require( `${root}/public/posts/${req.params.slug}.json` );
 
 	servePage( res, {
 		title: `${post.metadata.title} • Svelte`,
@@ -64,7 +66,7 @@ app.get( '/guide', ( req, res ) => {
 	const Nav = loadComponent( 'components/Nav' );
 	const Guide = loadComponent( 'routes/Guide' );
 
-	const sections = require( `${__dirname}/../public/guide.json` );
+	const sections = require( `${root}/public/guide.json` );
 
 	servePage( res, {
 		title: 'Learn Svelte',

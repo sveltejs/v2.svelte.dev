@@ -16,22 +16,19 @@ const nav = new Nav({
 let view;
 
 // legacy
-roadtrip
-	.add( '/blog/', {
-		enter () {
-			roadtrip.goto( '/blog', { replaceState: true });
-		}
-	})
-	.add( '/blog/:slug/', {
-		enter ( route ) {
-			roadtrip.goto( `/blog/${route.params.slug}`, { replaceState: true });
-		}
-	})
-	.add( '/guide/', {
-		enter () {
-			roadtrip.goto( '/guide', { replaceState: true });
+function redirect ( from, to ) {
+	roadtrip.add( from, {
+		enter: route => {
+			if ( typeof to === 'function' ) to = to( route );
+			roadtrip.goto( to, { replaceState: true });
 		}
 	});
+}
+
+redirect( '/', '' );
+redirect( '/blog/', '/blog' );
+redirect( '/guide/', '/guide' );
+redirect( '/blog:slug/', route => `/blog/${route.params.slug}` );
 
 roadtrip
 	.add( '/', {
@@ -130,7 +127,11 @@ roadtrip
 					}
 				});
 
-				window.scrollTo( route.scrollX, route.scrollY );
+				// scroll to section
+				if ( window.location.hash.length > 1 ) {
+					const h = main.querySelector( window.location.hash );
+					if ( h ) window.scrollTo( 0, h.getBoundingClientRect().top );
+				}
 			});
 		}
 	});
