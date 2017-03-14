@@ -22,5 +22,6 @@ export default {
 		}),
 		buble(),
 		!dev && uglify()
-	]
+	],
+	sourceMap: true
 };
