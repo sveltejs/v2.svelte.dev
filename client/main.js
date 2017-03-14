@@ -109,8 +109,6 @@ roadtrip
 		enter ( route ) {
 			nav.set({ route: 'guide' });
 
-			if ( route.isInitial ) return; // page is static
-
 			document.title = 'Learn Svelte';
 
 			if ( view ) {
@@ -127,10 +125,14 @@ roadtrip
 					}
 				});
 
-				// scroll to section
-				if ( window.location.hash.length > 1 ) {
-					const h = main.querySelector( window.location.hash );
-					if ( h ) window.scrollTo( 0, h.getBoundingClientRect().top );
+				if ( route.scrollY === 0 ) {
+					// scroll to section
+					if ( window.location.hash.length > 1 ) {
+						const h = main.querySelector( window.location.hash );
+						if ( h ) window.scrollTo( 0, h.getBoundingClientRect().top );
+					}
+				} else {
+					window.scrollTo( route.scrollX, route.scrollY );
 				}
 			});
 		}
