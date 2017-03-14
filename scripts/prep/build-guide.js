@@ -11,6 +11,10 @@ const langs = {
 	'html-no-repl': 'html'
 };
 
+function btoa ( str ) {
+	return new Buffer( str ).toString( 'base64' );
+}
+
 const sections = fs.readdirSync( `${root}/guide` )
 	.filter( file => file[0] !== '.' && path.extname( file ) === '.md' )
 	.map( file => {
@@ -27,13 +31,47 @@ const sections = fs.readdirSync( `${root}/guide` )
 		});
 
 		// syntax highlighting
-		const codeblockPattern = /```([\w-]+)?\n([\s\S]+?)```/g;
-		content = content.replace( codeblockPattern, ( match, lang, code ) => {
-			const highlighted = hljs.highlight( langs[ lang ] || lang, code );
-			return `<pre><code>${highlighted.value}</code></pre>`;
-		});
+		let uid = 0;
+		const replInput = {};
+		const replData = {};
+		const highlighted = {};
 
-		const html = marked( content.replace( /^\t+/gm, match => match.split( '\t' ).join( '  ' ) ) );
+		content = content
+			.replace( /```([\w-]+)?\n([\s\S]+?)```/g, ( match, lang, code ) => {
+				if ( lang === 'hidden-data' ) {
+					replData[ uid ] = JSON.parse( code );
+					return '\n\n';
+				}
+
+				const { value } = hljs.highlight( langs[ lang ] || lang, code );
+				highlighted[ ++uid ] = value;
+
+				if ( lang === 'html' ) {
+					replInput[ uid ] = code.replace( /^\t+/gm, match => match.split( '\t' ).join( '  ' ) );
+				}
+
+				return `@@${uid}`;
+			});
+
+		const html = marked( content )
+			.replace( /<p>(<a class='open-in-repl'[\s\S]+?)<\/p>/g, '$1' )
+			.replace( /<p>@@(\d+)<\/p>/g, ( match, id ) => {
+				const pre = `<pre><code>${highlighted[ id ]}</code></pre>`;
+
+				if ( id in replInput ) {
+					const json = JSON.stringify({
+						gist: null,
+						source: replInput[ id ],
+						data: replData[ id ] || {}
+					});
+
+					const href = `/repl?data=${btoa( encodeURIComponent( json ) )}`;
+					return `<a class='open-in-repl' href='${href}'></a>${pre}`;
+				}
+
+				return pre;
+			})
+			.replace( /^\t+/gm, match => match.split( '\t' ).join( '  ' ) );
 
 		const subsections = [];
 		const pattern = /<h3 id="(.+?)">(.+?)<\/h3>/g;
@@ -56,5 +94,3 @@ const sections = fs.readdirSync( `${root}/guide` )
 
 fs.writeFileSync( `${root}/public/guide.json`, JSON.stringify( sections ) );
 fs.writeFileSync( `${root}/shared/components/guide-summary.json`, JSON.stringify( sections ) );
-
-copy( 'node_modules/highlight.js/styles/default.css', 'public/hljs.css' );
