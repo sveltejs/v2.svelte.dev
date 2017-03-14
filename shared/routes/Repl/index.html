@@ -1,58 +1,56 @@
-<div class='left' style='width: {{verticalDividerPos}}%;'>
-	<section class='input'>
-		<div class='controls'>
-			<button class='{{showGenerated ? "" : "active"}}' on:click='set({ showGenerated: false })'>input</button>
-			<button class='{{showGenerated ? "active" : ""}}' on:click='set({ showGenerated: true })'>output</button>
-			<button class='{{saving ? "active" : ""}}' on:click='save()'>{{saving ? 'saving' : 'save'}}</button>
+<div class='repl-container'>
+	<div class='left' style='width: {{verticalDividerPos}}%;'>
+		<section class='input'>
+			<div class='controls'>
+				<button class='{{showGenerated ? "" : "active"}}' on:click='set({ showGenerated: false })'>input</button>
+				<button class='{{showGenerated ? "active" : ""}}' on:click='set({ showGenerated: true })'>output</button>
+				<button class='{{saving ? "active" : ""}}' on:click='save()'>{{saving ? 'saving' : 'save'}}</button>
 
-			<select bind:value='selectedExample'>
-				<option value='{{null}}' disabled>Select an example</option>
+				<select bind:value='selectedExample'>
+					<option value='{{null}}' disabled>Select an example</option>
 
-				{{#each examples as example}}
-					<option value='{{example}}'>{{example.title}}</option>
-				{{/each}}
-			</select>
+					{{#each examples as example}}
+						<option value='{{example}}'>{{example.title}}</option>
+					{{/each}}
+				</select>
+			</div>
+
+			{{#if ready}}
+				{{#if showGenerated}}
+					<CodeMirror ref:editor mode='javascript' code='{{compiled.code}}' readonly/>
+				{{else}}
+					<CodeMirror ref:editor mode='htmlmixed' bind:code='source' error='{{sourceError}}'/>
+				{{/if}}
+			{{/if}}
+		</section>
+	</div>
+
+	<div ref:right class='right' style='width: {{100 - verticalDividerPos}}%;'>
+		<div class='top' style='height: {{horizontalDividerPos}}%;'>
+			{{#if ready}}
+				<Viewer compiled='{{compiled}}' data='{{data}}' on:change='updateData(event)'/>
+			{{/if}}
+
+			{{#if dragging}}
+				<div class='mousecatcher'></div>
+			{{/if}}
 		</div>
 
-		{{#if ready}}
-			{{#if showGenerated}}
-				<CodeMirror ref:editor mode='javascript' code='{{compiled.code}}' readonly/>
-			{{else}}
-				<CodeMirror ref:editor mode='htmlmixed' bind:code='source' error='{{sourceError}}'/>
+		<div class='bottom' style='height: {{100 - horizontalDividerPos}}%;'>
+			{{#if ready}}
+				<CodeMirror ref:data mode='javascript' bind:code='json' error='{{dataError}}'/>
 			{{/if}}
-		{{/if}}
-	</section>
-</div>
+		</div>
 
-<div ref:right class='right' style='width: {{100 - verticalDividerPos}}%;'>
-	<div class='top' style='height: {{horizontalDividerPos}}%;'>
-		{{#if ready}}
-			<Viewer compiled='{{compiled}}' data='{{data}}' on:change='updateData(event)'/>
-		{{/if}}
-
-		{{#if dragging}}
-			<div class='mousecatcher'></div>
-		{{/if}}
+		<div class='divider horizontal-divider' style='top: calc({{horizontalDividerPos}}% - 8px)' on:drag='setHorizontal(event)'></div>
 	</div>
 
-	<div class='bottom' style='height: {{100 - horizontalDividerPos}}%;'>
-		{{#if ready}}
-			<CodeMirror ref:data mode='javascript' bind:code='json' error='{{dataError}}'/>
-		{{/if}}
-	</div>
+	<div class='divider vertical-divider' style='left: calc({{verticalDividerPos}}% - 8px)' on:drag='setVertical(event)'></div>
 
-	<div class='divider horizontal-divider' style='top: calc({{horizontalDividerPos}}% - 8px)' on:drag='setHorizontal(event)'></div>
+	<p class='screen-too-small'>Please open this page on a larger screen!</p>
 </div>
-
-<div class='divider vertical-divider' style='left: calc({{verticalDividerPos}}% - 8px)' on:drag='setVertical(event)'></div>
-
-<p class='screen-too-small'>Please open this page on a larger screen!</p>
 
 <style>
-	.repl-container {
-		height: calc(100vh - 6em);
-	}
-
 	@keyframes pulse {
 		0%   { opacity: 1; transform: scale(1.5); }
 		50%  { opacity: 0; transform: scale(1); }
@@ -97,7 +95,7 @@
 
 	@media (min-width: 768px) {
 		.repl-container {
-			height: calc(100vh - 7em);
+			height: calc(100vh - 4em);
 		}
 
 		.screen-too-small {
@@ -236,39 +234,41 @@
 		}
 	}
 
-	const search = typeof window !== 'undefined' ? window.location.search : '';
-	const dataMatch = /data=(.+)$/.exec( search );
-	const gistMatch = /gist=(.+)$/.exec( search );
-
-	let gist = null;
-	let source = null;
-	let data = {};
-
-	if ( dataMatch ) {
-		({ source, data } = tryParseData( dataMatch[1] ));
-	}
-	if ( !source ) {
-		if ( gistMatch ) {
-			gist = gistMatch[1];
-		} else {
-			({ source, data } = examples[0]);
-		}
-	}
-
 	export default {
-		data: () => ({
-			horizontalDividerPos: 50,
-			verticalDividerPos: 50,
+		data () {
+			const dataMatch = /data=(.+)$/.exec( window.location.search );
+			const gistMatch = /gist=(.+)$/.exec( window.location.search );
 
-			examples,
+			let gist = null;
+			let source = null;
+			let data = {};
 
-			gist,
-			source,
-			data,
-			json: null,
+			if ( dataMatch ) {
+				({ source, data } = tryParseData( dataMatch[1] ));
+			}
 
-			ready: false
-		}),
+			if ( !source ) {
+				if ( gistMatch ) {
+					gist = gistMatch[1];
+				} else {
+					({ source, data } = examples[0]);
+				}
+			}
+
+			return {
+				horizontalDividerPos: 50,
+				verticalDividerPos: 50,
+
+				examples,
+
+				gist,
+				source,
+				data,
+				json: JSON.stringify( data, null, '  ' ),
+
+				ready: false
+			};
+		},
 
 		methods: {
 			setHorizontal ( event ) {
