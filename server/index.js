@@ -77,6 +77,19 @@ app.get( '/guide', ( req, res ) => {
 	});
 });
 
+app.get( '/repl', ( req, res ) => {
+	const Nav = loadComponent( 'components/Nav' );
+	const Repl = loadComponent( 'routes/Repl/index' );
+
+	servePage( res, {
+		title: 'Svelte REPL',
+		nav: Nav.render({ route: 'guide' }),
+		route: Repl.render() // TODO is there any point? just render an empty box instead?
+	}).catch( err => {
+		console.log( err.stack );
+	});
+});
+
 app.listen( 3000, () => {
 	console.log( 'listening on localhost:3000' );
 });

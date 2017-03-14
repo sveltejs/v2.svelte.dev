@@ -1,0 +1,150 @@
+<div class='codemirror-container'>
+	<textarea ref:editor></textarea>
+
+	{{#if error}}
+		<div class='error'>
+			{{error.message}}
+		</div>
+	{{/if}}
+</div>
+
+<style>
+	.CodeMirror {
+		border-radius: 3px;
+		font-family: 'Inconsolata';
+		font-size: 16px;
+		line-height: 1.2;
+		font-weight: 400;
+		color: #333;
+	}
+
+	.CodeMirror {
+		height: auto;
+	}
+
+	.CodeMirror-scroll {
+		/*max-height: 80vh;*/
+	}
+
+	.CodeMirror-gutters {
+		border-right: 1px solid #eee;
+	}
+
+	.codemirror-container {
+		width: 100%;
+		height: 100%;
+	}
+
+	.codemirror-container .CodeMirror {
+		height: 100%;
+	}
+
+	textarea {
+		width: 100%;
+		height: 100%;
+		border: none;
+	}
+
+	.error {
+		position: absolute;
+		width: 100%;
+		bottom: 0;
+		padding: 0.5em;
+		background-color: rgb(255,220,220);
+		border-top: 1px solid rgb(200,0,0);
+		color: rgb(200,0,0);
+		z-index: 999;
+		opacity: 0;
+		-webkit-animation: fade-in 0.4s 1;
+		-webkit-animation-delay: 0.5s;
+		-webkit-animation-fill-mode: forwards;
+		animation: fade-in 0.4s 1;
+		animation-delay: 0.5s;
+		animation-fill-mode: forwards;
+	}
+
+	.error-loc {
+		position: relative;
+	}
+
+	.error-loc::before {
+		position: absolute;
+		content: '^';
+		display: inline-block;
+		bottom: -1.2em;
+		left: -0.2em;
+		/*background-color: rgb(200,0,0);
+		color: white;*/
+		background-color: white;
+		color: rgb(200,0,0);
+		font-size: 1em;
+		font-weight: 500;
+		/*width: 1em;
+		height: 1em;*/
+		/*padding: 0.1em;
+		text-align: center;*/
+		border-radius: 50%;
+		-webkit-animation: pulse 1s infinite;
+		animation: pulse 1s infinite;
+	}
+</style>
+
+<script>
+	export default {
+		oncreate () {
+			let updating = false;
+
+			this.editor = window.CodeMirror.fromTextArea( this.refs.editor, {
+				lineNumbers: true,
+				lineWrapping: true,
+				value: this.get( 'code' ),
+				mode: this.get( 'mode' ),
+				readOnly: this.get( 'readonly' )
+			});
+
+			// TODO this is a bug. oncreate should only be called once
+			// the component is actually in the DOM
+			setTimeout( () => {
+				this.editor.refresh();
+			});
+
+			this.editor.on( 'change', instance => {
+				if ( !updating ) {
+					updating = true;
+					this.set({ code: instance.getValue() });
+					updating = false;
+				}
+			});
+
+			this.observe( 'code', code => {
+				if ( !updating && code != null ) {
+					updating = true;
+					this.editor.setValue( code );
+					updating = false;
+				}
+			});
+
+			let marker;
+			this.observe( 'error', error => {
+				if ( marker ) marker.clear();
+				if ( error && error.pos != null ) {
+					const { line, ch } = this.editor.getDoc().posFromIndex( error.pos );
+
+					marker = this.editor.markText({ line, ch }, { line, ch: ch + 1 }, {
+						className: 'error-loc'
+					});
+				}
+			});
+
+			this.on( 'teardown', () => {
+				this.editor.toTextArea();
+			});
+		},
+
+		methods: {
+			resize () {
+				this.editor.refresh();
+			}
+		}
+	};
+</script>

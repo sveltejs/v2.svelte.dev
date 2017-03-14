@@ -5,7 +5,7 @@ import json from 'rollup-plugin-json';
 import uglify from 'rollup-plugin-uglify';
 import buble from 'rollup-plugin-buble';
 
-const dev = !!process.env.DEVELOPMENT;
+const dev = !!process.env.DEV;
 
 export default {
 	entry: 'client/main.js',

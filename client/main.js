@@ -3,6 +3,7 @@ import Index from '../shared/routes/Index.html';
 import BlogIndex from '../shared/routes/BlogIndex.html';
 import BlogPost from '../shared/routes/BlogPost.html';
 import Guide from '../shared/routes/Guide.html';
+import Repl from '../shared/routes/Repl/index.html';
 import Nav from '../shared/components/Nav.html';
 import get from './get.js';
 
@@ -131,6 +132,23 @@ roadtrip
 					const h = main.querySelector( window.location.hash );
 					if ( h ) window.scrollTo( 0, h.getBoundingClientRect().top );
 				}
+			});
+		}
+	})
+	.add( '/repl', {
+		enter ( route ) {
+			nav.set({ route: 'repl' });
+
+			document.title = 'Svelte REPL';
+
+			if ( view ) {
+				view.destroy();
+			} else {
+				main.innerHTML = '';
+			}
+
+			view = new Repl({
+				target: main
 			});
 		}
 	});

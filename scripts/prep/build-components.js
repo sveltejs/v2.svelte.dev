@@ -8,7 +8,14 @@ const { mkdirp } = require( './utils.js' );
 const root = path.resolve( __dirname, '../..' );
 
 // generate bundles for each route, plus the nav
-[ 'routes/Index', 'routes/BlogIndex', 'routes/BlogPost', 'routes/Guide', 'components/Nav' ].forEach( entry => {
+[
+	'routes/Index',
+	'routes/BlogIndex',
+	'routes/BlogPost',
+	'routes/Guide',
+	'routes/Repl/index',
+	'components/Nav'
+].forEach( entry => {
 	rollup.rollup({
 		entry: `${root}/shared/${entry}.html`,
 		plugins: [

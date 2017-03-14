@@ -1,0 +1,414 @@
+<div class='left' style='width: {{verticalDividerPos}}%;'>
+	<section class='input'>
+		<div class='controls'>
+			<button class='{{showGenerated ? "" : "active"}}' on:click='set({ showGenerated: false })'>input</button>
+			<button class='{{showGenerated ? "active" : ""}}' on:click='set({ showGenerated: true })'>output</button>
+			<button class='{{saving ? "active" : ""}}' on:click='save()'>{{saving ? 'saving' : 'save'}}</button>
+
+			<select bind:value='selectedExample'>
+				<option value='{{null}}' disabled>Select an example</option>
+
+				{{#each examples as example}}
+					<option value='{{example}}'>{{example.title}}</option>
+				{{/each}}
+			</select>
+		</div>
+
+		{{#if ready}}
+			{{#if showGenerated}}
+				<CodeMirror ref:editor mode='javascript' code='{{compiled.code}}' readonly/>
+			{{else}}
+				<CodeMirror ref:editor mode='htmlmixed' bind:code='source' error='{{sourceError}}'/>
+			{{/if}}
+		{{/if}}
+	</section>
+</div>
+
+<div ref:right class='right' style='width: {{100 - verticalDividerPos}}%;'>
+	<div class='top' style='height: {{horizontalDividerPos}}%;'>
+		{{#if ready}}
+			<Viewer compiled='{{compiled}}' data='{{data}}' on:change='updateData(event)'/>
+		{{/if}}
+
+		{{#if dragging}}
+			<div class='mousecatcher'></div>
+		{{/if}}
+	</div>
+
+	<div class='bottom' style='height: {{100 - horizontalDividerPos}}%;'>
+		{{#if ready}}
+			<CodeMirror ref:data mode='javascript' bind:code='json' error='{{dataError}}'/>
+		{{/if}}
+	</div>
+
+	<div class='divider horizontal-divider' style='top: calc({{horizontalDividerPos}}% - 8px)' on:drag='setHorizontal(event)'></div>
+</div>
+
+<div class='divider vertical-divider' style='left: calc({{verticalDividerPos}}% - 8px)' on:drag='setVertical(event)'></div>
+
+<p class='screen-too-small'>Please open this page on a larger screen!</p>
+
+<style>
+	.repl-container {
+		height: calc(100vh - 6em);
+	}
+
+	@keyframes pulse {
+		0%   { opacity: 1; transform: scale(1.5); }
+		50%  { opacity: 0; transform: scale(1); }
+		100% { opacity: 1; transform: scale(1.5); }
+	}
+
+	@-webkit-keyframes pulse {
+		0%   { opacity: 1; transform: scale(1.5); }
+		50%  { opacity: 0; transform: scale(1); }
+		100% { opacity: 1; transform: scale(1.5); }
+	}
+
+	@keyframes fade-in {
+		0%   { opacity: 0; }
+		100% { opacity: 1; }
+	}
+
+	@-webkit-keyframes fade-in {
+		0%   { opacity: 0; }
+		100% { opacity: 1; }
+	}
+
+	.screen-too-small {
+		text-align: center;
+		margin: 0;
+		padding: 4em 3em 8em 3em;
+		line-height: 1.5;
+	}
+
+	.left, .right {
+		position: relative;
+		height: 100%;
+		float: left;
+		display: none;
+	}
+
+	.divider {
+		position: absolute;
+		z-index: 10;
+		display: none;
+	}
+
+	@media (min-width: 768px) {
+		.repl-container {
+			height: calc(100vh - 7em);
+		}
+
+		.screen-too-small {
+			display: none;
+		}
+
+		.left, .right, .divider {
+			display: block;
+		}
+	}
+
+	.divider::after {
+		content: '';
+		position: absolute;
+		background-color: #eee;
+	}
+
+	.vertical-divider {
+		padding: 0 8px;
+		width: 0;
+		height: 100%;
+		cursor: ew-resize;
+	}
+
+	.vertical-divider::after {
+		left: 8px;
+		top: 0;
+		width: 1px;
+		height: 100%;
+	}
+
+	.horizontal-divider {
+		padding: 8px 0;
+		width: 100%;
+		height: 0;
+		cursor: ns-resize;
+	}
+
+	.horizontal-divider::after {
+		top: 8px;
+		left: 0;
+		width: 100%;
+		height: 1px;
+	}
+
+	section {
+		padding: 3em 0 0 0;
+		height: 100%;
+	}
+
+	.controls {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 3em;
+		padding: 0.5em;
+		background-color: #f7f7f7;
+		border-bottom: 1px solid #eee;
+		box-sizing: border-box;
+	}
+
+	.controls button {
+		display: block;
+		float: left;
+		padding: calc(0.5em - 1px) 1em;
+		margin: 0 0.5em 0 0;
+		border-radius: 0.2em;
+		color: rgb(170,30,30);
+		border: 1px solid rgb(170,30,30);
+		font-family: 'Rajdhani';
+		font-weight: 500;
+		font-size: inherit;
+		outline: none;
+		line-height: 1;
+		box-sizing: border-box;
+		background-color: white;
+		cursor: pointer;
+	}
+
+	.controls button.active {
+		background-color: rgb(170,30,30);
+		color: white;
+	}
+
+	select {
+		position: absolute;
+		right: 0.5em;
+		top: 50%;
+		transform: translate(0,-50%);
+	}
+
+	.mousecatcher {
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(255,255,255,0.01);
+	}
+</style>
+
+<script>
+	import CodeMirror from './CodeMirror.html';
+	import Viewer from './Viewer.html';
+	import examples from './examples.js';
+	import { getComponentFromGist, saveComponentAsGist } from './utils/gist.js';
+	import debounce from './utils/debounce.js';
+	import * as load from './utils/load.js';
+
+	const sourceById = {};
+
+	function loadCodemirror () {
+		return Promise.all([
+			curl([ '/codemirror.js' ]),
+			load.css( '/codemirror.css' ),
+		]).then( ([ CodeMirror ]) => {
+			return ( window.CodeMirror = CodeMirror );
+		});
+	}
+
+	function loadSvelte () {
+		// return load.script( '/magic-string.umd.js' ).then( () => {
+			const versionMatch = /version=([^&]+)/.exec( window.location.search );
+			const url = versionMatch ?
+				'https://unpkg.com/svelte@' + versionMatch[1] + '/compiler/svelte.js' :
+				'https://unpkg.com/svelte/compiler/svelte.js';
+
+			return curl([ url ]);
+		// });
+	}
+
+	export default {
+		data: () => ({
+			horizontalDividerPos: 50,
+			verticalDividerPos: 50,
+
+			examples,
+
+			gist: null,
+			source: '',
+			json: null,
+			data: {},
+
+			ready: false
+		}),
+
+		methods: {
+			setHorizontal ( event ) {
+				const { top, bottom } = this.refs.right.getBoundingClientRect();
+
+				this.set({
+					horizontalDividerPos: 100 * ( event.clientY - top ) / ( bottom - top )
+				});
+
+				this.refs.data.resize();
+			},
+
+			setVertical ( event ) {
+				this.set({
+					verticalDividerPos: 100 * event.clientX / window.innerWidth
+				});
+
+				this.refs.editor.resize();
+				this.refs.data.resize();
+			},
+
+			updateData ({ key, value }) {
+				const data = JSON.parse( this.get( 'json' ) );
+				data[ key ] = value;
+				this.set({ json: JSON.stringify( data, null, '  ' ) });
+			},
+
+			save () {
+				this.set({ saving: true });
+
+				saveComponentAsGist( this.get( 'source' ), this.get( 'json' ) ).then( id => {
+					if ( history ) history.replaceState( {}, 'x', `/repl/?${versionParameter}gist=${id}` );
+					this.set({ saving: false });
+				});
+			}
+		},
+
+		oncreate () {
+			// determine compiler version
+			const match = /version=([^\&]+)/.exec( window.location.search );
+
+			const version = ( typeof svelte !== 'undefined' && svelte.VERSION ) ?
+				svelte.VERSION :
+				match ? match[1] :
+				null;
+
+			const versionParameter = version ? `version=${version}&` : '';
+
+			if ( version ) {
+				console.log( `running Svelte compiler version %c${version}`, 'font-weight: bold' );
+			} else {
+				console.log( `running unknown version` );
+			}
+
+			loadCodemirror().then( () => {
+				this.set({ ready: true });
+			});
+
+			this.observe( 'selectedExample', example => {
+				if ( example ) this.set( { source: example.source, json: JSON.stringify( example.data , null, '  ' ) } );
+			});
+
+			if ( !this.get( 'gist' ) ) {
+				this.set({ json: JSON.stringify( this.get( 'data' ), null, '  ' ) });
+			}
+
+			this.observe( 'gist', gist => {
+				if ( !gist ) return;
+
+				if ( this.promise ) this.promise.cancel();
+				this.promise = getComponentFromGist( gist );
+
+				this.promise
+					.then( ({ source, json }) => {
+						sourceById[ gist ] = source;
+						this.set({ source, json });
+					})
+					.catch( err => {
+						alert( 'Error loading from gist.github.com – please try again later!' );
+						console.error( err.stack );
+					});
+
+				if ( history ) history.replaceState( {}, 'x', `/repl/?${versionParameter}gist=${gist}` );
+			});
+
+			loadSvelte().then( svelte => {
+				this.observe( 'source', source => {
+					if ( !source ) return;
+
+					const expectedSource = sourceById[ this.get( 'gist' ) ];
+
+					if ( source && expectedSource && source !== expectedSource ) {
+						this.set({ gist: null });
+					}
+
+					try {
+						const compiled = svelte.compile( source );
+						this.set({ compiled, sourceError: null });
+					} catch ( err ) {
+						console.error( err.stack );
+
+						this.set({
+							sourceError: { message: err.shortMessage || err.message, pos: err.pos }
+						});
+					}
+				});
+			});
+
+			this.observe( 'json', json => {
+				let data;
+
+				try {
+					data = JSON.parse( json );
+					this.set({ dataError: null });
+				} catch ( err ) {
+					console.error( err.stack );
+
+					const match = /(.+)in JSON at position (\d+)/.exec( err.message );
+
+					if ( match ) {
+						this.set({
+							dataError: { message: match[1], pos: +match[2] }
+						});
+					}
+				}
+
+				if ( data ) {
+					this.set({ data });
+				}
+			});
+		},
+
+		events: {
+			drag ( node, callback ) {
+				const mousedown = event => {
+					if ( event.which !== 1 ) return;
+
+					event.preventDefault();
+
+					this.set({ dragging: true });
+
+					const onmouseup = () => {
+						this.set({ dragging: false });
+
+						window.removeEventListener( 'mousemove', callback, false );
+						window.removeEventListener( 'mouseup', onmouseup, false );
+					};
+
+					window.addEventListener( 'mousemove', callback, false );
+					window.addEventListener( 'mouseup', onmouseup, false );
+				}
+
+				node.addEventListener( 'mousedown', mousedown, false );
+
+				return {
+					teardown () {
+						node.removeEventListener( 'mousedown', onmousedown, false );
+					}
+				};
+			}
+		},
+
+		components: {
+			CodeMirror,
+			Viewer
+		}
+	};
+</script>
