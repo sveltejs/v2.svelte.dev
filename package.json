@@ -34,6 +34,7 @@
     "eslint": "^3.17.1",
     "eslint-plugin-import": "^2.2.0",
     "express": "^4.15.2",
+    "highlight.js": "^9.10.0",
     "html-entities": "^1.2.0",
     "marked": "^0.3.6",
     "now": "^4.7.1",
