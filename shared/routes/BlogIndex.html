@@ -1,7 +1,7 @@
 <div class='posts'>
 	{{#each posts as post}}
 		<article class='post'>
-			<a href='/blog/{{post.slug}}/'>
+			<a href='/blog/{{post.slug}}'>
 				<h2>{{post.metadata.title}}</h2>
 				<p class='standfirst'>{{post.metadata.description}}</p>
 			</a>
@@ -10,7 +10,7 @@
 				<a href='{{post.metadata.authorURL}}'>{{post.metadata.author}}</a>
 				<time datetime='{{post.metadata.pubdate}}'>{{post.metadata.dateString}}</time>
 
-				<a class='continue-reading' href='/blog/{{post.slug}}/'>continue reading &raquo;</a>
+				<a class='continue-reading' href='/blog/{{post.slug}}'>continue reading &raquo;</a>
 			</p>
 		</article>
 	{{/each}}
@@ -26,7 +26,7 @@
 	.post {
 		max-width: 48em;
 		margin: 0 auto;
-		padding: 1em;		
+		padding: 1em;
 		/*padding: 0 0 2em 0;*/
 	}
 
