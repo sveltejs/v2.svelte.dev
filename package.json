@@ -2,15 +2,15 @@
   "name": "svelte.technology",
   "version": "1.0.0",
   "description": "Docs and examples for Svelte",
-  "main": "index.js",
   "scripts": {
-    "start": "npm run build && node server",
+    "start": "node server",
     "rollup": "rollup -c",
     "rollup:dev": "rollup -c -w",
-    "dev": "npm run rollup:dev & ( export DEV=true && npm start )",
-    "build": "node scripts/build",
-    "predeploy": "npm run build",
-    "predeploy:ci": "npm run build",
+    "dev": "npm run rollup:dev & ( export DEV=true && node scripts/prep && node server )",
+    "prep": "node scripts/prep",
+    "predeploy": "npm run prep",
+    "predeploy:ci": "npm run prep",
+    "stage": "npm run prep && now",
     "deploy": "now && now alias",
     "deploy:ci": "now --token $NOW_TOKEN && now alias --token $NOW_TOKEN"
   },
@@ -53,5 +53,12 @@
     "codemirror": "^5.24.2",
     "curl-amd": "^0.8.12",
     "svelte": "^1.11.2"
+  },
+  "now": {
+    "alias": "svelte.technology",
+    "files": [
+      "public",
+      "server"
+    ]
   }
 }
