@@ -1,0 +1,50 @@
+<ul class='guide-toc'>
+	{{#each contents as section}}
+		<li>
+			<a class='section' href='/guide#{{section.slug}}'>{{section.metadata.title}}</a>
+			{{#each section.subsections as subsection}}
+				<a class='subsection' href='/guide#{{subsection.slug}}'>{{subsection.title}}</a>
+			{{/each}}
+		</li>
+	{{/each}}
+</ul>
+
+<style>
+	.guide-toc {
+		margin: 0;
+		padding: 0;
+	}
+
+	.guide-toc li {
+		display: block;
+		margin: 0 0 2em 0;
+	}
+
+	.guide-toc .section {
+		display: block;
+		font-weight: 700;
+		color: #333;
+		font-size: 1.2rem;
+		margin: 0 0 0.15em 0;
+	}
+
+	.guide-toc .subsection {
+		display: block;
+		font-weight: 500;
+		color:#727272;
+		font-size: 1em;
+		margin: 0 0 0.15em 0;
+	}
+</style>
+
+<script>
+	import contents from './guide-summary.json';
+
+	export default {
+		data () {
+			return {
+				contents
+			};
+		}
+	};
+</script>

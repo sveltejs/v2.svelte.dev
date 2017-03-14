@@ -2,7 +2,7 @@
 
 var BlogPost = {};
 
-BlogPost.filename = "/Users/rharris/Documents/www/SVELTE/svelte.technology/shared/routes/BlogPost.html";
+BlogPost.filename = "/www/SVELTE/svelte.technology/shared/routes/BlogPost.html";
 
 BlogPost.data = function () {
 	return {};

@@ -2,7 +2,7 @@
 
 var BlogIndex = {};
 
-BlogIndex.filename = "/Users/rharris/Documents/www/SVELTE/svelte.technology/shared/routes/BlogIndex.html";
+BlogIndex.filename = "/www/SVELTE/svelte.technology/shared/routes/BlogIndex.html";
 
 BlogIndex.data = function () {
 	return {};

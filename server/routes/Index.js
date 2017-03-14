@@ -2,7 +2,7 @@
 
 var Index = {};
 
-Index.filename = "/Users/rharris/Documents/www/SVELTE/svelte.technology/shared/routes/Index.html";
+Index.filename = "/www/SVELTE/svelte.technology/shared/routes/Index.html";
 
 Index.data = function () {
 	return {};

@@ -7,7 +7,23 @@
 	{{/each}}
 </div>
 
+<div class='sidebar'>
+	<GuideContents/>
+</div>
+
 <style>
+	.sidebar {
+		position: fixed;
+		left: 0;
+		top: 4em;
+		width: 14em;
+		height: calc(100vh - 4em);
+		display: none;
+		font-family: Rajdhani;
+		overflow-y: auto;
+		padding: 2em 1em 2em 1.5em;
+	}
+
 	.content {
 		width: 100%;
 		padding: 1em;
@@ -34,7 +50,7 @@
 		line-height: 1.5;
 	}
 
-	a {
+	.content a {
 		border-bottom: 1px solid #e3d9d9;
 	}
 
@@ -148,9 +164,23 @@
 	}
 
 	@media (min-width: 768px) {
+		.sidebar {
+			display: block;
+		}
+
 		.content {
 			padding: 2em 2em 2em 16em;
 		}
 	}
 
 </style>
+
+<script>
+	import GuideContents from '../components/GuideContents.html';
+
+	export default {
+		components: {
+			GuideContents
+		}
+	};
+</script>
