@@ -7,6 +7,8 @@ import buble from 'rollup-plugin-buble';
 
 const dev = !!process.env.DEV;
 
+console.log( `creating ${dev ? 'development' : 'production'} bundle` );
+
 export default {
 	entry: 'client/main.js',
 	dest: 'public/bundle.js',

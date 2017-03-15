@@ -7,10 +7,11 @@
     "rollup": "rollup -c rollup/rollup.config.js && rollup -c rollup/rollup.config.codemirror.js",
     "rollup:dev": "export DEV=true && rollup -c rollup/rollup.config.js -w",
     "dev": "npm run rollup:dev & ( export DEV=true && node scripts/prep && node server )",
-    "prep": "node scripts/prep",
+    "prep": "node scripts/prep && npm run rollup",
+    "prestage": "npm run prep",
     "predeploy": "npm run prep",
     "predeploy:ci": "npm run prep",
-    "stage": "npm run prep && npm run rollup && now",
+    "stage": "now",
     "deploy": "now && now alias",
     "deploy:ci": "now --token $NOW_TOKEN && now alias --token $NOW_TOKEN"
   },
