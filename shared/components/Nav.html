@@ -15,7 +15,7 @@
 	</ul>
 
 	<div class='secondary'>
-		<GuideContents/>
+		<GuideContents active='{{active}}'/>
 	</div>
 </nav>
 
@@ -30,7 +30,7 @@
 		pointer-events: none;
 		opacity: 0;
 		/*transition: opacity 0.4s;*/
-		z-index: 2;
+		z-index: 3;
 	}
 
 	.mousecatcher.open {
@@ -281,7 +281,8 @@
 		data () {
 			return {
 				open: false,
-				route: ''
+				route: '',
+				active: null
 			};
 		},
 

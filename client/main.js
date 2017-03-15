@@ -125,6 +125,10 @@ roadtrip
 					}
 				});
 
+				view.on( 'scroll', id => {
+					nav.set({ active: id });
+				});
+
 				if ( route.scrollY === 0 ) {
 					// scroll to section
 					if ( window.location.hash.length > 1 ) {

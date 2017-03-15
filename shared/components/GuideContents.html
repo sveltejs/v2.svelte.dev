@@ -1,9 +1,9 @@
 <ul class='guide-toc'>
 	{{#each contents as section}}
 		<li>
-			<a class='section {{section.slug === hash ? "active": ""}}' href='/guide#{{section.slug}}'>{{section.metadata.title}}</a>
+			<a class='section {{section.slug === active ? "active": ""}}' href='/guide#{{section.slug}}'>{{section.metadata.title}}</a>
 			{{#each section.subsections as subsection}}
-				<a class='subsection {{subsection.slug === hash ? "active": ""}}' href='/guide#{{subsection.slug}}'>{{subsection.title}}</a>
+				<a class='subsection {{subsection.slug === active ? "active": ""}}' href='/guide#{{subsection.slug}}'>{{subsection.title}}</a>
 			{{/each}}
 		</li>
 	{{/each}}
@@ -53,7 +53,7 @@
 
 		oncreate () {
 			const onhashchange = () => {
-				this.set({ hash: window.location.hash.slice( 1 ) });
+				this.set({ active: window.location.hash.slice( 1 ) });
 			};
 
 			window.addEventListener( 'hashchange', onhashchange, false );

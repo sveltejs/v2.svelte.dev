@@ -8,7 +8,7 @@
 </div>
 
 <div class='sidebar'>
-	<GuideContents/>
+	<GuideContents ref:contents/>
 </div>
 
 <style>
@@ -223,22 +223,28 @@
 				});
 			}
 
-			const onscroll = throttle( () => {
-				const { top } = this.refs.container.getBoundingClientRect();
+			let lastId = window.location.hash.slice( 1 );
+
+			const onscroll = () => {
+				const top = -window.scrollY;
 
 				let i = anchors.length;
 				while ( i-- ) {
 					if ( positions[i] + top < 40 ) {
 						const anchor = anchors[i];
 						const { id } = anchor;
-						anchor.id = null;
-						window.location.hash = id;
-						anchor.id = id;
+
+						if ( id !== lastId ) {
+							this.refs.contents.set({ active: id });
+							this.fire( 'scroll', id );
+
+							lastId = id;
+						}
 
 						return;
 					}
 				}
-			}, 200 );
+			};
 
 			window.addEventListener( 'scroll', onscroll, { passive: true });
 			window.addEventListener( 'resize', onresize, { passive: true });
