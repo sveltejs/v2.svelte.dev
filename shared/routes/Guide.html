@@ -246,12 +246,12 @@
 				}
 			};
 
-			window.addEventListener( 'scroll', onscroll, { passive: true });
-			window.addEventListener( 'resize', onresize, { passive: true });
+			window.addEventListener( 'scroll', onscroll, true );
+			window.addEventListener( 'resize', onresize, true );
 
 			this.on( 'teardown', () => {
-				window.removeEventListener( 'scroll', onscroll, { passive: true });
-				window.removeEventListener( 'resize', onresize, { passive: true });
+				window.removeEventListener( 'scroll', onscroll, true );
+				window.removeEventListener( 'resize', onresize, true );
 			});
 
 			onresize();
