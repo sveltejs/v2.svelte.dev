@@ -1,9 +1,9 @@
 <ul class='guide-toc'>
 	{{#each contents as section}}
 		<li>
-			<a class='section' href='/guide#{{section.slug}}'>{{section.metadata.title}}</a>
+			<a class='section {{section.slug === hash ? "active": ""}}' href='/guide#{{section.slug}}'>{{section.metadata.title}}</a>
 			{{#each section.subsections as subsection}}
-				<a class='subsection' href='/guide#{{subsection.slug}}'>{{subsection.title}}</a>
+				<a class='subsection {{subsection.slug === hash ? "active": ""}}' href='/guide#{{subsection.slug}}'>{{subsection.title}}</a>
 			{{/each}}
 		</li>
 	{{/each}}
@@ -20,7 +20,7 @@
 		margin: 0 0 2em 0;
 	}
 
-	.guide-toc .section {
+	.section {
 		display: block;
 		font-weight: 700;
 		color: #333;
@@ -28,12 +28,16 @@
 		margin: 0 0 0.15em 0;
 	}
 
-	.guide-toc .subsection {
+	.subsection {
 		display: block;
 		font-weight: 500;
 		color:#727272;
 		font-size: 1em;
 		margin: 0 0 0.15em 0;
+	}
+
+	.section.active, .subsection.active {
+		color: #aa1e1e;
 	}
 </style>
 
@@ -45,6 +49,19 @@
 			return {
 				contents
 			};
+		},
+
+		oncreate () {
+			const onhashchange = () => {
+				this.set({ hash: window.location.hash.slice( 1 ) });
+			};
+
+			window.addEventListener( 'hashchange', onhashchange, false );
+			this.on( 'teardown', () => {
+				window.removeEventListener( 'hashchange', onhashchange, false );
+			});
+
+			onhashchange();
 		}
 	};
 </script>

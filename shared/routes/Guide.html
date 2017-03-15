@@ -1,4 +1,4 @@
-<div class='content'>
+<div ref:container class='content'>
 	{{#each sections as section}}
 		<section id='{{section.slug}}'>
 			<h2>{{section.metadata.title}}</h2>
@@ -34,6 +34,7 @@
 		margin: -3rem 0 1rem 0;
 		font-size: 2.4em;
 		font-weight: 400;
+		pointer-events: none;
 	}
 
 	h3 {
@@ -41,6 +42,7 @@
 		font-size: 1.2em;
 		font-weight: 800;
 		margin: -3em 0 0 0;
+		pointer-events: none;
 	}
 
 	p {
@@ -193,7 +195,67 @@
 <script>
 	import GuideContents from '../components/GuideContents.html';
 
+	function throttle ( fn, ms ) {
+		let blocked = false;
+
+		function unblock () {
+			blocked = false;
+		};
+
+		return function () {
+			if ( blocked ) return;
+			blocked = true;
+
+			fn();
+			setTimeout( unblock, ms );
+		};
+	}
+
 	export default {
+		oncreate () {
+			const anchors = this.refs.container.querySelectorAll( '[id]' );
+			let positions;
+
+			const onresize = () => {
+				const { top } = this.refs.container.getBoundingClientRect();
+				positions = [].map.call( anchors, anchor => {
+					return anchor.getBoundingClientRect().top - top;
+				});
+			}
+
+			const onscroll = throttle( () => {
+				const { top } = this.refs.container.getBoundingClientRect();
+
+				let i = anchors.length;
+				while ( i-- ) {
+					if ( positions[i] + top < 40 ) {
+						const anchor = anchors[i];
+						const { id } = anchor;
+						anchor.id = null;
+						window.location.hash = id;
+						anchor.id = id;
+
+						return;
+					}
+				}
+			}, 200 );
+
+			window.addEventListener( 'scroll', onscroll, { passive: true });
+			window.addEventListener( 'resize', onresize, { passive: true });
+
+			this.on( 'teardown', () => {
+				window.removeEventListener( 'scroll', onscroll, { passive: true });
+				window.removeEventListener( 'resize', onresize, { passive: true });
+			});
+
+			onresize();
+			onscroll();
+
+			// wait for fonts to load...
+			setTimeout( onresize, 1000 );
+			setTimeout( onresize, 5000 );
+		},
+
 		components: {
 			GuideContents
 		}
