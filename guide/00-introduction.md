@@ -10,7 +10,7 @@ But Svelte has a crucial difference: rather than interpreting your application c
 
 And because there's no overhead, you can easily adopt Svelte in an existing app incrementally, or ship widgets as standalone packages that work anywhere.
 
-[Read the introductory blog post](/blog/frameworks-without-the-framework/) to learn more about Svelte's goals and philosophy.
+[Read the introductory blog post](/blog/frameworks-without-the-framework) to learn more about Svelte's goals and philosophy.
 
 
 ### Understanding Svelte components

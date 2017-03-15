@@ -28,7 +28,7 @@ function redirect ( from, to ) {
 
 redirect( '/blog/', '/blog' );
 redirect( '/guide/', '/guide' );
-redirect( '/blog:slug/', route => `/blog/${route.params.slug}` );
+redirect( '/blog/:slug/', route => `/blog/${route.params.slug}` );
 
 roadtrip
 	.add( '/', {
