@@ -1,0 +1,316 @@
+<div class='{{open ? "open": "closed"}} mousecatcher' on:click='set({ open: false })'></div>
+
+<div class='container'>
+	<span class="menu-link" on:click='toggleOpen()'>{{open ? 'Close' : 'Menu'}}</span>
+	<a href='/' class='logo'>Svelte</a>
+</div>
+
+<nav ref:nav class='{{open ? "open": "closed"}}' on:click='set({ open: false })'>
+	<ul class='primary'>
+		<li><a class='{{route === "guide" ? "active": ""}}' href='/guide'>Guide</a></li>
+		<li><a class='{{route === "repl" ? "active": ""}}' href='/repl'>REPL</a></li>
+		<li><a class='{{route === "blog" ? "active": ""}}' href='/blog'>Blog</a></li>
+		<li><a href='https://gitter.im/sveltejs/svelte'>Chat</a></li>
+		<li><a href='https://github.com/sveltejs/svelte'>GitHub</a></li>
+	</ul>
+
+	<div class='secondary'>
+		<GuideContents active='{{active}}'/>
+	</div>
+</nav>
+
+<style>
+	.mousecatcher {
+		position: fixed;
+		left: 0;
+		top: 0;
+		width: 100vw;
+		height: 100vh;
+		background-color: black;
+		pointer-events: none;
+		opacity: 0;
+		/*transition: opacity 0.4s;*/
+		z-index: 3;
+	}
+
+	.mousecatcher.open {
+		pointer-events: all;
+		opacity: 0.3;
+	}
+
+	@keyframes fadein {
+		from { opacity: 0; }
+		to { opacity: 1; }
+	}
+
+	.container {
+		position: fixed;
+		width: 100%;
+		height: 3em;
+		background-color: #333;
+		color: #eee;
+		border-bottom: 2px solid rgb(170,30,30);
+		font-family: Rajdhani, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+		z-index: 3;
+	}
+
+	nav {
+		position: fixed;
+		width: 14em;
+		height: calc(100vh - 3em);
+		top: 3em;
+		font-family: Rajdhani, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+		background-color: white;
+		transform: translate(-100%,0);
+		transition: transform 0.2s cubic-bezier(.17,.67,.24,.99);
+		border-right: 1px solid #eee;
+		z-index: 3;
+		padding: 1em;
+		user-select: none;
+		overflow-y: auto;
+	}
+
+	.open {
+		transform: translate(0,0);
+		transition: transform 0.3s cubic-bezier(.17,.67,.24,.99);
+	}
+
+	.menu-link {
+		display: inline;
+		position: absolute;
+		top: 0;
+		left: 1rem;
+		font-size: 1em;
+		font-family: Rajdhani, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+		line-height: 3.1em;
+		color: #ccc;
+		cursor: pointer;
+		font-weight: 500;
+		-webkit-tap-highlight-color: transparent;
+		-webkit-touch-callout: none;
+	}
+
+	.logo {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -45%);
+		-webkit-tap-highlight-color: transparent;
+		-webkit-touch-callout: none;
+		line-height: 1;
+		text-transform: lowercase;
+		color: white;
+		font-size: 1.4rem;
+	}
+
+	ul {
+		display: block;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.primary {
+		margin: 0 0 2em 0;
+	}
+
+	.primary li {
+		position: relative;
+		display: block;
+	}
+
+	.primary .active {
+		color: #333;
+		font-weight: 700;
+	}
+
+	/**/
+
+	.primary li a {
+		display: block;
+		color: #727272;
+		font-size: 1.3em;
+		font-weight: 500;
+		padding: 0.75em 0;
+		line-height: 1;
+	}
+
+	/*.primary .active {
+		color: white;
+		font-weight: 500;
+	}
+
+	.primary li a:hover {
+		color: white;
+	}*/
+
+
+
+	/*.sidebar {
+		position: fixed;
+		width: 14em;
+		height: calc(100% - 3em);
+		top: 3em;
+		max-width: calc(100% - 2em);
+		background-color: white;
+		text-align: left;
+		margin: 0;
+		padding: 2em 1em 2em 1.5em;
+		z-index: 2;
+		overflow-y: auto;
+		display: block;
+	}
+
+	.sidebar a {
+		color: #333;
+		transition: color 180ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
+	}
+
+	.sidebar li {
+		list-style: none;
+		font-family: Rajdhani, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+		margin: 0 0 1.5em 0;
+	}
+
+	.sidebar .section {
+		display: block;
+		font-size: 1.2em;
+		font-weight: 700;
+		margin-bottom: 0.15em;
+	}
+
+	.sidebar .subsection {
+		margin-bottom: 0.15em;
+		padding: 0;
+		display: block;
+		color: #727272;
+	}
+
+	.sidebar .active-section {
+		color: rgb(170,30,30);
+	}*/
+
+	@media (min-width: 360px) {
+		/*.logo {
+			top: 0.7rem;
+			font-size: 1.8em;
+		}*/
+
+		/*.primary li a {
+			padding: 1.1em 0.5em 0.9em 0.5em;
+		}*/
+	}
+
+	@media (min-width: 768px) {
+		.mousecatcher, .menu-link {
+			display: none;
+		}
+
+		.container {
+			height: 4em;
+		}
+
+		nav {
+			width: 100%;
+			height: 4em;
+			padding: 0 1.5em 0 0;
+			transform: none;
+			transition: none;
+			height: 0;
+		}
+
+		.primary {
+			position: fixed;
+			top: 0;
+			right: 1em;
+			margin: 0;
+		}
+
+		.primary li {
+			display: inline-block;
+		}
+
+		.primary li a {
+			padding: 1.5em 0.5em;
+			color: #ccc;
+			font-size: 1rem;
+		}
+
+		.primary li a.active {
+			color: white;
+			font-weight: 500;
+		}
+
+		.primary li::after {
+			position: absolute;
+			top: 1.5rem;
+			right: -0.3em;
+			content: '/';
+			font-size: 0.8em;
+			color: #999;
+		}
+
+		li:last-child::after {
+			content: '';
+		}
+
+		.secondary {
+			display: none;
+		}
+
+		/*.sidebar {
+			height: calc(100% - 4em);
+			top: 4em;
+		}*/
+
+		.logo {
+			position: absolute;
+			top: 1rem;
+			left: 1rem;
+			font-size: 2em;
+			font-weight: 300;
+			transform: none;
+		}
+	}
+</style>
+
+<script>
+	import GuideContents from './GuideContents.html';
+
+	export default {
+		data () {
+			return {
+				open: false,
+				route: '',
+				active: null
+			};
+		},
+
+		methods: {
+			toggleOpen () {
+				const open = this.get( 'open' );
+
+				// if the menu is closing, scroll back to the top *after* it
+				// shuts. otherwise, scroll back to the top immediately
+				// (just in case the user reopened before it happened).
+				// The reason we don't just do it when the menu opens is
+				// that the scrollbar visibly flashes
+				if ( open ) {
+					setTimeout( () => {
+						if ( !this.get( 'open' ) ) {
+							this.refs.nav.scrollTop = 0;
+						}
+					}, 350 );
+				} else {
+					this.refs.nav.scrollTop = 0;
+				}
+
+				this.set({ open: !open });
+			}
+		},
+
+		components: {
+			GuideContents
+		}
+	};
+</script>

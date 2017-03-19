@@ -2,14 +2,18 @@
   "name": "svelte.technology",
   "version": "1.0.0",
   "description": "Docs and examples for Svelte",
-  "main": "index.js",
   "scripts": {
-    "start": "gobble",
-    "build": "gobble build -f dist",
-    "predeploy": "npm run build",
-    "predeploy:ci": "npm run build",
-    "deploy": "cd dist && now && now alias",
-    "deploy:ci": "cd dist && now --token $NOW_TOKEN && now alias --token $NOW_TOKEN"
+    "start": "node server",
+    "rollup": "rollup -c rollup/rollup.config.js && rollup -c rollup/rollup.config.codemirror.js",
+    "rollup:dev": "export DEV=true && rollup -c rollup/rollup.config.js -w",
+    "dev": "npm run rollup:dev & ( export DEV=true && node scripts/prep && node server )",
+    "prep": "node scripts/prep && npm run rollup",
+    "prestage": "npm run prep",
+    "predeploy": "npm run prep",
+    "predeploy:ci": "npm run prep",
+    "stage": "now",
+    "deploy": "now && now alias",
+    "deploy:ci": "now --token $NOW_TOKEN && now alias --token $NOW_TOKEN"
   },
   "repository": {
     "type": "git",
@@ -26,27 +30,39 @@
   "homepage": "https://github.com/sveltejs/svelte.technology#readme",
   "devDependencies": {
     "chalk": "^1.1.3",
+    "clean-css": "^4.0.8",
+    "compression": "^1.6.2",
     "eslint": "^3.17.1",
     "eslint-plugin-import": "^2.2.0",
-    "gobble": "^0.12.0",
-    "gobble-cli": "^0.8.0",
-    "gobble-concat": "^0.4.1",
-    "gobble-postcss": "^0.3.0",
-    "gobble-rollup": "^0.40.0",
-    "gobble-uglifyjs": "^0.2.1",
+    "express": "^4.15.2",
+    "highlight.js": "^9.10.0",
     "html-entities": "^1.2.0",
     "marked": "^0.3.6",
     "now": "^4.7.1",
     "postcss-clearfix": "^1.0.0",
     "postcss-import": "^9.1.0",
     "postcss-nested": "^1.0.0",
+    "rollup": "^0.41.5",
     "rollup-plugin-buble": "^0.15.0",
+    "rollup-plugin-commonjs": "^8.0.2",
     "rollup-plugin-json": "^2.1.0",
-    "rollup-plugin-svelte": "^1.6.0"
+    "rollup-plugin-node-resolve": "^2.0.0",
+    "rollup-plugin-svelte": "^1.6.0",
+    "rollup-plugin-uglify": "^1.0.1",
+    "rollup-watch": "^3.2.2",
+    "uglify-js": "^2.8.12"
   },
   "dependencies": {
     "codemirror": "^5.24.2",
     "curl-amd": "^0.8.12",
+    "roadtrip": "^0.3.4",
     "svelte": "^1.11.2"
+  },
+  "now": {
+    "alias": "svelte.technology",
+    "files": [
+      "public",
+      "server"
+    ]
   }
 }

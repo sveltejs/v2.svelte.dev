@@ -2,3 +2,10 @@
 node_modules
 .gobble*
 dist
+public/bundle.js
+public/bundle.js.map
+public/main.css
+public/guide.json
+shared/components/guide-summary.json
+server/components
+server/routes

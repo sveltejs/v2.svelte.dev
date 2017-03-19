@@ -10,7 +10,7 @@ But Svelte has a crucial difference: rather than interpreting your application c
 
 And because there's no overhead, you can easily adopt Svelte in an existing app incrementally, or ship widgets as standalone packages that work anywhere.
 
-[Read the introductory blog post](/blog/frameworks-without-the-framework/) to learn more about Svelte's goals and philosophy.
+[Read the introductory blog post](/blog/frameworks-without-the-framework) to learn more about Svelte's goals and philosophy.
 
 
 ### Understanding Svelte components
@@ -76,7 +76,7 @@ cd my-svelte-project
 
 Inside `my-svelte-project`, create a `HelloWorld.html` file with the following contents:
 
-```html
+```html-no-repl
 <h1>Hello {{name}}</h1>
 ```
 
@@ -90,7 +90,7 @@ The `--format iife` bit means 'generate an immediately-invoked function expressi
 
 Create an `index.html` page and include the script we just generated:
 
-```html
+```html-no-repl
 <!doctype html>
 <html>
 <head>

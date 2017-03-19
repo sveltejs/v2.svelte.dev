@@ -1,0 +1,102 @@
+<article class='post'>
+	<h1>{{post.metadata.title}}</h1>
+	<p class='standfirst'>{{post.metadata.description}}</p>
+
+	<p class='byline'><a href='{{post.metadata.authorURL}}'>{{post.metadata.author}}</a> <time datetime='{{post.metadata.pubdate}}'>{{post.metadata.dateString}}</time></p>
+
+	{{{post.html}}}
+</article>
+
+<style>
+	.post {
+		max-width: 48em;
+		margin: 0 auto;
+		padding: 1em;
+		/*padding: 0 0 2em 0;*/
+	}
+
+	p {
+		margin: 0 0 1em 0;
+		line-height: 1.5;
+	}
+
+	.byline {
+		font-size: 0.8em;
+		border-top: 1px solid #eee;
+		padding: 0.5em 0;
+	}
+
+	time {
+		/*float: right;*/
+	}
+
+	p {
+		font-weight: 300;
+		color: #333;
+	}
+
+	p:last-child {
+		margin: 0;
+	}
+
+	strong {
+		color: #333;
+		font-weight: 700;
+	}
+
+	code {
+		background-color: #f9f9f9;
+		padding: 0.2em 0.4em;
+		border-radius: 3px;
+	}
+
+	.post {
+		padding: 1em;
+	}
+
+	h1, h2 {
+		font-size: 1.8em;
+		margin: 0;
+		font-weight: 500;
+	}
+
+	h2 {
+		color: #333;
+	}
+
+	.standfirst {
+		font-size: 1.4em;
+		font-family: Rajdhani, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+		line-height: 1.2;
+		color: #888;
+		font-weight: 500;
+	}
+
+	blockquote {
+		color: #999;
+		margin: 1em 0;
+		padding: 0.5em 0 0.5em 1em;
+		max-width: 48em;
+		background-color: #f9f9f9;
+		border-left: 2px solid #ddd;
+		/*border-top: 1px solid #eee;
+		border-bottom: 1px solid #eee;*/
+	}
+
+	blockquote p {
+		color: #666;
+	}
+
+	blockquote strong {
+		display: block;
+		font-weight: 300;
+		font-style: italic;
+		color: #666;
+	}
+
+	@media (min-width: 768px) {
+		h1, h2 {
+			font-size: 2.4em;
+		}
+	}
+</style>
