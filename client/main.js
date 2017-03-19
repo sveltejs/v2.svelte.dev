@@ -29,6 +29,10 @@ function redirect ( from, to ) {
 redirect( '/blog/', '/blog' );
 redirect( '/guide/', '/guide' );
 redirect( '/blog/:slug/', route => `/blog/${route.params.slug}` );
+redirect( '/repl/', route => {
+	const query = Object.keys( route.query ).map( key => `${key}=${route.query[key]}` ).join( '&' );
+	return query ? `/repl?${query}` : '/repl';
+});
 
 roadtrip
 	.add( '/', {
