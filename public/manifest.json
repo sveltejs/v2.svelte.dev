@@ -1,0 +1,13 @@
+{
+  "background_color": "#aa1e1e",
+  "name": "Svelte",
+  "short_name": "Svelte",
+  "display": "browser",
+  "icons": [
+    {
+      "src": "svelte-144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    }
+  ]
+}
