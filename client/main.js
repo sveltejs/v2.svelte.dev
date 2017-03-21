@@ -5,7 +5,7 @@ import BlogPost from '../shared/routes/BlogPost.html';
 import Guide from '../shared/routes/Guide.html';
 import Repl from '../shared/routes/Repl/index.html';
 import Nav from '../shared/components/Nav.html';
-import get from './get.js';
+import store from './store.js';
 
 const header = document.querySelector( 'header' );
 const main = document.querySelector( 'main' );
@@ -70,7 +70,7 @@ roadtrip
 				main.innerHTML = '';
 			}
 
-			return get( `/blog.json` ).then( JSON.parse ).then( posts => {
+			return store.getJSON( `/blog.json` ).then( posts => {
 				view = new BlogIndex({
 					target: main,
 					data: {
@@ -79,6 +79,11 @@ roadtrip
 				});
 
 				window.scrollTo( route.scrollX, route.scrollY );
+
+				// start preloading blog posts
+				posts.reduce( ( promise, post ) => {
+					promise.then( () => store.getJSON( `/blog/${post.slug}.json` ) );
+				}, Promise.resolve() );
 			});
 		}
 	})
@@ -88,7 +93,7 @@ roadtrip
 
 			if ( route.isInitial ) return; // page is static
 
-			return get( `/blog/${route.params.slug}.json` ).then( JSON.parse ).then( post => {
+			return store.getJSON( `/blog/${route.params.slug}.json` ).then( post => {
 				document.title = `${post.metadata.title} • Svelte`;
 
 				if ( view ) {
@@ -121,7 +126,7 @@ roadtrip
 				main.innerHTML = '';
 			}
 
-			return get( `/guide.json` ).then( JSON.parse ).then( sections => {
+			return store.getJSON( `/guide.json` ).then( sections => {
 				view = new Guide({
 					target: main,
 					data: {
@@ -146,7 +151,7 @@ roadtrip
 		}
 	})
 	.add( '/repl', {
-		enter ( route ) {
+		enter () {
 			nav.set({ route: 'repl' });
 
 			document.title = 'Svelte REPL';
