@@ -11,7 +11,6 @@ const app = express();
 const root = path.resolve( __dirname, '..' );
 
 app.use( compression({ threshold: 0 }) );
-app.use( express.static( 'public' ) );
 
 function loadComponent ( file ) {
 	const resolved = require.resolve( `./${file}.js` );
@@ -32,11 +31,19 @@ app.get( '/', ( req, res ) => {
 	});
 });
 
+app.use( ( req, res, next ) => {
+	if ( req.url.slice( -1 ) === '/' && req.url.length > 1 ) {
+		res.redirect( 301, req.url.slice( 0, -1 ) );
+	} else {
+		next();
+	}
+});
+
 app.get( '/blog', ( req, res ) => {
 	const Nav = loadComponent( 'components/Nav' );
 	const BlogIndex = loadComponent( 'routes/BlogIndex' );
 
-	const posts = require( `${root}/public/posts.json` );
+	const posts = require( `${root}/public/blog.json` );
 
 	servePage( res, {
 		title: 'Svelte • The magical disappearing UI framework',
@@ -51,7 +58,7 @@ app.get( '/blog/:slug', ( req, res ) => {
 	const Nav = loadComponent( 'components/Nav' );
 	const BlogPost = loadComponent( 'routes/BlogPost' );
 
-	const post = require( `${root}/public/posts/${req.params.slug}.json` );
+	const post = require( `${root}/public/blog/${req.params.slug}.json` );
 
 	servePage( res, {
 		title: `${post.metadata.title} • Svelte`,
@@ -89,6 +96,8 @@ app.get( '/repl', ( req, res ) => {
 		console.log( err.stack );
 	});
 });
+
+app.use( express.static( 'public' ) );
 
 app.listen( 3000, () => {
 	console.log( 'listening on localhost:3000' );
