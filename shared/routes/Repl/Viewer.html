@@ -1,4 +1,4 @@
-<iframe ref:child srcdoc='
+<iframe ref:child class='{{error || pendingImports ? "greyed-out" : ""}}' srcdoc='
 	<!doctype html>
 	<html>
 		<head>
@@ -8,11 +8,65 @@
 	</html>
 '></iframe>
 
+<div class='overlay'>
+	{{#if error}}
+		<p class='error'>{{error.message}}</p>
+	{{elseif pendingImports}}
+		<p class='info'>loading {{pendingImports}} {{pendingImports === 1 ? 'dependency' : 'dependencies'}} from wzrd.in</p>
+	{{/if}}
+</div>
+
 <style>
 	iframe {
 		width: 100%;
 		height: 100%;
 		border: none;
+	}
+
+	.greyed-out {
+		filter: grayscale(100%);
+		opacity: 0.4;
+	}
+
+	.overlay {
+		position: absolute;
+		top: 0;
+		width: 100%;
+		padding: 1em;
+		pointer-events: none;
+	}
+
+	.overlay p {
+		position: relative;
+		border-radius: 0.2em;
+		margin: 0;
+		padding: 0.5em 0.5em 0.5em 2.5em;
+		color: white;
+	}
+
+	.overlay p::before {
+		content: '!';
+		position: absolute;
+		left: 0.7em;
+		top: 0.55em;
+		font-size: 0.8em;
+		font-weight: 800;
+		width: 1em;
+		height: 1em;
+		text-align: center;
+		line-height: 1;
+		padding: 0.2em 0.15em 0.1em 0.15em;
+		border-radius: 50%;
+		color: white;
+		border: 2px solid white;
+	}
+
+	.error {
+		background-color: rgb(170,30,30);
+	}
+
+	.info {
+		background-color: #666;
 	}
 </style>
 
@@ -20,8 +74,14 @@
 	let importCache = {};
 
 	function fetchImport ( x ) {
-		return curl([ `https://wzrd.in/standalone/${x.source}@latest` ]).then( module => {
-			importCache[ x.source ] = module;
+		return new Promise( ( fulfil, reject ) => {
+			curl([ `https://wzrd.in/standalone/${x.source}@latest` ]).then( module => {
+				importCache[ x.source ] = module;
+				fulfil( module );
+			}, err => {
+				console.error( err.stack );
+				reject( new Error( `Error loading ${x.source} from wzrd.in` ) );
+			});
 		});
 	}
 
@@ -102,6 +162,8 @@
 						const missingImports = imports.filter( x => !importCache[ x.source ] );
 
 						const createComponent = () => {
+							this.set({ error: null });
+
 							if ( toTeardown ) {
 								const styles = iframe.contentDocument.querySelectorAll( 'style' );
 								let i = styles.length;
@@ -156,12 +218,32 @@
 							}
 						};
 
+						let pendingImports = missingImports.length;
+						this.set({ pendingImports });
+
 						if ( missingImports.length ) {
 							let cancelled = false;
-							promise = Promise.all( missingImports.map( fetchImport ) );
+
+							promise = Promise.all(
+								missingImports.map( id => fetchImport( id ).then( module => {
+									pendingImports -= 1;
+									this.set({ pendingImports });
+									return module;
+								}))
+							);
 							promise.cancel = () => cancelled = true;
 
-							promise.then( createComponent );
+							promise
+								.then( () => {
+									if ( cancelled ) return;
+									createComponent();
+								})
+								.catch( error => {
+									if ( cancelled ) return;
+
+									console.error( error.stack );
+									this.set({ error });
+								});
 						} else {
 							createComponent();
 						}

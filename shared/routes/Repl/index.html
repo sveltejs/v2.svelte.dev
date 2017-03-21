@@ -15,20 +15,24 @@
 				</select>
 			</div>
 
-			{{#if ready}}
+			{{#if loadedCodemirror}}
 				{{#if showGenerated}}
 					<CodeMirror ref:editor mode='javascript' code='{{compiled.code}}' readonly/>
 				{{else}}
 					<CodeMirror ref:editor mode='htmlmixed' bind:code='source' error='{{sourceError}}'/>
 				{{/if}}
+			{{else}}
+				<p class='loading'>loading editor...</p>
 			{{/if}}
 		</section>
 	</div>
 
 	<div ref:right class='right' style='width: {{100 - verticalDividerPos}}%;'>
 		<div class='top' style='height: {{horizontalDividerPos}}%;'>
-			{{#if ready}}
+			{{#if loadedSvelte}}
 				<Viewer compiled='{{compiled}}' data='{{data}}' on:change='updateData(event)'/>
+			{{else}}
+				<p class='loading'>loading Svelte compiler...</p>
 			{{/if}}
 
 			{{#if dragging}}
@@ -37,8 +41,10 @@
 		</div>
 
 		<div class='bottom' style='height: {{100 - horizontalDividerPos}}%;'>
-			{{#if ready}}
+			{{#if loadedCodemirror}}
 				<CodeMirror ref:data mode='javascript' bind:code='json' error='{{dataError}}'/>
+			{{else}}
+				<p class='loading'>loading editor...</p>
 			{{/if}}
 		</div>
 
@@ -139,6 +145,13 @@
 		left: 0;
 		width: 100%;
 		height: 1px;
+	}
+
+	.loading {
+		text-align: center;
+		color: #999;
+		font-weight: 300;
+		margin: 2em 0 0 0;
 	}
 
 	section {
@@ -272,7 +285,7 @@
 				data,
 				json: JSON.stringify( data, null, '  ' ),
 
-				ready: false
+				loadedCodemirror: false
 			};
 		},
 
@@ -339,7 +352,7 @@
 
 		oncreate () {
 			loadCodemirror().then( () => {
-				this.set({ ready: true });
+				this.set({ loadedCodemirror: true });
 			});
 
 			this.observe( 'selectedExample', id => {
@@ -380,6 +393,8 @@
 			loadSvelte().then( svelte => {
 				console.log( `running Svelte compiler version %c${svelte.VERSION}`, 'font-weight: bold' );
 				window.svelte = svelte;
+
+				this.set({ loadedSvelte: true });
 
 				this.observe( 'source', source => {
 					if ( !source ) return;
