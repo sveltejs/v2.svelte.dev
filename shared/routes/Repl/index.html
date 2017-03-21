@@ -301,9 +301,22 @@
 				this.set({ saving: true });
 
 				saveComponentAsGist( this.get( 'source' ), this.get( 'json' ) ).then( id => {
-					if ( history ) history.replaceState( {}, 'x', `/repl/?${versionParameter}gist=${id}` );
+					this.updateUrl();
 					this.set({ saving: false });
 				});
+			},
+
+			updateUrl () {
+				if ( typeof history === 'undefined' ) return;
+
+				const params = {};
+				if ( typeof svelte !== 'undefined' ) params.svelte = svelte.VERSION;
+				if ( this.get( 'gist' ) ) params.gist = this.get( 'gist' );
+
+				const queryString = Object.keys( params ).map( key => `${key}=${params[key]}` ).join( '&' );
+				const url = queryString ? `/repl?${queryString}` : '/repl';
+
+				history.replaceState( {}, 'x', url );
 			}
 		},
 
@@ -336,11 +349,12 @@
 						console.error( err.stack );
 					});
 
-				if ( history ) history.replaceState( {}, 'x', `/repl/?${versionParameter}gist=${gist}` );
+				this.updateUrl();
 			});
 
 			loadSvelte().then( svelte => {
 				console.log( `running Svelte compiler version %c${svelte.VERSION}`, 'font-weight: bold' );
+				window.svelte = svelte;
 
 				this.observe( 'source', source => {
 					if ( !source ) return;
@@ -362,6 +376,8 @@
 						});
 					}
 				});
+
+				this.updateUrl();
 			});
 
 			this.observe( 'json', json => {
