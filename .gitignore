@@ -6,6 +6,8 @@ public/bundle.js
 public/bundle.js.map
 public/main.css
 public/guide.json
+public/examples
 shared/components/guide-summary.json
+shared/routes/Repl/examples.js
 server/components
 server/routes

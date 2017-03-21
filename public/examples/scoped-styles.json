@@ -1,1 +1,0 @@
-{"title":"Scoped styles","data":{},"source":"<div class='foo'>\n\tBig red Comic Sans\n</div>\n\n<style>\n\t.foo {\n\t\tcolor: red;\n\t\tfont-size: 2em;\n\t\tfont-family: 'Comic Sans MS';\n\t}\n</style>"}
