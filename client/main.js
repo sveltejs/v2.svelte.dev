@@ -5,7 +5,7 @@ import BlogPost from '../shared/routes/BlogPost.html';
 import Guide from '../shared/routes/Guide.html';
 import Repl from '../shared/routes/Repl/index.html';
 import Nav from '../shared/components/Nav.html';
-import store from './store.js';
+import * as store from './store.js';
 
 const header = document.querySelector( 'header' );
 const main = document.querySelector( 'main' );
@@ -54,6 +54,11 @@ roadtrip
 			});
 
 			window.scrollTo( route.scrollX, route.scrollY );
+
+			// preload blog and guide
+			store.getJSON( `/blog.json` ).then( () => {
+				return store.getJSON( `/guide.json` );
+			});
 		}
 	})
 	.add( '/blog', {
@@ -82,8 +87,11 @@ roadtrip
 
 				// start preloading blog posts
 				posts.reduce( ( promise, post ) => {
-					promise.then( () => store.getJSON( `/blog/${post.slug}.json` ) );
-				}, Promise.resolve() );
+					return promise.then( () => store.getJSON( `/blog/${post.slug}.json` ) );
+				}, Promise.resolve() )
+
+					// then preload the guide
+					.then( () => store.getJSON( `/guide.json` ) );
 			});
 		}
 	})
@@ -111,6 +119,11 @@ roadtrip
 
 				// TODO this doesn't work because it's the <main> that scrolls, not the window
 				window.scrollTo( route.scrollX, route.scrollY );
+
+				// preload blog index and guide
+				store.getJSON( `/blog.json` ).then( () => {
+					return store.getJSON( `/guide.json` );
+				});
 			});
 		}
 	})
@@ -147,6 +160,9 @@ roadtrip
 				} else {
 					window.scrollTo( route.scrollX, route.scrollY );
 				}
+
+				// preload blog index
+				store.getJSON( `/blog.json` );
 			});
 		}
 	})

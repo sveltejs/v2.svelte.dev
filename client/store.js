@@ -10,17 +10,15 @@ function get ( url ) {
 	});
 }
 
-export default {
-	getJSON ( url ) {
-		if ( !cache[ url ] ) {
-			cache[ url ] = get( url )
-				.then( JSON.parse )
-				.catch( err => {
-					cache[ url ] = null;
-					throw err;
-				});
-		}
-
-		return cache[ url ];
+export function getJSON ( url ) {
+	if ( !cache[ url ] ) {
+		cache[ url ] = get( url )
+			.then( JSON.parse )
+			.catch( err => {
+				cache[ url ] = null;
+				throw err;
+			});
 	}
-};
+
+	return cache[ url ];
+}
