@@ -54,6 +54,9 @@ app.get( '/blog', ( req, res ) => {
 	});
 });
 
+// putting this here so following route doesn't confuse it (blog/thing.json etc)
+app.use( express.static( 'public' ) );
+
 app.get( '/blog/:slug', ( req, res ) => {
 	const Nav = loadComponent( 'components/Nav' );
 	const BlogPost = loadComponent( 'routes/BlogPost' );
@@ -96,8 +99,6 @@ app.get( '/repl', ( req, res ) => {
 		console.log( err.stack );
 	});
 });
-
-app.use( express.static( 'public' ) );
 
 app.listen( 3000, () => {
 	console.log( 'listening on localhost:3000' );
