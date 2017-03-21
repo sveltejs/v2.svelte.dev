@@ -4,6 +4,8 @@ node_modules
 dist
 public/bundle.js
 public/bundle.js.map
+public/service-worker.js
+public/service-worker.js.map
 public/main.css
 public/guide.json
 public/examples

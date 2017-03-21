@@ -1,12 +1,3 @@
-/* TODO figure out which of these we actually need */
-@font-face {
-	font-family: 'Roboto';
-	src: url('/fonts/Roboto/Roboto-BlackItalic.woff2') format('woff2'),
-		url('/fonts/Roboto/Roboto-BlackItalic.woff') format('woff');
-	font-weight: 900;
-	font-style: italic;
-}
-
 @font-face {
 	font-family: 'Roboto';
 	src: url('/fonts/Roboto/Roboto-LightItalic.woff2') format('woff2'),
@@ -17,57 +8,9 @@
 
 @font-face {
 	font-family: 'Roboto';
-	src: url('/fonts/Roboto/Roboto-Regular.woff2') format('woff2'),
-		url('/fonts/Roboto/Roboto-Regular.woff') format('woff');
-	font-weight: normal;
-	font-style: normal;
-}
-
-@font-face {
-	font-family: 'Roboto';
 	src: url('/fonts/Roboto/Roboto-Light.woff2') format('woff2'),
 		url('/fonts/Roboto/Roboto-Light.woff') format('woff');
 	font-weight: 300;
-	font-style: normal;
-}
-
-@font-face {
-	font-family: 'Rajdhani';
-	src: url('/fonts/Rajdhani/Rajdhani-Bold.woff2') format('woff2'),
-		url('/fonts/Rajdhani/Rajdhani-Bold.woff') format('woff');
-	font-weight: bold;
-	font-style: normal;
-}
-
-@font-face {
-	font-family: 'Roboto';
-	src: url('/fonts/Roboto/Roboto-Medium.woff2') format('woff2'),
-		url('/fonts/Roboto/Roboto-Medium.woff') format('woff');
-	font-weight: 500;
-	font-style: normal;
-}
-
-@font-face {
-	font-family: 'Roboto';
-	src: url('/fonts/Roboto/Roboto-Italic.woff2') format('woff2'),
-		url('/fonts/Roboto/Roboto-Italic.woff') format('woff');
-	font-weight: normal;
-	font-style: italic;
-}
-
-@font-face {
-	font-family: 'Rajdhani';
-	src: url('/fonts/Rajdhani/Rajdhani-Medium.woff2') format('woff2'),
-		url('/fonts/Rajdhani/Rajdhani-Medium.woff') format('woff');
-	font-weight: 500;
-	font-style: normal;
-}
-
-@font-face {
-	font-family: 'Rajdhani';
-	src: url('/fonts/Rajdhani/Rajdhani-Semibold.woff2') format('woff2'),
-		url('/fonts/Rajdhani/Rajdhani-Semibold.woff') format('woff');
-	font-weight: 600;
 	font-style: normal;
 }
 
@@ -80,70 +23,45 @@
 }
 
 @font-face {
-	font-family: 'Roboto';
-	src: url('/fonts/Roboto/Roboto-Black.woff2') format('woff2'),
-		url('/fonts/Roboto/Roboto-Black.woff') format('woff');
-	font-weight: 900;
+	font-family: 'Rajdhani';
+	src: url('/fonts/Rajdhani/Rajdhani-Bold.woff2') format('woff2'),
+		url('/fonts/Rajdhani/Rajdhani-Bold.woff') format('woff');
+	font-weight: 700;
 	font-style: normal;
-}
-
-@font-face {
-	font-family: 'Roboto';
-	src: url('/fonts/Roboto/Roboto-BoldItalic.woff2') format('woff2'),
-		url('/fonts/Roboto/Roboto-BoldItalic.woff') format('woff');
-	font-weight: bold;
-	font-style: italic;
 }
 
 @font-face {
 	font-family: 'Rajdhani';
-	src: url('/fonts/Rajdhani/Rajdhani-Light.woff2') format('woff2'),
-		url('/fonts/Rajdhani/Rajdhani-Light.woff') format('woff');
-	font-weight: 300;
-	font-style: normal;
-}
-
-@font-face {
-	font-family: 'Roboto';
-	src: url('/fonts/Roboto/Roboto-MediumItalic.woff2') format('woff2'),
-		url('/fonts/Roboto/Roboto-MediumItalic.woff') format('woff');
+	src: url('/fonts/Rajdhani/Rajdhani-Medium.woff2') format('woff2'),
+		url('/fonts/Rajdhani/Rajdhani-Medium.woff') format('woff');
 	font-weight: 500;
-	font-style: italic;
+	font-style: normal;
 }
 
 @font-face {
 	font-family: 'Rajdhani';
 	src: url('/fonts/Rajdhani/Rajdhani-Regular.woff2') format('woff2'),
 		url('/fonts/Rajdhani/Rajdhani-Regular.woff') format('woff');
+	font-weight: 300;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Inconsolata';
+	src: local('Inconsolata Bold'), local('Inconsolata-Bold'),
+		url('/fonts/Inconsolata/Inconsolata-Bold.woff2') format('woff2'),
+		url('/fonts/Inconsolata/Inconsolata-Bold.woff') format('woff');
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Inconsolata';
+	src: local('Inconsolata'), local('Inconsolata-Regular'),
+		url('/fonts/Inconsolata/Inconsolata-Regular.woff2') format('woff2'),
+		url('/fonts/Inconsolata/Inconsolata-Regular.woff') format('woff');
 	font-weight: normal;
 	font-style: normal;
-}
-
-@font-face {
-	font-family: 'Roboto';
-	src: url('/fonts/Roboto/Roboto-Thin.woff2') format('woff2'),
-		url('/fonts/Roboto/Roboto-Thin.woff') format('woff');
-	font-weight: 100;
-	font-style: normal;
-}
-
-@font-face {
-	font-family: 'Roboto';
-	src: url('/fonts/Roboto/Roboto-ThinItalic.woff2') format('woff2'),
-		url('/fonts/Roboto/Roboto-ThinItalic.woff') format('woff');
-	font-weight: 100;
-	font-style: italic;
-}
-
-@font-face{
-	font-family: 'Inconsolata';
-	src: url('/fonts/Inconsolata/Inconsolata-Regular.ttf') format('truetype');
-}
-
-@font-face{
-	font-family: 'Inconsolata';
-	src: url('/fonts/Inconsolata/Inconsolata-Bold.ttf') format('truetype');
-	font-weight: 500;
 }
 
 * {
@@ -155,7 +73,7 @@ body {
 	margin: 0;
 	background: #fff;
 	font-family: Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-	font-weight: 400;
+	font-weight: 300;
 	color: #333;
 }
 

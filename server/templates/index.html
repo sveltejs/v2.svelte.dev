@@ -4,7 +4,9 @@
 	<meta charset='utf-8'>
 	<meta name='viewport' content='width=device-width'>
 
+	<link rel='manifest' href='/manifest.json'>
 	<link rel='icon' type='image/png' href='/favicon.png'>
+	<meta name='theme-color' content='#333'>
 
 	<link rel='stylesheet' href='/main.css'>
 
@@ -16,6 +18,20 @@
 	<meta name='twitter:image' content='https://svelte.technology/images/twitter-card.png'>
 
 	<title>__title__</title>
+
+	<script>
+		if ( 'serviceWorker' in navigator ) {
+			window.addEventListener( 'load', function () {
+				navigator.serviceWorker.register( '/service-worker.js' )
+					.then( function ( registration ) {
+						console.log( 'ServiceWorker registration successful' );
+					})
+					.catch( function ( err ) {
+						console.error( err.stack );
+					});
+			});
+		}
+	</script>
 </head>
 <body>
 	<header>__nav__</header>
