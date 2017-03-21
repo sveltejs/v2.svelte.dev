@@ -16,6 +16,20 @@
 	<meta name='twitter:image' content='https://svelte.technology/images/twitter-card.png'>
 
 	<title>__title__</title>
+
+	<script>
+		if ( 'serviceWorker' in navigator ) {
+			window.addEventListener( 'load', function () {
+				navigator.serviceWorker.register( '/service-worker.js' )
+					.then( function ( registration ) {
+						console.log( 'ServiceWorker registration successful' );
+					})
+					.catch( function ( err ) {
+						console.error( err.stack );
+					});
+			});
+		}
+	</script>
 </head>
 <body>
 	<header>__nav__</header>

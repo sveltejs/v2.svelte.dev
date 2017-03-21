@@ -4,7 +4,7 @@
   "description": "Docs and examples for Svelte",
   "scripts": {
     "start": "node server",
-    "rollup": "rollup -c rollup/rollup.config.js && rollup -c rollup/rollup.config.codemirror.js",
+    "rollup": "rollup -c rollup/rollup.config.js && rollup -c rollup/rollup.config.codemirror.js && rollup -c rollup/rollup.config.sw.js",
     "rollup:dev": "export DEV=true && rollup -c rollup/rollup.config.js -w",
     "dev": "npm run rollup:dev & ( export DEV=true && node scripts/prep && node server )",
     "prep": "node scripts/prep && npm run rollup",
@@ -47,6 +47,7 @@
     "rollup-plugin-commonjs": "^8.0.2",
     "rollup-plugin-json": "^2.1.0",
     "rollup-plugin-node-resolve": "^2.0.0",
+    "rollup-plugin-replace": "^1.1.1",
     "rollup-plugin-svelte": "^1.6.0",
     "rollup-plugin-uglify": "^1.0.1",
     "rollup-watch": "^3.2.2",
