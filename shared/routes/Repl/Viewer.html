@@ -129,7 +129,7 @@
 			this.refs.child.addEventListener( 'load', () => {
 				const iframe = this.refs.child;
 				const body = iframe.contentDocument.body;
-				const eval2 = iframe.contentWindow.eval;
+				const evalInIframe = iframe.contentWindow.eval;
 
 				let promise = null;
 				let observers = null;
@@ -191,7 +191,7 @@
 							const data = this.get( 'data' );
 
 							try {
-								eval2( `
+								evalInIframe( `
 									var SvelteComponent = (function () { ${code} }());
 									document.body.innerHTML = '';
 									var component = new SvelteComponent({
@@ -211,10 +211,14 @@
 										updating = false;
 									}, { init: false });
 								});
-							} catch ( err ) {
+							} catch ( error ) {
 								// TODO show in UI
 								component = null;
 								observers = null;
+
+								console.error( error.stack );
+
+								this.set({ error });
 							}
 						};
 
