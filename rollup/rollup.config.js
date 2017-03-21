@@ -11,7 +11,7 @@ console.log( `creating ${dev ? 'development' : 'production'} bundle` );
 
 export default {
 	entry: 'client/main.js',
-	dest: 'public/bundle.js',
+	dest: 'public/js/bundle.js',
 	format: 'iife',
 	plugins: [
 		json(),

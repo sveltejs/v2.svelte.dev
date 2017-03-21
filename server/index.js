@@ -54,8 +54,18 @@ app.get( '/blog', ( req, res ) => {
 	});
 });
 
-// putting this here so following route doesn't confuse it (blog/thing.json etc)
-app.use( express.static( 'public' ) );
+// putting this all here so following route doesn't confuse it (blog/thing.json etc)
+app.use( express.static( 'public/js', {
+	maxAge: 60 * 1000 // one minute... we want to keep this short
+}));
+
+app.use( '/examples', express.static( 'public/examples', {
+	maxAge: 60 * 1000
+}));
+
+app.use( express.static( 'public', {
+	maxAge: 1000 * 60 * 60 * 24 // one day
+}));
 
 app.get( '/blog/:slug', ( req, res ) => {
 	const Nav = loadComponent( 'components/Nav' );
