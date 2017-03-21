@@ -1,0 +1,165 @@
+<div class='chart'>
+	<h2>US birthrate by year</h2>
+
+	<svg ref:svg>
+		<g transform='translate(0,0)'>
+			<g class='axes'>
+				<!-- y axis -->
+				<g class='axis y-axis' transform='translate(0, {{ padding.top }} )'>
+					{{#each yTicks as tick}}
+						<g class='tick tick-{{ tick }}' transform='translate( 0, {{ yScale(tick) - padding.bottom }} )'>
+							<line stroke='#000' x2='100%' y1='0' y2='0'></line>
+							<text fill='#000' x='0' y='0' dy='-2'>{{ tick !== 0 ? tick : ''}} {{tick === 20 ? ' per 1,000 population' : ''}}</text>
+						</g>
+					{{/each}}
+				</g>
+
+				<!-- x axis -->
+				<g class='axis x-axis'>
+					{{#each xTicks as tick}}
+						<g class='tick tick-{{ tick }}' transform='translate( {{ xScale(tick) }}, {{ height }} )'>
+							<line stroke='#000' y1='-{{height}}' y2='-{{padding.bottom}}' x1='0' x2='0'></line>
+
+							{{#if width > 380}}
+								<text fill='#000' x='0' y='0' dy='-2'>{{ tick }}</text>
+							{{else}}
+								<text fill='#000' x='0' y='0' dy='-2'>{{ formatMobile(tick) }}</text>
+							{{/if}}
+						</g>
+					{{/each}}
+				</g>
+			</g>
+
+			<!-- area shape -->
+			<path class='path-area' d="{{ areaPath }}"></path>
+		</g>
+	</svg>
+</div>
+
+<style>
+	.chart {
+		width: 100%;
+		max-width: 500px;
+		margin: 0 auto;
+	}
+
+	svg {
+		position: relative;
+		width: 100%;
+		height: 100%;
+	}
+
+	.tick,
+	p.source {
+		font-size: .725em;
+		font-weight: 200;
+	}
+
+	.tick line {
+		stroke: #e2e2e2;
+		stroke-dasharray: 2;
+	}
+
+	.tick text {
+		fill: #ccc;
+		text-anchor: start;
+	}
+
+	.tick.tick-0 line {
+		stroke-dasharray: 0;
+	}
+
+	.x-axis .tick text {
+		text-anchor: middle;
+	}
+
+	.path-area {
+		fill: #a11;
+		stroke: transparent;
+		stroke-linejoin: round;
+		stroke-linecap: round;
+		stroke-width: 2;
+		opacity: 0.65;
+	}
+</style>
+
+<script>
+	import { scaleLinear } from 'd3-scale';
+
+	export default {
+		data: function () {
+			return {
+				padding: {
+					top: 20,
+					right: 15,
+					bottom: 20,
+					left: 25
+				},
+				height: 200,
+				width: 300,
+				yTicks: [0, 5, 10, 15, 20 ],
+				xTicks: [1990, 1995, 2000, 2005, 2010, 2015],
+				formatMobile ( tick ) {
+					return "'" + tick.toString().slice(-2);
+				}
+			};
+		},
+
+		computed: {
+			yScale: function ( padding, height, yTicks ) {
+				return scaleLinear()
+					.domain([Math.min.apply(null, yTicks), Math.max.apply(null, yTicks)])
+					.range([height - padding.bottom, padding.top]);
+			},
+
+			xScale: function ( padding, width, xTicks ) {
+				return scaleLinear()
+					.domain([Math.min.apply(null, xTicks), Math.max.apply(null, xTicks)])
+					.range([padding.left, width - padding.right]);
+			},
+
+			areaPath: function ( myData, xScale, yScale ) {
+				var path = '';
+				var years = [];
+				var initialpoint;
+
+				// make path
+				myData.forEach(function (datapoint, i) {
+					var year = datapoint.year;
+					years.push(year);
+
+					if (i === 0) {
+						path = 'M' + xScale(year) + ' ' + yScale(datapoint.birthrate) + ' ';
+						initialpoint = 'L ' + xScale(year) + ' ' + yScale(datapoint.birthrate_all) + ' ';
+
+					} else {
+						path += 'L ' + xScale(year) + ' ' + yScale(datapoint.birthrate) + ' ';
+					}
+				})
+
+				path += 'L ' + xScale(years[years.length-1]) + ' ' + yScale(0) + ' ' + 'L ' + xScale(years[0]) + ' ' + yScale(0) + ' ';
+
+				return path;
+			}
+		},
+
+		oncreate () {
+			this.container = this.refs.svg;
+
+			var self = this;
+			window.addEventListener( 'resize', function () {
+				self.resize();
+			});
+			this.resize();
+		},
+
+		methods: {
+			resize () {
+				this.set({
+					width: this.container.getBoundingClientRect().width,
+					height: this.container.getBoundingClientRect().height
+				});
+			}
+		}
+	};
+</script>

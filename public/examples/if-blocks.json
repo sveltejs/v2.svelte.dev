@@ -1,0 +1,1 @@
+{"title":"If blocks","data":{"foo":true},"source":"{{#if foo}}\n\t<p>foo!</p>\n{{else}}\n\t<p>not foo!</p>\n{{/if}}"}

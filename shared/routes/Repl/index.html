@@ -10,7 +10,7 @@
 					<option value='{{null}}' disabled>Select an example</option>
 
 					{{#each examples as example}}
-						<option value='{{example}}'>{{example.title}}</option>
+						<option value='{{example.id}}'>{{example.title}}</option>
 					{{/each}}
 				</select>
 			</div>
@@ -205,6 +205,7 @@
 	import { getComponentFromGist, saveComponentAsGist } from './utils/gist.js';
 	import debounce from './utils/debounce.js';
 	import * as load from './utils/load.js';
+	import getJSON from './utils/getJSON.js';
 
 	const sourceById = {};
 
@@ -217,8 +218,9 @@
 		});
 	}
 
+	const versionMatch = typeof window !== 'undefined' && /version=([^&]+)/.exec( window.location.search );
+
 	function loadSvelte () {
-		const versionMatch = /version=([^&]+)/.exec( window.location.search );
 		const url = versionMatch ?
 			'https://unpkg.com/svelte@' + versionMatch[1] + '/compiler/svelte.js' :
 			'https://unpkg.com/svelte/compiler/svelte.js';
@@ -237,11 +239,13 @@
 	export default {
 		data () {
 			const search = typeof window !== 'undefined' ? window.location.search : '';
-			const dataMatch = /data=(.+)$/.exec( search );
-			const gistMatch = /gist=(.+)$/.exec( search );
+			const dataMatch = /data=([^&]+)$/.exec( search ); // TODO I think this is legacy... can probably remove
+			const gistMatch = /gist=([^&]+)$/.exec( search );
+			const exampleMatch = /example=([^&]+)$/.exec( search );
 
 			let gist = null;
 			let source = null;
+			let selectedExample = null;
 			let data = {};
 
 			if ( dataMatch ) {
@@ -252,7 +256,7 @@
 				if ( gistMatch ) {
 					gist = gistMatch[1];
 				} else {
-					({ source, data } = examples[0]);
+					selectedExample = exampleMatch ? exampleMatch[1] : examples[0].id;
 				}
 			}
 
@@ -261,6 +265,7 @@
 				verticalDividerPos: 50,
 
 				examples,
+				selectedExample,
 
 				gist,
 				source,
@@ -309,9 +314,21 @@
 			updateUrl () {
 				if ( typeof history === 'undefined' ) return;
 
+				const gist = this.get( 'gist' );
+				const selectedExample = this.get( 'selectedExample' );
+
 				const params = {};
-				if ( typeof svelte !== 'undefined' ) params.svelte = svelte.VERSION;
-				if ( this.get( 'gist' ) ) params.gist = this.get( 'gist' );
+				if ( typeof svelte !== 'undefined' ) {
+					params.version = svelte.VERSION;
+				} else if ( versionMatch ) {
+					params.version = versionMatch[1];
+				}
+
+				if ( gist ) {
+					params.gist = gist;
+				} else if ( selectedExample ) {
+					params.example = selectedExample;
+				}
 
 				const queryString = Object.keys( params ).map( key => `${key}=${params[key]}` ).join( '&' );
 				const url = queryString ? `/repl?${queryString}` : '/repl';
@@ -325,8 +342,15 @@
 				this.set({ ready: true });
 			});
 
-			this.observe( 'selectedExample', example => {
-				if ( example ) this.set( { source: example.source, json: JSON.stringify( example.data , null, '  ' ) } );
+			this.observe( 'selectedExample', id => {
+				if ( !id ) return;
+
+				getJSON( `/examples/${id}.json` ).then( example => {
+					this.set( { source: example.source, json: JSON.stringify( example.data , null, '  ' ) } );
+				});
+
+				this.set({ gist: null });
+				this.updateUrl();
 			});
 
 			if ( !this.get( 'gist' ) ) {
@@ -349,6 +373,7 @@
 						console.error( err.stack );
 					});
 
+				this.set({ selectedExample: null });
 				this.updateUrl();
 			});
 
