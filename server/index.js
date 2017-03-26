@@ -103,7 +103,7 @@ app.get( '/repl', ( req, res ) => {
 
 	servePage( res, {
 		title: 'Svelte REPL',
-		nav: Nav.render({ route: 'guide' }),
+		nav: Nav.render({ route: 'repl' }),
 		route: Repl.render() // TODO is there any point? just render an empty box instead?
 	}).catch( err => {
 		console.log( err.stack );
