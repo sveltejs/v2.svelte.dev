@@ -319,8 +319,12 @@
 				this.set({ saving: true });
 
 				saveComponentAsGist( this.get( 'source' ), this.get( 'json' ) ).then( id => {
+					this.set({
+						saving: false,
+						gist: id,
+						selectedExample: null
+					});
 					this.updateUrl();
-					this.set({ saving: false });
 				});
 			},
 
