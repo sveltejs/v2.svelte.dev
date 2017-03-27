@@ -58,6 +58,11 @@ const rss = `
 	<title>Svelte blog</title>
 	<link>https://svelte.technology/blog</link>
 	<description>News and information about the magical disappearing UI framework</description>
+	<image>
+		<url>https://svelte.technology/favicon.png</url>
+		<title>Svelte</title>
+		<link>https://svelte.technology/blog</link>
+	</image>
 	${posts.map( post => `
 		<item>
 			<title>${post.metadata.title}</title>
