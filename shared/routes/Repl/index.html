@@ -54,8 +54,6 @@
 	</div>
 
 	<div class='divider vertical-divider' style='left: calc({{verticalDividerPos}}% - 8px)' on:drag='setVertical(event)'></div>
-
-	<p class='screen-too-small'>Please open this page on a larger screen!</p>
 </div>
 
 <style>
@@ -81,23 +79,9 @@
 		100% { opacity: 1; }
 	}
 
-	.screen-too-small {
-		text-align: center;
-		margin: 0;
-		padding: 4em 3em 8em 3em;
-		line-height: 1.5;
-	}
-
 	.left, .right {
 		position: relative;
-		height: 100%;
-		float: left;
-		display: none;
-	}
-
-	.left .editor-wrapper {
-		/* make it easier to interact with scrollbar */
-		padding-right: 8px;
+		width: 100% !important; /* override divider-set width */
 	}
 
 	.divider {
@@ -117,6 +101,17 @@
 
 		.left, .right, .divider {
 			display: block;
+
+		}
+
+		.left, .right {
+			height: 100%;
+			float: left;
+		}
+
+		.left .editor-wrapper {
+			/* make it easier to interact with scrollbar */
+			padding-right: 8px;
 		}
 	}
 
