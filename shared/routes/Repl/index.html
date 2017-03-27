@@ -16,11 +16,13 @@
 			</div>
 
 			{{#if loadedCodemirror}}
-				{{#if showGenerated}}
-					<CodeMirror ref:editor mode='javascript' code='{{compiled.code}}' readonly/>
-				{{else}}
-					<CodeMirror ref:editor mode='htmlmixed' bind:code='source' error='{{sourceError}}'/>
-				{{/if}}
+				<div class='editor-wrapper'>
+					{{#if showGenerated}}
+						<CodeMirror ref:editor mode='javascript' code='{{compiled.code}}' readonly/>
+					{{else}}
+						<CodeMirror ref:editor mode='htmlmixed' bind:code='source' error='{{sourceError}}'/>
+					{{/if}}
+				</div>
 			{{else}}
 				<p class='loading'>loading editor...</p>
 			{{/if}}
@@ -91,6 +93,11 @@
 		height: 100%;
 		float: left;
 		display: none;
+	}
+
+	.left .editor-wrapper {
+		/* make it easier to interact with scrollbar */
+		padding-right: 8px;
 	}
 
 	.divider {
