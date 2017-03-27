@@ -42,3 +42,36 @@ mkdirp( `${root}/public/blog` );
 posts.forEach( post => {
 	fs.writeFileSync( `${root}/public/blog/${post.slug}.json`, JSON.stringify( post ) );
 });
+
+const months = ',Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec'.split( ',' );
+
+function formatPubdate ( str ) {
+	const [ y, m, d ] = str.split( '-' );
+	return `${d} ${months[m]} ${y}`;
+}
+
+const rss = `
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+
+<channel>
+	<title>Svelte blog</title>
+	<link>https://svelte.technology/blog</link>
+	<description>News and information about the magical disappearing UI framework</description>
+	${posts.map( post => `
+		<item>
+			<title>${post.metadata.title}</title>
+			<link>https://svelte.technology/blog/${post.slug}</link>
+			<description>${post.metadata.description}</description>
+			<pubDate>${formatPubdate(post.metadata.pubdate)}</pubDate>
+		</item>
+	` )}
+</channel>
+
+</rss>
+`
+.replace( />[^\S]+/gm, '>' )
+.replace( /[^\S]+</gm, '<' )
+.trim();
+
+fs.writeFileSync( `${root}/public/blog/rss.xml`, rss );
