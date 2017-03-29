@@ -16,6 +16,7 @@
 			</div>
 
 			{{#if loadedCodemirror}}
+				<h2 class='show-if-mobile'>App.html</h2>
 				<div class='editor-wrapper'>
 					{{#if showGenerated}}
 						<CodeMirror ref:editor mode='javascript' code='{{compiled.code}}' readonly/>
@@ -30,6 +31,16 @@
 	</div>
 
 	<div ref:right class='right' style='width: {{100 - verticalDividerPos}}%;'>
+		<h2 class='show-if-mobile'>data.json</h2>
+		<div class='bottom' style='height: {{100 - horizontalDividerPos}}%;'>
+			{{#if loadedCodemirror}}
+				<CodeMirror ref:data mode='javascript' bind:code='json' error='{{dataError}}'/>
+			{{else}}
+				<p class='loading'>loading editor...</p>
+			{{/if}}
+		</div>
+
+		<h2 class='show-if-mobile'>Rendered component</h2>
 		<div class='top' style='height: {{horizontalDividerPos}}%;'>
 			{{#if loadedSvelte}}
 				<Viewer compiled='{{compiled}}' data='{{data}}' on:change='updateData(event)'/>
@@ -42,14 +53,6 @@
 			{{/if}}
 		</div>
 
-		<div class='bottom' style='height: {{100 - horizontalDividerPos}}%;'>
-			{{#if loadedCodemirror}}
-				<CodeMirror ref:data mode='javascript' bind:code='json' error='{{dataError}}'/>
-			{{else}}
-				<p class='loading'>loading editor...</p>
-			{{/if}}
-		</div>
-
 		<div class='divider horizontal-divider' style='top: calc({{horizontalDividerPos}}% - 8px)' on:drag='setHorizontal(event)'></div>
 	</div>
 
@@ -57,6 +60,11 @@
 </div>
 
 <style>
+	.repl-container {
+		min-height: calc(100vh - 3em);
+		background-color: #f4f4f4;
+	}
+
 	@keyframes pulse {
 		0%   { opacity: 1; transform: scale(1.5); }
 		50%  { opacity: 0; transform: scale(1); }
@@ -81,7 +89,16 @@
 
 	.left, .right {
 		position: relative;
-		width: 100% !important; /* override divider-set width */
+	}
+
+	@media (max-width: 767px) {
+		.left, .right {
+			width: 100% !important; /* override divider-set width */
+		}
+
+		.top, .bottom {
+			height: auto !important;
+		}
 	}
 
 	.divider {
@@ -90,8 +107,19 @@
 		display: none;
 	}
 
+	h2 {
+		padding: 0 8px;
+		font-weight: 500;
+		font-size: 1.2em;
+	}
+
 	@media (min-width: 768px) {
+		.show-if-mobile {
+			display: none;
+		}
+
 		.repl-container {
+			min-height: auto;
 			height: calc(100vh - 4em);
 		}
 
@@ -109,9 +137,23 @@
 			float: left;
 		}
 
+		.top, .bottom {
+			position: absolute;
+			width: 100%;
+		}
+
+		.top { top: 0; }
+		.bottom { bottom: 0; }
+
 		.left .editor-wrapper {
 			/* make it easier to interact with scrollbar */
 			padding-right: 8px;
+			height: auto;
+			height: 100%;
+		}
+
+		section {
+			height: 100%;
 		}
 	}
 
@@ -158,7 +200,6 @@
 
 	section {
 		padding: 3em 0 0 0;
-		height: 100%;
 	}
 
 	.controls {
