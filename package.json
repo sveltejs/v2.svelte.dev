@@ -55,6 +55,7 @@
     "rollup-plugin-svelte": "^1.6.0",
     "rollup-plugin-uglify": "^1.0.1",
     "rollup-watch": "^3.2.2",
+    "svelte": "^1.13.1",
     "uglify-js": "^2.8.12"
   },
   "dependencies": {
