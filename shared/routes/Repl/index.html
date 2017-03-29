@@ -1,11 +1,7 @@
 <div class='repl-container'>
 	<div class='left' style='width: {{verticalDividerPos}}%;'>
 		<section class='input'>
-			<div class='controls'>
-				<button class='{{showGenerated ? "" : "active"}}' on:click='set({ showGenerated: false })'>input</button>
-				<button class='{{showGenerated ? "active" : ""}}' on:click='set({ showGenerated: true })'>output</button>
-				<button class='{{saving ? "active" : ""}}' on:click='save()'>{{saving ? 'saving' : 'save'}}</button>
-
+			<div class='app-controls'>
 				<select bind:value='selectedExample'>
 					<option value='{{null}}' disabled>Select an example</option>
 
@@ -13,16 +9,31 @@
 						<option value='{{example.id}}'>{{example.title}}</option>
 					{{/each}}
 				</select>
+
+				<button class='{{saving ? "active" : ""}}' on:click='save()'>{{saving ? 'saving' : 'save'}}</button>
+				<!-- TODO add a download button -->
+			</div>
+
+			<div class='module-controls'>
+				<ModuleName bind:name='selectedComponent.name' on:create='createComponent()'/>
+
+				<!--<div class='tabs'>
+					<span class='tab {{showGenerated ? "" : "active"}}' on:click='set({ showGenerated: false })'>input</span>
+					<span class='tab {{showGenerated ? "active" : ""}}' on:click='set({ showGenerated: true })'>output</span>
+				</div>-->
 			</div>
 
 			{{#if loadedCodemirror}}
-				<h2 class='show-if-mobile'>App.html</h2>
-				<div class='editor-wrapper'>
+				<div ref:editorWrapper class='editor-wrapper {{flip}}'>
 					{{#if showGenerated}}
 						<CodeMirror ref:editor mode='javascript' code='{{compiled.code}}' readonly/>
 					{{else}}
 						<CodeMirror ref:editor mode='htmlmixed' bind:code='source' error='{{sourceError}}'/>
 					{{/if}}
+
+					<button class='editor-toggle' on:click='flip()'>
+						<span class='flip-text'>{{showGenerated ? 'output' : 'input'}}</span>
+					</button>
 				</div>
 			{{else}}
 				<p class='loading'>loading editor...</p>
@@ -114,6 +125,56 @@
 		font-size: 1.2em;
 	}
 
+	.editor-wrapper {
+		z-index: 5;
+		transform-style: preserve-3d;
+		animation-fill-mode: forwards;
+	}
+
+	.editor-toggle {
+		position: absolute;
+		bottom: 1em;
+		right: 1em;
+		z-index: 10;
+		background: white url(/icons/flip.svg) no-repeat calc(100% - 0.7em) 50%;
+		background-size: 1.4em 1em;
+		padding-right: 2.5em;
+	}
+
+	.flip-text {
+		/*display: none;*/
+	}
+
+	.editor-toggle:hover .flip-text {
+		/*display: inline-block;*/
+	}
+
+	.flip-out {
+		animation-name: flip-out;
+		animation-duration: 0.2s;
+		animation-timing-function: ease-in;
+	}
+
+	.flip-pause {
+		opacity: 0;
+	}
+
+	.flip-in {
+		animation-name: flip-in;
+		animation-duration: 0.2s;
+		animation-timing-function: ease-out;
+	}
+
+	@keyframes flip-out {
+		from { transform: rotateY(0deg); }
+		to { transform: rotateY(90deg); }
+	}
+
+	@keyframes flip-in {
+		from { transform: rotateY(-90deg); }
+		to { transform: rotateY(0deg); }
+	}
+
 	@media (min-width: 768px) {
 		.show-if-mobile {
 			display: none;
@@ -201,30 +262,71 @@
 		margin: 2em 0 0 0;
 	}
 
-	section {
-		padding: 3em 0 0 0;
+	.input {
+		padding: 6em 0 0 0;
+		perspective: 1500px;
+		perspective-origin: 50% 0%;
 	}
 
-	.controls {
+	@media (min-width: 768px) {
+		.input {
+			perspective-origin: 50% 50%;
+		}
+	}
+
+	.app-controls, .module-controls {
 		position: absolute;
-		top: 0;
 		left: 0;
 		width: 100%;
 		height: 3em;
 		padding: 0.5em;
-		background-color: #f7f7f7;
-		border-bottom: 1px solid #eee;
-		box-sizing: border-box;
 	}
 
-	.controls button {
+	.app-controls {
+		top: 0;
+		border-bottom: 1px solid #eee;
+		background-color: #f4f4f4;
+	}
+
+	.module-controls {
+		top: 3em;
+		border-bottom: 1px solid #eee;
+	}
+
+	.tabs {
+		position: absolute;
+		right: 0.5em;
+		top: 0.5em;
+	}
+
+	.tab {
+		padding: 0.8em 1em;
+		border: 1px solid #eee;
+		border-bottom: none;
+		border-radius: 0.2em 0.2em 0 0;
+		bottom: -0.2em;
+		background: white;
+		line-height: 1;
+		display: inline-block;
+		background-color: #f4f4f4;
+		user-select: none;
+		cursor: default;
+	}
+
+	.tab.active {
+		z-index: 2;
+		background-color: white;
+		bottom: 0;
+	}
+
+	button {
 		display: block;
-		float: left;
+		float: right;
 		padding: calc(0.5em - 1px) 1em;
 		margin: 0 0.5em 0 0;
 		border-radius: 0.2em;
 		color: rgb(170,30,30);
-		border: 1px solid rgb(170,30,30);
+		border: 1px solid rgba(170,30,30,0.3);
 		font-family: Rajdhani, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 		font-weight: 500;
 		font-size: inherit;
@@ -235,16 +337,19 @@
 		cursor: pointer;
 	}
 
-	.controls button.active {
+	button:hover {
+		border: 1px solid rgb(170,30,30);
+	}
+
+	button.active {
 		background-color: rgb(170,30,30);
 		color: white;
 	}
 
 	select {
 		position: absolute;
-		right: 0.5em;
+		left: 0.5em;
 		top: 50%;
-		transform: translate(0,-50%);
 	}
 
 	.mousecatcher {
@@ -260,6 +365,7 @@
 <script>
 	import CodeMirror from './CodeMirror.html';
 	import Viewer from './Viewer.html';
+	import ModuleName from './ModuleName.html';
 	import examples from './examples.js';
 	import { getComponentFromGist, saveComponentAsGist } from './utils/gist.js';
 	import debounce from './utils/debounce.js';
@@ -322,20 +428,95 @@
 			return {
 				horizontalDividerPos: 50,
 				verticalDividerPos: 50,
+				showGenerated: false,
+
+				// TODO remove this post-https://github.com/sveltejs/svelte/issues/424
+				false: false,
+				true: true,
 
 				examples,
 				selectedExample,
+
+				// TODO allow multiple modules...
+				selectedComponent: {
+					name: 'App',
+					entry: true
+				},
 
 				gist,
 				source,
 				data,
 				json: JSON.stringify( data, null, '  ' ),
 
-				loadedCodemirror: false
+				loadedCodemirror: false,
+				editorRotation: 0,
+				flip: ''
 			};
 		},
 
 		methods: {
+			createComponent () {
+				console.log( 'TODO create component' );
+			},
+
+			flip () {
+				if ( window.innerWidth < 768 ) {
+					this.flipMobile();
+					return;
+				}
+
+				if ( this.flipping ) return;
+				this.flipping = true;
+
+				const wrapper = this.refs.editorWrapper;
+				const showGenerated = this.get( 'showGenerated' );
+
+				const handleFlipOutEnd = () => {
+					wrapper.removeEventListener( 'animationend', handleFlipOutEnd );
+					wrapper.removeEventListener( 'webkitAnimationEnd', handleFlipOutEnd );
+
+					this.set({
+						showGenerated: !showGenerated,
+						flip: 'flip-pause'
+					});
+
+					const handleFlipInEnd = () => {
+						wrapper.removeEventListener( 'animationend', handleFlipInEnd );
+						wrapper.removeEventListener( 'webkitAnimationEnd', handleFlipInEnd );
+
+						this.flipping = false;
+
+						this.set({ flip: '' });
+					}
+
+					wrapper.addEventListener( 'animationend', handleFlipInEnd );
+					wrapper.addEventListener( 'webkitAnimationEnd', handleFlipInEnd );
+
+					setTimeout( () => {
+						this.set({ flip: 'flip-in' });
+					});
+				}
+
+				wrapper.addEventListener( 'animationend', handleFlipOutEnd );
+				wrapper.addEventListener( 'webkitAnimationEnd', handleFlipOutEnd );
+
+				this.set({ flip: 'flip-out' });
+			},
+
+			flipMobile () {
+				const bcr1 = this.refs.editorWrapper.getBoundingClientRect();
+				this.set({
+					showGenerated: !this.get( 'showGenerated' )
+				});
+
+				// if top is visible, keep it that way
+				if ( bcr1.top > 0 ) return;
+
+				const bcr2 = this.refs.editorWrapper.getBoundingClientRect();
+				const d = bcr2.bottom - bcr1.bottom;
+				window.scrollTo( 0, window.scrollY + d );
+			},
+
 			setHorizontal ( event ) {
 				const { top, bottom } = this.refs.right.getBoundingClientRect();
 
@@ -526,7 +707,8 @@
 
 		components: {
 			CodeMirror,
-			Viewer
+			Viewer,
+			ModuleName
 		}
 	};
 </script>

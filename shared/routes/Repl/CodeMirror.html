@@ -102,6 +102,9 @@
 			this.editor = window.CodeMirror.fromTextArea( this.refs.editor, {
 				lineNumbers: true,
 				lineWrapping: true,
+				indentWithTabs: true,
+				indentUnit: 2,
+				tabSize: 2,
 				value: this.get( 'code' ),
 				mode: this.get( 'mode' ),
 				readOnly: this.get( 'readonly' )
