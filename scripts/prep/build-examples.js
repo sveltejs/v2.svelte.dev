@@ -1,6 +1,7 @@
 const fs = require( 'fs' );
 const path = require( 'path' );
 const assert = require( 'assert' );
+const glob = require( 'glob' );
 const { mkdirp } = require( './utils.js' );
 
 const root = path.resolve( __dirname, '../..' );
@@ -13,14 +14,28 @@ assert.deepEqual( examples.sort(), manifest.slice().sort() );
 mkdirp( `${root}/public/examples` );
 
 const summary = [];
-manifest.forEach( file => {
-	const example = require( `${root}/examples/${file}/example.json` );
-	example.source = fs.readFileSync( `${root}/examples/${file}/source.html`, 'utf-8' );
+manifest.forEach( id => {
+	const example = require( `${root}/examples/${id}/example.json` );
 
-	fs.writeFileSync( `${root}/public/examples/${file}.json`, JSON.stringify( example ) );
+	example.components = glob.sync( '**/*.html', { cwd: `${root}/examples/${id}` })
+		.map( file => {
+			return {
+				name: file.replace( /\.html$/, '' ),
+				entry: file === 'App.html' ? true : undefined,
+				source: fs.readFileSync( `${root}/examples/${id}/${file}`, 'utf-8' )
+			};
+		})
+		.sort( ( a, b ) => {
+			if ( a.name === 'App' ) return -1;
+			if ( b.name === 'App' ) return 1;
+
+			return a.name < b.name ? -1 : 1;
+		});
+
+	fs.writeFileSync( `${root}/public/examples/${id}.json`, JSON.stringify( example ) );
 
 	summary.push({
-		id: file,
+		id,
 		title: example.title
 	});
 });

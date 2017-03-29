@@ -15,12 +15,9 @@
 			</div>
 
 			<div class='module-controls'>
-				<ModuleName bind:name='selectedComponent.name' on:create='createComponent()'/>
-
-				<!--<div class='tabs'>
-					<span class='tab {{showGenerated ? "" : "active"}}' on:click='set({ showGenerated: false })'>input</span>
-					<span class='tab {{showGenerated ? "active" : ""}}' on:click='set({ showGenerated: true })'>output</span>
-				</div>-->
+				{{#if selectedComponent}}
+					<ModuleSelector :components bind:selectedComponent on:create='createComponent()'/>
+				{{/if}}
 			</div>
 
 			{{#if loadedCodemirror}}
@@ -28,7 +25,7 @@
 					{{#if showGenerated}}
 						<CodeMirror ref:editor mode='javascript' code='{{compiled.code}}' readonly/>
 					{{else}}
-						<CodeMirror ref:editor mode='htmlmixed' bind:code='source' error='{{sourceError}}'/>
+						<CodeMirror ref:editor mode='htmlmixed' bind:code='selectedComponent.source' error='{{sourceError}}'/>
 					{{/if}}
 
 					<button class='editor-toggle' on:click='flip()'>
@@ -365,14 +362,12 @@
 <script>
 	import CodeMirror from './CodeMirror.html';
 	import Viewer from './Viewer.html';
-	import ModuleName from './ModuleName.html';
+	import ModuleSelector from './ModuleSelector.html';
 	import examples from './examples.js';
 	import { getComponentFromGist, saveComponentAsGist } from './utils/gist.js';
 	import debounce from './utils/debounce.js';
 	import * as load from './utils/load.js';
 	import getJSON from './utils/getJSON.js';
-
-	const sourceById = {};
 
 	function loadCodemirror () {
 		return Promise.all([
@@ -409,15 +404,31 @@
 			const exampleMatch = /example=([^&]+)$/.exec( search );
 
 			let gist = null;
-			let source = null;
+			let components = [];
 			let selectedExample = null;
 			let data = {};
 
 			if ( dataMatch ) {
-				({ source, data } = tryParseData( dataMatch[1] ));
+				const parsed = tryParseData( dataMatch[1] );
+				({ source, components, data } = tryParseData( dataMatch[1] ));
+
+				if ( parsed.source && !parsed.components ) {
+					// legacy
+					components = [
+						{
+							name: 'App',
+							entry: true,
+							source
+						}
+					];
+				} else {
+					components = parsed.components;
+				}
+
+				data = parsed.data;
 			}
 
-			if ( !source ) {
+			if ( !components || components.length === 0 ) {
 				if ( gistMatch ) {
 					gist = gistMatch[1];
 				} else {
@@ -433,18 +444,16 @@
 				// TODO remove this post-https://github.com/sveltejs/svelte/issues/424
 				false: false,
 				true: true,
+				null: null,
 
 				examples,
 				selectedExample,
 
 				// TODO allow multiple modules...
-				selectedComponent: {
-					name: 'App',
-					entry: true
-				},
+				selectedComponent: null,
 
 				gist,
-				source,
+				components,
 				data,
 				json: JSON.stringify( data, null, '  ' ),
 
@@ -586,11 +595,20 @@
 				this.set({ loadedCodemirror: true });
 			});
 
+			let exampleComponents;
+			let lastSelectedExample;
+
 			this.observe( 'selectedExample', id => {
 				if ( !id ) return;
 
+				lastSelectedExample = id;
 				getJSON( `/examples/${id}.json` ).then( example => {
-					this.set( { source: example.source, json: JSON.stringify( example.data , null, '  ' ) } );
+					exampleComponents = JSON.stringify( example.components );
+					this.set({
+						components: example.components,
+						selectedComponent: example.components[0],
+						json: JSON.stringify( example.data , null, '  ' )
+					});
 				});
 
 				this.set({ gist: null });
@@ -609,7 +627,6 @@
 
 				this.promise
 					.then( ({ source, json }) => {
-						sourceById[ gist ] = source;
 						this.set({ source, json });
 					})
 					.catch( err => {
@@ -627,17 +644,16 @@
 
 				this.set({ loadedSvelte: true });
 
-				this.observe( 'source', source => {
-					if ( !source ) return;
+				this.observe( 'selectedComponent', component => {
+					if ( !component || !component.source ) return;
 
-					const expectedSource = sourceById[ this.get( 'gist' ) ];
-
-					if ( source && expectedSource && source !== expectedSource ) {
-						this.set({ gist: null });
+					// if component has been edited, unset selectedExample
+					if ( JSON.stringify( this.get( 'components' ) ) !== exampleComponents ) {
+						this.set({ selectedExample: null });
 					}
 
 					try {
-						const compiled = svelte.compile( source );
+						const compiled = svelte.compile( component.source );
 						this.set({ compiled, sourceError: null });
 					} catch ( err ) {
 						console.error( err.stack );
@@ -646,6 +662,7 @@
 							sourceError: { message: err.shortMessage || err.message, pos: err.pos }
 						});
 					}
+					console.groupEnd()
 				});
 
 				this.updateUrl();
@@ -708,7 +725,7 @@
 		components: {
 			CodeMirror,
 			Viewer,
-			ModuleName
+			ModuleSelector
 		}
 	};
 </script>
