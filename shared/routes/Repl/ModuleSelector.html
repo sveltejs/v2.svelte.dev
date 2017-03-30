@@ -2,7 +2,7 @@
 	<div class='dropdown'>
 		<select bind:value='selectedComponent'>
 			{{#each components as component}}
-				<option value='component'>{{component.name}}.html</option>
+				<option value='{{component}}'>{{component.name}}.html</option>
 			{{/each}}
 		</select>
 
@@ -12,7 +12,7 @@
 		{{else}}
 			<div class='input-wrapper'>
 				<span class='widther'>{{selectedComponent.name || 'x'}}</span>
-				<input bind:value='selectedComponent.name' on:focus='this.select()' on:enter='this.blur()'>
+				<input tabindex='1' ref:name bind:value='selectedComponent.name' on:focus='this.select()' on:enter='this.blur()'>
 			</div>
 		{{/if}}
 
@@ -72,6 +72,7 @@
 		display: block;
 		float: left;
 		line-height: 1;
+		margin: 0 0.3em 0 0;
 	}
 
 	.widther {

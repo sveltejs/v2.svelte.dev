@@ -16,16 +16,24 @@
 
 			<div class='module-controls'>
 				{{#if selectedComponent}}
-					<ModuleSelector :components bind:selectedComponent on:create='createComponent()'/>
+					<ModuleSelector
+						ref:selector
+						:components
+						bind:selectedComponent
+						on:create='createComponent()'
+						on:remove='removeComponent(selectedComponent)'
+					/>
 				{{/if}}
 			</div>
 
 			{{#if loadedCodemirror}}
 				<div ref:editorWrapper class='editor-wrapper {{flip}}'>
-					{{#if showGenerated}}
-						<CodeMirror ref:editor mode='javascript' code='{{compiled.code}}' readonly/>
-					{{else}}
-						<CodeMirror ref:editor mode='htmlmixed' bind:code='selectedComponent.source' error='{{sourceError}}'/>
+					{{#if selectedComponent}}
+						{{#if showGenerated}}
+							<CodeMirror ref:editor mode='javascript' code='{{selectedComponent.compiled.code}}' readonly/>
+						{{else}}
+							<CodeMirror ref:editor mode='htmlmixed' bind:code='selectedComponent.source' error='{{sourceError}}'/>
+						{{/if}}
 					{{/if}}
 
 					<button class='editor-toggle' on:click='flip()'>
@@ -51,7 +59,9 @@
 		<h2 class='show-if-mobile'>Rendered component</h2>
 		<div class='top' style='height: {{horizontalDividerPos}}%;'>
 			{{#if loadedSvelte}}
-				<Viewer compiled='{{compiled}}' data='{{data}}' on:change='updateData(event)'/>
+				{{#if selectedComponent}}
+					<Viewer compiled='{{selectedComponent.compiled}}' data='{{data}}' on:change='updateData(event)'/>
+				{{/if}}
 			{{else}}
 				<p class='loading'>loading Svelte compiler...</p>
 			{{/if}}
@@ -465,7 +475,55 @@
 
 		methods: {
 			createComponent () {
-				console.log( 'TODO create component' );
+				const components = this.get( 'components' );
+
+				const newComponent = {
+					name: this.uid++ ? `Component${this.uid}` : 'Component',
+					source: ''
+				};
+
+				components.push( newComponent );
+
+				this.set({
+					components,
+
+					// for some reason we need to unset selectedComponent before
+					// resetting it, otherwise the editor remains bound to the
+					// previous component. TODO look into this bug
+					selectedComponent: null
+				});
+
+				this.set({
+					selectedComponent: newComponent
+				});
+
+				this.refs.selector.refs.name.focus();
+			},
+
+			removeComponent ( component ) {
+				const components = this.get( 'components' );
+
+				let selectedComponent;
+
+				if ( component.entry ) {
+					// App.html can't be removed
+					component.source = '';
+					selectedComponent = component;
+				} else {
+					const index = components.indexOf( component );
+					if ( ~index ) {
+						components.splice( index, 1 );
+					} else {
+						console.error( `Could not find component! That's... odd` );
+					}
+
+					selectedComponent = components[ index ] || components[ components.length - 1 ];
+				}
+
+				this.set({
+					components,
+					selectedComponent
+				});
 			},
 
 			flip () {
@@ -591,6 +649,9 @@
 		},
 
 		oncreate () {
+			this.uid = 0;
+			this.flipping = false;
+
 			loadCodemirror().then( () => {
 				this.set({ loadedCodemirror: true });
 			});
@@ -644,8 +705,8 @@
 
 				this.set({ loadedSvelte: true });
 
-				this.observe( 'selectedComponent', component => {
-					if ( !component || !component.source ) return;
+				this.observe( 'selectedComponent', selectedComponent => {
+					if ( !selectedComponent ) return;
 
 					// if component has been edited, unset selectedExample
 					if ( JSON.stringify( this.get( 'components' ) ) !== exampleComponents ) {
@@ -653,8 +714,8 @@
 					}
 
 					try {
-						const compiled = svelte.compile( component.source );
-						this.set({ compiled, sourceError: null });
+						selectedComponent.compiled = svelte.compile( selectedComponent.source || '' );
+						this.set({ selectedComponent, sourceError: null });
 					} catch ( err ) {
 						console.error( err.stack );
 
