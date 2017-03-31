@@ -138,11 +138,11 @@ Refs are a convenient way to store a reference to particular DOM nodes or compon
 			const canvas = this.refs.canvas;
 			const ctx = canvas.getContext( '2d' );
 
-			let torndown = false;
-			this.on( 'teardown', () => torndown = true );
+			let destroyed = false;
+			this.on( 'destroy', () => destroyed = true );
 
 			function loop () {
-				if ( torndown ) return;
+				if ( destroyed ) return;
 				requestAnimationFrame( loop );
 
 				const imageData = ctx.getImageData( 0, 0, canvas.width, canvas.height );
