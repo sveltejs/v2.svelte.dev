@@ -112,7 +112,7 @@ To observe on a nested component, use refs:
 <Widget ref:widget/>
 <script>
 	export default {
-		onrender () {
+		oncreate () {
 			this.refs.widget.observe( 'xxx', () => {...});
 		}
 	};
