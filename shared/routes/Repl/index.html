@@ -640,18 +640,16 @@
 
 				let uid = 1;
 				const importMap = new Map();
+				const entry = './App.html';
 
 				this.bundlePromise = rollup.rollup({
-					entry: '\0App.html',
+					entry,
 					external: id => {
-						return id.charCodeAt( 0 ) > 0;
+						return id.charCodeAt( 0 ) > 0 && id[0] !== '.';
 					},
 					plugins: [{
 						resolveId ( importee, importer ) {
-							if ( !importer ) return importee;
-							if ( importee[0] === '.' ) {
-								return `\0${importee.slice( 2 )}`;
-							}
+							if ( importee[0] === '.' ) return `\0${importee.slice( 2 )}`;
 						},
 						load ( id ) {
 							return lookup[ id ];
@@ -733,6 +731,17 @@
 				lastSelectedExample = id;
 				getJSON( `/examples/${id}.json` ).then( example => {
 					exampleComponents = JSON.stringify( example.components );
+
+					// compile non-selected components
+					if ( window.svelte ) {
+						example.components.slice( 1 ).forEach( component => {
+							component.compiled = svelte.compile( component.source, {
+								name: component.name,
+								filename: component.name + '.html'
+							});
+						});
+					}
+
 					this.set({
 						components: example.components,
 						selectedComponent: example.components[0],
@@ -773,6 +782,24 @@
 
 				this.set({ loadedSvelte: true });
 
+				this.get( 'components' ).forEach( component => {
+					// skip the selected component, that'll come soon enough
+					if ( component === this.get( 'selectedComponent' ) ) return;
+
+					try {
+						component.compiled = svelte.compile( component.source || '', {
+							name: component.name,
+							filename: component.name + '.html'
+						});
+					} catch ( err ) {
+						console.error( err.stack );
+
+						this.set({
+							sourceError: { message: err.shortMessage || err.message, pos: err.pos }
+						});
+					}
+				});
+
 				this.observe( 'selectedComponent', selectedComponent => {
 					if ( !selectedComponent ) return;
 
@@ -782,7 +809,10 @@
 					}
 
 					try {
-						selectedComponent.compiled = svelte.compile( selectedComponent.source || '' );
+						selectedComponent.compiled = svelte.compile( selectedComponent.source || '', {
+							name: selectedComponent.name,
+							filename: selectedComponent.name + '.html'
+						});
 						this.set({ selectedComponent, sourceError: null });
 
 						if ( this.get( 'loadedRollup' ) ) {
@@ -795,7 +825,6 @@
 							sourceError: { message: err.shortMessage || err.message, pos: err.pos }
 						});
 					}
-					console.groupEnd()
 				});
 
 				this.updateUrl();

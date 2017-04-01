@@ -7,5 +7,6 @@
 	"line-chart",
 	"area-chart",
 	"bar-chart",
-	"self-references"
+	"self-references",
+	"nested-components"
 ]

@@ -17,6 +17,8 @@ const summary = [];
 manifest.forEach( id => {
 	const example = require( `${root}/examples/${id}/example.json` );
 
+	example.data = example.data || {};
+
 	example.components = glob.sync( '**/*.html', { cwd: `${root}/examples/${id}` })
 		.map( file => {
 			return {
