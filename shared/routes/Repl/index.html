@@ -59,8 +59,8 @@
 		<h2 class='show-if-mobile'>Rendered component</h2>
 		<div class='top' style='height: {{horizontalDividerPos}}%;'>
 			{{#if loadedSvelte}}
-				{{#if selectedComponent}}
-					<Viewer compiled='{{selectedComponent.compiled}}' data='{{data}}' on:change='updateData(event)'/>
+				{{#if bundle}}
+					<Viewer :bundle :data on:change='updateData(event)'/>
 				{{/if}}
 			{{else}}
 				<p class='loading'>loading Svelte compiler...</p>
@@ -622,6 +622,73 @@
 				});
 			},
 
+			updateBundle () {
+				// TODO do this in a worker
+				const components = this.get( 'components' );
+
+				if ( !components ) return;
+				if ( components.some( c => !c.compiled ) ) return;
+
+				if ( this.bundlePromise ) this.bundlePromise.cancel();
+
+				const lookup = {};
+				components.forEach( component => {
+					lookup[ `\0${component.name}.html` ] = component.compiled;
+				});
+
+				let cancelled = false;
+
+				let uid = 1;
+				const importMap = new Map();
+
+				this.bundlePromise = rollup.rollup({
+					entry: '\0App.html',
+					external: id => {
+						return id.charCodeAt( 0 ) > 0;
+					},
+					plugins: [{
+						resolveId ( importee, importer ) {
+							if ( !importer ) return importee;
+							if ( importee[0] === '.' ) {
+								return `\0${importee.slice( 2 )}`;
+							}
+						},
+						load ( id ) {
+							return lookup[ id ];
+						}
+					}],
+					onwarn ( warning ) {
+						if ( warning.code === 'MISSING_GLOBAL_NAME' ) return;
+						console.warn( warning.message );
+					}
+				}).then( bundle => {
+					if ( cancelled ) return;
+
+					const { code, map } = bundle.generate({
+						format: 'iife',
+						moduleName: 'SvelteComponent',
+						globals: id => {
+							const name = `import_${uid++}`;
+							importMap.set( id, name );
+							return name;
+						}
+					});
+
+					this.set({
+						bundle: {
+							code,
+							map,
+							imports: bundle.imports,
+							importMap
+						}
+					});
+				});
+
+				this.bundlePromise.cancel = () => {
+					cancelled = true;
+				};
+			},
+
 			updateUrl () {
 				if ( typeof history === 'undefined' ) return;
 
@@ -651,6 +718,7 @@
 		oncreate () {
 			this.uid = 0;
 			this.flipping = false;
+			this.bundlePromise = null;
 
 			loadCodemirror().then( () => {
 				this.set({ loadedCodemirror: true });
@@ -716,6 +784,10 @@
 					try {
 						selectedComponent.compiled = svelte.compile( selectedComponent.source || '' );
 						this.set({ selectedComponent, sourceError: null });
+
+						if ( this.get( 'loadedRollup' ) ) {
+							this.updateBundle();
+						}
 					} catch ( err ) {
 						console.error( err.stack );
 
@@ -727,6 +799,13 @@
 				});
 
 				this.updateUrl();
+			});
+
+			curl([ '/rollup.browser.js' ]).then( rollup => {
+				this.set({ loadedRollup: true });
+				window.rollup = rollup;
+
+				this.updateBundle();
 			});
 
 			this.observe( 'json', json => {

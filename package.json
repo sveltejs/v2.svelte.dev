@@ -63,6 +63,7 @@
     "codemirror": "^5.24.2",
     "curl-amd": "^0.8.12",
     "roadtrip": "^0.3.4",
+    "rollup": "^0.41.6",
     "svelte": "^1.11.2"
   },
   "now": {
