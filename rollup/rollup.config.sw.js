@@ -39,7 +39,7 @@ export default {
 	format: 'iife',
 	plugins: [
 		replace({
-			__CACHEVERSION__: dev ? 'dev' : Date.now(),
+			__CACHEVERSION__: Date.now(),
 			__MANIFEST__: JSON.stringify( manifest )
 		}),
 		buble(),

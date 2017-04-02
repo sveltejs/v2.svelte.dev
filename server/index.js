@@ -1,4 +1,3 @@
-const fs = require( 'fs' );
 const path = require( 'path' );
 const express = require( 'express' );
 const compression = require( 'compression' );
@@ -27,7 +26,7 @@ app.get( '/', ( req, res ) => {
 		nav: Nav.render({ route: 'index' }),
 		route: Index.render()
 	}).catch( err => {
-		console.log( err.stack );
+		console.log( err.stack ); // eslint-disable-line no-console
 	});
 });
 
@@ -50,7 +49,7 @@ app.get( '/blog', ( req, res ) => {
 		nav: Nav.render({ route: 'blog' }),
 		route: BlogIndex.render({ posts })
 	}).catch( err => {
-		console.log( err.stack );
+		console.log( err.stack ); // eslint-disable-line no-console
 	});
 });
 
@@ -78,7 +77,7 @@ app.get( '/blog/:slug', ( req, res ) => {
 		nav: Nav.render({ route: 'blog' }),
 		route: BlogPost.render({ post })
 	}).catch( err => {
-		console.log( err.stack );
+		console.log( err.stack ); // eslint-disable-line no-console
 	});
 });
 
@@ -93,7 +92,7 @@ app.get( '/guide', ( req, res ) => {
 		nav: Nav.render({ route: 'guide' }),
 		route: Guide.render({ sections })
 	}).catch( err => {
-		console.log( err.stack );
+		console.log( err.stack ); // eslint-disable-line no-console
 	});
 });
 
@@ -106,10 +105,10 @@ app.get( '/repl', ( req, res ) => {
 		nav: Nav.render({ route: 'repl' }),
 		route: Repl.render() // TODO is there any point? just render an empty box instead?
 	}).catch( err => {
-		console.log( err.stack );
+		console.log( err.stack ); // eslint-disable-line no-console
 	});
 });
 
 app.listen( 3000, () => {
-	console.log( 'listening on localhost:3000' );
+	console.log( 'listening on localhost:3000' ); // eslint-disable-line no-console
 });

@@ -14,20 +14,20 @@
 	{{#if error}}
 		<p class='error'>{{error.message}}</p>
 	{{elseif pendingImports}}
-		<p class='info'>loading {{pendingImports}} {{pendingImports === 1 ? 'dependency' : 'dependencies'}} from wzrd.in</p>
+		<p class='info'>loading {{pendingImports}} {{pendingImports === 1 ? 'dependency' : 'dependencies'}} from packd.now.sh (this may take a while if the package isn't cached)</p>
 	{{/if}}
 </div>
 
 <style>
 	.iframe-container {
 		border-top: 1px solid #ccc;
+		background-color: white;
 	}
 
 	iframe {
 		width: 100%;
 		height: calc(100vh - 3em);
 		border: none;
-		background-color: white;
 		display: block;
 	}
 
@@ -92,14 +92,14 @@
 <script>
 	let importCache = {};
 
-	function fetchImport ( x ) {
+	function fetchImport ( id ) {
 		return new Promise( ( fulfil, reject ) => {
-			curl([ `https://wzrd.in/standalone/${x.source}@latest` ]).then( module => {
-				importCache[ x.source ] = module;
+			curl([ `https://packd.now.sh/${id}` ]).then( module => {
+				importCache[ id ] = module;
 				fulfil( module );
 			}, err => {
 				console.error( err.stack );
-				reject( new Error( `Error loading ${x.source} from wzrd.in` ) );
+				reject( new Error( `Error loading ${id} from packd.now.sh` ) );
 			});
 		});
 	}
@@ -156,8 +156,8 @@
 
 				let toTeardown = null;
 
-				this.observe( 'compiled', compiled => {
-					if ( !compiled ) return;
+				this.observe( 'bundle', bundle => {
+					if ( !bundle ) return; // TODO can this ever happen?
 					if ( promise ) promise.cancel();
 
 					toTeardown = component;
@@ -167,18 +167,7 @@
 						const imports = [];
 						const pattern = /\bimport\s+(?:(.+)\s+from\s+)?[\'"]([^"\']+)["\']/g; // https://gist.github.com/pilwon/ff55634a29bb4456e0dd
 
-						const code = compiled.code
-							.replace( pattern, ( match, specifiers, source ) => {
-								imports.push({
-									specifiers: parseSpecifiers( specifiers ),
-									source
-								});
-
-								return '';
-							})
-							.replace( 'export default ', '' ) + '\n\nreturn SvelteComponent;';
-
-						const missingImports = imports.filter( x => !importCache[ x.source ] );
+						const missingImports = bundle.imports.filter( x => !importCache[ x ] );
 
 						const createComponent = () => {
 							this.set({ error: null });
@@ -191,27 +180,18 @@
 								toTeardown.teardown();
 							}
 
-							imports.forEach( x => {
-								const module = importCache[ x.source ];
+							bundle.imports.forEach( x => {
+								const module = importCache[ x ];
+								const name = bundle.importMap.get( x );
 
-								if ( x.specifiers.namespace ) {
-									iframe.contentWindow[ x.specifiers.name ] = module;
-								} else {
-									if ( x.specifiers.default ) {
-										iframe.contentWindow[ x.specifiers.default ] = 'default' in module ? module.default : module;
-									}
-
-									x.specifiers.names.forEach( name => {
-										iframe.contentWindow[ name.local ] = module[ name.exported ];
-									});
-								}
+								iframe.contentWindow[ name ] = module;
 							});
 
 							const data = this.get( 'data' );
 
 							try {
 								evalInIframe( `
-									var SvelteComponent = (function () { ${code} }());
+									${bundle.code}
 									document.body.innerHTML = '';
 									var component = new SvelteComponent({
 										target: document.body,

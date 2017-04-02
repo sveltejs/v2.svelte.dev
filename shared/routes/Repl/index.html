@@ -1,28 +1,38 @@
 <div class='repl-container'>
 	<div class='left' style='width: {{verticalDividerPos}}%;'>
 		<section class='input'>
-			<div class='controls'>
-				<button class='{{showGenerated ? "" : "active"}}' on:click='set({ showGenerated: false })'>input</button>
-				<button class='{{showGenerated ? "active" : ""}}' on:click='set({ showGenerated: true })'>output</button>
+			<div class='app-controls'>
+				<ExampleSelector :examples bind:selectedExample/>
+
 				<button class='{{saving ? "active" : ""}}' on:click='save()'>{{saving ? 'saving' : 'save'}}</button>
+				<!-- TODO add a download button -->
+			</div>
 
-				<select bind:value='selectedExample'>
-					<option value='{{null}}' disabled>Select an example</option>
-
-					{{#each examples as example}}
-						<option value='{{example.id}}'>{{example.title}}</option>
-					{{/each}}
-				</select>
+			<div class='module-controls'>
+				{{#if selectedComponent}}
+					<ComponentSelector
+						ref:selector
+						:components
+						bind:selectedComponent
+						on:create='createComponent()'
+						on:remove='removeComponent(selectedComponent)'
+					/>
+				{{/if}}
 			</div>
 
 			{{#if loadedCodemirror}}
-				<h2 class='show-if-mobile'>App.html</h2>
-				<div class='editor-wrapper'>
-					{{#if showGenerated}}
-						<CodeMirror ref:editor mode='javascript' code='{{compiled.code}}' readonly/>
-					{{else}}
-						<CodeMirror ref:editor mode='htmlmixed' bind:code='source' error='{{sourceError}}'/>
+				<div ref:editorWrapper class='editor-wrapper {{flip}}'>
+					{{#if selectedComponent}}
+						{{#if showGenerated}}
+							<CodeMirror ref:editor mode='javascript' code='{{selectedComponent.compiled.code}}' readonly/>
+						{{else}}
+							<CodeMirror ref:editor mode='htmlmixed' bind:code='selectedComponent.source' error='{{sourceError}}'/>
+						{{/if}}
 					{{/if}}
+
+					<button class='editor-toggle' on:click='flip()'>
+						<span class='flip-text'>{{showGenerated ? 'output' : 'input'}}</span>
+					</button>
 				</div>
 			{{else}}
 				<p class='loading'>loading editor...</p>
@@ -43,7 +53,9 @@
 		<h2 class='show-if-mobile'>Rendered component</h2>
 		<div class='top' style='height: {{horizontalDividerPos}}%;'>
 			{{#if loadedSvelte}}
-				<Viewer compiled='{{compiled}}' data='{{data}}' on:change='updateData(event)'/>
+				{{#if bundle}}
+					<Viewer :bundle :data on:change='updateData(event)'/>
+				{{/if}}
 			{{else}}
 				<p class='loading'>loading Svelte compiler...</p>
 			{{/if}}
@@ -112,6 +124,56 @@
 		padding: 0 8px;
 		font-weight: 500;
 		font-size: 1.2em;
+	}
+
+	.editor-wrapper {
+		z-index: 5;
+		transform-style: preserve-3d;
+		animation-fill-mode: forwards;
+	}
+
+	.editor-toggle {
+		position: absolute;
+		bottom: 1em;
+		right: 1em;
+		z-index: 10;
+		background: white url(/icons/flip.svg) no-repeat calc(100% - 0.7em) 50%;
+		background-size: 1.4em 1em;
+		padding-right: 2.5em;
+	}
+
+	.flip-text {
+		/*display: none;*/
+	}
+
+	.editor-toggle:hover .flip-text {
+		/*display: inline-block;*/
+	}
+
+	.flip-out {
+		animation-name: flip-out;
+		animation-duration: 0.2s;
+		animation-timing-function: ease-in;
+	}
+
+	.flip-pause {
+		opacity: 0;
+	}
+
+	.flip-in {
+		animation-name: flip-in;
+		animation-duration: 0.2s;
+		animation-timing-function: ease-out;
+	}
+
+	@keyframes flip-out {
+		from { transform: rotateY(0deg); }
+		to { transform: rotateY(90deg); }
+	}
+
+	@keyframes flip-in {
+		from { transform: rotateY(-90deg); }
+		to { transform: rotateY(0deg); }
 	}
 
 	@media (min-width: 768px) {
@@ -201,30 +263,71 @@
 		margin: 2em 0 0 0;
 	}
 
-	section {
-		padding: 3em 0 0 0;
+	.input {
+		padding: 6em 0 0 0;
+		perspective: 1500px;
+		perspective-origin: 50% 0%;
 	}
 
-	.controls {
+	@media (min-width: 768px) {
+		.input {
+			perspective-origin: 50% 50%;
+		}
+	}
+
+	.app-controls, .module-controls {
 		position: absolute;
-		top: 0;
 		left: 0;
 		width: 100%;
 		height: 3em;
 		padding: 0.5em;
-		background-color: #f7f7f7;
-		border-bottom: 1px solid #eee;
-		box-sizing: border-box;
 	}
 
-	.controls button {
+	.app-controls {
+		top: 0;
+		border-bottom: 1px solid #eee;
+		background-color: #f4f4f4;
+	}
+
+	.module-controls {
+		top: 3em;
+		border-bottom: 1px solid #eee;
+	}
+
+	.tabs {
+		position: absolute;
+		right: 0.5em;
+		top: 0.5em;
+	}
+
+	.tab {
+		padding: 0.8em 1em;
+		border: 1px solid #eee;
+		border-bottom: none;
+		border-radius: 0.2em 0.2em 0 0;
+		bottom: -0.2em;
+		background: white;
+		line-height: 1;
+		display: inline-block;
+		background-color: #f4f4f4;
+		user-select: none;
+		cursor: default;
+	}
+
+	.tab.active {
+		z-index: 2;
+		background-color: white;
+		bottom: 0;
+	}
+
+	button {
 		display: block;
-		float: left;
+		float: right;
 		padding: calc(0.5em - 1px) 1em;
-		margin: 0 0.5em 0 0;
+		margin: 0 0 0 0.5em;
 		border-radius: 0.2em;
 		color: rgb(170,30,30);
-		border: 1px solid rgb(170,30,30);
+		border: 1px solid rgba(170,30,30,0.3);
 		font-family: Rajdhani, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 		font-weight: 500;
 		font-size: inherit;
@@ -235,16 +338,19 @@
 		cursor: pointer;
 	}
 
-	.controls button.active {
+	button:hover {
+		border: 1px solid rgb(170,30,30);
+	}
+
+	button.active {
 		background-color: rgb(170,30,30);
 		color: white;
 	}
 
 	select {
 		position: absolute;
-		right: 0.5em;
+		left: 0.5em;
 		top: 50%;
-		transform: translate(0,-50%);
 	}
 
 	.mousecatcher {
@@ -260,13 +366,13 @@
 <script>
 	import CodeMirror from './CodeMirror.html';
 	import Viewer from './Viewer.html';
+	import ComponentSelector from './ComponentSelector.html';
+	import ExampleSelector from './ExampleSelector.html';
 	import examples from './examples.js';
 	import { getComponentFromGist, saveComponentAsGist } from './utils/gist.js';
 	import debounce from './utils/debounce.js';
 	import * as load from './utils/load.js';
 	import getJSON from './utils/getJSON.js';
-
-	const sourceById = {};
 
 	function loadCodemirror () {
 		return Promise.all([
@@ -303,39 +409,176 @@
 			const exampleMatch = /example=([^&]+)$/.exec( search );
 
 			let gist = null;
-			let source = null;
+			let components = [];
 			let selectedExample = null;
 			let data = {};
 
 			if ( dataMatch ) {
-				({ source, data } = tryParseData( dataMatch[1] ));
+				const parsed = tryParseData( dataMatch[1] );
+				({ source, components, data } = tryParseData( dataMatch[1] ));
+
+				if ( parsed.source && !parsed.components ) {
+					// legacy
+					components = [
+						{
+							name: 'App',
+							entry: true,
+							source
+						}
+					];
+				} else {
+					components = parsed.components;
+				}
+
+				data = parsed.data;
 			}
 
-			if ( !source ) {
+			if ( !components || components.length === 0 ) {
 				if ( gistMatch ) {
 					gist = gistMatch[1];
 				} else {
-					selectedExample = exampleMatch ? exampleMatch[1] : examples[0].id;
+					selectedExample = exampleMatch && examples.find( e => e.id === exampleMatch[1] ) || examples[0];
 				}
 			}
 
 			return {
 				horizontalDividerPos: 50,
 				verticalDividerPos: 50,
+				showGenerated: false,
+
+				// TODO remove this post-https://github.com/sveltejs/svelte/issues/424
+				false: false,
+				true: true,
+				null: null,
 
 				examples,
 				selectedExample,
 
+				// TODO allow multiple modules...
+				selectedComponent: null,
+
 				gist,
-				source,
+				components,
 				data,
 				json: JSON.stringify( data, null, '  ' ),
 
-				loadedCodemirror: false
+				loadedCodemirror: false,
+				editorRotation: 0,
+				flip: ''
 			};
 		},
 
 		methods: {
+			createComponent () {
+				const components = this.get( 'components' );
+
+				const newComponent = {
+					name: this.uid++ ? `Component${this.uid}` : 'Component',
+					source: ''
+				};
+
+				components.push( newComponent );
+
+				this.set({
+					components,
+
+					// for some reason we need to unset selectedComponent before
+					// resetting it, otherwise the editor remains bound to the
+					// previous component. TODO look into this bug
+					selectedComponent: null
+				});
+
+				this.set({
+					selectedComponent: newComponent
+				});
+
+				this.refs.selector.refs.name.focus();
+			},
+
+			removeComponent ( component ) {
+				const components = this.get( 'components' );
+
+				let selectedComponent;
+
+				if ( component.entry ) {
+					// App.html can't be removed
+					component.source = '';
+					selectedComponent = component;
+				} else {
+					const index = components.indexOf( component );
+					if ( ~index ) {
+						components.splice( index, 1 );
+					} else {
+						console.error( `Could not find component! That's... odd` );
+					}
+
+					selectedComponent = components[ index ] || components[ components.length - 1 ];
+				}
+
+				this.set({
+					components,
+					selectedComponent
+				});
+			},
+
+			flip () {
+				if ( window.innerWidth < 768 ) {
+					this.flipMobile();
+					return;
+				}
+
+				if ( this.flipping ) return;
+				this.flipping = true;
+
+				const wrapper = this.refs.editorWrapper;
+				const showGenerated = this.get( 'showGenerated' );
+
+				const handleFlipOutEnd = () => {
+					wrapper.removeEventListener( 'animationend', handleFlipOutEnd );
+					wrapper.removeEventListener( 'webkitAnimationEnd', handleFlipOutEnd );
+
+					this.set({
+						showGenerated: !showGenerated,
+						flip: 'flip-pause'
+					});
+
+					const handleFlipInEnd = () => {
+						wrapper.removeEventListener( 'animationend', handleFlipInEnd );
+						wrapper.removeEventListener( 'webkitAnimationEnd', handleFlipInEnd );
+
+						this.flipping = false;
+
+						this.set({ flip: '' });
+					}
+
+					wrapper.addEventListener( 'animationend', handleFlipInEnd );
+					wrapper.addEventListener( 'webkitAnimationEnd', handleFlipInEnd );
+
+					setTimeout( () => {
+						this.set({ flip: 'flip-in' });
+					});
+				}
+
+				wrapper.addEventListener( 'animationend', handleFlipOutEnd );
+				wrapper.addEventListener( 'webkitAnimationEnd', handleFlipOutEnd );
+
+				this.set({ flip: 'flip-out' });
+			},
+
+			flipMobile () {
+				const bcr1 = this.refs.editorWrapper.getBoundingClientRect();
+				this.set({
+					showGenerated: !this.get( 'showGenerated' )
+				});
+
+				// if top is visible, keep it that way
+				if ( bcr1.top > 0 ) return;
+
+				const bcr2 = this.refs.editorWrapper.getBoundingClientRect();
+				const d = bcr2.bottom - bcr1.bottom;
+				window.scrollTo( 0, window.scrollY + d );
+			},
+
 			setHorizontal ( event ) {
 				const { top, bottom } = this.refs.right.getBoundingClientRect();
 
@@ -374,6 +617,71 @@
 				});
 			},
 
+			updateBundle () {
+				// TODO do this in a worker
+				const components = this.get( 'components' );
+
+				if ( !components ) return;
+				if ( components.some( c => !c.compiled ) ) return;
+
+				if ( this.bundlePromise ) this.bundlePromise.cancel();
+
+				const lookup = {};
+				components.forEach( component => {
+					lookup[ `\0${component.name}.html` ] = component.compiled;
+				});
+
+				let cancelled = false;
+
+				let uid = 1;
+				const importMap = new Map();
+				const entry = './App.html';
+
+				this.bundlePromise = rollup.rollup({
+					entry,
+					external: id => {
+						return id.charCodeAt( 0 ) > 0 && id[0] !== '.';
+					},
+					plugins: [{
+						resolveId ( importee, importer ) {
+							if ( importee[0] === '.' ) return `\0${importee.slice( 2 )}`;
+						},
+						load ( id ) {
+							return lookup[ id ];
+						}
+					}],
+					onwarn ( warning ) {
+						if ( warning.code === 'MISSING_GLOBAL_NAME' ) return;
+						console.warn( warning.message );
+					}
+				}).then( bundle => {
+					if ( cancelled ) return;
+
+					const { code, map } = bundle.generate({
+						format: 'iife',
+						moduleName: 'SvelteComponent',
+						globals: id => {
+							const name = `import_${uid++}`;
+							importMap.set( id, name );
+							return name;
+						}
+					});
+
+					this.set({
+						bundle: {
+							code,
+							map,
+							imports: bundle.imports,
+							importMap
+						}
+					});
+				});
+
+				this.bundlePromise.cancel = () => {
+					cancelled = true;
+				};
+			},
+
 			updateUrl () {
 				if ( typeof history === 'undefined' ) return;
 
@@ -390,7 +698,7 @@
 				if ( gist ) {
 					params.gist = gist;
 				} else if ( selectedExample ) {
-					params.example = selectedExample;
+					params.example = selectedExample.id;
 				}
 
 				const queryString = Object.keys( params ).map( key => `${key}=${params[key]}` ).join( '&' );
@@ -401,15 +709,40 @@
 		},
 
 		oncreate () {
+			this.uid = 0;
+			this.flipping = false;
+			this.bundlePromise = null;
+
 			loadCodemirror().then( () => {
 				this.set({ loadedCodemirror: true });
 			});
 
-			this.observe( 'selectedExample', id => {
-				if ( !id ) return;
+			let exampleComponents;
+			let lastSelectedExample;
 
+			this.observe( 'selectedExample', example => {
+				if ( !example ) return;
+				const id = example.id;
+
+				lastSelectedExample = id;
 				getJSON( `/examples/${id}.json` ).then( example => {
-					this.set( { source: example.source, json: JSON.stringify( example.data , null, '  ' ) } );
+					exampleComponents = JSON.stringify( example.components );
+
+					// compile non-selected components
+					if ( window.svelte ) {
+						example.components.slice( 1 ).forEach( component => {
+							component.compiled = svelte.compile( component.source, {
+								name: component.name,
+								filename: component.name + '.html'
+							});
+						});
+					}
+
+					this.set({
+						components: example.components,
+						selectedComponent: example.components[0],
+						json: JSON.stringify( example.data , null, '  ' )
+					});
 				});
 
 				this.set({ gist: null });
@@ -428,7 +761,6 @@
 
 				this.promise
 					.then( ({ source, json }) => {
-						sourceById[ gist ] = source;
 						this.set({ source, json });
 					})
 					.catch( err => {
@@ -446,18 +778,42 @@
 
 				this.set({ loadedSvelte: true });
 
-				this.observe( 'source', source => {
-					if ( !source ) return;
+				this.get( 'components' ).forEach( component => {
+					// skip the selected component, that'll come soon enough
+					if ( component === this.get( 'selectedComponent' ) ) return;
 
-					const expectedSource = sourceById[ this.get( 'gist' ) ];
+					try {
+						component.compiled = svelte.compile( component.source || '', {
+							name: component.name,
+							filename: component.name + '.html'
+						});
+					} catch ( err ) {
+						console.error( err.stack );
 
-					if ( source && expectedSource && source !== expectedSource ) {
-						this.set({ gist: null });
+						this.set({
+							sourceError: { message: err.shortMessage || err.message, pos: err.pos }
+						});
+					}
+				});
+
+				this.observe( 'selectedComponent', selectedComponent => {
+					if ( !selectedComponent ) return;
+
+					// if component has been edited, unset selectedExample
+					if ( JSON.stringify( this.get( 'components' ) ) !== exampleComponents ) {
+						this.set({ selectedExample: null });
 					}
 
 					try {
-						const compiled = svelte.compile( source );
-						this.set({ compiled, sourceError: null });
+						selectedComponent.compiled = svelte.compile( selectedComponent.source || '', {
+							name: selectedComponent.name,
+							filename: selectedComponent.name + '.html'
+						});
+						this.set({ selectedComponent, sourceError: null });
+
+						if ( this.get( 'loadedRollup' ) ) {
+							this.updateBundle();
+						}
 					} catch ( err ) {
 						console.error( err.stack );
 
@@ -468,6 +824,13 @@
 				});
 
 				this.updateUrl();
+			});
+
+			curl([ '/rollup.browser.js' ]).then( rollup => {
+				this.set({ loadedRollup: true });
+				window.rollup = rollup;
+
+				this.updateBundle();
 			});
 
 			this.observe( 'json', json => {
@@ -526,7 +889,9 @@
 
 		components: {
 			CodeMirror,
-			Viewer
+			Viewer,
+			ComponentSelector,
+			ExampleSelector
 		}
 	};
 </script>
