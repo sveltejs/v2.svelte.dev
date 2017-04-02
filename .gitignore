@@ -2,10 +2,8 @@
 node_modules
 .gobble*
 dist
-public/js/bundle.js
-public/js/bundle.js.map
-public/service-worker.js
-public/service-worker.js.map
+public/js/bundle.*
+public/sw.*
 public/main.css
 public/guide.json
 public/examples

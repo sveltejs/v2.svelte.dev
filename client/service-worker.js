@@ -1,11 +1,29 @@
 const CACHE_NAME = `cache-v__CACHEVERSION__`;
 const urlsToCache = __MANIFEST__; // eslint-disable-line no-undef
 
+console.log( CACHE_NAME );
+
 self.addEventListener( 'install', event => {
+	console.log( 'install' );
 	event.waitUntil(
 		caches.open( CACHE_NAME )
-			.then( cache => cache.addAll( urlsToCache ) )
-			.then( () => self.skipWaiting() )
+			.then( cache => {
+				return Promise.all(
+					urlsToCache.map( url => {
+						return cache.add( url ).catch( err => {
+							console.error( `Error caching ${url}: ${err.message}` );
+						});
+					})
+				);
+			})
+			.catch( err => {
+				console.log( 'ffs' );
+				console.error( err.stack );
+			})
+			.then( () => {
+				console.log( `cached ${urlsToCache.length} urls` );
+				self.skipWaiting();
+			})
 	);
 });
 
