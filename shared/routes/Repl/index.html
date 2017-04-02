@@ -880,7 +880,7 @@
 				node.addEventListener( 'mousedown', mousedown, false );
 
 				return {
-					teardown () {
+					destroy () {
 						node.removeEventListener( 'mousedown', onmousedown, false );
 					}
 				};

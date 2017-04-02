@@ -202,7 +202,7 @@ Soon, we'll learn about [event handlers](#event-handlers) – if you want, skip 
 
 Most of the time you can make do with the standard DOM events (the sort you'd add via `element.addEventListener`, such as `click`) but sometimes you might need custom events to handle gestures, for example.
 
-Custom events are just functions that take a node and a callback as their argument, and return an object with a `teardown` method that gets called when the element is removed from the page:
+Custom events are just functions that take a node and a callback as their argument, and return an object with a `destroy` method that gets called when the element is removed from the page:
 
 ```html
 <button on:longpress='set({ done: true })'>click and hold</button>
@@ -229,7 +229,7 @@ Custom events are just functions that take a node and a callback as their argume
 				node.addEventListener( 'mousedown', onmousedown, false );
 
 				return {
-					teardown () {
+					destroy () {
 						node.removeEventListener( 'mousedown', onmousedown, false );
 					}
 				};
@@ -283,6 +283,6 @@ const widget = new Widget({
 });
 ```
 
-...except that Svelte will ensure that the value of `baz` is kept in sync with the value of `dynamic` in the parent component, and takes care of tearing down the child component when the parent is torn down.
+...except that Svelte will ensure that the value of `baz` is kept in sync with the value of `dynamic` in the parent component, and takes care of destroying the child component when the parent is destroyed.
 
 > Component names should be capitalised, following the widely-used JavaScript convention of capitalising constructor names. It's also an easy way to distinguish components from elements in your template.

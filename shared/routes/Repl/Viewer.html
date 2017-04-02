@@ -154,13 +154,13 @@
 				let observers = null;
 				let updating = null;
 
-				let toTeardown = null;
+				let toDestroy = null;
 
 				this.observe( 'bundle', bundle => {
 					if ( !bundle ) return; // TODO can this ever happen?
 					if ( promise ) promise.cancel();
 
-					toTeardown = component;
+					toDestroy = component;
 					component = null;
 
 					setTimeout( () => { // necessary because `data` is not yet updated. TODO would be nice to fix this
@@ -172,12 +172,12 @@
 						const createComponent = () => {
 							this.set({ error: null });
 
-							if ( toTeardown ) {
+							if ( toDestroy ) {
 								const styles = iframe.contentDocument.querySelectorAll( 'style' );
 								let i = styles.length;
 								while ( i-- ) styles[i].parentNode.removeChild( styles[i] );
 
-								toTeardown.teardown();
+								toDestroy.destroy();
 							}
 
 							bundle.imports.forEach( x => {

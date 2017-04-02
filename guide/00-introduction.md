@@ -45,7 +45,7 @@ const app = new App({
 app.set({ name: 'everybody' });
 
 // detach the component and clean everything up
-app.teardown();
+app.destroy();
 ```
 
 Congratulations, you've just learned about half of Svelte's API!

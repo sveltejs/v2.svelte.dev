@@ -112,7 +112,7 @@ To observe on a nested component, use refs:
 <Widget ref:widget/>
 <script>
 	export default {
-		onrender () {
+		oncreate () {
 			this.refs.widget.observe( 'xxx', () => {...});
 		}
 	};
@@ -148,14 +148,14 @@ At first glance `component.on(...)` and `component.fire(...)` aren't particularl
 > `component.on(...)` and `component.observe(...)` look quite similar, but they have different purposes. Observers are useful for reacting to data flowing through your application and changing continuously over time, whereas events are good for modeling discrete moments such as 'the user made a selection, and this is what it is'.
 
 
-### component.teardown()
+### component.destroy()
 
-Removes the component from the DOM and removes any observers and event listeners that were created. This will also fire a `teardown` event:
+Removes the component from the DOM and removes any observers and event listeners that were created. This will also fire a `destroy` event:
 
 ```js
-component.on( 'teardown', () => {
+component.on( 'destroy', () => {
 	alert( 'goodbye!' ); // please don't do this
 });
 
-component.teardown();
+component.destroy();
 ```
