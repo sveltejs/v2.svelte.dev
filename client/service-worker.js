@@ -1,5 +1,5 @@
 const CACHE_NAME = `cache-v__CACHEVERSION__`;
-const urlsToCache = __MANIFEST__;
+const urlsToCache = __MANIFEST__; // eslint-disable-line no-undef
 
 self.addEventListener( 'install', event => {
 	event.waitUntil(

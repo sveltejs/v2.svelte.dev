@@ -16,7 +16,8 @@
     "predeploy:ci": "npm run prep",
     "stage": "now",
     "deploy": "now && now alias",
-    "deploy:ci": "now --token $NOW_TOKEN && now alias --token $NOW_TOKEN"
+    "deploy:ci": "now --token $NOW_TOKEN && now alias --token $NOW_TOKEN",
+    "lint": "eslint server client shared"
   },
   "repository": {
     "type": "git",
@@ -47,7 +48,7 @@
     "postcss-clearfix": "^1.0.0",
     "postcss-import": "^9.1.0",
     "postcss-nested": "^1.0.0",
-    "rollup": "^0.41.5",
+    "rollup": "^0.41.6",
     "rollup-plugin-buble": "^0.15.0",
     "rollup-plugin-commonjs": "^8.0.2",
     "rollup-plugin-json": "^2.1.0",
@@ -56,7 +57,7 @@
     "rollup-plugin-svelte": "^1.6.0",
     "rollup-plugin-uglify": "^1.0.1",
     "rollup-watch": "^3.2.2",
-    "svelte": "^1.13.1",
+    "svelte": "^1.13.3",
     "uglify-js": "^2.8.12"
   },
   "dependencies": {
@@ -64,7 +65,7 @@
     "curl-amd": "^0.8.12",
     "roadtrip": "^0.3.4",
     "rollup": "^0.41.6",
-    "svelte": "^1.11.2"
+    "svelte": "^1.13.3"
   },
   "now": {
     "alias": "svelte.technology",
