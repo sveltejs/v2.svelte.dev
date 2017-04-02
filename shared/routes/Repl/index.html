@@ -23,7 +23,7 @@
 			{{#if loadedCodemirror}}
 				<div ref:editorWrapper class='editor-wrapper {{flip}}'>
 					{{#if selectedComponent}}
-						{{#if showGenerated}}
+						{{#if showGenerated && selectedComponent.compiled}}
 							<CodeMirror ref:editor mode='javascript' code='{{selectedComponent.compiled.code}}' readonly/>
 						{{else}}
 							<CodeMirror ref:editor mode='htmlmixed' bind:code='selectedComponent.source' error='{{sourceError}}'/>
