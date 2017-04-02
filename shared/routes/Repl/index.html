@@ -2,13 +2,7 @@
 	<div class='left' style='width: {{verticalDividerPos}}%;'>
 		<section class='input'>
 			<div class='app-controls'>
-				<select bind:value='selectedExample'>
-					<option value='{{null}}' disabled>Select an example</option>
-
-					{{#each examples as example}}
-						<option value='{{example.id}}'>{{example.title}}</option>
-					{{/each}}
-				</select>
+				<ExampleSelector :examples bind:selectedExample/>
 
 				<button class='{{saving ? "active" : ""}}' on:click='save()'>{{saving ? 'saving' : 'save'}}</button>
 				<!-- TODO add a download button -->
@@ -16,7 +10,7 @@
 
 			<div class='module-controls'>
 				{{#if selectedComponent}}
-					<ModuleSelector
+					<ComponentSelector
 						ref:selector
 						:components
 						bind:selectedComponent
@@ -372,7 +366,8 @@
 <script>
 	import CodeMirror from './CodeMirror.html';
 	import Viewer from './Viewer.html';
-	import ModuleSelector from './ModuleSelector.html';
+	import ComponentSelector from './ComponentSelector.html';
+	import ExampleSelector from './ExampleSelector.html';
 	import examples from './examples.js';
 	import { getComponentFromGist, saveComponentAsGist } from './utils/gist.js';
 	import debounce from './utils/debounce.js';
@@ -442,7 +437,7 @@
 				if ( gistMatch ) {
 					gist = gistMatch[1];
 				} else {
-					selectedExample = exampleMatch ? exampleMatch[1] : examples[0].id;
+					selectedExample = exampleMatch && examples.find( e => e.id === exampleMatch[1] ) || examples[0];
 				}
 			}
 
@@ -703,7 +698,7 @@
 				if ( gist ) {
 					params.gist = gist;
 				} else if ( selectedExample ) {
-					params.example = selectedExample;
+					params.example = selectedExample.id;
 				}
 
 				const queryString = Object.keys( params ).map( key => `${key}=${params[key]}` ).join( '&' );
@@ -725,8 +720,9 @@
 			let exampleComponents;
 			let lastSelectedExample;
 
-			this.observe( 'selectedExample', id => {
-				if ( !id ) return;
+			this.observe( 'selectedExample', example => {
+				if ( !example ) return;
+				const id = example.id;
 
 				lastSelectedExample = id;
 				getJSON( `/examples/${id}.json` ).then( example => {
@@ -894,7 +890,8 @@
 		components: {
 			CodeMirror,
 			Viewer,
-			ModuleSelector
+			ComponentSelector,
+			ExampleSelector
 		}
 	};
 </script>
