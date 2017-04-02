@@ -28,6 +28,13 @@
 	},
 
 	{
+		"name": "7guis",
+		"examples": [
+			"7guis-counter"
+		]
+	},
+
+	{
 		"name": "<:Window>",
 		"examples": [
 			"parallax"
