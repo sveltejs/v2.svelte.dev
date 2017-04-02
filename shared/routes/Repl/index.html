@@ -2,7 +2,7 @@
 	<div class='left' style='width: {{verticalDividerPos}}%;'>
 		<section class='input'>
 			<div class='app-controls'>
-				<ExampleSelector :examples bind:selectedExample/>
+				<ExampleSelector :exampleGroups bind:selectedExample/>
 
 				<button class='{{saving ? "active" : ""}}' on:click='save()'>{{saving ? 'saving' : 'save'}}</button>
 				<!-- TODO add a download button -->
@@ -368,7 +368,7 @@
 	import Viewer from './Viewer.html';
 	import ComponentSelector from './ComponentSelector.html';
 	import ExampleSelector from './ExampleSelector.html';
-	import examples from './examples.js';
+	import exampleGroups from './examples.js';
 	import { getComponentFromGist, saveComponentAsGist } from './utils/gist.js';
 	import debounce from './utils/debounce.js';
 	import * as load from './utils/load.js';
@@ -401,6 +401,15 @@
 		}
 	}
 
+	function findExample ( id ) {
+		for ( let i = 0; i < exampleGroups.length; i += 1 ) {
+			const group = exampleGroups[i];
+			for ( let j = 0; j < group.examples.length; j += 1 ) {
+				if ( group.examples[j].id === id ) return group.examples[j];
+			}
+		}
+	}
+
 	export default {
 		data () {
 			const search = typeof window !== 'undefined' ? window.location.search : '';
@@ -415,7 +424,6 @@
 
 			if ( dataMatch ) {
 				const parsed = tryParseData( dataMatch[1] );
-				({ source, components, data } = tryParseData( dataMatch[1] ));
 
 				if ( parsed.source && !parsed.components ) {
 					// legacy
@@ -423,7 +431,7 @@
 						{
 							name: 'App',
 							entry: true,
-							source
+							source: parsed.source
 						}
 					];
 				} else {
@@ -433,11 +441,15 @@
 				data = parsed.data;
 			}
 
-			if ( !components || components.length === 0 ) {
+			let selectedComponent = null;
+
+			if ( components && components.length > 0 ) {
+				selectedComponent = components[0];
+			} else {
 				if ( gistMatch ) {
 					gist = gistMatch[1];
 				} else {
-					selectedExample = exampleMatch && examples.find( e => e.id === exampleMatch[1] ) || examples[0];
+					selectedExample = exampleMatch && findExample( exampleGroups, exampleMatch[1] ) || exampleGroups[0].examples[0];
 				}
 			}
 
@@ -451,11 +463,9 @@
 				true: true,
 				null: null,
 
-				examples,
+				exampleGroups,
 				selectedExample,
-
-				// TODO allow multiple modules...
-				selectedComponent: null,
+				selectedComponent,
 
 				gist,
 				components,

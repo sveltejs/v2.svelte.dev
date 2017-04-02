@@ -2,8 +2,12 @@
 	<select bind:value='selectedExample'>
 		<option value='{{null}}' disabled>Select an example</option>
 
-		{{#each examples as example}}
-			<option value='{{example}}'>{{example.title}}</option>
+		{{#each exampleGroups as group}}
+			<optgroup label='{{group.name}}'>
+				{{#each group.examples as example}}
+					<option value='{{example}}'>{{example.title}}</option>
+				{{/each}}
+			</optgroup>
 		{{/each}}
 	</select>
 

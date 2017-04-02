@@ -1,12 +1,36 @@
 [
-	"hello-world",
-	"if-blocks",
-	"each-blocks",
-	"scoped-styles",
-	"svg-clock",
-	"line-chart",
-	"area-chart",
-	"bar-chart",
-	"self-references",
-	"nested-components"
+	{
+		"name": "Basics",
+		"examples": [
+			"hello-world",
+			"if-blocks",
+			"each-blocks",
+			"scoped-styles"
+		]
+	},
+
+	{
+		"name": "Nested components",
+		"examples": [
+			"self-references",
+			"nested-components"
+		]
+	},
+
+	{
+		"name": "SVG and dataviz",
+		"examples": [
+			"svg-clock",
+			"line-chart",
+			"area-chart",
+			"bar-chart"
+		]
+	},
+
+	{
+		"name": "<:Window>",
+		"examples": [
+			"parallax"
+		]
+	}
 ]
