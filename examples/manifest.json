@@ -30,7 +30,9 @@
 	{
 		"name": "7guis",
 		"examples": [
-			"7guis-counter"
+			"7guis-counter",
+			"7guis-temperature",
+			"7guis-flight-booker"
 		]
 	},
 

@@ -1,0 +1,26 @@
+<input bind:value='celsius' type='number'> °c =
+<input bind:value='fahrenheight' type='number'> °f
+
+<style>
+	input {
+		width: 5em;
+	}
+</style>
+
+<script>
+	export default {
+		oncreate: function () {
+			this.observe( 'celsius', c => {
+				this.set({
+					fahrenheight: +( 32 + ( 9 / 5 * c ) ).toFixed( 1 )
+				});
+			});
+
+			this.observe( 'fahrenheight', f => {
+				this.set({
+					celsius: +( 5 / 9 * ( f - 32 ) ).toFixed( 1 )
+				});
+			});
+		}
+	}
+</script>

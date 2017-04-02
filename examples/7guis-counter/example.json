@@ -1,3 +1,6 @@
 {
-	"count": 0
+	"title": "Counter",
+	"data": {
+		"count": 0
+	}
 }
