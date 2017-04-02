@@ -424,7 +424,6 @@
 
 			if ( dataMatch ) {
 				const parsed = tryParseData( dataMatch[1] );
-				({ source, components, data } = tryParseData( dataMatch[1] ));
 
 				if ( parsed.source && !parsed.components ) {
 					// legacy
@@ -432,7 +431,7 @@
 						{
 							name: 'App',
 							entry: true,
-							source
+							source: parsed.source
 						}
 					];
 				} else {
@@ -442,7 +441,11 @@
 				data = parsed.data;
 			}
 
-			if ( !components || components.length === 0 ) {
+			let selectedComponent = null;
+
+			if ( components && components.length > 0 ) {
+				selectedComponent = components[0];
+			} else {
 				if ( gistMatch ) {
 					gist = gistMatch[1];
 				} else {
@@ -462,9 +465,7 @@
 
 				exampleGroups,
 				selectedExample,
-
-				// TODO allow multiple modules...
-				selectedComponent: null,
+				selectedComponent,
 
 				gist,
 				components,
