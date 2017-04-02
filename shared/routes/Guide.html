@@ -255,7 +255,7 @@
 				setTimeout( onresize, 5000 )
 			];
 
-			this.on( 'teardown', () => {
+			this.on( 'destroy', () => {
 				window.removeEventListener( 'scroll', onscroll, true );
 				window.removeEventListener( 'resize', onresize, true );
 

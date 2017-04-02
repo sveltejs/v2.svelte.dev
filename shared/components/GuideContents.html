@@ -57,7 +57,7 @@
 			};
 
 			window.addEventListener( 'hashchange', onhashchange, false );
-			this.on( 'teardown', () => {
+			this.on( 'destroy', () => {
 				window.removeEventListener( 'hashchange', onhashchange, false );
 			});
 
