@@ -383,6 +383,8 @@
 		});
 	}
 
+	const search = typeof window !== 'undefined' ? window.location.search : '';
+	const dataMatch = /data=([^&]+)$/.exec( search );
 	const versionMatch = typeof window !== 'undefined' && /version=([^&]+)/.exec( window.location.search );
 
 	function loadSvelte () {
@@ -412,8 +414,6 @@
 
 	export default {
 		data () {
-			const search = typeof window !== 'undefined' ? window.location.search : '';
-			const dataMatch = /data=([^&]+)$/.exec( search ); // TODO I think this is legacy... can probably remove
 			const gistMatch = /gist=([^&]+)$/.exec( search );
 			const exampleMatch = /example=([^&]+)$/.exec( search );
 
@@ -617,7 +617,7 @@
 			save () {
 				this.set({ saving: true });
 
-				saveComponentAsGist( this.get( 'source' ), this.get( 'json' ) ).then( id => {
+				saveComponentAsGist( this.get( 'components' ), this.get( 'json' ) ).then( id => {
 					this.set({
 						saving: false,
 						gist: id,
@@ -709,6 +709,8 @@
 					params.gist = gist;
 				} else if ( selectedExample ) {
 					params.example = selectedExample.id;
+				} else if ( dataMatch ) {
+					params.data = dataMatch[1];
 				}
 
 				const queryString = Object.keys( params ).map( key => `${key}=${params[key]}` ).join( '&' );
@@ -770,8 +772,8 @@
 				this.promise = getComponentFromGist( gist );
 
 				this.promise
-					.then( ({ source, json }) => {
-						this.set({ source, json });
+					.then( ({ components, json }) => {
+						this.set({ components, json, selectedComponent: components[0] });
 					})
 					.catch( err => {
 						alert( 'Error loading from gist.github.com – please try again later!' );
