@@ -1,8 +1,6 @@
 const CACHE_NAME = `cache-v__CACHEVERSION__`;
 const urlsToCache = __MANIFEST__; // eslint-disable-line no-undef
 
-console.log( CACHE_NAME );
-
 self.addEventListener( 'install', event => {
 	console.log( 'install' );
 	event.waitUntil(
@@ -46,6 +44,8 @@ self.addEventListener( 'activate', event => {
 
 
 self.addEventListener( 'fetch', event => {
+	if ( !/^https?/.test( event.request.url ) ) return;
+
 	event.respondWith(
 		caches.match( event.request )
 			.then( response => {
@@ -64,11 +64,17 @@ self.addEventListener( 'fetch', event => {
 
 						caches.open( CACHE_NAME )
 							.then( cache => {
-								cache.put( event.request, responseToCache );
+								// no need to wait on this before responding
+								cache.put( event.request, responseToCache ).catch( err => {
+									console.error( `failed to cache ${event.request.url}: ${err.stack}` );
+								});
 							});
 
 						return response;
 					});
+			})
+			.catch( err => {
+				console.error( err.stack );
 			})
 	);
 });
