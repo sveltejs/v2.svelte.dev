@@ -32,7 +32,7 @@ const sections = fs.readdirSync( `${root}/guide` )
 
 		// syntax highlighting
 		let uid = 0;
-		const replInput = {};
+		const replComponents = {};
 		const replData = {};
 		const highlighted = {};
 
@@ -43,33 +43,55 @@ const sections = fs.readdirSync( `${root}/guide` )
 					return '\n\n';
 				}
 
-				const { value } = hljs.highlight( langs[ lang ] || lang, code );
-				highlighted[ ++uid ] = value;
+				const syntax = lang.startsWith( 'html-nested-' ) ? 'html' : langs[ lang ] || lang;
+				const { value } = hljs.highlight( syntax, code );
+				const name = lang.slice( 12 );
 
-				if ( lang === 'html' ) {
-					replInput[ uid ] = code.replace( /^\t+/gm, match => match.split( '\t' ).join( '  ' ) );
+				if ( lang.startsWith( 'html-nested-' ) ) {
+					replComponents[ uid ].push({
+						name,
+						source: code.replace( /^\t+/gm, match => match.split( '\t' ).join( '  ' ) )
+					});
+
+					highlighted[ uid ] += `\n\n<h2>${name}.html</h2>${value}`;
+					return '';
 				}
 
-				return `@@${uid}`;
+				else {
+					highlighted[ ++uid ] = value;
+
+					if ( lang === 'html' ) {
+						replComponents[ uid ] = [{
+							name: 'App',
+							source: code.replace( /^\t+/gm, match => match.split( '\t' ).join( '  ' ) )
+						}];
+
+						return `%%${uid}`;
+					}
+
+					return `@@${uid}`;
+				}
 			});
 
 		const html = marked( content )
 			.replace( /<p>(<a class='open-in-repl'[\s\S]+?)<\/p>/g, '$1' )
 			.replace( /<p>@@(\d+)<\/p>/g, ( match, id ) => {
-				const pre = `<pre><code>${highlighted[ id ]}</code></pre>`;
+				return `<pre><code>${highlighted[ id ]}</code></pre>`;
+			})
+			.replace( /<p>%%(\d+)<\/p>/g, ( match, id ) => {
+				const components = replComponents[ id ];
+				const header = components.length > 1 ? `<h2>App.html</h2>` : '';
+				const pre = `<pre><code>${header}${highlighted[ id ]}</code></pre>`;
+				const data = replData[ id ] || {};
 
-				if ( id in replInput ) {
-					const json = JSON.stringify({
-						gist: null,
-						source: replInput[ id ],
-						data: replData[ id ] || {}
-					});
+				const json = JSON.stringify({
+					gist: null,
+					components,
+					data
+				});
 
-					const href = `/repl?data=${btoa( encodeURIComponent( json ) )}`;
-					return `<a class='open-in-repl' href='${href}'></a>${pre}`;
-				}
-
-				return pre;
+				const href = `/repl?data=${btoa( encodeURIComponent( json ) )}`;
+				return `<a class='open-in-repl' href='${href}'></a>${pre}`;
 			})
 			.replace( /^\t+/gm, match => match.split( '\t' ).join( '  ' ) );
 
