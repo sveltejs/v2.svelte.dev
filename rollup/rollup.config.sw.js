@@ -35,7 +35,7 @@ const manifest = [].concat(
 
 export default {
 	entry: 'client/service-worker.js',
-	dest: 'public/service-worker.js',
+	dest: 'public/sw.js',
 	format: 'iife',
 	plugins: [
 		replace({
