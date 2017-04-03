@@ -263,6 +263,7 @@ Components are assumed to be in the HTML namespace. If your component is designe
 ```
 
 ```html-nested-SmileyFace
+<!-- CC-BY-SA — https://commons.wikimedia.org/wiki/File:718smiley.svg -->
 <g transform='translate({{x}},{{y}}) scale({{size / 366.5}})'>
 	<circle r="366.5"/>
 	<circle r="336.5" fill="#fede58"/>
