@@ -32,7 +32,10 @@
 		"examples": [
 			"7guis-counter",
 			"7guis-temperature",
-			"7guis-flight-booker"
+			"7guis-flight-booker",
+			"7guis-timer",
+			"7guis-crud",
+			"7guis-circles"
 		]
 	},
 
