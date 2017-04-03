@@ -151,12 +151,10 @@ roadtrip
 					nav.set({ active: id });
 				});
 
-				if ( route.scrollY === 0 ) {
+				if ( route.scrollY === 0 && route.hash ) {
 					// scroll to section
-					if ( window.location.hash.length > 1 ) {
-						const h = main.querySelector( window.location.hash );
-						if ( h ) window.scrollTo( 0, h.getBoundingClientRect().top );
-					}
+					const h = main.querySelector( `#${route.hash}` );
+					if ( h ) window.scrollTo( 0, window.scrollY + h.getBoundingClientRect().top );
 				} else {
 					window.scrollTo( route.scrollX, route.scrollY );
 				}
@@ -164,6 +162,11 @@ roadtrip
 				// preload blog index
 				store.getJSON( `/blog.json` );
 			});
+		},
+
+		update ( route ) {
+			const h = main.querySelector( `#${route.hash}` );
+			if ( h ) window.scrollTo( 0, window.scrollY + h.getBoundingClientRect().top );
 		}
 	})
 	.add( '/repl', {
