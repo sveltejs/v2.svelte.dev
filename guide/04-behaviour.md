@@ -246,11 +246,11 @@ Components are assumed to be in the HTML namespace. If your component is designe
 
 ```html
 <svg viewBox='0 0 1000 1000' style='width: 100%; height: 100%;'>
-	<SmileyFace x='50' y='200' size='100'/>
-	<SmileyFace x='800' y='250' size='150'/>
-	<SmileyFace x='150' y='700' size='75'/>
-	<SmileyFace x='875' y='730' size='120'/>
-	<SmileyFace x='450' y='500' size='300'/>
+	<SmileyFace x='70' y='280' size='100' fill='#f4d9c7'/>
+	<SmileyFace x='800' y='250' size='150' fill='#40250f'/>
+	<SmileyFace x='150' y='700' size='110' fill='#d2aa7a'/>
+	<SmileyFace x='875' y='730' size='130' fill='#824e2e'/>
+	<SmileyFace x='450' y='500' size='240' fill='#d2b198'/>
 </svg>
 
 <script>
@@ -266,7 +266,7 @@ Components are assumed to be in the HTML namespace. If your component is designe
 <!-- CC-BY-SA — https://commons.wikimedia.org/wiki/File:718smiley.svg -->
 <g transform='translate({{x}},{{y}}) scale({{size / 366.5}})'>
 	<circle r="366.5"/>
-	<circle r="336.5" fill="#fede58"/>
+	<circle r="336.5" fill="{{fill}}"/>
 	<path d="m-41.5 298.5c-121-21-194-115-212-233v-8l-25-1-1-18h481c6 13 10 27 13 41 13 94-38 146-114 193-45 23-93 29-142 26z"/>
 	<path d="m5.5 280.5c52-6 98-28 138-62 28-25 46-56 51-87 4-20 1-57-5-70l-423-1c-2 56 39 118 74 157 31 34 72 54 116 63 11 2 38 2 49 0z" fill="#871945"/>
 	<path d="m-290.5 -24.5c-13-26-13-57-9-85 6-27 18-52 35-68 21-20 50-23 77-18 15 4 28 12 39 23 18 17 30 40 36 67 4 20 4 41 0 60l-6 21z"/>
