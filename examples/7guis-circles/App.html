@@ -1,7 +1,14 @@
-<!-- https://github.com/eugenkiss/7guis/wiki#circle-drawer -->
+<!--
+https://github.com/eugenkiss/7guis/wiki#circle-drawer
+
+Click on the canvas to draw a circle. Click on a circle
+to select it. Right-click on the canvas to adjust the
+radius of the selected circle.
+-->
+
 <div class='controls'>
-	<button on:click='undo()' disabled='{{i === 0}}'>undo</button>
-	<button on:click='redo()' disabled='{{i === undoStack.length -1}}'>redo</button>
+	<button on:click='travel(-1)' disabled='{{i === 0}}'>undo</button>
+	<button on:click='travel(+1)' disabled='{{i === undoStack.length -1}}'>redo</button>
 </div>
 
 <svg on:click='handleClick(event)' on:contextmenu='adjust(event)'>
@@ -113,14 +120,6 @@
 				let { i, undoStack } = this.get();
 				const circles = clone( undoStack[ i += d ] );
 				this.set({ circles, i, adjusting: false });
-			},
-
-			undo () {
-				this.travel( -1 );
-			},
-
-			redo () {
-				this.travel( +1 );
 			}
 		}
 	};
