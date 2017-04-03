@@ -45,14 +45,16 @@ const sections = fs.readdirSync( `${root}/guide` )
 
 				const syntax = lang.startsWith( 'html-nested-' ) ? 'html' : langs[ lang ] || lang;
 				const { value } = hljs.highlight( syntax, code );
+				const name = lang.slice( 12 );
 
 				if ( lang.startsWith( 'html-nested-' ) ) {
 					replComponents[ uid ].push({
-						name: lang.slice( 12 ),
+						name,
 						source: code.replace( /^\t+/gm, match => match.split( '\t' ).join( '  ' ) )
 					});
 
-					highlighted[ uid ] += '\n\n' + value;
+					highlighted[ uid ] += `\n\n<h2>${name}.html</h2>${value}`;
+					return '';
 				}
 
 				else {
@@ -77,8 +79,9 @@ const sections = fs.readdirSync( `${root}/guide` )
 				return `<pre><code>${highlighted[ id ]}</code></pre>`;
 			})
 			.replace( /<p>%%(\d+)<\/p>/g, ( match, id ) => {
-				const pre = `<pre><code>${highlighted[ id ]}</code></pre>`;
 				const components = replComponents[ id ];
+				const header = components.length > 1 ? `<h2>App.html</h2>` : '';
+				const pre = `<pre><code>${header}${highlighted[ id ]}</code></pre>`;
 				const data = replData[ id ] || {};
 
 				const json = JSON.stringify({

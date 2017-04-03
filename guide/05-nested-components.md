@@ -4,7 +4,7 @@ title: Nested components
 
 As well as containing elements (and `if` blocks and `each` blocks), Svelte components can contain *other* Svelte components.
 
-```html
+```html-no-repl
 <div class='widget-container'>
 	<Widget foo bar='static' baz='{{dynamic}}'/>
 </div>
@@ -73,7 +73,7 @@ A component can contain a `{{yield}}` tag, which allows the parent component to 
 <div class='modal-background' on:click='destroy()'></div>
 
 <div class='modal'>
-	{{yield}}
+	{{yield}} <!-- content is injected here -->
 	<button on:click='destroy()'>close modal</button>
 </div>
 
