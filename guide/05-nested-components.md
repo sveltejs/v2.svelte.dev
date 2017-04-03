@@ -107,3 +107,23 @@ A component can contain a `{{yield}}` tag, which allows the parent component to 
 	"showModal": true
 }
 ```
+
+
+### <:Self> tags
+
+Sometimes, a component needs to embed itself recursively — for example if you have a tree-like data structure. In Svelte, that's accomplished with the `<:Self>` tag:
+
+```html
+{{#if countdown > 0}}
+	<p>{{countdown}}</p>
+	<:Self countdown='{{countdown - 1}}'/>
+{{else}}
+	<p>liftoff!</p>
+{{/if}}
+```
+
+```hidden-data
+{
+	"countdown": 5
+}
+```

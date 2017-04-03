@@ -15,6 +15,24 @@ function btoa ( str ) {
 	return new Buffer( str ).toString( 'base64' );
 }
 
+const escaped = {
+	'"': '&quot;',
+	"'": '&#39;',
+	'&': '&amp;',
+	'<': '&lt;',
+	'>': '&gt;'
+};
+
+const unescaped = Object.keys( escaped ).reduce( ( unescaped, key ) => ( unescaped[ escaped[ key ] ] = key, unescaped ), {} );
+
+function escape ( html ) {
+	return String( html ).replace( /["'&<>]/g, match => escaped[ match ] );
+}
+
+function unescape ( str ) {
+	return String( str ).replace( /&.+?;/g, match => unescaped[ match ] || match );
+}
+
 const sections = fs.readdirSync( `${root}/guide` )
 	.filter( file => file[0] !== '.' && path.extname( file ) === '.md' )
 	.map( file => {
@@ -50,7 +68,7 @@ const sections = fs.readdirSync( `${root}/guide` )
 				if ( lang.startsWith( 'html-nested-' ) ) {
 					replComponents[ uid ].push({
 						name,
-						source: code.replace( /^\t+/gm, match => match.split( '\t' ).join( '  ' ) )
+						source: code
 					});
 
 					highlighted[ uid ] += `\n\n<h2>${name}.html</h2>${value}`;
@@ -63,7 +81,7 @@ const sections = fs.readdirSync( `${root}/guide` )
 					if ( lang === 'html' ) {
 						replComponents[ uid ] = [{
 							name: 'App',
-							source: code.replace( /^\t+/gm, match => match.split( '\t' ).join( '  ' ) )
+							source: code
 						}];
 
 						return `%%${uid}`;
@@ -99,9 +117,9 @@ const sections = fs.readdirSync( `${root}/guide` )
 		const pattern = /<h3 id="(.+?)">(.+?)<\/h3>/g;
 		while ( match = pattern.exec( html ) ) {
 			const slug = match[1];
-			const title = match[2]
+			const title = unescape( match[2]
 				.replace( /<\/?code>/g, '' )
-				.replace( /\.(\w+).+/, '.$1' );
+				.replace( /\.(\w+).+/, '.$1' ) );
 
 			subsections.push({ slug, title });
 		}
