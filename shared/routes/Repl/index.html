@@ -617,7 +617,7 @@
 			save () {
 				this.set({ saving: true });
 
-				saveComponentAsGist( this.get( 'source' ), this.get( 'json' ) ).then( id => {
+				saveComponentAsGist( this.get( 'components' ), this.get( 'json' ) ).then( id => {
 					this.set({
 						saving: false,
 						gist: id,
@@ -770,8 +770,8 @@
 				this.promise = getComponentFromGist( gist );
 
 				this.promise
-					.then( ({ source, json }) => {
-						this.set({ source, json });
+					.then( ({ components, json }) => {
+						this.set({ components, json, selectedComponent: components[0] });
 					})
 					.catch( err => {
 						alert( 'Error loading from gist.github.com – please try again later!' );
