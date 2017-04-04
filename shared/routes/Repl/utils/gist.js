@@ -21,6 +21,7 @@ export function getComponentFromGist ( id ) {
 					// legacy
 					components.push({
 						name: 'App',
+						entry: true,
 						source: gist.files[ 'component.html' ].content
 					});
 				} else {
@@ -28,7 +29,7 @@ export function getComponentFromGist ( id ) {
 						const name = file.slice( 0, -5 );
 						const source = gist.files[ file ].content;
 
-						components.push({ name, source });
+						components.push({ name, entry: name === 'App', source });
 					});
 				}
 
