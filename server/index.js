@@ -11,20 +11,41 @@ const root = path.resolve( __dirname, '..' );
 
 app.use( compression({ threshold: 0 }) );
 
-function loadComponent ( file ) {
-	const resolved = require.resolve( `./${file}.js` );
-	if ( dev ) delete require.cache[ resolved ];
-	return require( resolved );
+function renderComponent ( file, data ) {
+	if ( dev ) {
+		const rollup = require( 'rollup' );
+		const json = require( 'rollup-plugin-json' );
+		const svelte = require( 'rollup-plugin-svelte' );
+
+		return rollup.rollup({
+			entry: `${root}/shared/${file}.html`,
+			plugins: [
+				json(),
+				svelte({
+					generate: 'ssr',
+					css: false
+				})
+			]
+		}).then( bundle => {
+			const { code } = bundle.generate({
+				format: 'iife',
+				moduleName: 'SvelteComponent'
+			});
+
+			const SvelteComponent = eval( `(function () { ${code}; return SvelteComponent; })()` );
+
+			return SvelteComponent.render( data );
+		});
+	}
+
+	return require( `./${file}.js` ).render( data );
 }
 
 app.get( '/', ( req, res ) => {
-	const Nav = loadComponent( 'components/Nav' );
-	const Index = loadComponent( 'routes/Index' );
-
 	servePage( res, {
 		title: 'Svelte • The magical disappearing UI framework',
-		nav: Nav.render({ route: 'index' }),
-		route: Index.render()
+		nav: renderComponent( 'components/Nav', { route: 'index' }),
+		route: renderComponent( 'routes/Index' )
 	}).catch( err => {
 		console.log( err.stack ); // eslint-disable-line no-console
 	});
@@ -39,15 +60,12 @@ app.use( ( req, res, next ) => {
 });
 
 app.get( '/blog', ( req, res ) => {
-	const Nav = loadComponent( 'components/Nav' );
-	const BlogIndex = loadComponent( 'routes/BlogIndex' );
-
 	const posts = require( `${root}/public/blog.json` );
 
 	servePage( res, {
 		title: 'Svelte • The magical disappearing UI framework',
-		nav: Nav.render({ route: 'blog' }),
-		route: BlogIndex.render({ posts })
+		nav: renderComponent( 'components/Nav', { route: 'blog' }),
+		route: renderComponent( 'routes/BlogIndex', { posts })
 	}).catch( err => {
 		console.log( err.stack ); // eslint-disable-line no-console
 	});
@@ -67,43 +85,34 @@ app.use( express.static( 'public', {
 }));
 
 app.get( '/blog/:slug', ( req, res ) => {
-	const Nav = loadComponent( 'components/Nav' );
-	const BlogPost = loadComponent( 'routes/BlogPost' );
-
 	const post = require( `${root}/public/blog/${req.params.slug}.json` );
 
 	servePage( res, {
 		title: `${post.metadata.title} • Svelte`,
-		nav: Nav.render({ route: 'blog' }),
-		route: BlogPost.render({ post })
+		nav: renderComponent( 'components/Nav', { route: 'blog' }),
+		route: renderComponent( 'routes/BlogPost', { post })
 	}).catch( err => {
 		console.log( err.stack ); // eslint-disable-line no-console
 	});
 });
 
 app.get( '/guide', ( req, res ) => {
-	const Nav = loadComponent( 'components/Nav' );
-	const Guide = loadComponent( 'routes/Guide' );
-
 	const sections = require( `${root}/public/guide.json` );
 
 	servePage( res, {
 		title: 'Learn Svelte',
-		nav: Nav.render({ route: 'guide' }),
-		route: Guide.render({ sections })
+		nav: renderComponent( 'components/Nav', { route: 'guide' }),
+		route: renderComponent( 'routes/Guide', { sections })
 	}).catch( err => {
 		console.log( err.stack ); // eslint-disable-line no-console
 	});
 });
 
 app.get( '/repl', ( req, res ) => {
-	const Nav = loadComponent( 'components/Nav' );
-	const Repl = loadComponent( 'routes/Repl/index' );
-
 	servePage( res, {
 		title: 'Svelte REPL',
-		nav: Nav.render({ route: 'repl' }),
-		route: Repl.render() // TODO is there any point? just render an empty box instead?
+		nav: renderComponent( 'components/Nav', { route: 'repl' }),
+		route: renderComponent( 'routes/Repl/index' ) // TODO is there any point? just render an empty box instead?
 	}).catch( err => {
 		console.log( err.stack ); // eslint-disable-line no-console
 	});
