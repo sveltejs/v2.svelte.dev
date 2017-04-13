@@ -12,7 +12,13 @@
 
 <div class='overlay'>
 	{{#if error}}
-		<p class='error'>{{error.message}}</p>
+		<p class='error'>
+			{{#if errorLocation}}
+				<strong>{{errorLocation.source}} ({{errorLocation.line}}:{{errorLocation.column}})</strong>
+			{{/if}}
+
+			{{error.message}}
+		</p>
 	{{elseif pendingImports}}
 		<p class='info'>loading {{pendingImports}} {{pendingImports === 1 ? 'dependency' : 'dependencies'}} from packd.now.sh (this may take a while if the package isn't cached)</p>
 	{{/if}}
@@ -90,6 +96,9 @@
 </style>
 
 <script>
+	import getLocationFromStack from './utils/getLocationFromStack.js';
+	import { decode } from 'sourcemap-codec';
+
 	let importCache = {};
 
 	function fetchImport ( id ) {
@@ -170,7 +179,7 @@
 						const missingImports = bundle.imports.filter( x => !importCache[ x ] );
 
 						const createComponent = () => {
-							this.set({ error: null });
+							this.set({ error: null, errorLocation: null });
 
 							if ( toDestroy ) {
 								const styles = iframe.contentDocument.querySelectorAll( 'style' );
@@ -190,14 +199,12 @@
 							const data = this.get( 'data' );
 
 							try {
-								evalInIframe( `
-									${bundle.code}
+								evalInIframe( `${bundle.code}
 									document.body.innerHTML = '';
 									var component = new SvelteComponent({
 										target: document.body,
 										data: ${JSON.stringify(data)}
-									});
-								`);
+									});`);
 
 								component = window.component = iframe.contentWindow.component;
 
@@ -215,9 +222,12 @@
 								component = null;
 								observers = null;
 
+								const errorLocation = getLocationFromStack( error.stack, bundle.map );
+
+								console.log( `errorLocation`, errorLocation )
 								console.error( error.stack );
 
-								this.set({ error });
+								this.set({ error, errorLocation });
 							}
 						};
 

@@ -388,6 +388,7 @@
 
 	function loadSvelte () {
 		const url = versionMatch ?
+			versionMatch[1] === 'local' ? '/svelte.js' :
 			'https://unpkg.com/svelte@' + versionMatch[1] + '/compiler/svelte.js' :
 			'https://unpkg.com/svelte/compiler/svelte.js';
 
@@ -409,6 +410,13 @@
 				if ( group.examples[j].id === id ) return group.examples[j];
 			}
 		}
+	}
+
+	function compile ( component ) {
+		return svelte.compile( component.source || '', {
+			name: component.name,
+			filename: component.name + '.html'
+		});
 	}
 
 	export default {
@@ -640,7 +648,7 @@
 
 				const lookup = {};
 				components.forEach( component => {
-					lookup[ `\0${component.name}.html` ] = component.compiled;
+					lookup[ `./${component.name}.html` ] = component.compiled;
 				});
 
 				let cancelled = false;
@@ -652,14 +660,14 @@
 				this.bundlePromise = rollup.rollup({
 					entry,
 					external: id => {
-						return id.charCodeAt( 0 ) > 0 && id[0] !== '.';
+						return id[0] !== '.';
 					},
 					plugins: [{
 						resolveId ( importee, importer ) {
-							if ( importee[0] === '.' ) return `\0${importee.slice( 2 )}`;
+							if ( importee[0] === '.' ) return importee;
 						},
 						load ( id ) {
-							return lookup[ id ];
+							return lookup[ `${id}` ];
 						}
 					}],
 					onwarn ( warning ) {
@@ -676,7 +684,8 @@
 							const name = `import_${uid++}`;
 							importMap.set( id, name );
 							return name;
-						}
+						},
+						sourceMap: true
 					});
 
 					this.set({
@@ -702,7 +711,7 @@
 
 				const params = {};
 				if ( typeof svelte !== 'undefined' ) {
-					params.version = svelte.VERSION;
+					params.version = versionMatch && versionMatch[1] === 'local' ? 'local' : svelte.VERSION;
 				} else if ( versionMatch ) {
 					params.version = versionMatch[1];
 				}
@@ -745,10 +754,7 @@
 					// compile non-selected components
 					if ( window.svelte ) {
 						example.components.slice( 1 ).forEach( component => {
-							component.compiled = svelte.compile( component.source, {
-								name: component.name,
-								filename: component.name + '.html'
-							});
+							component.compiled = compile( component );
 						});
 					}
 
@@ -797,10 +803,7 @@
 					if ( component === this.get( 'selectedComponent' ) ) return;
 
 					try {
-						component.compiled = svelte.compile( component.source || '', {
-							name: component.name,
-							filename: component.name + '.html'
-						});
+						component.compiled = compile( component );
 					} catch ( err ) {
 						console.error( err.stack );
 
@@ -819,10 +822,7 @@
 					}
 
 					try {
-						selectedComponent.compiled = svelte.compile( selectedComponent.source || '', {
-							name: selectedComponent.name,
-							filename: selectedComponent.name + '.html'
-						});
+						selectedComponent.compiled = compile( selectedComponent );
 						this.set({ selectedComponent, sourceError: null });
 
 						if ( this.get( 'loadedRollup' ) ) {
