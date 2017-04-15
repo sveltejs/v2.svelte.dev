@@ -1595,6 +1595,10 @@ levn@^0.3.0, levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
+locate-character@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/locate-character/-/locate-character-2.0.0.tgz#8eb94df3a899e53c8d4cee6d13c9effb76213699"
+
 lodash.cond@^4.3.0:
   version "4.5.2"
   resolved "https://registry.yarnpkg.com/lodash.cond/-/lodash.cond-4.5.2.tgz#f471a1da486be60f6ab955d17115523dd1d255d5"

@@ -2,9 +2,16 @@
 	<textarea tabindex='2' ref:editor></textarea>
 
 	{{#if error}}
-		<div class='error'>
+		<p class='error message'>
+			<strong>
+				{{#if error.filename}}
+					<span class='filename' on:click='fire("navigate", error.filename)'>{{error.filename}}</span>
+				{{/if}}
+
+				({{error.loc.line}}:{{error.loc.column}})
+			</strong>
 			{{error.message}}
-		</div>
+		</p>
 	{{/if}}
 </div>
 
@@ -52,45 +59,20 @@
 	}
 
 	.error {
+		bottom: 1em;
+		left: 1em;
 		position: absolute;
-		width: 100%;
-		bottom: 0;
-		padding: 0.5em;
-		background-color: rgb(255,220,220);
-		border-top: 1px solid rgb(200,0,0);
-		color: rgb(200,0,0);
-		z-index: 999;
-		-webkit-animation: fade-in 0.4s 1;
-		-webkit-animation-delay: 0.5s;
-		-webkit-animation-fill-mode: forwards;
-		animation: fade-in 0.4s 1;
-		animation-delay: 0.5s;
-		animation-fill-mode: forwards;
+		z-index: 20;
 	}
 
 	.error-loc {
 		position: relative;
+		/*background-color: rgba(200,0,30,0.1);*/
+		border-bottom: 2px solid rgb(200,0,0);
 	}
 
-	.error-loc::before {
-		position: absolute;
-		content: '^';
-		display: inline-block;
-		bottom: -1.2em;
-		left: -0.2em;
-		/*background-color: rgb(200,0,0);
-		color: white;*/
-		background-color: white;
-		color: rgb(200,0,0);
-		font-size: 1em;
-		font-weight: 500;
-		/*width: 1em;
-		height: 1em;*/
-		/*padding: 0.1em;
-		text-align: center;*/
-		border-radius: 50%;
-		-webkit-animation: pulse 1s infinite;
-		animation: pulse 1s infinite;
+	.error-line {
+		background-color: rgba(200,0,0,0.05);
 	}
 </style>
 
@@ -99,6 +81,14 @@
 		oncreate () {
 			let updating = false;
 
+			const modeName = this.get( 'mode' );
+			const mode = modeName === 'json' ? {
+				name: 'javascript',
+				json: true
+			} : {
+				name: modeName
+			};
+
 			this.editor = window.CodeMirror.fromTextArea( this.refs.editor, {
 				lineNumbers: true,
 				lineWrapping: true,
@@ -106,7 +96,7 @@
 				indentUnit: 2,
 				tabSize: 2,
 				value: this.get( 'code' ),
-				mode: this.get( 'mode' ),
+				mode,
 				readOnly: this.get( 'readonly' )
 			});
 
@@ -133,15 +123,27 @@
 			});
 
 			let marker;
-			this.observe( 'error', error => {
+			let line;
+			this.observe( 'errorLoc', loc => {
 				if ( marker ) marker.clear();
-				if ( error && error.pos != null ) {
-					const { line, ch } = this.editor.getDoc().posFromIndex( error.pos );
+
+				if ( loc == null ) {
+					this.set({ errorLine: null });
+				} else {
+					const line = loc.line - 1;
+					const ch = loc.column;
 
 					marker = this.editor.markText({ line, ch }, { line, ch: ch + 1 }, {
 						className: 'error-loc'
 					});
+
+					this.set({ errorLine: line });
 				}
+			});
+
+			this.observe( 'errorLine', ( line, previousLine ) => {
+				if ( previousLine != null ) this.editor.removeLineClass( previousLine, 'wrap', 'error-line' );
+				if ( line != null ) this.editor.addLineClass( line, 'wrap', 'error-line' );
 			});
 
 			this.on( 'destroy', () => {

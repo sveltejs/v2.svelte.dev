@@ -26,7 +26,14 @@
 						{{#if showGenerated && selectedComponent.compiled}}
 							<CodeMirror ref:editor mode='javascript' code='{{selectedComponent.compiled.code}}' readonly/>
 						{{else}}
-							<CodeMirror ref:editor mode='htmlmixed' bind:code='selectedComponent.source' error='{{sourceError}}'/>
+							<CodeMirror
+								ref:editor
+								mode='htmlmixed'
+								bind:code='selectedComponent.source'
+								error='{{sourceError}}'
+								errorLoc='{{sourceErrorLoc || runtimeErrorLoc}}'
+								on:navigate='navigate(event)'
+							/>
 						{{/if}}
 					{{/if}}
 
@@ -44,7 +51,7 @@
 		<h2 class='show-if-mobile'>data.json</h2>
 		<div class='bottom' style='height: {{100 - horizontalDividerPos}}%;'>
 			{{#if loadedCodemirror}}
-				<CodeMirror ref:data mode='javascript' bind:code='json' error='{{dataError}}'/>
+				<CodeMirror ref:data mode='javascript' bind:code='json' error='{{dataError}}' errorLoc='{{dataErrorLoc}}'/>
 			{{else}}
 				<p class='loading'>loading editor...</p>
 			{{/if}}
@@ -54,7 +61,7 @@
 		<div class='top' style='height: {{horizontalDividerPos}}%;'>
 			{{#if loadedSvelte}}
 				{{#if bundle}}
-					<Viewer :bundle :data on:change='updateData(event)'/>
+					<Viewer :bundle :data bind:error='runtimeError' on:change='updateData(event)' on:navigate='navigate(event)'/>
 				{{/if}}
 			{{else}}
 				<p class='loading'>loading Svelte compiler...</p>
@@ -361,9 +368,47 @@
 		height: 100%;
 		background: rgba(255,255,255,0.01);
 	}
+
+	.message {
+		position: relative;
+		border-radius: 0.2em;
+		margin: 0;
+		padding: 0.5em 0.5em 0.5em 2.5em;
+		color: white;
+	}
+
+	.message::before {
+		content: '!';
+		position: absolute;
+		left: 0.7em;
+		top: 0.55em;
+		font-size: 0.8em;
+		font-weight: 800;
+		width: 1em;
+		height: 1em;
+		text-align: center;
+		line-height: 1;
+		padding: 0.2em 0.15em 0.1em 0.15em;
+		border-radius: 50%;
+		color: white;
+		border: 2px solid white;
+	}
+
+	.error.message {
+		background-color: rgb(170,30,30);
+	}
+
+	.info.message {
+		background-color: #666;
+	}
+
+	.error .filename {
+		cursor: pointer;
+	}
 </style>
 
 <script>
+	import { locate } from 'locate-character';
 	import CodeMirror from './CodeMirror.html';
 	import Viewer from './Viewer.html';
 	import ComponentSelector from './ComponentSelector.html';
@@ -486,6 +531,15 @@
 				editorRotation: 0,
 				flip: ''
 			};
+		},
+
+		computed: {
+			runtimeErrorLoc ( runtimeError, selectedComponent ) {
+				if ( !runtimeError || !selectedComponent ) return null;
+				if ( runtimeError.filename !== `${selectedComponent.name}.html` ) return;
+
+				return runtimeError.loc;
+			}
 		},
 
 		methods: {
@@ -728,6 +782,17 @@
 				const url = queryString ? `/repl?${queryString}` : '/repl';
 
 				history.replaceState( {}, 'x', url );
+			},
+
+			navigate ( filename ) {
+				const name = filename.replace( /\.html$/, '' );
+				const { components, selectedComponent } = this.get();
+
+				if ( selectedComponent.name === name ) return;
+
+				this.set({
+					selectedComponent: components.find( c => c.name === name )
+				});
 			}
 		},
 
@@ -808,7 +873,8 @@
 						console.error( err.stack );
 
 						this.set({
-							sourceError: { message: err.shortMessage || err.message, pos: err.pos }
+							sourceError: err,
+							sourceErrorLoc: err.loc
 						});
 					}
 				});
@@ -823,16 +889,15 @@
 
 					try {
 						selectedComponent.compiled = compile( selectedComponent );
-						this.set({ selectedComponent, sourceError: null });
+						this.set({ selectedComponent, sourceError: null, sourceErrorLoc: null });
 
 						if ( this.get( 'loadedRollup' ) ) {
 							this.updateBundle();
 						}
 					} catch ( err ) {
-						console.error( err.stack );
-
 						this.set({
-							sourceError: { message: err.shortMessage || err.message, pos: err.pos }
+							sourceError: err,
+							sourceErrorLoc: err.loc
 						});
 					}
 				});
@@ -848,25 +913,27 @@
 			});
 
 			this.observe( 'json', json => {
-				let data;
-
 				try {
-					data = JSON.parse( json );
-					this.set({ dataError: null });
+					this.set({
+						data: JSON.parse( json ),
+						dataError: null,
+						dataErrorLoc: null
+					});
 				} catch ( err ) {
 					console.error( err.stack );
 
-					const match = /(.+)in JSON at position (\d+)/.exec( err.message );
+					const match = /in JSON at position (\d+)/.exec( err.message );
 
 					if ( match ) {
+						const loc = locate( json, +match[1], { offsetLine: 1 });
 						this.set({
-							dataError: { message: match[1], pos: +match[2] }
+							dataError: {
+								message: err.message.slice( 0, match.index ).trim(),
+								loc
+							},
+							dataErrorLoc: loc
 						});
 					}
-				}
-
-				if ( data ) {
-					this.set({ data });
 				}
 			});
 		},
