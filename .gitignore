@@ -10,6 +10,7 @@ public/examples
 public/blog
 public/codemirror*
 public/rollup.browser.js
+public/svelte*
 shared/components/guide-summary.json
 shared/routes/Repl/examples.js
 server/components

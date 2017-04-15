@@ -16,10 +16,12 @@ function renderComponent ( file, data ) {
 		const rollup = require( 'rollup' );
 		const json = require( 'rollup-plugin-json' );
 		const svelte = require( 'rollup-plugin-svelte' );
+		const resolve = require( 'rollup-plugin-node-resolve' );
 
 		return rollup.rollup({
 			entry: `${root}/shared/${file}.html`,
 			plugins: [
+				resolve(),
 				json(),
 				svelte({
 					generate: 'ssr',

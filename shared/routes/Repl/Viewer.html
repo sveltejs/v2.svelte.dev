@@ -12,9 +12,21 @@
 
 <div class='overlay'>
 	{{#if error}}
-		<p class='error'>{{error.message}}</p>
+		<p class='error message'>
+			{{#if error.loc}}
+				<strong>
+					{{#if error.filename}}
+						<span class='filename' on:click='fire("navigate", error.filename)'>{{error.filename}}</span>
+					{{/if}}
+
+					({{error.loc.line}}:{{error.loc.column}})
+				</strong>
+			{{/if}}
+
+			{{error.message}}
+		</p>
 	{{elseif pendingImports}}
-		<p class='info'>loading {{pendingImports}} {{pendingImports === 1 ? 'dependency' : 'dependencies'}} from packd.now.sh (this may take a while if the package isn't cached)</p>
+		<p class='info message'>loading {{pendingImports}} {{pendingImports === 1 ? 'dependency' : 'dependencies'}} from packd.now.sh (this may take a while if the package isn't cached)</p>
 	{{/if}}
 </div>
 
@@ -56,40 +68,14 @@
 	}
 
 	.overlay p {
-		position: relative;
-		border-radius: 0.2em;
-		margin: 0;
-		padding: 0.5em 0.5em 0.5em 2.5em;
-		color: white;
-	}
-
-	.overlay p::before {
-		content: '!';
-		position: absolute;
-		left: 0.7em;
-		top: 0.55em;
-		font-size: 0.8em;
-		font-weight: 800;
-		width: 1em;
-		height: 1em;
-		text-align: center;
-		line-height: 1;
-		padding: 0.2em 0.15em 0.1em 0.15em;
-		border-radius: 50%;
-		color: white;
-		border: 2px solid white;
-	}
-
-	.error {
-		background-color: rgb(170,30,30);
-	}
-
-	.info {
-		background-color: #666;
+		pointer-events: all;
 	}
 </style>
 
 <script>
+	import getLocationFromStack from './utils/getLocationFromStack.js';
+	import { decode } from 'sourcemap-codec';
+
 	let importCache = {};
 
 	function fetchImport ( id ) {
@@ -156,6 +142,97 @@
 
 				let toDestroy = null;
 
+				const init = () => {
+					const { bundle } = this.get();
+
+					const imports = [];
+					const pattern = /\bimport\s+(?:(.+)\s+from\s+)?[\'"]([^"\']+)["\']/g; // https://gist.github.com/pilwon/ff55634a29bb4456e0dd
+
+					const missingImports = bundle.imports.filter( x => !importCache[ x ] );
+
+					const createComponent = () => {
+						this.set({ error: null });
+
+						if ( toDestroy ) {
+							const styles = iframe.contentDocument.querySelectorAll( 'style' );
+							let i = styles.length;
+							while ( i-- ) styles[i].parentNode.removeChild( styles[i] );
+
+							toDestroy.destroy();
+							toDestroy = null;
+						}
+
+						bundle.imports.forEach( x => {
+							const module = importCache[ x ];
+							const name = bundle.importMap.get( x );
+
+							iframe.contentWindow[ name ] = module;
+						});
+
+						const data = this.get( 'data' );
+
+						try {
+							evalInIframe( `${bundle.code}
+								document.body.innerHTML = '';
+								var component = new SvelteComponent({
+									target: document.body,
+									data: ${JSON.stringify(data)}
+								});`);
+
+							component = window.component = iframe.contentWindow.component;
+
+							observers = Object.keys( data ).map( key => {
+								return component.observe( key, value => {
+									if ( updating ) return;
+
+									updating = true;
+									this.fire( 'change', { key, value });
+									updating = false;
+								}, { init: false });
+							});
+						} catch ( error ) {
+							// TODO show in UI
+							component = null;
+							observers = null;
+
+							const loc = getLocationFromStack( error.stack, bundle.map );
+							if ( loc ) {
+								error.filename = loc.source;
+								error.loc = { line: loc.line, column: loc.column };
+							}
+							this.set({ error });
+						}
+					};
+
+					let pendingImports = missingImports.length;
+					this.set({ pendingImports });
+
+					if ( missingImports.length ) {
+						let cancelled = false;
+
+						promise = Promise.all(
+							missingImports.map( id => fetchImport( id ).then( module => {
+								pendingImports -= 1;
+								this.set({ pendingImports });
+								return module;
+							}))
+						);
+						promise.cancel = () => cancelled = true;
+
+						promise
+							.then( () => {
+								if ( cancelled ) return;
+								createComponent();
+							})
+							.catch( error => {
+								if ( cancelled ) return;
+								this.set({ error });
+							});
+					} else {
+						createComponent();
+					}
+				}
+
 				this.observe( 'bundle', bundle => {
 					if ( !bundle ) return; // TODO can this ever happen?
 					if ( promise ) promise.cancel();
@@ -163,92 +240,7 @@
 					toDestroy = component;
 					component = null;
 
-					setTimeout( () => { // necessary because `data` is not yet updated. TODO would be nice to fix this
-						const imports = [];
-						const pattern = /\bimport\s+(?:(.+)\s+from\s+)?[\'"]([^"\']+)["\']/g; // https://gist.github.com/pilwon/ff55634a29bb4456e0dd
-
-						const missingImports = bundle.imports.filter( x => !importCache[ x ] );
-
-						const createComponent = () => {
-							this.set({ error: null });
-
-							if ( toDestroy ) {
-								const styles = iframe.contentDocument.querySelectorAll( 'style' );
-								let i = styles.length;
-								while ( i-- ) styles[i].parentNode.removeChild( styles[i] );
-
-								toDestroy.destroy();
-							}
-
-							bundle.imports.forEach( x => {
-								const module = importCache[ x ];
-								const name = bundle.importMap.get( x );
-
-								iframe.contentWindow[ name ] = module;
-							});
-
-							const data = this.get( 'data' );
-
-							try {
-								evalInIframe( `
-									${bundle.code}
-									document.body.innerHTML = '';
-									var component = new SvelteComponent({
-										target: document.body,
-										data: ${JSON.stringify(data)}
-									});
-								`);
-
-								component = window.component = iframe.contentWindow.component;
-
-								observers = Object.keys( data ).map( key => {
-									return component.observe( key, value => {
-										if ( updating ) return;
-
-										updating = true;
-										this.fire( 'change', { key, value });
-										updating = false;
-									}, { init: false });
-								});
-							} catch ( error ) {
-								// TODO show in UI
-								component = null;
-								observers = null;
-
-								console.error( error.stack );
-
-								this.set({ error });
-							}
-						};
-
-						let pendingImports = missingImports.length;
-						this.set({ pendingImports });
-
-						if ( missingImports.length ) {
-							let cancelled = false;
-
-							promise = Promise.all(
-								missingImports.map( id => fetchImport( id ).then( module => {
-									pendingImports -= 1;
-									this.set({ pendingImports });
-									return module;
-								}))
-							);
-							promise.cancel = () => cancelled = true;
-
-							promise
-								.then( () => {
-									if ( cancelled ) return;
-									createComponent();
-								})
-								.catch( error => {
-									if ( cancelled ) return;
-									this.set({ error });
-								});
-						} else {
-							createComponent();
-						}
-					});
+					setTimeout( init ); // necessary because `data` is not yet updated. TODO would be nice to fix this
 				});
 
 				this.observe( 'data', data => {
@@ -258,6 +250,7 @@
 						}
 
 						if ( component ) {
+							this.set({ error: null });
 							updating = true;
 							component.set( data );
 							updating = false;
@@ -271,10 +264,16 @@
 									updating = false;
 								}, { init: false });
 							});
+						} else {
+							init();
 						}
-					} catch ( err ) {
-						// TODO show the error in the UI
-						console.error( err );
+					} catch ( error ) {
+						const loc = getLocationFromStack( error.stack, this.get( 'bundle' ).map );
+						if ( loc ) {
+							error.filename = loc.source;
+							error.loc = { line: loc.line, column: loc.column };
+						}
+						this.set({ error });
 					}
 				});
 			});

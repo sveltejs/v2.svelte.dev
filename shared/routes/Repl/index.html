@@ -26,7 +26,14 @@
 						{{#if showGenerated && selectedComponent.compiled}}
 							<CodeMirror ref:editor mode='javascript' code='{{selectedComponent.compiled.code}}' readonly/>
 						{{else}}
-							<CodeMirror ref:editor mode='htmlmixed' bind:code='selectedComponent.source' error='{{sourceError}}'/>
+							<CodeMirror
+								ref:editor
+								mode='htmlmixed'
+								bind:code='selectedComponent.source'
+								error='{{sourceError}}'
+								errorLoc='{{sourceErrorLoc || runtimeErrorLoc}}'
+								on:navigate='navigate(event)'
+							/>
 						{{/if}}
 					{{/if}}
 
@@ -44,7 +51,7 @@
 		<h2 class='show-if-mobile'>data.json</h2>
 		<div class='bottom' style='height: {{100 - horizontalDividerPos}}%;'>
 			{{#if loadedCodemirror}}
-				<CodeMirror ref:data mode='javascript' bind:code='json' error='{{dataError}}'/>
+				<CodeMirror ref:data mode='javascript' bind:code='json' error='{{dataError}}' errorLoc='{{dataErrorLoc}}'/>
 			{{else}}
 				<p class='loading'>loading editor...</p>
 			{{/if}}
@@ -54,7 +61,7 @@
 		<div class='top' style='height: {{horizontalDividerPos}}%;'>
 			{{#if loadedSvelte}}
 				{{#if bundle}}
-					<Viewer :bundle :data on:change='updateData(event)'/>
+					<Viewer :bundle :data bind:error='runtimeError' on:change='updateData(event)' on:navigate='navigate(event)'/>
 				{{/if}}
 			{{else}}
 				<p class='loading'>loading Svelte compiler...</p>
@@ -361,9 +368,47 @@
 		height: 100%;
 		background: rgba(255,255,255,0.01);
 	}
+
+	.message {
+		position: relative;
+		border-radius: 0.2em;
+		margin: 0;
+		padding: 0.5em 0.5em 0.5em 2.5em;
+		color: white;
+	}
+
+	.message::before {
+		content: '!';
+		position: absolute;
+		left: 0.7em;
+		top: 0.55em;
+		font-size: 0.8em;
+		font-weight: 800;
+		width: 1em;
+		height: 1em;
+		text-align: center;
+		line-height: 1;
+		padding: 0.2em 0.15em 0.1em 0.15em;
+		border-radius: 50%;
+		color: white;
+		border: 2px solid white;
+	}
+
+	.error.message {
+		background-color: rgb(170,30,30);
+	}
+
+	.info.message {
+		background-color: #666;
+	}
+
+	.error .filename {
+		cursor: pointer;
+	}
 </style>
 
 <script>
+	import { locate } from 'locate-character';
 	import CodeMirror from './CodeMirror.html';
 	import Viewer from './Viewer.html';
 	import ComponentSelector from './ComponentSelector.html';
@@ -388,6 +433,7 @@
 
 	function loadSvelte () {
 		const url = versionMatch ?
+			versionMatch[1] === 'local' ? '/svelte.js' :
 			'https://unpkg.com/svelte@' + versionMatch[1] + '/compiler/svelte.js' :
 			'https://unpkg.com/svelte/compiler/svelte.js';
 
@@ -409,6 +455,13 @@
 				if ( group.examples[j].id === id ) return group.examples[j];
 			}
 		}
+	}
+
+	function compile ( component ) {
+		return svelte.compile( component.source || '', {
+			name: component.name,
+			filename: component.name + '.html'
+		});
 	}
 
 	export default {
@@ -478,6 +531,15 @@
 				editorRotation: 0,
 				flip: ''
 			};
+		},
+
+		computed: {
+			runtimeErrorLoc ( runtimeError, selectedComponent ) {
+				if ( !runtimeError || !selectedComponent ) return null;
+				if ( runtimeError.filename !== `${selectedComponent.name}.html` ) return;
+
+				return runtimeError.loc;
+			}
 		},
 
 		methods: {
@@ -640,7 +702,7 @@
 
 				const lookup = {};
 				components.forEach( component => {
-					lookup[ `\0${component.name}.html` ] = component.compiled;
+					lookup[ `./${component.name}.html` ] = component.compiled;
 				});
 
 				let cancelled = false;
@@ -652,14 +714,14 @@
 				this.bundlePromise = rollup.rollup({
 					entry,
 					external: id => {
-						return id.charCodeAt( 0 ) > 0 && id[0] !== '.';
+						return id[0] !== '.';
 					},
 					plugins: [{
 						resolveId ( importee, importer ) {
-							if ( importee[0] === '.' ) return `\0${importee.slice( 2 )}`;
+							if ( importee[0] === '.' ) return importee;
 						},
 						load ( id ) {
-							return lookup[ id ];
+							return lookup[ `${id}` ];
 						}
 					}],
 					onwarn ( warning ) {
@@ -676,7 +738,8 @@
 							const name = `import_${uid++}`;
 							importMap.set( id, name );
 							return name;
-						}
+						},
+						sourceMap: true
 					});
 
 					this.set({
@@ -702,7 +765,7 @@
 
 				const params = {};
 				if ( typeof svelte !== 'undefined' ) {
-					params.version = svelte.VERSION;
+					params.version = versionMatch && versionMatch[1] === 'local' ? 'local' : svelte.VERSION;
 				} else if ( versionMatch ) {
 					params.version = versionMatch[1];
 				}
@@ -719,6 +782,17 @@
 				const url = queryString ? `/repl?${queryString}` : '/repl';
 
 				history.replaceState( {}, 'x', url );
+			},
+
+			navigate ( filename ) {
+				const name = filename.replace( /\.html$/, '' );
+				const { components, selectedComponent } = this.get();
+
+				if ( selectedComponent.name === name ) return;
+
+				this.set({
+					selectedComponent: components.find( c => c.name === name )
+				});
 			}
 		},
 
@@ -745,10 +819,7 @@
 					// compile non-selected components
 					if ( window.svelte ) {
 						example.components.slice( 1 ).forEach( component => {
-							component.compiled = svelte.compile( component.source, {
-								name: component.name,
-								filename: component.name + '.html'
-							});
+							component.compiled = compile( component );
 						});
 					}
 
@@ -797,15 +868,13 @@
 					if ( component === this.get( 'selectedComponent' ) ) return;
 
 					try {
-						component.compiled = svelte.compile( component.source || '', {
-							name: component.name,
-							filename: component.name + '.html'
-						});
+						component.compiled = compile( component );
 					} catch ( err ) {
 						console.error( err.stack );
 
 						this.set({
-							sourceError: { message: err.shortMessage || err.message, pos: err.pos }
+							sourceError: err,
+							sourceErrorLoc: err.loc
 						});
 					}
 				});
@@ -819,20 +888,16 @@
 					}
 
 					try {
-						selectedComponent.compiled = svelte.compile( selectedComponent.source || '', {
-							name: selectedComponent.name,
-							filename: selectedComponent.name + '.html'
-						});
-						this.set({ selectedComponent, sourceError: null });
+						selectedComponent.compiled = compile( selectedComponent );
+						this.set({ selectedComponent, sourceError: null, sourceErrorLoc: null });
 
 						if ( this.get( 'loadedRollup' ) ) {
 							this.updateBundle();
 						}
 					} catch ( err ) {
-						console.error( err.stack );
-
 						this.set({
-							sourceError: { message: err.shortMessage || err.message, pos: err.pos }
+							sourceError: err,
+							sourceErrorLoc: err.loc
 						});
 					}
 				});
@@ -848,25 +913,27 @@
 			});
 
 			this.observe( 'json', json => {
-				let data;
-
 				try {
-					data = JSON.parse( json );
-					this.set({ dataError: null });
+					this.set({
+						data: JSON.parse( json ),
+						dataError: null,
+						dataErrorLoc: null
+					});
 				} catch ( err ) {
 					console.error( err.stack );
 
-					const match = /(.+)in JSON at position (\d+)/.exec( err.message );
+					const match = /in JSON at position (\d+)/.exec( err.message );
 
 					if ( match ) {
+						const loc = locate( json, +match[1], { offsetLine: 1 });
 						this.set({
-							dataError: { message: match[1], pos: +match[2] }
+							dataError: {
+								message: err.message.slice( 0, match.index ).trim(),
+								loc
+							},
+							dataErrorLoc: loc
 						});
 					}
-				}
-
-				if ( data ) {
-					this.set({ data });
 				}
 			});
 		},
