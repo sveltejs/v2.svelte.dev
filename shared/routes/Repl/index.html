@@ -808,7 +808,6 @@
 						.then( JSZip.loadAsync )
 						.then( zip => {
 							const { bundle, components, data } = this.get();
-							console.log( `bundle`, bundle )
 
 							// remove any dotfiles that snuck in
 							Object.keys( zip.files ).forEach( key => {
@@ -818,11 +817,11 @@
 
 							// add component files
 							components.forEach( component => {
-								zip.file( `svelte-app/src/${component.name}.html`, component.source );
+								zip.file( `src/${component.name}.html`, component.source );
 							});
 
 							// add entry point
-							zip.file( `svelte-app/src/main.js`, `import App from './App.html';
+							zip.file( `src/main.js`, `import App from './App.html';
 
 var app = new App({
 	target: document.body,
