@@ -10,7 +10,8 @@
     "bundle:codemirror": "rollup -c rollup/rollup.config.codemirror.js",
     "rollup:dev": "export DEV=true && rollup -c rollup/rollup.config.js -w",
     "dev": "npm run rollup:dev & ( export DEV=true && node scripts/prep && node server )",
-    "prep": "node scripts/prep && npm run bundle",
+    "prep": "npm run zip && node scripts/prep && npm run bundle",
+    "zip": "cp public/repl-viewer.css scripts/svelte-app/public/global.css && rm -rf public/svelte-app.zip && cd scripts && rm -rf svelte-app/node_modules && zip -r -X ../public/svelte-app.zip svelte-app",
     "prestage": "npm run prep",
     "predeploy": "npm run prep",
     "predeploy:ci": "npm run prep",
@@ -63,6 +64,8 @@
   "dependencies": {
     "codemirror": "^5.25.0",
     "curl-amd": "^0.8.12",
+    "file-saver": "^1.3.3",
+    "jszip": "^3.1.3",
     "locate-character": "^2.0.0",
     "roadtrip": "^0.4.1",
     "rollup": "^0.41.6",
