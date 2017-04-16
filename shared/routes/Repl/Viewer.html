@@ -179,7 +179,7 @@
 									data: ${JSON.stringify(data)}
 								});`);
 
-							component = window.component = iframe.contentWindow.component;
+							component = window.app = window.component = iframe.contentWindow.component;
 
 							observers = Object.keys( data ).map( key => {
 								return component.observe( key, value => {
