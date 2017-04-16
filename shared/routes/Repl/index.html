@@ -830,15 +830,34 @@ var app = new App({
 
 export default app;` );
 
-							// TODO update pkg with any additional dependencies
-
-							zip.generateAsync({ type: 'blob' })
-								.then( blob => {
-									this.set({
-										downloading: false
+							const go = () => {
+								zip.generateAsync({ type: 'blob' })
+									.then( blob => {
+										this.set({
+											downloading: false
+										});
+										saveAs( blob, 'svelte-app.zip' );
 									});
-									saveAs( blob, 'svelte-app.zip' );
-								});
+							};
+
+							if ( bundle.imports.length > 0 ) {
+								zip.file( 'package.json' )
+									.async( 'string' )
+									.then( JSON.parse )
+									.then( pkg => {
+										const deps = {};
+										bundle.imports.forEach( mod => {
+											const match = /^[^@\/]+/.exec( mod );
+											deps[ match[0] ] = 'latest';
+										});
+										pkg.dependencies = deps;
+
+										zip.file( 'package.json', JSON.stringify( pkg, null, '  ' ) );
+									})
+									.then( go );
+							} else {
+								go();
+							}
 						});
 				});
 			}
