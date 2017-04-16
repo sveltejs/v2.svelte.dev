@@ -4,7 +4,8 @@
 			<div class='app-controls'>
 				<ExampleSelector :exampleGroups bind:selectedExample/>
 
-				<button class='{{saving ? "active" : ""}}' on:click='save()'>{{saving ? 'saving' : 'save'}}</button>
+				<button style='width: 6em;' disabled='{{downloading}}' class='{{downloading ? "active" : ""}}' on:click='download()'>{{downloading ? 'zipping' : 'download'}}</button>
+				<button disabled='{{saving}}' class='{{saving ? "active" : ""}}' on:click='save()'>{{saving ? 'saving' : 'save'}}</button>
 				<!-- TODO add a download button -->
 			</div>
 
@@ -417,7 +418,7 @@
 	import { getComponentFromGist, saveComponentAsGist } from './utils/gist.js';
 	import debounce from './utils/debounce.js';
 	import * as load from './utils/load.js';
-	import getJSON from './utils/getJSON.js';
+	import { get } from './utils/get.js';
 
 	function loadCodemirror () {
 		return Promise.all([
@@ -793,6 +794,72 @@
 				this.set({
 					selectedComponent: components.find( c => c.name === name )
 				});
+			},
+
+			download () {
+				this.set({
+					downloading: true
+				});
+
+				curl([ '/jszip.js', '/file-saver.js' ]).then( ( JSZip, saveAs ) => {
+					const zip = new JSZip();
+
+					get( '/svelte-app.zip', { responseType: 'arraybuffer' })
+						.then( JSZip.loadAsync )
+						.then( zip => {
+							const { bundle, components, data } = this.get();
+
+							// remove any dotfiles that snuck in
+							Object.keys( zip.files ).forEach( key => {
+								const file = key.split( '/' ).pop();
+								if ( file[0] === '.' ) zip.remove( key );
+							});
+
+							// add component files
+							components.forEach( component => {
+								zip.file( `src/${component.name}.html`, component.source );
+							});
+
+							// add entry point
+							zip.file( `src/main.js`, `import App from './App.html';
+
+var app = new App({
+	target: document.body,
+	data: ${JSON.stringify( data, null, '\t' ).replace( /\n/g, '\n\t' )}
+});
+
+export default app;` );
+
+							const go = () => {
+								zip.generateAsync({ type: 'blob' })
+									.then( blob => {
+										this.set({
+											downloading: false
+										});
+										saveAs( blob, 'svelte-app.zip' );
+									});
+							};
+
+							if ( bundle.imports.length > 0 ) {
+								zip.file( 'package.json' )
+									.async( 'string' )
+									.then( JSON.parse )
+									.then( pkg => {
+										const deps = {};
+										bundle.imports.forEach( mod => {
+											const match = /^[^@\/]+/.exec( mod );
+											deps[ match[0] ] = 'latest';
+										});
+										pkg.dependencies = deps;
+
+										zip.file( 'package.json', JSON.stringify( pkg, null, '  ' ) );
+									})
+									.then( go );
+							} else {
+								go();
+							}
+						});
+				});
 			}
 		},
 
@@ -813,7 +880,7 @@
 				const id = example.id;
 
 				lastSelectedExample = id;
-				getJSON( `/examples/${id}.json` ).then( example => {
+				get( `/examples/${id}.json` ).then( JSON.parse ).then( example => {
 					exampleComponents = JSON.stringify( example.components );
 
 					// compile non-selected components
