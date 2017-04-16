@@ -1,10 +1,10 @@
 {
 	"title": "CRUD",
 	"data": {
-		"names": [
-			"Emil, Hans",
-			"Mustermann, Max",
-			"Tisch, Roman"
+		"people": [
+			{ "first": "Hans", "last": "Emil" },
+			{ "first": "Max", "last": "Mustermann" },
+			{ "first": "Roman", "last": "Tisch" }
 		]
 	}
 }
