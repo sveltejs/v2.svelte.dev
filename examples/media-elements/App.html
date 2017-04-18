@@ -1,0 +1,107 @@
+<:Window on:click='seek(event)' on:mousemove='seek(event)'/>
+
+<audio bind:currentTime='t' bind:duration='d' bind:paused>
+	<source type='audio/mp3' src='{{src}}'>
+</audio>
+
+<p>Via <a on:click='event.stopPropagation()' href='{{url}}'>SoundCloud</a></p>
+<div class='status' on:click='event.stopPropagation()'>
+	<img on:click='set({ paused: !paused })' src='{{icon}}/333333'>
+	<span class='elapsed'>{{format(t)}}</span>
+	<span class='duration'>{{format(d)}}</span>
+</div>
+
+<div class='progress' style='width: {{d ? 100 * t/d : 0}}%; background: {{bg}};'>
+	<p>Via <a href='{{url}}'>SoundCloud</a></p>
+	<div class='status'>
+		<img src='{{icon}}/ffffff'>
+		<span class='elapsed'>{{format(t)}}</span>
+		<span class='duration'>{{format(d)}}</span>
+	</div>
+</div>
+
+<style>
+	.progress {
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		color: white;
+		overflow: hidden;
+		pointer-events: none;
+	}
+
+	.progress a {
+		color: white;
+	}
+
+	p {
+		position: absolute;
+		left: 1em;
+		top: 1em;
+		width: 20em;
+	}
+
+	.status {
+		position: absolute;
+		bottom: 1em;
+		left: 1em;
+		width: calc(100vw - 2em);
+	}
+
+	img {
+		position: absolute;
+		bottom: 2em;
+		width: 3em;
+		cursor: pointer;
+	}
+
+	.elapsed { float: left; }
+	.duration { float: right; }
+</style>
+
+<script>
+	function pad ( num ) {
+		return num < 10 ? '0' + num : num;
+	}
+
+	export default {
+		computed: {
+			src: function ( track, client_id ) {
+				return `https://api.soundcloud.com/tracks/${track}/stream?client_id=${client_id}`;
+			},
+
+			icon: function ( paused ) {
+				return `https://icon.now.sh/${paused ? 'play' : 'pause'}_circle_filled`;
+			},
+
+			bg: function ( t, d ) {
+				var p = d ? t / d : 0;
+				var h = 90 + 90 * p;
+				var l = 10 + p * 30;
+				return `hsl(${h},50%,${l}%)`;
+			}
+		},
+
+		helpers: {
+			format: function ( time ) {
+				if ( isNaN( time ) ) return '--:--.-';
+				var minutes = Math.floor( time / 60 );
+				var seconds = ( time % 60 ).toFixed( 1 );
+
+				return minutes + ':' + pad( seconds )
+			}
+		},
+
+		methods: {
+			seek: function ( event ) {
+				if ( event.which === 1 ) {
+					event.preventDefault();
+					var p = event.clientX / window.innerWidth;
+					this.set({ t: p * this.get( 'd' ) });
+				}
+			}
+		}
+	}
+</script>

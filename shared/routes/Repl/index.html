@@ -450,6 +450,8 @@
 	}
 
 	function findExample ( id ) {
+		id = decodeURIComponent( id );
+
 		if ( redirects[ id ] ) {
 			return findExample( redirects[ id ] );
 		}

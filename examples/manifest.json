@@ -10,6 +10,13 @@
 	},
 
 	{
+		"name": "Two-way bindings",
+		"examples": [
+			"media-elements"
+		]
+	},
+
+	{
 		"name": "Nested components",
 		"examples": [
 			"self-references",
