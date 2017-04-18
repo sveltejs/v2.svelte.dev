@@ -1,17 +1,11 @@
 const fs = require( 'fs' );
 const path = require( 'path' );
-const assert = require( 'assert' );
 const glob = require( 'glob' );
 const { mkdirp } = require( './utils.js' );
 
 const root = path.resolve( __dirname, '../..' );
 
 const manifest = require( `${root}/examples/manifest.json` );
-const examples = fs.readdirSync( `${root}/examples` ).filter( file => file[0] !== '.' && file !== 'manifest.json' );
-
-// check all examples exist and are used
-const flattened = manifest.reduce( ( f, group ) => ( f.push( ...group.examples ), f ), [] );
-assert.deepEqual( examples.sort(), flattened.slice().sort() );
 
 mkdirp( `${root}/public/examples` );
 

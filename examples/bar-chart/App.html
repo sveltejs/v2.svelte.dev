@@ -84,8 +84,8 @@
 				padding: { top: 20, right: 15, bottom: 20, left: 25 },
 				height: 200,
 				width: 500,
-				yTicks: [ 0, 5, 10, 15, 20 ],
-				xTicks: [ 1990, 1995, 2000, 2005, 2010, 2015 ]
+				xTicks: [ 1990, 1995, 2000, 2005, 2010, 2015 ],
+				yTicks: [ 0, 5, 10, 15, 20 ]
 			};
 		},
 
@@ -101,16 +101,16 @@
 				return innerWidth / xTicks.length;
 			},
 
-			yScale: function ( padding, height, yTicks ) {
-				return yScale
-					.domain([0, Math.max.apply(null, yTicks)])
-					.range([height - padding.bottom, padding.top]);
-			},
-
 			xScale: function ( padding, width, xTicks ) {
 				return xScale
 					.domain([0, xTicks.length])
 					.range([padding.left, width - padding.right]);
+			},
+
+			yScale: function ( padding, height, yTicks ) {
+				return yScale
+					.domain([0, Math.max.apply(null, yTicks)])
+					.range([height - padding.bottom, padding.top]);
 			}
 		},
 

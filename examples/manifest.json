@@ -22,8 +22,8 @@
 		"examples": [
 			"svg-clock",
 			"line-chart",
-			"area-chart",
-			"bar-chart"
+			"bar-chart",
+			"scatterplot"
 		]
 	},
 
