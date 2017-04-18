@@ -25,6 +25,10 @@ a:visited {
 	color: rgb(0,80,160);
 }
 
+label {
+	display: block;
+}
+
 input, button, select, textarea {
 	font-family: inherit;
 	font-size: inherit;
