@@ -16,11 +16,17 @@ assert.deepEqual( examples.sort(), flattened.slice().sort() );
 mkdirp( `${root}/public/examples` );
 
 const summary = [];
+const redirects = {};
 manifest.forEach( group => {
 	const groupSummary = [];
 
 	group.examples.forEach( id => {
 		const example = require( `${root}/examples/${id}/example.json` );
+
+		if ( example.redirect ) {
+			redirects[ id ] = example.redirect;
+			return;
+		}
 
 		example.data = example.data || {};
 
@@ -55,5 +61,6 @@ manifest.forEach( group => {
 
 fs.writeFileSync( `${root}/shared/routes/Repl/examples.js`, `
 // this file is auto-generated, don't edit it
-export default ${JSON.stringify( summary )};
+export const exampleGroups = ${JSON.stringify( summary )};
+export const redirects = ${JSON.stringify( redirects )};
 `.trim() );

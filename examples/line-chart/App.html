@@ -1,39 +1,35 @@
+<:Window on:resize='resize()'/>
+
 <div class='chart'>
-	<h2>US birthrate by year</h2>
+	<h2>Arctic sea ice minimum</h2>
 
 	<svg ref:svg>
-		<g transform='translate(0,0)'>
-			<g class='axes'>
-				<!-- y axis -->
-				<g class='axis y-axis' transform='translate(0, {{ padding.top }} )'>
-					{{#each yTicks as tick}}
-						<g class='tick tick-{{ tick }}' transform='translate( 0, {{ yScale(tick) - padding.bottom }} )'>
-							<line stroke='#000' x2='100%' y1='0' y2='0'></line>
-							<text fill='#000' x='0' y='0' dy='-2'>{{ tick !== 0 ? tick : ''}} {{tick === 20 ? ' per 1,000 population' : ''}}</text>
-						</g>
-					{{/each}}
+		<!-- y axis -->
+		<g class='axis y-axis' transform='translate(0, {{padding.top}})'>
+			{{#each yTicks as tick}}
+				<g class='tick tick-{{tick}}' transform='translate(0, {{yScale(tick) - padding.bottom}})'>
+					<line x2='100%'></line>
+					<text y='-4'>{{tick}} {{tick === 8 ? ' million sq km' : ''}}</text>
 				</g>
-
-				<!-- x axis -->
-				<g class='axis x-axis'>
-					{{#each xTicks as tick}}
-						<g class='tick tick-{{ tick }}' transform='translate( {{ xScale(tick) }}, {{ height }} )'>
-							<line stroke='#000' y1='-{{height}}' y2='-{{padding.bottom}}' x1='0' x2='0'></line>
-
-							{{#if width > 380}}
-								<text fill='#000' x='0' y='0' dy='-2'>{{ tick }}</text>
-							{{else}}
-								<text fill='#000' x='0' y='0' dy='-2'>{{ formatMobile(tick) }}</text>
-							{{/if}}
-						</g>
-					{{/each}}
-				</g>
-			</g>
-
-			<!-- line -->
-			<path class='path-line' d='{{ path }}'></path>
+			{{/each}}
 		</g>
+
+		<!-- x axis -->
+		<g class='axis x-axis'>
+			{{#each xTicks as tick}}
+				<g class='tick tick-{{ tick }}' transform='translate({{xScale(tick)}},{{height}})'>
+					<line y1='-{{height}}' y2='-{{padding.bottom}}' x1='0' x2='0'></line>
+					<text y='-2'>{{width > 380 ? tick : formatMobile(tick)}}</text>
+				</g>
+			{{/each}}
+		</g>
+
+		<!-- data -->
+		<path class='path-area' d='{{area}}'></path>
+		<path class='path-line' d='{{path}}'></path>
 	</svg>
+
+	<p>Average September extent. Source: <a href='https://climate.nasa.gov/vital-signs/arctic-sea-ice/'>NSIDC/NASA</a>
 </div>
 
 <style>
@@ -46,22 +42,21 @@
 	svg {
 		position: relative;
 		width: 100%;
-		height: 100%;
+		height: 200px;
 	}
 
-	.tick,
-	p.source {
+	.tick, p.source {
 		font-size: .725em;
 		font-weight: 200;
 	}
 
 	.tick line {
-		stroke: #e2e2e2;
+		stroke: #aaa;
 		stroke-dasharray: 2;
 	}
 
 	.tick text {
-		fill: #ccc;
+		fill: #666;
 		text-anchor: start;
 	}
 
@@ -75,15 +70,22 @@
 
 	.path-line {
 		fill: none;
-		stroke: #a11;
+		stroke: rgb(0,100,100);
 		stroke-linejoin: round;
 		stroke-linecap: round;
 		stroke-width: 2;
+	}
+
+	.path-area {
+		fill: rgba(0,100,100,0.2);
 	}
 </style>
 
 <script>
 	import { scaleLinear } from 'd3-scale';
+
+	var xScale = scaleLinear();
+	var yScale = scaleLinear();
 
 	export default {
 		data () {
@@ -94,58 +96,61 @@
 					bottom: 20,
 					left: 25
 				},
-				height: 150,
+				height: 200,
 				width: 500,
-				yTicks: [0, 5, 10, 15, 20 ],
-				xTicks: [1990, 1995, 2000, 2005, 2010, 2015],
+				yTicks: [ 0, 2, 4, 6, 8 ],
+				xTicks: [ 1980, 1990, 2000, 2010 ],
 				formatMobile ( tick ) {
-					return "'" + tick.toString().slice(-2);
+					return "'" + tick % 100;
 				}
 			};
 		},
+
 		computed: {
+			minX: function ( points ) {
+				return points[0].x;
+			},
+			maxX: function ( points ) {
+				return points[points.length - 1].x;
+			},
 			yScale: function ( padding, height, yTicks ) {
-				return scaleLinear()
+				return xScale
 					.domain([Math.min.apply(null, yTicks), Math.max.apply(null, yTicks)])
 					.range([height - padding.bottom, padding.top]);
 			},
-			xScale: function ( padding, width, xTicks ) {
-				return scaleLinear()
-					.domain([Math.min.apply(null, xTicks), Math.max.apply(null, xTicks)])
+			xScale: function ( padding, width, minX, maxX ) {
+				return yScale
+					.domain([minX, maxX])
 					.range([padding.left, width - padding.right]);
 			},
-			path ( myData, xScale, yScale ) {
-
-				var path = '';
-
+			path ( points, xScale, yScale ) {
 				// make path
-				myData.forEach(function (datapoint, i) {
-					var year = datapoint.year;
-
-					if (i === 0) {
-						path = 'M' + xScale(year) + ' ' + yScale(datapoint.birthrate) + ' ';
-					} else {
-						path += 'L ' + xScale(year) + ' ' + yScale(datapoint.birthrate) + ' ';
-					}
-				})
-
-				return path;
+				return 'M' + points
+					.map(function (point, i) {
+						return xScale(point.x) + ',' + yScale(point.y);
+					})
+				  .join( 'L' );
+			},
+			area: function ( points, xScale, yScale, minX, maxX, path ) {
+				return path + (
+					'L' + xScale( maxX ) + ',' + yScale( 0 ) +
+					'L' + xScale( minX ) + ',' + yScale( 0 ) +
+					'Z'
+				);
 			}
 		},
-		oncreate () {
-			this.container = this.refs.svg;
 
-			var self = this;
-			window.addEventListener( 'resize', function () {
-				self.resize();
-			});
+		oncreate () {
 			this.resize();
 		},
+
 		methods: {
-			resize () {
+			resize: function () {
+				var boundingClientRect = this.refs.svg.getBoundingClientRect();
+
 				this.set({
-					width: this.container.getBoundingClientRect().width,
-					height: this.container.getBoundingClientRect().height
+					width: boundingClientRect.width,
+					height: boundingClientRect.height
 				});
 			}
 		}

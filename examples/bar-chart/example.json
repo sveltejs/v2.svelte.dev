@@ -1,7 +1,7 @@
 {
 	"title": "Bar chart",
 	"data": {
-		"myData": [
+		"points": [
 			{
 				"year": 1990,
 				"birthrate": 16.7
