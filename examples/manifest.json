@@ -12,7 +12,11 @@
 	{
 		"name": "Two-way bindings",
 		"examples": [
-			"media-elements"
+			"binding-input-text",
+			"binding-input-numeric",
+			"binding-textarea",
+			"binding-input-checkbox",
+			"binding-media-elements"
 		]
 	},
 

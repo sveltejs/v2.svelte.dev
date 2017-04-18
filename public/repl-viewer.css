@@ -25,7 +25,7 @@ a:visited {
 	color: rgb(0,80,160);
 }
 
-input, button, select {
+input, button, select, textarea {
 	font-family: inherit;
 	font-size: inherit;
 	padding: 0.4em;
