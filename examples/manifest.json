@@ -16,6 +16,7 @@
 			"binding-input-numeric",
 			"binding-textarea",
 			"binding-input-checkbox",
+			"binding-input-radio",
 			"binding-media-elements"
 		]
 	},
