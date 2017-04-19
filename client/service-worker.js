@@ -47,7 +47,8 @@ self.addEventListener( 'fetch', event => {
 	if ( !/^https?/.test( event.request.url ) ) return;
 
 	event.respondWith(
-		caches.match( event.request )
+		caches.open( CACHE_NAME )
+			.then( cache => cache.match( event.request ) )
 			.then( response => {
 				if ( response ) return response;
 

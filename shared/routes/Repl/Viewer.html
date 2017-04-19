@@ -240,7 +240,7 @@
 					toDestroy = component;
 					component = null;
 
-					setTimeout( init ); // necessary because `data` is not yet updated. TODO would be nice to fix this
+					if ( this.get( 'data' ) !== undefined ) init();
 				});
 
 				this.observe( 'data', data => {

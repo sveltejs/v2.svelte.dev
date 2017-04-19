@@ -10,6 +10,18 @@
 	},
 
 	{
+		"name": "Two-way bindings",
+		"examples": [
+			"binding-input-text",
+			"binding-input-numeric",
+			"binding-textarea",
+			"binding-input-checkbox",
+			"binding-input-radio",
+			"binding-media-elements"
+		]
+	},
+
+	{
 		"name": "Nested components",
 		"examples": [
 			"self-references",
