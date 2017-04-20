@@ -52,6 +52,7 @@
 
 	img {
 		position: absolute;
+		left: 0;
 		bottom: 2em;
 		width: 3em;
 		cursor: pointer;
@@ -96,7 +97,7 @@
 
 		methods: {
 			seek: function ( event ) {
-				if ( event.which === 1 ) {
+				if ( event.buttons === 1 ) {
 					event.preventDefault();
 					var p = event.clientX / window.innerWidth;
 					this.set({ t: p * this.get( 'd' ) });
