@@ -3,13 +3,16 @@
 
 	{{#if error}}
 		<p class='error message'>
-			<strong>
-				{{#if error.filename}}
-					<span class='filename' on:click='fire("navigate", error.filename)'>{{error.filename}}</span>
-				{{/if}}
+			{{#if error.loc}}
+				<strong>
+					{{#if error.filename}}
+						<span class='filename' on:click='fire("navigate", error.filename)'>{{error.filename}}</span>
+					{{/if}}
 
-				({{error.loc.line}}:{{error.loc.column}})
-			</strong>
+					({{error.loc.line}}:{{error.loc.column}})
+				</strong>
+			{{/if}}
+
 			{{error.message}}
 		</p>
 	{{/if}}
