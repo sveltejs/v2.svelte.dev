@@ -969,6 +969,8 @@ export default app;` );
 							this.updateBundle();
 						}
 					} catch ( err ) {
+						console.error( err.stack );
+
 						this.set({
 							sourceError: err,
 							sourceErrorLoc: err.loc
