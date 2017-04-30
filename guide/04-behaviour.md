@@ -229,7 +229,7 @@ Custom events are just functions that take a node and a callback as their argume
 				node.addEventListener( 'mousedown', onmousedown, false );
 
 				return {
-					destroy () {
+					teardown () {
 						node.removeEventListener( 'mousedown', onmousedown, false );
 					}
 				};
