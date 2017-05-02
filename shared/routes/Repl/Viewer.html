@@ -5,7 +5,10 @@
 			<head>
 				<link rel="stylesheet" href="/repl-viewer.css">
 			</head>
-			<body></body>
+			<body>
+				<script src="/curl.js"></script>
+				<script>curl.config({ dontAddFileExt: /./ });</script>
+			</body>
 		</html>
 	'></iframe>
 </div>
@@ -78,7 +81,7 @@
 
 	let importCache = {};
 
-	function fetchImport ( id ) {
+	function fetchImport ( id, curl ) {
 		return new Promise( ( fulfil, reject ) => {
 			curl([ `https://packd.now.sh/${id}` ]).then( module => {
 				importCache[ id ] = module;
@@ -211,7 +214,7 @@
 						let cancelled = false;
 
 						promise = Promise.all(
-							missingImports.map( id => fetchImport( id ).then( module => {
+							missingImports.map( id => fetchImport( id, iframe.contentWindow.curl ).then( module => {
 								pendingImports -= 1;
 								this.set({ pendingImports });
 								return module;
