@@ -5,13 +5,13 @@ import uglify from 'rollup-plugin-uglify';
 const dev = !!process.env.DEV;
 
 export default {
-	entry: 'client/codemirror.js',
+	entry: 'client/src/codemirror.js',
 	dest: 'public/codemirror.js',
 	format: 'amd',
 	plugins: [
 		nodeResolve(),
 		commonjs(),
-		// !dev && uglify()
+		!dev && uglify()
 	],
 	sourceMap: true
 };

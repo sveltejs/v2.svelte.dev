@@ -73,10 +73,8 @@ app.get( '/blog', ( req, res ) => {
 	});
 });
 
-// putting this all here so following route doesn't confuse it (blog/thing.json etc)
-app.use( express.static( 'public/js', {
-	maxAge: 60 * 1000 // one minute... we want to keep this short
-}));
+app.use( express.static( 'service-worker/dist' ) );
+app.use( express.static( 'client/dist', { maxAge: dev ? '1s' : '1y' }));
 
 app.use( '/examples', express.static( 'public/examples', {
 	maxAge: 60 * 1000

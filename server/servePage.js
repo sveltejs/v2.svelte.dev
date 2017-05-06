@@ -1,7 +1,24 @@
 const fs = require( 'fs' );
 
-const template = fs.readFileSync( `${__dirname}/templates/index.html`, 'utf-8' );
-	
+const dev = process.env.DEV;
+
+// TODO this is unfortunate... would be nice to have a neater solution
+const hashed = dev ? {
+	bundle: '/bundle.js',
+	css: '/main.css'
+} : {
+	bundle: require( './manifests/bundle.json' )[ 'bundle.js' ].replace( 'client/dist', '' ),
+	css: require( './manifests/css.json' )[ 'main.css' ].replace( 'client/dist', '' )
+};
+
+let template = fs.readFileSync( `${__dirname}/templates/index.html`, 'utf-8' );
+if ( !dev ) {
+	// TODO come up with a better approach than this massive hack...
+	template = template
+		.replace( '/bundle.js', hashed.bundle )
+		.replace( '/main.css', hashed.css );
+}
+
 const templateChunks = [];
 const pattern = /__(\w+)__/g;
 let match;
@@ -27,8 +44,8 @@ templateChunks.push({
 });
 
 const preload = [
-	`</bundle.js>; rel=preload; as=script`,
-	`</main.css>; rel=preload; as=style`,
+	`<${hashed.bundle}>; rel=preload; as=script`,
+	`<${hashed.css}>; rel=preload; as=style`,
 
 	// only preload the essential fonts for initial render
 	`</fonts/rajdhani-light.woff2>; rel=preload; as=font; type='font/woff2'`,
