@@ -62,7 +62,7 @@
 		<div class='top' style='height: {{horizontalDividerPos}}%;'>
 			{{#if loadedSvelte}}
 				{{#if bundle}}
-					<Viewer :bundle :data bind:error='runtimeError' on:change='updateData(event)' on:navigate='navigate(event)'/>
+					<Viewer :bundle :data :bundleError bind:error='runtimeError' on:change='updateData(event)' on:navigate='navigate(event)'/>
 				{{/if}}
 			{{else}}
 				<p class='loading'>loading Svelte compiler...</p>
@@ -703,7 +703,7 @@
 				// TODO do this in a worker
 				const components = this.get( 'components' );
 
-				if ( !components ) return;
+				if ( !components || !components.length ) return;
 				if ( components.some( c => !c.compiled ) ) return;
 
 				if ( this.bundlePromise ) this.bundlePromise.cancel();
@@ -756,7 +756,13 @@
 							map,
 							imports: bundle.imports,
 							importMap
-						}
+						},
+						runtimeError: null
+					});
+				}).catch( err => {
+					console.error( err.stack );
+					this.set({
+						bundleError: err
 					});
 				});
 
