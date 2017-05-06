@@ -926,6 +926,13 @@ export default app;` );
 
 				this.promise
 					.then( ({ components, json }) => {
+						// compile non-selected components
+						if ( window.svelte ) {
+							components.slice( 1 ).forEach( component => {
+								component.compiled = compile( component );
+							});
+						}
+
 						this.set({ components, json, selectedComponent: components[0] });
 					})
 					.catch( err => {
