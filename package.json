@@ -77,7 +77,9 @@
     "alias": "svelte.technology",
     "files": [
       "public",
-      "server"
+      "server",
+      "client/dist",
+      "service-worker/dist"
     ]
   }
 }
