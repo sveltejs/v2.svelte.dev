@@ -25,7 +25,11 @@
 				<div ref:editorWrapper class='editor-wrapper {{flip}}'>
 					{{#if selectedComponent}}
 						{{#if showGenerated && selectedComponent.compiled}}
-							<CodeMirror ref:editor mode='javascript' code='{{selectedComponent.compiled.code}}' readonly/>
+							<CodeMirror ref:editor mode='javascript' code='{{selectedComponent.compiled[showGeneratedType].code}}' readonly/>
+
+							<button class='editor-toggle editor-toggle-generate' on:click='toggleGeneratedType()'>
+								<span class='flip-text'>{{showGeneratedType}}</span>
+							</button>
 						{{else}}
 							<CodeMirror
 								ref:editor
@@ -38,7 +42,7 @@
 						{{/if}}
 					{{/if}}
 
-					<button class='editor-toggle' on:click='flip()'>
+					<button class='editor-toggle editor-toggle-output' on:click='flip()'>
 						<span class='flip-text'>{{showGenerated ? 'output' : 'input'}}</span>
 					</button>
 				</div>
@@ -143,11 +147,18 @@
 	.editor-toggle {
 		position: absolute;
 		bottom: 1em;
-		right: 1em;
 		z-index: 10;
 		background: white url(/icons/flip.svg) no-repeat calc(100% - 0.7em) 50%;
 		background-size: 1.4em 1em;
 		padding-right: 2.5em;
+	}
+
+	.editor-toggle-output {
+		right: 1em;
+	}
+
+	.editor-toggle-generate {
+		right: 8em;
 	}
 
 	.flip-text {
@@ -466,10 +477,15 @@
 	}
 
 	function compile ( component ) {
-		return svelte.compile( component.source || '', {
+		const source = component.source || ''
+		const options = {
 			name: component.name,
 			filename: component.name + '.html'
-		});
+		}
+		return {
+			dom: svelte.compile( source, Object.assign( { generate: 'dom' }, options ) ),
+			ssr: svelte.compile( source, Object.assign( { generate: 'ssr' }, options ) )
+		};
 	}
 
 	export default {
@@ -520,6 +536,7 @@
 				horizontalDividerPos: 50,
 				verticalDividerPos: 50,
 				showGenerated: false,
+				showGeneratedType: 'dom',
 
 				// TODO remove this post-https://github.com/sveltejs/svelte/issues/424
 				false: false,
@@ -601,6 +618,13 @@
 					components,
 					selectedComponent
 				});
+			},
+
+			toggleGeneratedType () {
+				const oldType = this.get( 'showGeneratedType' )
+				const showGeneratedType = oldType === 'dom' ? 'ssr' : 'dom'
+				// Todo: should maybe animate.
+				this.set( { showGeneratedType } )
 			},
 
 			flip () {
