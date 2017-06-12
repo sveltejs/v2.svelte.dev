@@ -28,6 +28,6 @@ yarn run dev
 
 This process is a little bit clunky and may change in future.
 
-## Licenes
+## License
 
 [MIT](LICENSE)
