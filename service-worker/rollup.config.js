@@ -15,13 +15,13 @@ const manifest = [].concat(
 	'/blog',
 
 	// js
-	'/bundle.js',
+	'/bundle.js', // TODO should be hashed...
 	'/curl.js',
 	'/codemirror.js',
 	'/magic-string.umd.js',
 
 	// css
-	'/main.css',
+	'/main.css', // TODO should be hashed...
 	'/codemirror.css',
 
 	// fonts

@@ -4,17 +4,16 @@
   "description": "Docs and examples for Svelte",
   "scripts": {
     "start": "node server/dist",
-    "bundle": "rollup -c",
-    "prebundle": "rm -rf client/dist && mkdir -p client/dist && rm -rf service-worker/dist && mkdir -p service-worker/dist",
+    "prebuild": "rm -rf client/dist && mkdir -p client/dist && rm -rf service-worker/dist && mkdir -p service-worker/dist",
     "dev": "rollup -c -w & node scripts/prep && npm start",
-    "prep": "npm run zip && node scripts/prep && npm run bundle",
-    "zip": "sh scripts/zip.sh",
-    "prestage": "npm run prep",
-    "predeploy": "npm run prep",
-    "predeploy:ci": "npm run prep",
+    "build": "node scripts/prep && rollup -c",
+    "zip": "sh ./scripts/zip.sh",
     "stage": "now",
     "deploy": "now && now alias",
     "deploy:ci": "now --token $NOW_TOKEN && now alias --token $NOW_TOKEN",
+    "prestage": "npm run zip",
+    "predeploy": "npm run zip",
+    "predeploy:ci": "npm run zip",
     "lint": "eslint server client shared"
   },
   "repository": {
@@ -67,12 +66,6 @@
     "svelte": "^1.21.0"
   },
   "now": {
-    "alias": "svelte.technology",
-    "files": [
-      "public",
-      "server",
-      "client/dist",
-      "service-worker/dist"
-    ]
+    "alias": "svelte.technology"
   }
 }
