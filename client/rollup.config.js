@@ -11,7 +11,7 @@ import buble from 'rollup-plugin-buble';
 const CleanCSS = require( 'clean-css' );
 
 const dev = !!process.env.DEV;
-const root = path.resolve( __dirname, '..' );
+const root = path.resolve( '.' );
 
 console.log( `creating ${dev ? 'development' : 'production'} bundle` );
 
