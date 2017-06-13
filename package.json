@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "Docs and examples for Svelte",
   "scripts": {
-    "start": "node server",
+    "start": "node server/dist",
     "bundle": "rollup -c",
     "prebundle": "rm -rf client/dist && mkdir -p client/dist && rm -rf service-worker/dist && mkdir -p service-worker/dist",
-    "dev": "export DEV=true && rollup -c -w & node scripts/prep && node server",
+    "dev": "rollup -c -w & node scripts/prep && npm start",
     "prep": "npm run zip && node scripts/prep && npm run bundle",
     "zip": "sh scripts/zip.sh",
     "prestage": "npm run prep",
@@ -33,11 +33,9 @@
   "devDependencies": {
     "chalk": "^1.1.3",
     "clean-css": "^4.0.12",
-    "compression": "^1.6.2",
     "eslint": "^4.0.0",
     "eslint-plugin-html": "^3.0.0",
     "eslint-plugin-import": "^2.2.0",
-    "express": "^4.15.2",
     "glob": "^7.1.1",
     "highlight.js": "^9.11.0",
     "html-entities": "^1.2.1",
@@ -50,7 +48,7 @@
     "rollup-plugin-json": "^2.1.1",
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-replace": "^1.1.1",
-    "rollup-plugin-svelte": "^2.0.0",
+    "rollup-plugin-svelte": "^2.0.1",
     "rollup-plugin-uglify": "^2.0.1",
     "rollup-watch": "^4.0.0",
     "uglify-js": "^3.0.0"
@@ -58,11 +56,13 @@
   "dependencies": {
     "codemirror": "^5.25.2",
     "curl-amd": "^0.8.12",
+    "compression": "^1.6.2",
+    "express": "^4.15.2",
     "file-saver": "^1.3.3",
     "jszip": "^3.1.3",
     "locate-character": "^2.0.0",
     "roadtrip": "^0.5.1",
-    "rollup": "^0.42.0",
+    "rollup": "^0.43.0",
     "sourcemap-codec": "^1.3.1",
     "svelte": "^1.21.0"
   },

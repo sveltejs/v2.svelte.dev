@@ -10,10 +10,10 @@ import uglify from 'rollup-plugin-uglify';
 import buble from 'rollup-plugin-buble';
 const CleanCSS = require( 'clean-css' );
 
-const dev = !!process.env.DEV;
+const dev = !!process.env.ROLLUP_WATCH;
 const root = path.resolve( '.' );
 
-console.log( `creating ${dev ? 'development' : 'production'} bundle` );
+console.log( `creating ${dev ? 'development' : 'production'} client bundle` );
 
 export default {
 	entry: 'client/src/main.js',
@@ -25,7 +25,7 @@ export default {
 		commonjs(),
 		svelte({
 			css ( css ) {
-				let styles = fs.readFileSync( `${root}/server/templates/main.css`, 'utf-8' )
+				let styles = fs.readFileSync( `${root}/templates/main.css`, 'utf-8' )
 					.replace( '__components__', css );
 
 				if ( dev ) {

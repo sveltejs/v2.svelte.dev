@@ -1,18 +1,16 @@
-const fs = require( 'fs' );
-
-const dev = process.env.DEV;
+import fs from 'fs';
 
 // TODO this is unfortunate... would be nice to have a neater solution
-const hashed = dev ? {
+const hashed = __dev__ ? {
 	bundle: '/bundle.js',
 	css: '/main.css'
 } : {
-	bundle: require( './manifests/bundle.json' )[ 'bundle.js' ].replace( 'client/dist', '' ),
-	css: require( './manifests/css.json' )[ 'main.css' ].replace( 'client/dist', '' )
+	bundle: require( '../manifests/bundle.json' )[ 'bundle.js' ].replace( 'client/dist', '' ),
+	css: require( '../manifests/css.json' )[ 'main.css' ].replace( 'client/dist', '' )
 };
 
-let template = fs.readFileSync( `${__dirname}/templates/index.html`, 'utf-8' );
-if ( !dev ) {
+let template = fs.readFileSync( `templates/index.html`, 'utf-8' );
+if ( !__dev__ ) {
 	// TODO come up with a better approach than this massive hack...
 	template = template
 		.replace( '/bundle.js', hashed.bundle )
@@ -52,7 +50,7 @@ const preload = [
 	`</fonts/roboto-regular.woff2>; rel=preload; as=font; type='font/woff2'`
 ].join( ', ' );
 
-module.exports = function servePage ( res, data ) {
+export default function servePage ( res, data ) {
 	res.writeHead( 200, {
 		'Content-Type': 'text/html',
 		Link: preload
@@ -76,4 +74,4 @@ module.exports = function servePage ( res, data ) {
 	return promise.then( () => {
 		res.end();
 	});
-};
+}

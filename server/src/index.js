@@ -1,53 +1,28 @@
-const path = require( 'path' );
-const express = require( 'express' );
-const compression = require( 'compression' );
-const servePage = require( './servePage.js' );
+import path from 'path';
+import express from 'express';
+import compression from 'compression';
+import servePage from './servePage.js';
+
+import Nav from '../../universal/components/Nav.html';
+import Index from '../../universal/routes/Index.html';
+import BlogIndex from '../../universal/routes/BlogIndex.html';
+import BlogPost from '../../universal/routes/BlogPost.html';
+import Guide from '../../universal/routes/Guide.html';
+import Repl from '../../universal/routes/Repl/index.html';
 
 const dev = !!process.env.DEV;
 
 const app = express();
 
-const root = path.resolve( __dirname, '..' );
+const root = path.resolve( '.' );
 
 app.use( compression({ threshold: 0 }) );
-
-function renderComponent ( file, data ) {
-	if ( dev ) {
-		const rollup = require( 'rollup' );
-		const json = require( 'rollup-plugin-json' );
-		const svelte = require( 'rollup-plugin-svelte' );
-		const resolve = require( 'rollup-plugin-node-resolve' );
-
-		return rollup.rollup({
-			entry: `${root}/shared/${file}.html`,
-			plugins: [
-				resolve(),
-				json(),
-				svelte({
-					generate: 'ssr',
-					css: false
-				})
-			]
-		}).then( bundle => {
-			const { code } = bundle.generate({
-				format: 'iife',
-				moduleName: 'SvelteComponent'
-			});
-
-			const SvelteComponent = eval( `(function () { ${code}; return SvelteComponent; })()` );
-
-			return SvelteComponent.render( data );
-		});
-	}
-
-	return require( `./${file}.js` ).render( data );
-}
 
 app.get( '/', ( req, res ) => {
 	servePage( res, {
 		title: 'Svelte • The magical disappearing UI framework',
-		nav: renderComponent( 'components/Nav', { route: 'index' }),
-		route: renderComponent( 'routes/Index' )
+		nav: Nav.render({ route: 'index' }),
+		route: Index.render()
 	}).catch( err => {
 		console.log( err.stack ); // eslint-disable-line no-console
 	});
@@ -66,8 +41,8 @@ app.get( '/blog', ( req, res ) => {
 
 	servePage( res, {
 		title: 'Svelte • The magical disappearing UI framework',
-		nav: renderComponent( 'components/Nav', { route: 'blog' }),
-		route: renderComponent( 'routes/BlogIndex', { posts })
+		nav: Nav.render({ route: 'blog' }),
+		route: BlogIndex.render({ posts })
 	}).catch( err => {
 		console.log( err.stack ); // eslint-disable-line no-console
 	});
@@ -89,8 +64,8 @@ app.get( '/blog/:slug', ( req, res ) => {
 
 	servePage( res, {
 		title: `${post.metadata.title} • Svelte`,
-		nav: renderComponent( 'components/Nav', { route: 'blog' }),
-		route: renderComponent( 'routes/BlogPost', { post })
+		nav: Nav.render({ route: 'blog' }),
+		route: BlogPost.render({ post })
 	}).catch( err => {
 		console.log( err.stack ); // eslint-disable-line no-console
 	});
@@ -101,8 +76,8 @@ app.get( '/guide', ( req, res ) => {
 
 	servePage( res, {
 		title: 'Learn Svelte',
-		nav: renderComponent( 'components/Nav', { route: 'guide' }),
-		route: renderComponent( 'routes/Guide', { sections })
+		nav: Nav.render({ route: 'guide' }),
+		route: Guide.render({ sections })
 	}).catch( err => {
 		console.log( err.stack ); // eslint-disable-line no-console
 	});
@@ -111,8 +86,8 @@ app.get( '/guide', ( req, res ) => {
 app.get( '/repl', ( req, res ) => {
 	servePage( res, {
 		title: 'Svelte REPL',
-		nav: renderComponent( 'components/Nav', { route: 'repl' }),
-		route: renderComponent( 'routes/Repl/index' ) // TODO is there any point? just render an empty box instead?
+		nav: Nav.render({ route: 'repl' }),
+		route: Repl.render() // TODO is there any point? just render an empty box instead?
 	}).catch( err => {
 		console.log( err.stack ); // eslint-disable-line no-console
 	});

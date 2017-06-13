@@ -3,7 +3,7 @@ import buble from 'rollup-plugin-buble';
 import uglify from 'rollup-plugin-uglify';
 import glob from 'glob';
 
-const dev = !!process.env.DEV;
+const dev = !!process.env.ROLLUP_WATCH;
 
 console.log( `creating ${dev ? 'development' : 'production'} service worker` );
 
