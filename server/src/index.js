@@ -3,6 +3,7 @@ import express from 'express';
 import compression from 'compression';
 import servePage from './servePage.js';
 
+import home from '../../universal/pages/home.html';
 import Nav from '../../universal/components/Nav.html';
 import Index from '../../universal/routes/Index.html';
 import BlogIndex from '../../universal/routes/BlogIndex.html';
@@ -18,14 +19,39 @@ const root = path.resolve( '.' );
 
 app.use( compression({ threshold: 0 }) );
 
+// TODO this is unfortunate... would be nice to have a neater solution
+const hashed = __dev__ ? {
+	bundle: '/bundle.js',
+	css: '/main.css'
+} : {
+	bundle: require( '../manifests/bundle.json' )[ 'bundle.js' ].replace( 'client/dist', '' ),
+	css: require( '../manifests/css.json' )[ 'main.css' ].replace( 'client/dist', '' )
+};
+
+const preload = [
+	`<${hashed.bundle}>; rel=preload; as=script`,
+	`<${hashed.css}>; rel=preload; as=style`,
+
+	// only preload the essential fonts for initial render
+	`</fonts/rajdhani-light.woff2>; rel=preload; as=font; type='font/woff2'`,
+	`</fonts/roboto-regular.woff2>; rel=preload; as=font; type='font/woff2'`
+].join( ', ' );
+
 app.get( '/', ( req, res ) => {
-	servePage( res, {
-		title: 'Svelte • The magical disappearing UI framework',
-		nav: Nav.render({ route: 'index' }),
-		route: Index.render()
-	}).catch( err => {
-		console.log( err.stack ); // eslint-disable-line no-console
+	res.writeHead( 200, {
+		'Content-Type': 'text/html',
+		Link: preload
 	});
+
+	res.write( home.render() );
+	res.end();
+	// servePage( res, {
+	// 	title: 'Svelte • The magical disappearing UI framework',
+	// 	nav: Nav.render({ route: 'index' }),
+	// 	route: Index.render()
+	// }).catch( err => {
+	// 	console.log( err.stack ); // eslint-disable-line no-console
+	// });
 });
 
 app.use( ( req, res, next ) => {

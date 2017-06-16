@@ -1,0 +1,23 @@
+<Page title='Svelte • The magical disappearing UI framework'>
+	<header>
+		<Nav route='index'/>
+	</header>
+
+	<main>
+		<Index/>
+	</main>
+</Page>
+
+<script>
+	import Page from '../Page.html';
+	import Nav from '../components/Nav.html';
+	import Index from '../routes/Index.html';
+
+	export default {
+		components: {
+			Page,
+			Nav,
+			Index
+		}
+	};
+</script>
