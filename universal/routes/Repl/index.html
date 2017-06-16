@@ -710,7 +710,10 @@
 
 				const lookup = {};
 				components.forEach( component => {
-					lookup[ `./${component.name}.html` ] = component.compiled;
+					lookup[ `./${component.name}.html` ] = {
+						code: component.compiled.code,
+						map: component.compiled.map
+					};
 				});
 
 				let cancelled = false;
