@@ -43,7 +43,7 @@ app.get( '/', ( req, res ) => {
 		Link: preload
 	});
 
-	res.write( home.render() );
+	res.write( home.render({ hashed }) );
 	res.end();
 	// servePage( res, {
 	// 	title: 'Svelte • The magical disappearing UI framework',
