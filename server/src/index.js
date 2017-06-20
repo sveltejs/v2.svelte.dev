@@ -1,15 +1,15 @@
 import path from 'path';
 import express from 'express';
 import compression from 'compression';
-import servePage from './servePage.js';
 
 import home from '../../universal/pages/home.html';
-import Nav from '../../universal/components/Nav.html';
-import Index from '../../universal/routes/Index.html';
-import BlogIndex from '../../universal/routes/BlogIndex.html';
-import BlogPost from '../../universal/routes/BlogPost.html';
-import Guide from '../../universal/routes/Guide.html';
-import Repl from '../../universal/routes/Repl/index.html';
+import blogIndex from '../../universal/pages/blog.html';
+import blogPost from '../../universal/pages/blog/:id.html';
+import guidePage from '../../universal/pages/guidePage.html';
+import replPage from '../../universal/pages/replPage.html';
+
+import blogPosts from '../../public/blog.json';
+import guideSections from '../../public/guide.json';
 
 const dev = !!process.env.DEV;
 
@@ -37,21 +37,18 @@ const preload = [
 	`</fonts/roboto-regular.woff2>; rel=preload; as=font; type='font/woff2'`
 ].join( ', ' );
 
-app.get( '/', ( req, res ) => {
+function serve (req, res, page, data) {
 	res.writeHead( 200, {
 		'Content-Type': 'text/html',
 		Link: preload
 	});
 
-	res.write( home.render({ hashed }) );
+	res.write(page.render(data));
 	res.end();
-	// servePage( res, {
-	// 	title: 'Svelte • The magical disappearing UI framework',
-	// 	nav: Nav.render({ route: 'index' }),
-	// 	route: Index.render()
-	// }).catch( err => {
-	// 	console.log( err.stack ); // eslint-disable-line no-console
-	// });
+}
+
+app.get( '/', ( req, res ) => {
+	serve(req, res, home, { hashed });
 });
 
 app.use( ( req, res, next ) => {
@@ -63,15 +60,7 @@ app.use( ( req, res, next ) => {
 });
 
 app.get( '/blog', ( req, res ) => {
-	const posts = require( `${root}/public/blog.json` );
-
-	servePage( res, {
-		title: 'Svelte • The magical disappearing UI framework',
-		nav: Nav.render({ route: 'blog' }),
-		route: BlogIndex.render({ posts })
-	}).catch( err => {
-		console.log( err.stack ); // eslint-disable-line no-console
-	});
+	serve(req, res, blogIndex, { hashed, posts: blogPosts });
 });
 
 app.use( express.static( 'service-worker/dist' ) );
@@ -86,37 +75,21 @@ app.use( express.static( 'public', {
 }));
 
 app.get( '/blog/:slug', ( req, res ) => {
-	const post = require( `${root}/public/blog/${req.params.slug}.json` );
-
-	servePage( res, {
-		title: `${post.metadata.title} • Svelte`,
-		nav: Nav.render({ route: 'blog' }),
-		route: BlogPost.render({ post })
-	}).catch( err => {
-		console.log( err.stack ); // eslint-disable-line no-console
-	});
+	try {
+		const post = require( `${root}/public/blog/${req.params.slug}.json` );
+		serve(req, res, blogPost, { hashed, post });
+	} catch (err) {
+		res.status(404);
+		res.end('not found');
+	}
 });
 
 app.get( '/guide', ( req, res ) => {
-	const sections = require( `${root}/public/guide.json` );
-
-	servePage( res, {
-		title: 'Learn Svelte',
-		nav: Nav.render({ route: 'guide' }),
-		route: Guide.render({ sections })
-	}).catch( err => {
-		console.log( err.stack ); // eslint-disable-line no-console
-	});
+	serve(req, res, guidePage, { hashed, sections: guideSections });
 });
 
 app.get( '/repl', ( req, res ) => {
-	servePage( res, {
-		title: 'Svelte REPL',
-		nav: Nav.render({ route: 'repl' }),
-		route: Repl.render() // TODO is there any point? just render an empty box instead?
-	}).catch( err => {
-		console.log( err.stack ); // eslint-disable-line no-console
-	});
+	serve(req, res, replPage, { hashed });
 });
 
 app.listen( 3000, () => {

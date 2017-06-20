@@ -1,0 +1,23 @@
+<Page title='Svelte • The magical disappearing UI framework' :hashed>
+	<header>
+		<Nav route='blog'/>
+	</header>
+
+	<main>
+		<BlogPost :post/>
+	</main>
+</Page>
+
+<script>
+	import Page from '../../Page.html';
+	import Nav from '../../components/Nav.html';
+	import BlogPost from '../../routes/BlogPost.html';
+
+	export default {
+		components: {
+			Page,
+			Nav,
+			BlogPost
+		}
+	};
+</script>
