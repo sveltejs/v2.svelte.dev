@@ -3,7 +3,7 @@ import buble from 'rollup-plugin-buble';
 import uglify from 'rollup-plugin-uglify';
 import glob from 'glob';
 
-const dev = !!process.env.DEV;
+const dev = !!process.env.ROLLUP_WATCH;
 
 console.log( `creating ${dev ? 'development' : 'production'} service worker` );
 
@@ -15,13 +15,13 @@ const manifest = [].concat(
 	'/blog',
 
 	// js
-	'/bundle.js',
+	'/bundle.js', // TODO should be hashed...
 	'/curl.js',
 	'/codemirror.js',
 	'/magic-string.umd.js',
 
 	// css
-	'/main.css',
+	'/main.css', // TODO should be hashed...
 	'/codemirror.css',
 
 	// fonts

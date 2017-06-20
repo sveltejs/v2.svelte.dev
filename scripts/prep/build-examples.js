@@ -53,7 +53,7 @@ manifest.forEach( group => {
 	});
 });
 
-fs.writeFileSync( `${root}/shared/routes/Repl/examples.js`, `
+fs.writeFileSync( `${root}/universal/routes/Repl/examples.js`, `
 // this file is auto-generated, don't edit it
 export const exampleGroups = ${JSON.stringify( summary )};
 export const redirects = ${JSON.stringify( redirects )};

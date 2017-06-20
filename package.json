@@ -3,21 +3,17 @@
   "version": "1.0.0",
   "description": "Docs and examples for Svelte",
   "scripts": {
-    "start": "node server",
-    "bundle": "npm run bundle:client && npm run bundle:sw && npm run bundle:codemirror",
-    "bundle:client": "rm -rf client/dist && mkdir -p client/dist && npm run bundle:codemirror && rollup -c client/rollup.config.js",
-    "bundle:sw": "rm -rf service-worker/dist && rollup -c service-worker/rollup.config.js",
-    "bundle:codemirror": "rollup -c client/rollup.config.codemirror.js",
-    "rollup:dev": "npm run bundle:codemirror && export DEV=true && rollup -c client/rollup.config.js -w",
-    "dev": "npm run rollup:dev & ( export DEV=true && node scripts/prep && node server )",
-    "prep": "npm run zip && node scripts/prep && npm run bundle",
-    "zip": "sh scripts/zip.sh",
-    "prestage": "npm run prep",
-    "predeploy": "npm run prep",
-    "predeploy:ci": "npm run prep",
+    "start": "node server/dist",
+    "prebuild": "rm -rf client/dist && mkdir -p client/dist && rm -rf service-worker/dist && mkdir -p service-worker/dist",
+    "dev": "rollup -c -w & node scripts/prep && npm start",
+    "build": "node scripts/prep && rollup -c",
+    "zip": "sh ./scripts/zip.sh",
     "stage": "now",
     "deploy": "now && now alias",
     "deploy:ci": "now --token $NOW_TOKEN && now alias --token $NOW_TOKEN",
+    "prestage": "npm run zip",
+    "predeploy": "npm run zip",
+    "predeploy:ci": "npm run zip",
     "lint": "eslint server client shared"
   },
   "repository": {
@@ -36,11 +32,9 @@
   "devDependencies": {
     "chalk": "^1.1.3",
     "clean-css": "^4.0.12",
-    "compression": "^1.6.2",
     "eslint": "^4.0.0",
     "eslint-plugin-html": "^3.0.0",
     "eslint-plugin-import": "^2.2.0",
-    "express": "^4.15.2",
     "glob": "^7.1.1",
     "highlight.js": "^9.11.0",
     "html-entities": "^1.2.1",
@@ -53,7 +47,7 @@
     "rollup-plugin-json": "^2.1.1",
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-replace": "^1.1.1",
-    "rollup-plugin-svelte": "^2.0.0",
+    "rollup-plugin-svelte": "^2.0.1",
     "rollup-plugin-uglify": "^2.0.1",
     "rollup-watch": "^4.0.0",
     "uglify-js": "^3.0.0"
@@ -61,21 +55,17 @@
   "dependencies": {
     "codemirror": "^5.25.2",
     "curl-amd": "^0.8.12",
+    "compression": "^1.6.2",
+    "express": "^4.15.2",
     "file-saver": "^1.3.3",
     "jszip": "^3.1.3",
     "locate-character": "^2.0.0",
     "roadtrip": "^0.5.1",
-    "rollup": "^0.42.0",
+    "rollup": "^0.43.0",
     "sourcemap-codec": "^1.3.1",
     "svelte": "^1.21.0"
   },
   "now": {
-    "alias": "svelte.technology",
-    "files": [
-      "public",
-      "server",
-      "client/dist",
-      "service-worker/dist"
-    ]
+    "alias": "svelte.technology"
   }
 }

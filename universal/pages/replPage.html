@@ -1,0 +1,23 @@
+<Page title='Svelte REPL' :hashed>
+	<header>
+		<Nav route='repl'/>
+	</header>
+
+	<main>
+		<Repl/>
+	</main>
+</Page>
+
+<script>
+	import Page from '../Page.html';
+	import Nav from '../components/Nav.html';
+	import Repl from '../routes/Repl/index.html';
+
+	export default {
+		components: {
+			Page,
+			Nav,
+			Repl
+		}
+	};
+</script>

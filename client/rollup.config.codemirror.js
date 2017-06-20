@@ -2,7 +2,7 @@ import nodeResolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import uglify from 'rollup-plugin-uglify';
 
-const dev = !!process.env.DEV;
+const dev = !!process.env.ROLLUP_WATCH;
 
 export default {
 	entry: 'client/src/codemirror.js',
