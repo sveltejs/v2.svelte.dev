@@ -24,6 +24,7 @@ export default {
 		nodeResolve(),
 		commonjs(),
 		svelte({
+			cascade: false,
 			css ( css ) {
 				let styles = fs.readFileSync( `${root}/templates/main.css`, 'utf-8' )
 					.replace( '__components__', css );

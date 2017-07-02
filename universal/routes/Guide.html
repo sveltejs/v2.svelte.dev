@@ -45,7 +45,7 @@
 		color: rgba(0,0,0,0.5);
 	}
 
-	h3 {
+	section :global(h3) {
 		padding-top: 6rem;
 		font-size: 1.2em;
 		font-weight: 800;
@@ -53,7 +53,7 @@
 		pointer-events: none;
 	}
 
-	p {
+	section :global(p) {
 		margin: 0 0 1em 0;
 		font-family: Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 		font-weight: 300;
@@ -61,25 +61,25 @@
 		line-height: 1.5;
 	}
 
-	.content a {
+	section :global(a) {
 		border-bottom: 1px solid #e3d9d9;
 	}
 
-	strong {
+	section :global(strong) {
 		font-weight: 500;
 	}
 
-	code {
+	section :global(code) {
 		background-color: #f9f9f9;
 		padding: 0.2em 0.4em;
 		border-radius: 3px;
 	}
 
-	pre code {
+	section :global(pre) :global(code) {
 		padding: 0;
 	}
 
-	section:first-child h3 {
+	section:first-child :global(h3) {
 		border: none;
 	}
 
@@ -94,33 +94,33 @@
 		border: none;
 	}
 
-	section > pre, .CodeMirror {
+	section > :global(pre), section :global(.CodeMirror) {
 		background-color: #f9f9f9;
 		border-left: 2px solid #eee;
 		padding: 8px;
 		margin: 0 0 1em 0;
 	}
 
-	section > pre {
+	section > :global(pre) {
 		padding: 12px 8px 12px 12px;
 		border-radius: 3px;
 	}
 
-	p, ul {
+	section :global(p), section :global(ul) {
 		max-width: 48em;
 	}
 
-	li {
+	section :global(li) {
 		margin: 0;
 	}
 
-	.open-in-repl {
+	section :global(.open-in-repl) {
 		position: absolute;
 		z-index: 2;
 		right: 0;
 	}
 
-	.open-in-repl::after {
+	section :global(.open-in-repl::after) {
 		position: absolute;
 		content: 'open in repl';
 		text-transform: uppercase;
@@ -138,12 +138,12 @@
 		background-color: rgb(253,242,242);
 	}
 
-	.open-in-repl:hover::after {
+	section :global(.open-in-repl:hover::after) {
 		color: white;
 		background-color: rgba(170,30,30,1);
 	}
 
-	blockquote {
+	section :global(blockquote) {
 		position: relative;
 		color: #999;
 		margin: 1em 0;
@@ -153,15 +153,15 @@
 		border-bottom: 1px solid #eee;
 	}
 
-	blockquote p {
+	section :global(blockquote) :global(p) {
 		color: #666;
 	}
 
-	blockquote p:last-child {
+	section :global(blockquote) :global(p:last-child) {
 		margin: 0;
 	}
 
-	blockquote::before {
+	section :global(blockquote::before) {
 		content: '!';
 		position: absolute;
 		left: 0.5em;
@@ -192,12 +192,11 @@
 			margin: -4rem 0 1rem 0;
 		}
 
-		h3 {
+		section :global(h3) {
 			padding-top: 7rem;
 			margin: -4em 0 0 0;
 		}
 	}
-
 </style>
 
 <script>

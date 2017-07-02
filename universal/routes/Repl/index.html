@@ -140,7 +140,7 @@
 		animation-fill-mode: forwards;
 	}
 
-	.editor-toggle {
+	.repl-container .editor-toggle {
 		position: absolute;
 		bottom: 1em;
 		right: 1em;
@@ -328,7 +328,7 @@
 		bottom: 0;
 	}
 
-	button {
+	.repl-container :global(button) {
 		display: block;
 		float: right;
 		padding: calc(0.5em - 1px) 1em;
@@ -346,11 +346,11 @@
 		cursor: pointer;
 	}
 
-	button:hover {
+	.repl-container :global(button:hover) {
 		border: 1px solid rgb(170,30,30);
 	}
 
-	button.active {
+	.repl-container :global(button.active) {
 		background-color: rgb(170,30,30);
 		color: white;
 	}
@@ -370,7 +370,7 @@
 		background: rgba(255,255,255,0.01);
 	}
 
-	.message {
+	.repl-container :global(.message) {
 		position: relative;
 		border-radius: 0.2em;
 		margin: 0;
@@ -378,7 +378,7 @@
 		color: white;
 	}
 
-	.message::before {
+	.repl-container :global(.message::before) {
 		content: '!';
 		position: absolute;
 		left: 0.7em;
@@ -395,15 +395,15 @@
 		border: 2px solid white;
 	}
 
-	.error.message {
+	.repl-container :global(.error.message) {
 		background-color: rgb(170,30,30);
 	}
 
-	.info.message {
+	.repl-container :global(.info.message) {
 		background-color: #666;
 	}
 
-	.error .filename {
+	.repl-container :global(.error) :global(.filename) {
 		cursor: pointer;
 	}
 </style>

@@ -16,6 +16,7 @@ export default {
 		json(),
 		svelte({
 			generate: 'ssr',
+			cascade: false,
 			css: false
 		}),
 		replace({
