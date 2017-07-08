@@ -3,10 +3,12 @@
 		<section class='input'>
 			<div class='app-controls'>
 				<ExampleSelector :exampleGroups bind:selectedExample/>
-
+				
 				<button style='width: 6em;' disabled='{{downloading}}' class='{{downloading ? "active" : ""}}' on:click='download()'>{{downloading ? 'zipping' : 'download'}}</button>
 				<button disabled='{{saving}}' class='{{saving ? "active" : ""}}' on:click='save()'>{{saving ? 'saving' : 'save'}}</button>
-				<!-- TODO add a download button -->
+				{{#if gist}}
+					<a class="btn" href="{{ githubGist }}" title="Link to saved gist" target="_blank">Gist</a>
+				{{/if}}
 			</div>
 
 			<div class='module-controls'>
@@ -327,7 +329,8 @@
 		background-color: white;
 		bottom: 0;
 	}
-
+	
+	.btn,
 	button {
 		display: block;
 		float: right;
@@ -345,11 +348,13 @@
 		background-color: white;
 		cursor: pointer;
 	}
-
+	
+	.btn:hover,
 	button:hover {
 		border: 1px solid rgb(170,30,30);
 	}
 
+	.btn.active,
 	button.active {
 		background-color: rgb(170,30,30);
 		color: white;
@@ -547,6 +552,9 @@
 				if ( runtimeError.filename !== `${selectedComponent.name}.html` ) return;
 
 				return runtimeError.loc;
+			},
+			githubGist (gist) {
+				return 'https://gist.github.com/anonymous/' + gist;
 			}
 		},
 
