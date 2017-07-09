@@ -1,14 +1,14 @@
 <div class='module-name'>
-	<div class='dropdown'>
+	<!-- <div class='dropdown'>
 		<select bind:value='selectedComponent'>
 			{{#each components as component}}
 				<option value='{{component}}'>{{component.name}}.html</option>
 			{{/each}}
 		</select>
 
-		{{#if selectedComponent.entry}}
+		{{#if selectedComponent.entry}} -->
 			<!-- entry module name ('App') is read-only -->
-			<span style='padding-left: 0.2em;'>{{selectedComponent.name}}</span>
+			<!-- <span style='padding-left: 0.2em;'>{{selectedComponent.name}}</span>
 		{{else}}
 			<div class='input-wrapper'>
 				<span class='widther'>{{selectedComponent.name || 'x'}}</span>
@@ -17,9 +17,9 @@
 		{{/if}}
 
 		<span class='file-extension'>.html</span>
-	</div>
+	</div> -->
 
-	<button style='width: 4em;' on:click='remove()' on:mouseout='set({ danger: false })'>
+	<!-- <button style='width: 4em;' on:click='remove()' on:mouseout='set({ danger: false })'>
 		{{#if danger}}
 			sure?
 		{{else}}
@@ -27,7 +27,34 @@
 		{{/if}}
 	</button>
 
-	<button on:click='fire("create")'>add</button>
+	<button on:click='fire("create")'>add</button> -->
+</div>
+<div class="panel-header">
+	<ul class="file-tabs">
+		{{#each components as component}}
+		<li class='{{ selectedComponent == component ? "active" : "" }}' data-name='{{component.name}}'>
+			<button class='file-tabs-item' on:click='selectComponent(component)'>
+				{{#if component.name == 'App'}}
+                    {{component.name}}.html
+				{{else}}
+					{{#if !component.edit}}
+					<div class='editable' title='edit component name' on:click='editTab()'>
+						{{component.name}}.html
+					</div>
+	                {{else}}
+					<div class='file-tabs-item input-wrapper'>
+	                    <input ref:name bind:value='component.name' on:focus='this.select()' on:blur='closeEdit()' on:enter='this.blur()' />
+	                </div>
+					{{/if}}
+	                <!-- <span class='file-extension'>.html</span> -->
+	            {{/if}}
+			</button>
+		</li>
+		{{/each}}
+		<li>
+			<button class='btn-link' on:click='fire("create")' title="add new component">&#10133;</button>
+		</li>
+	</ul>
 </div>
 
 <style>
@@ -85,7 +112,7 @@
 		line-height: 1;
 	}
 
-	input {
+	/*input {
 		position: absolute;
 		width: 100%;
 		height: 100%;
@@ -103,7 +130,7 @@
 
 	input:focus {
 		border: 1px solid rgb(170,30,30);
-	}
+	}*/
 
 	.file-extension {
 		display: inline-block;
@@ -111,6 +138,53 @@
 		color: #999;
 		left: -0.2em;
 		pointer-events: none;
+	}
+	.file-tabs {
+		border: none;
+		padding-left: 0;
+		margin: 0;
+		list-style-type: none;
+	}
+	.file-tabs > li {
+		float: left;
+		margin-bottom: -1px;
+	}
+	.file-tabs li.active {
+		background-color: #fff;
+		border-bottom: 2px solid #31455a;
+		font-weight: 500;
+	}
+	.file-tabs > li > .file-tabs-item {
+		float: none;
+		border: none;
+		border-radius: 0;
+		color: #2e3e4e;
+		position: relative;
+		display: block;
+		padding: 10px 15px;
+		margin: 0;
+	}
+	.file-tabs-input {
+		padding: 10px 15px;
+	}
+	.editable {
+    	display: inline-block;
+    	padding: 0 19px 0 4px;
+    	position: relative;
+	}
+	li.active .editable:hover {
+		box-shadow: 0 0 0 1px #ccc;
+	    border-radius: 2px;
+	    cursor: pointer;
+	    visibility: visible;
+	}
+	.btn-link {
+		border: none;
+		padding: 10px 10px 6px 8px;
+    	line-height: 1.45;
+	}
+	.btn-link:hover {
+		border: none;
 	}
 </style>
 
@@ -135,6 +209,23 @@
 
 	export default {
 		methods: {
+			selectComponent(component) {
+				let selectedComponent = this.get('selectedComponent');
+				if (selectedComponent != component) {
+					selectedComponent.edit = false;
+				}
+				this.set({selectedComponent: component})
+			},
+			editTab() {
+				let selectedComponent = this.get('selectedComponent');
+				selectedComponent.edit = true;
+				this.set({selectedComponent});
+			},
+			closeEdit() {
+				let selectedComponent = this.get('selectedComponent');
+				selectedComponent.edit = false;
+				this.set({selectedComponent});
+			},
 			remove () {
 				if ( this.get( 'danger' ) ) {
 					this.fire( 'remove' );
