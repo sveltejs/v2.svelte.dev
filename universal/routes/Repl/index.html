@@ -4,11 +4,14 @@
 			<div class='app-controls'>
 				<ExampleSelector :exampleGroups bind:selectedExample/>
 				
-				<button style='width: 6em;' disabled='{{downloading}}' class='{{downloading ? "active" : ""}}' on:click='download()'>{{downloading ? 'zipping' : 'download'}}</button>
-				<button disabled='{{saving}}' class='{{saving ? "active" : ""}}' on:click='save()'>{{saving ? 'saving' : 'save'}}</button>
-				{{#if gist}}
-					<a class="btn" href="{{ githubGist }}" title="Link to saved gist" target="_blank">Gist</a>
-				{{/if}}
+				<div style='position: absolute; right: 0.5em;'>
+					<button style='width: 6em;' disabled='{{downloading}}' class='{{downloading ? "active" : ""}}' on:click='download()'>{{downloading ? 'zipping' : 'download'}}</button>
+					<button disabled='{{saving}}' class='{{saving ? "active" : ""}}' on:click='save()'>{{saving ? 'saving' : 'save'}}</button>
+
+					{{#if gist}}
+						<a class='gist-link' href="{{githubGist}}" title="Link to saved gist" target="_blank">gist</a>
+					{{/if}}
+				</div>
 			</div>
 
 			<div class='module-controls'>
@@ -330,7 +333,6 @@
 		bottom: 0;
 	}
 	
-	.btn,
 	button {
 		display: block;
 		float: right;
@@ -349,15 +351,28 @@
 		cursor: pointer;
 	}
 	
-	.btn:hover,
 	button:hover {
 		border: 1px solid rgb(170,30,30);
 	}
 
-	.btn.active,
 	button.active {
 		background-color: rgb(170,30,30);
 		color: white;
+	}
+
+	.gist-link {
+		float: right;
+		line-height: 2;
+		font-family: Rajdhani;
+		font-weight: 400;
+		padding: 0 0.1em;
+		display: none;
+	}
+
+	@media (min-width: 768px) {
+		.gist-link {
+			display: block;
+		}
 	}
 
 	select {
