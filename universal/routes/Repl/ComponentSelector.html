@@ -33,17 +33,17 @@
 	<ul class="file-tabs">
 		{{#each components as component}}
 		<li class='{{ selectedComponent == component ? "active" : "" }}' data-name='{{component.name}}'>
-			<button class='file-tabs-item' on:click='selectComponent(component)'>
+			<button class='file-tabs-item' on:click='selectComponent(component, selectedComponent)'>
 				{{#if component.name == 'App'}}
                     {{component.name}}.html
 				{{else}}
 					{{#if !component.edit}}
-					<div class='editable' title='edit component name' on:click='editTab()'>
+					<div class='editable' title='edit component name' on:click='editTab(selectedComponent)'>
 						{{component.name}}.html
 					</div>
 	                {{else}}
 					<div class='file-tabs-item input-wrapper'>
-	                    <input ref:name bind:value='component.name' on:focus='this.select()' on:blur='closeEdit()' on:enter='this.blur()' />
+	                    <input ref:name bind:value='component.name' on:focus='this.select()' on:blur='closeEdit(selectedComponent)' on:enter='this.blur()' />
 	                </div>
 					{{/if}}
 	                <!-- <span class='file-extension'>.html</span> -->
@@ -52,9 +52,13 @@
 		</li>
 		{{/each}}
 		<li>
-			<button class='btn-link' on:click='fire("create")' title="add new component">&#10133;</button>
+			
 		</li>
 	</ul>
+	
+	<div class="btn-action-container">
+		<button class='btn-link' on:click='fire("create")' title="add new component">&#10133;</button>
+	</div>
 </div>
 
 <style>
@@ -178,6 +182,11 @@
 	    cursor: pointer;
 	    visibility: visible;
 	}
+	.btn-action-container {
+		position: absolute;
+		right: 0;
+		top: 0;
+	}
 	.btn-link {
 		border: none;
 		padding: 10px 10px 6px 8px;
@@ -209,20 +218,18 @@
 
 	export default {
 		methods: {
-			selectComponent(component) {
-				let selectedComponent = this.get('selectedComponent');
+			selectComponent(component, selectedComponent) {
 				if (selectedComponent != component) {
 					selectedComponent.edit = false;
 				}
 				this.set({selectedComponent: component})
 			},
-			editTab() {
-				let selectedComponent = this.get('selectedComponent');
+			editTab(selectedComponent) {
 				selectedComponent.edit = true;
 				this.set({selectedComponent});
+				this.refs.name.focus();
 			},
-			closeEdit() {
-				let selectedComponent = this.get('selectedComponent');
+			closeEdit(selectedComponent) {
 				selectedComponent.edit = false;
 				this.set({selectedComponent});
 			},
