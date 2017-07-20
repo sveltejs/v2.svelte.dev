@@ -1,70 +1,41 @@
-<div class='module-name'>
-	<!-- <div class='dropdown'>
-		<select bind:value='selectedComponent'>
-			{{#each components as component}}
-				<option value='{{component}}'>{{component.name}}.html</option>
-			{{/each}}
-		</select>
-
-		{{#if selectedComponent.entry}} -->
-			<!-- entry module name ('App') is read-only -->
-			<!-- <span style='padding-left: 0.2em;'>{{selectedComponent.name}}</span>
-		{{else}}
-			<div class='input-wrapper'>
-				<span class='widther'>{{selectedComponent.name || 'x'}}</span>
-				<input tabindex='1' ref:name bind:value='selectedComponent.name' on:focus='this.select()' on:enter='this.blur()'>
-			</div>
-		{{/if}}
-
-		<span class='file-extension'>.html</span>
-	</div> -->
-
-	<!-- <button style='width: 4em;' on:click='remove()' on:mouseout='set({ danger: false })'>
-		{{#if danger}}
-			sure?
-		{{else}}
-			delete
-		{{/if}}
-	</button>
-
-	<button on:click='fire("create")'>add</button> -->
-</div>
 <div class="panel-header">
-	<ul class="file-tabs">
+	<ul ref:files class="file-tabs">
 		{{#each components as component}}
-		<li class='{{ selectedComponent == component ? "active" : "" }}' data-name='{{component.name}}'>
-			<button class='file-tabs-item' on:click='selectComponent(component, selectedComponent)'>
+		<li id='{{component.name}}' class='{{ selectedComponent == component ? "active" : "" }}' data-name='{{component.name}}'>
+			<button class='file-tabs-item {{ component.edit ? "edit-mode" : ""}}' on:click='selectComponent(component, selectedComponent)'>
 				{{#if component.name == 'App'}}
-                    {{component.name}}.html
+					{{component.name}}.html
 				{{else}}
 					{{#if !component.edit}}
-					<div class='editable' title='edit component name' on:click='editTab(selectedComponent)'>
-						{{component.name}}.html
-					</div>
-	                {{else}}
-					<div class='file-tabs-item input-wrapper'>
-	                    <input ref:name bind:value='component.name' on:focus='this.select()' on:blur='closeEdit(selectedComponent)' on:enter='this.blur()' />
-	                </div>
+						<div class='editable' title='edit component name' on:click='editTab(component, selectedComponent)'>
+							{{component.name}}.html
+						</div>
+					{{else}}
+						<div class='input-wrapper'>
+							<input ref:name bind:value='component.name' on:focus='this.select()' on:blur='closeEdit(selectedComponent)' on:enter='this.blur()' />
+						</div>
 					{{/if}}
-	                <!-- <span class='file-extension'>.html</span> -->
-	            {{/if}}
+					<span class='remove' on:click='remove(component)'>&times;</span>
+				{{/if}}
 			</button>
 		</li>
 		{{/each}}
-		<li>
-			
-		</li>
 	</ul>
-	
-	<div class="btn-action-container">
-		<button class='btn-link' on:click='fire("create")' title="add new component">&#10133;</button>
-	</div>
+</div>
+
+<div class="btn-action-container">
+	<button class='btn-link' on:click='fire("create")' title="add new component">&#10133;</button>
 </div>
 
 <style>
 	.module-name {
 		position: relative;
 		display: block;
+	}
+
+	.panel-header {
+		height: 2.4em;
+		padding-right: 40px;
 	}
 
 	button {
@@ -99,12 +70,22 @@
 		opacity: 0;
 		font-size: inherit;
 	}
+
 	.input-wrapper {
 		position: relative;
 		display: block;
 		float: left;
 		line-height: 1;
 		margin: 0 0.3em 0 0;
+	}
+
+	.input-wrapper input {
+		background-color: #e7e7e7;
+		font-size: 16px;
+		font-family: Rajdhani, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+		border: none;
+		color: #aa1e1e;
+		padding: 0 4px;
 	}
 
 	.widther {
@@ -116,26 +97,6 @@
 		line-height: 1;
 	}
 
-	/*input {
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		left: 0;
-		top: 0;
-		font-family: inherit;
-		font-size: inherit;
-		border: 1px solid rgba(170,30,30,0.3);
-		border-radius: 0.2em;
-		padding: calc(0.5em - 1px) 0.2em;
-		line-height: 1;
-		outline: none;
-		box-sizing: border-box;
-	}
-
-	input:focus {
-		border: 1px solid rgb(170,30,30);
-	}*/
-
 	.file-extension {
 		display: inline-block;
 		padding: calc(0.5em - 1px) 0;
@@ -143,22 +104,31 @@
 		left: -0.2em;
 		pointer-events: none;
 	}
+
 	.file-tabs {
 		border: none;
 		padding-left: 0;
 		margin: 0;
 		list-style-type: none;
+		white-space: nowrap;
+		overflow-x: auto;
+		overflow-y: hidden;
 	}
+
 	.file-tabs > li {
-		float: left;
-		margin-bottom: -1px;
+		display: inline-block;
+		float: none;
+		margin-bottom: 0;
+		vertical-align: top;
 	}
+
 	.file-tabs li.active {
 		background-color: #fff;
 		border-bottom: 2px solid #31455a;
 		font-weight: 500;
 	}
-	.file-tabs > li > .file-tabs-item {
+
+	.file-tabs-item {
 		float: none;
 		border: none;
 		border-radius: 0;
@@ -168,30 +138,55 @@
 		padding: 10px 15px;
 		margin: 0;
 	}
+
+	.file-tabs-item:hover {
+		border: none;
+	}
+
+	.edit-mode {
+		padding-bottom: 8px;
+		padding-top: 8px;
+	}
+
 	.file-tabs-input {
 		padding: 10px 15px;
 	}
+
 	.editable {
-    	display: inline-block;
-    	padding: 0 19px 0 4px;
-    	position: relative;
+		display: inline-block;
+		margin-right: 4px;
+		padding: 0 4px;
+		position: relative;
 	}
+
+	.remove {
+		display: none;
+		font-size: 16px;
+	}
+
 	li.active .editable:hover {
 		box-shadow: 0 0 0 1px #ccc;
-	    border-radius: 2px;
-	    cursor: pointer;
-	    visibility: visible;
+		border-radius: 2px;
+		cursor: pointer;
+		visibility: visible;
 	}
+
+	li.active .remove {
+		display: inline-block;
+	}
+
 	.btn-action-container {
 		position: absolute;
 		right: 0;
 		top: 0;
 	}
+
 	.btn-link {
 		border: none;
-		padding: 10px 10px 6px 8px;
-    	line-height: 1.45;
+		padding: 16px 14px 8px 10px;
+		line-height: 1.45;
 	}
+
 	.btn-link:hover {
 		border: none;
 	}
@@ -218,27 +213,29 @@
 
 	export default {
 		methods: {
-			selectComponent(component, selectedComponent) {
+			selectComponent (component, selectedComponent) {
 				if (selectedComponent != component) {
 					selectedComponent.edit = false;
 				}
-				this.set({selectedComponent: component})
+				this.set({ selectedComponent: component })
 			},
-			editTab(selectedComponent) {
-				selectedComponent.edit = true;
-				this.set({selectedComponent});
-				this.refs.name.focus();
+			editTab (component, selectedComponent) {
+				if (selectedComponent == component) {
+					selectedComponent.edit = true;
+					this.set({ selectedComponent });
+					this.refs.name.focus();
+				}
 			},
-			closeEdit(selectedComponent) {
+			closeEdit (selectedComponent) {
 				selectedComponent.edit = false;
-				this.set({selectedComponent});
+				this.set({ selectedComponent });
 			},
-			remove () {
-				if ( this.get( 'danger' ) ) {
+			remove (component) {
+				let result = confirm(`Are you sure you want to delete ${component.name}.html?`);
+				if ( result ) {
 					this.fire( 'remove' );
-					this.set({ danger: false });
-				} else {
-					this.set({ danger: true });
+					let components = this.get('components');
+					this.set({ selectedComponent: components[components.length-1] });
 				}
 			}
 		},

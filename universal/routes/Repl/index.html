@@ -555,7 +555,7 @@
 				const components = this.get( 'components' );
 
 				const newComponent = {
-					name: this.uid++ ? `Component${this.uid}` : 'Component',
+					name: this.uid++ ? `Component${this.uid}` : 'Component1',
 					source: ''
 				};
 
@@ -573,6 +573,7 @@
 				this.set({
 					selectedComponent: newComponent
 				});
+				document.getElementById(newComponent.name).scrollIntoView(false);
 			},
 
 			removeComponent ( component ) {
