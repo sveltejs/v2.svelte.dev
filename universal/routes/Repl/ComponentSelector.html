@@ -4,7 +4,7 @@
 		<li id='{{component.name}}' class='{{ selectedComponent == component ? "active" : "" }}' data-name='{{component.name}}'>
 			<button class='file-tabs-item {{ component.edit ? "edit-mode" : ""}}' on:click='selectComponent(component, selectedComponent)'>
 				{{#if component.name == 'App'}}
-					{{component.name}}.html
+					App.html
 				{{else}}
 					{{#if !component.edit}}
 						<div class='editable' title='edit component name' on:click='editTab(component, selectedComponent)'>
@@ -24,7 +24,9 @@
 </div>
 
 <div class="btn-action-container">
-	<button class='btn-link' on:click='fire("create")' title="add new component">&#10133;</button>
+	<button class='add-new' on:click='fire("create")' title="add new component">
+		<span>+</span>
+	</button>
 </div>
 
 <style>
@@ -34,8 +36,7 @@
 	}
 
 	.panel-header {
-		height: 2.4em;
-		padding-right: 40px;
+		padding: 0 40px 0.5em 0;
 	}
 
 	button {
@@ -124,19 +125,26 @@
 
 	.file-tabs li.active {
 		background-color: #fff;
-		border-bottom: 2px solid #31455a;
 		font-weight: 500;
+	}
+
+	.file-tabs li.active button {
+		border-bottom: 2px solid #666;
 	}
 
 	.file-tabs-item {
 		float: none;
 		border: none;
 		border-radius: 0;
-		color: #2e3e4e;
+		color: #333;
 		position: relative;
 		display: block;
-		padding: 10px 15px;
+		padding: 0.7em;
 		margin: 0;
+		height: 2.4em;
+		box-sizing: border-box;
+		line-height: 1.4;
+		font-weight: 300;
 	}
 
 	.file-tabs-item:hover {
@@ -181,14 +189,27 @@
 		top: 0;
 	}
 
-	.btn-link {
+	.add-new {
 		border: none;
-		padding: 16px 14px 8px 10px;
-		line-height: 1.45;
+		width: 2.4em;
+		height: 2.4em;
+		color: #999;
+		background: none;
 	}
 
-	.btn-link:hover {
+	.add-new span {
+		position: absolute;
+		font-size: 2em;
+		font-weight: 300;
+		top: 0;
+		line-height: 1.3;
+		left: 0;
+		width: 100%;
+	}
+
+	.add-new:hover {
 		border: none;
+		color: #333;
 	}
 </style>
 
