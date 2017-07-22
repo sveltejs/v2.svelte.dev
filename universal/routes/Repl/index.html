@@ -558,7 +558,8 @@
 
 				const newComponent = {
 					name: this.uid++ ? `Component${this.uid}` : 'Component1',
-					source: ''
+					source: '',
+					edit: true
 				};
 
 				components.push( newComponent );
@@ -576,6 +577,7 @@
 					selectedComponent: newComponent
 				});
 				document.getElementById(newComponent.name).scrollIntoView(false);
+				this.refs.selector.focusLast();
 			},
 
 			removeComponent ( component ) {

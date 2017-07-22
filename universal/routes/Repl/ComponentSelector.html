@@ -10,7 +10,7 @@
 				{{else}}
 					{{#if component.edit}}
 						<div class='input-wrapper'>
-							<input ref:name bind:value='component.name' on:focus='selectInput(this)' on:blur='closeEdit(selectedComponent)' on:enter='this.blur()' />
+							<input autofocus ref:name bind:value='component.name' on:focus='selectInput(this)' on:blur='closeEdit(selectedComponent)' on:enter='this.blur()' />
 						</div>
 					{{else}}
 						<div class='editable' title='edit component name' on:click='editTab(component, selectedComponent)'>
@@ -252,7 +252,7 @@
 				if (selectedComponent == component) {
 					selectedComponent.edit = true;
 					this.set({ selectedComponent });
-					this.refs.name.focus();
+					// this.refs.name.focus();
 				}
 			},
 			closeEdit (selectedComponent) {
@@ -271,6 +271,9 @@
 				setTimeout(() => {
 					input.select();
 				});
+			},
+			focusLast() {
+
 			}
 		},
 
