@@ -4,7 +4,7 @@
 			<div class='app-controls'>
 				<ExampleSelector :exampleGroups bind:selectedExample/>
 				
-				<div style='position: absolute; right: 0.5em;'>
+				<div style='position: absolute; right: 0.5em; z-index: 2;'>
 					<button style='width: 6em;' disabled='{{downloading}}' class='btn {{downloading ? "active" : ""}}' on:click='download()'>{{downloading ? 'zipping' : 'download'}}</button>
 					<button disabled='{{saving}}' class='btn {{saving ? "active" : ""}}' on:click='save()'>{{saving ? 'saving' : 'save'}}</button>
 
@@ -465,10 +465,17 @@
 	}
 
 	function compile ( component ) {
-		return svelte.compile( component.source || '', {
+		const warnings = [];
+		const { code, map } = svelte.compile( component.source || '', {
+			cascade: false,
 			name: component.name,
-			filename: component.name + '.html'
+			filename: component.name + '.html',
+			onwarn: warning => {
+				warnings.push( warning );
+			}
 		});
+
+		return { code, map, warnings };
 	}
 
 	export default {
@@ -709,10 +716,22 @@
 				if ( !components || !components.length ) return;
 				if ( components.some( c => !c.compiled ) ) return;
 
+				console.clear();
+
 				if ( this.bundlePromise ) this.bundlePromise.cancel();
 
 				const lookup = {};
 				components.forEach( component => {
+					const w = component.compiled.warnings.length;
+					if ( w > 0 ) {
+						console.group( `${component.name}.html: ${w} ${w === 1 ? 'warning' : 'warnings'}` );
+						component.compiled.warnings.forEach( warning => {
+							console.warn( warning.message );
+							console.log( warning.frame );
+						});
+						console.groupEnd();
+					}
+
 					lookup[ `./${component.name}.html` ] = {
 						code: component.compiled.code,
 						map: component.compiled.map
@@ -735,7 +754,12 @@
 							if ( importee[0] === '.' ) return importee;
 						},
 						load ( id ) {
-							return lookup[ `${id}` ];
+							if ( id in lookup ) return lookup[id];
+							if ( id[0] === '.' ) {
+								throw new Error( `file does not exist` );
+							}
+
+							return null;
 						}
 					}],
 					onwarn ( warning ) {
@@ -763,6 +787,7 @@
 							imports: bundle.imports,
 							importMap
 						},
+						bundleError: null,
 						runtimeError: null
 					});
 				}).catch( err => {

@@ -147,11 +147,7 @@
 
 				const init = () => {
 					const { bundle, bundleError } = this.get();
-
-					if ( bundleError ) {
-						this.set({ error: bundleError });
-						return;
-					}
+					if ( bundleError ) return;
 
 					const imports = [];
 					const pattern = /\bimport\s+(?:(.+)\s+from\s+)?[\'"]([^"\']+)["\']/g; // https://gist.github.com/pilwon/ff55634a29bb4456e0dd
@@ -283,6 +279,10 @@
 						}
 						this.set({ error });
 					}
+				});
+
+				this.observe( 'bundleError', error => {
+					if ( error ) this.set({ error });
 				});
 			});
 		}
