@@ -47,7 +47,7 @@
     "rollup-plugin-json": "^2.1.1",
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-replace": "^1.1.1",
-    "rollup-plugin-svelte": "^2.0.1",
+    "rollup-plugin-svelte": "^3.0.0",
     "rollup-plugin-uglify": "^2.0.1",
     "rollup-watch": "^4.0.0",
     "uglify-js": "^3.0.0"
@@ -63,7 +63,7 @@
     "roadtrip": "^0.5.1",
     "rollup": "^0.43.0",
     "sourcemap-codec": "^1.3.1",
-    "svelte": "^1.25.0"
+    "svelte": "^1.25.1"
   },
   "now": {
     "alias": "svelte.technology"
