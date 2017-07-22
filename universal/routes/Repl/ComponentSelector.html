@@ -1,18 +1,20 @@
 <div class="panel-header">
-	<ul ref:files class="file-tabs">
+	<ul ref:files class="file-tabs" on:dblclick='fire("create")'>
 		{{#each components as component}}
-		<li id='{{component.name}}' class='{{ selectedComponent == component ? "active" : "" }}' data-name='{{component.name}}'>
+		<li id='{{component.name}}' class='{{ selectedComponent == component ? "active" : "" }}' data-name='{{component.name}}' on:dblclick='event.stopPropagation()'>
 			<button class='file-tabs-item {{ component.edit ? "edit-mode" : ""}}' on:click='selectComponent(component, selectedComponent)'>
 				{{#if component.name == 'App'}}
-					App.html
+					<div class='uneditable'>
+						App.html
+					</div>
 				{{else}}
-					{{#if !component.edit}}
-						<div class='editable' title='edit component name' on:click='editTab(component, selectedComponent)'>
-							{{component.name}}.html
+					{{#if component.edit}}
+						<div class='input-wrapper'>
+							<input ref:name bind:value='component.name' on:focus='selectInput(this)' on:blur='closeEdit(selectedComponent)' on:enter='this.blur()' />
 						</div>
 					{{else}}
-						<div class='input-wrapper'>
-							<input ref:name bind:value='component.name' on:focus='this.select()' on:blur='closeEdit(selectedComponent)' on:enter='this.blur()' />
+						<div class='editable' title='edit component name' on:click='editTab(component, selectedComponent)'>
+							{{component.name}}.html
 						</div>
 					{{/if}}
 					<span class='remove' on:click='remove(component)'>&times;</span>
@@ -77,16 +79,18 @@
 		display: block;
 		float: left;
 		line-height: 1;
-		margin: 0 0.3em 0 0;
+		/* margin: 0 0.3em 0 0; */
 	}
 
 	.input-wrapper input {
-		background-color: #e7e7e7;
+		width: 100%;
+		/* background-color: #e7e7e7; */
 		font-size: 16px;
 		font-family: Rajdhani, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 		border: none;
 		color: #aa1e1e;
-		padding: 0 4px;
+		padding: 4px 10px;
+		outline: none;
 	}
 
 	.widther {
@@ -120,26 +124,28 @@
 		display: inline-block;
 		float: none;
 		margin-bottom: 0;
+		margin: 0 0.5em 0 0;
 		vertical-align: top;
 	}
 
 	.file-tabs li.active {
 		background-color: #fff;
-		font-weight: 500;
 	}
 
 	.file-tabs li.active button {
-		border-bottom: 2px solid #666;
+		border-bottom: 1px solid #666;
+		/* font-weight: 500; */
 	}
 
-	.file-tabs-item {
+	button.file-tabs-item {
 		float: none;
-		border: none;
+		border-bottom: 1px solid #eee;
 		border-radius: 0;
 		color: #333;
 		position: relative;
 		display: block;
-		padding: 0.7em;
+		/* padding: 0 0.7em; */
+		padding: 0.4em 0 0 0;
 		margin: 0;
 		height: 2.4em;
 		box-sizing: border-box;
@@ -147,9 +153,9 @@
 		font-weight: 300;
 	}
 
-	.file-tabs-item:hover {
+	/* .file-tabs-item:hover {
 		border: none;
-	}
+	} */
 
 	.edit-mode {
 		padding-bottom: 8px;
@@ -160,23 +166,25 @@
 		padding: 10px 15px;
 	}
 
-	.editable {
+	.editable, .uneditable {
 		display: inline-block;
 		margin-right: 4px;
-		padding: 0 4px;
+		padding: 0 10px;
 		position: relative;
 	}
 
 	.remove {
+		position: absolute;
 		display: none;
-		font-size: 16px;
+		right: 0;
+		width: 20px;
+		text-align: right;
+		padding: 0.7em 0 0.5em 0.5em;
+		top: 0;
 	}
 
-	li.active .editable:hover {
-		box-shadow: 0 0 0 1px #ccc;
-		border-radius: 2px;
-		cursor: pointer;
-		visibility: visible;
+	li.active .editable {
+		cursor: text;
 	}
 
 	li.active .remove {
@@ -189,7 +197,7 @@
 		top: 0;
 	}
 
-	.add-new {
+	button.add-new {
 		border: none;
 		width: 2.4em;
 		height: 2.4em;
@@ -258,6 +266,11 @@
 					let components = this.get('components');
 					this.set({ selectedComponent: components[components.length-1] });
 				}
+			},
+			selectInput(input) {
+				setTimeout(() => {
+					input.select();
+				});
 			}
 		},
 

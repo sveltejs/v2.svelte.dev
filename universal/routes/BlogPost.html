@@ -15,27 +15,20 @@
 		/*padding: 0 0 2em 0;*/
 	}
 
-	p {
-		margin: 0 0 1em 0;
-		line-height: 1.5;
-	}
-
 	.byline {
 		font-size: 0.8em;
 		border-top: 1px solid #eee;
 		padding: 0.5em 0;
 	}
 
-	time {
-		/*float: right;*/
-	}
-
-	p {
+	.post :global(p) {
+		margin: 0 0 1em 0;
+		line-height: 1.5;
 		font-weight: 300;
 		color: #333;
 	}
 
-	p:last-child {
+	.post :global(p:last-child) {
 		margin: 0;
 	}
 
@@ -44,7 +37,7 @@
 		font-weight: 700;
 	}
 
-	code {
+	.post :global(code) {
 		background-color: #f9f9f9;
 		padding: 0.2em 0.4em;
 		border-radius: 3px;
@@ -54,13 +47,13 @@
 		padding: 1em;
 	}
 
-	h1, h2 {
+	h1, .post :global(h2) {
 		font-size: 1.8em;
 		margin: 0;
 		font-weight: 500;
 	}
 
-	h2 {
+	.post :global(h2) {
 		color: #333;
 	}
 
@@ -72,7 +65,7 @@
 		font-weight: 500;
 	}
 
-	blockquote {
+	.post :global(blockquote) {
 		color: #999;
 		margin: 1em 0;
 		padding: 0.5em 0 0.5em 1em;
@@ -83,11 +76,11 @@
 		border-bottom: 1px solid #eee;*/
 	}
 
-	blockquote p {
+	.post :global(blockquote) :global(p) {
 		color: #666;
 	}
 
-	blockquote strong {
+	.post :global(blockquote) :global(strong) {
 		display: block;
 		font-weight: 300;
 		font-style: italic;
@@ -95,7 +88,7 @@
 	}
 
 	@media (min-width: 768px) {
-		h1, h2 {
+		h1, .post :global(h2) {
 			font-size: 2.4em;
 		}
 	}

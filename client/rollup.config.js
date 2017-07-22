@@ -8,10 +8,8 @@ import commonjs from 'rollup-plugin-commonjs';
 import json from 'rollup-plugin-json';
 import uglify from 'rollup-plugin-uglify';
 import buble from 'rollup-plugin-buble';
-const CleanCSS = require( 'clean-css' );
 
 const dev = !!process.env.ROLLUP_WATCH;
-const root = path.resolve( '.' );
 
 console.log( `creating ${dev ? 'development' : 'production'} client bundle` );
 
@@ -24,18 +22,15 @@ export default {
 		nodeResolve(),
 		commonjs(),
 		svelte({
+			cascade: false,
 			css ( css ) {
-				let styles = fs.readFileSync( `${root}/templates/main.css`, 'utf-8' )
-					.replace( '__components__', css );
-
-				if ( dev ) {
-					fs.writeFileSync( `client/dist/main.css`, styles );
+				if (dev) {
+					css.write('client/dist/main.css');
 				} else {
-					styles = new CleanCSS().minify( styles ).styles;
-
-					const hash = hasha( styles, { algorithm: 'md5' });
-					fs.writeFileSync( `client/dist/main.${hash}.css`, styles );
-					fs.writeFileSync( `server/manifests/css.json`, JSON.stringify({ 'main.css': `client/dist/main.${hash}.css` }) );
+					const hash = hasha( css.code, { algorithm: 'md5' });
+					const dest = `client/dist/main.${hash}.css`;
+					css.write(dest);
+					fs.writeFileSync( `server/manifests/css.json`, JSON.stringify({ 'main.css': dest }) );
 				}
 			}
 		}),
