@@ -15,6 +15,10 @@
 
 			{{error.message}}
 		</p>
+	{{elseif warningCount > 0}}
+		<p class='warning message'>
+			Compiled, but with {{warningCount}} {{warningCount === 1 ? 'warning' : 'warnings'}} — check the console for details
+		</p>
 	{{/if}}
 </div>
 
@@ -57,7 +61,7 @@
 		border: none;
 	}
 
-	.codemirror-container .error {
+	.codemirror-container .message {
 		bottom: 1em;
 		left: 1em;
 		position: absolute;
