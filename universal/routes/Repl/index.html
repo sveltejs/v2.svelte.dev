@@ -900,7 +900,7 @@ export default app;` );
 
 				lastSelectedExample = id;
 				get( `/examples/${id}.json` ).then( JSON.parse ).then( example => {
-					exampleComponents = JSON.stringify( example.components );
+					exampleComponents = stringifyComponents( example.components );
 
 					// compile non-selected components
 					if ( window.svelte ) {
@@ -976,7 +976,7 @@ export default app;` );
 					if ( !selectedComponent ) return;
 
 					// if component has been edited, unset selectedExample
-					if ( JSON.stringify( this.get( 'components' ) ) !== exampleComponents ) {
+					if ( stringifyComponents( this.get('components') ) !== exampleComponents ) {
 						this.set({ selectedExample: null });
 					}
 
@@ -1070,4 +1070,15 @@ export default app;` );
 			ExampleSelector
 		}
 	};
+
+	function stringifyComponents( components ) {
+		return JSON.stringify(
+			components.map( component => {
+				return {
+					name: component.name,
+					source: component.source
+				};
+			})
+		);
+	}
 </script>
