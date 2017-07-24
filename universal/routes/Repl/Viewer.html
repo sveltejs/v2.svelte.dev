@@ -33,7 +33,7 @@
 			<span>Click to run</span>
 		</div>
 	{{elseif pendingImports}}
-		<p class='info message'>loading {{pendingImports}} {{pendingImports === 1 ? 'dependency' : 'dependencies'}} from packd.now.sh (this may take a while if the package isn't cached)</p>
+		<p class='info message'>loading {{pendingImports}} {{pendingImports === 1 ? 'dependency' : 'dependencies'}} from https://bundle.run</p>
 	{{/if}}
 </div>
 
@@ -108,12 +108,12 @@
 
 	function fetchImport ( id, curl ) {
 		return new Promise( ( fulfil, reject ) => {
-			curl([ `https://packd.now.sh/${id}` ]).then( module => {
+			curl([ `https://bundle.run/${id}` ]).then( module => {
 				importCache[ id ] = module;
 				fulfil( module );
 			}, err => {
 				console.error( err.stack );
-				reject( new Error( `Error loading ${id} from packd.now.sh` ) );
+				reject( new Error( `Error loading ${id} from bundle.run` ) );
 			});
 		});
 	}
