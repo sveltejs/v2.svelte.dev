@@ -60,6 +60,12 @@ ansi-styles@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/ansi-styles/-/ansi-styles-2.2.1.tgz#b432dd3358b634cf75e1e4664368240533c1ddbe"
 
+ansi-styles@^3.1.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/ansi-styles/-/ansi-styles-3.2.0.tgz#c159b8d5be0f9e5a6f346dab94f16ce022161b88"
+  dependencies:
+    color-convert "^1.9.0"
+
 anymatch@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/anymatch/-/anymatch-1.3.0.tgz#a3e52fa39168c825ff57b0248126ce5a8ff95507"
@@ -247,6 +253,14 @@ chalk@^1.0.0, chalk@^1.1.0, chalk@^1.1.1, chalk@^1.1.3:
     strip-ansi "^3.0.0"
     supports-color "^2.0.0"
 
+chalk@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.0.1.tgz#dbec49436d2ae15f536114e76d14656cdbc0f44d"
+  dependencies:
+    ansi-styles "^3.1.0"
+    escape-string-regexp "^1.0.5"
+    supports-color "^4.0.0"
+
 chokidar@^1.7.0:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-1.7.0.tgz#798e689778151c8076b4b360e5edd28cda2bb468"
@@ -293,6 +307,16 @@ code-point-at@^1.0.0:
 codemirror@^5.25.2:
   version "5.26.0"
   resolved "https://registry.yarnpkg.com/codemirror/-/codemirror-5.26.0.tgz#bcbee86816ed123870c260461c2b5c40b68746e5"
+
+color-convert@^1.9.0:
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/color-convert/-/color-convert-1.9.0.tgz#1accf97dd739b983bf994d56fec8f95853641b7a"
+  dependencies:
+    color-name "^1.1.1"
+
+color-name@^1.1.1:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/color-name/-/color-name-1.1.3.tgz#a7d0558bd89c42f795dd42328f740831ca53bc25"
 
 combined-stream@^1.0.5, combined-stream@~1.0.5:
   version "1.0.5"
@@ -883,7 +907,7 @@ glob-parent@^2.0.0:
   dependencies:
     is-glob "^2.0.0"
 
-glob@^7.0.3, glob@^7.0.5, glob@^7.1.1, glob@^7.1.2:
+glob@^7.0.3, glob@^7.0.5, glob@^7.1.2:
   version "7.1.2"
   resolved "https://registry.yarnpkg.com/glob/-/glob-7.1.2.tgz#c19c9df9a028702d678612384a6552404c636d15"
   dependencies:
@@ -933,6 +957,10 @@ has-ansi@^2.0.0:
   resolved "https://registry.yarnpkg.com/has-ansi/-/has-ansi-2.0.0.tgz#34f5049ce1ecdf2b0649af3ef24e45ed35416d91"
   dependencies:
     ansi-regex "^2.0.0"
+
+has-flag@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/has-flag/-/has-flag-2.0.0.tgz#e8207af1cc7b30d446cc70b734b5e8be18f88d51"
 
 has-unicode@^2.0.0:
   version "2.0.1"
@@ -1452,9 +1480,9 @@ normalize-path@^2.0.1:
   dependencies:
     remove-trailing-separator "^1.0.1"
 
-now@^6.2.0:
-  version "6.2.0"
-  resolved "https://registry.yarnpkg.com/now/-/now-6.2.0.tgz#6998bdc808e6d998867ee186b587d1fd2d7a0f3d"
+now@^7.2.4:
+  version "7.3.0"
+  resolved "https://registry.yarnpkg.com/now/-/now-7.3.0.tgz#c20b75fe8e40a3e84b3820aaaabe4ebea5b9f14a"
 
 npmlog@^4.0.2:
   version "4.1.0"
@@ -1857,13 +1885,14 @@ rollup-plugin-replace@^1.1.1:
     minimatch "^3.0.2"
     rollup-pluginutils "^1.5.0"
 
-rollup-plugin-svelte@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/rollup-plugin-svelte/-/rollup-plugin-svelte-2.0.1.tgz#bf48eccbc452d5940be7f7312054fc8f7ded3f83"
+rollup-plugin-svelte@^3.0.0:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-svelte/-/rollup-plugin-svelte-3.0.1.tgz#ae871862df63abd8b3d4cda578a9e54a3574e148"
   dependencies:
     require-relative "^0.8.7"
     rollup-pluginutils "^2.0.1"
-    svelte "^1.11.2"
+    sourcemap-codec "^1.3.1"
+    svelte "^1.25.1"
 
 rollup-plugin-uglify@^2.0.1:
   version "2.0.1"
@@ -1892,9 +1921,9 @@ rollup-watch@^4.0.0:
     chokidar "^1.7.0"
     require-relative "0.8.7"
 
-rollup@^0.43.0:
-  version "0.43.0"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-0.43.0.tgz#b36bdb75fa5e0823b6de8aee18ff7b5655520543"
+rollup@^0.45.2:
+  version "0.45.2"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-0.45.2.tgz#63a284c2b31234656f24e9e9717fabb6a7f0fa43"
   dependencies:
     source-map-support "^0.4.0"
 
@@ -2074,9 +2103,15 @@ supports-color@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-2.0.0.tgz#535d045ce6b6363fa40117084629995e9df324c7"
 
-svelte@^1.11.2, svelte@^1.21.0:
-  version "1.21.0"
-  resolved "https://registry.yarnpkg.com/svelte/-/svelte-1.21.0.tgz#c5104c9a2ba4de1831bb194b9f0421b9567db441"
+supports-color@^4.0.0:
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-4.2.1.tgz#65a4bb2631e90e02420dba5554c375a4754bb836"
+  dependencies:
+    has-flag "^2.0.0"
+
+svelte@^1.25.1:
+  version "1.27.0"
+  resolved "https://registry.yarnpkg.com/svelte/-/svelte-1.27.0.tgz#9c65aaa76e5c3683e3d0b35fabd0aefa9a02874f"
 
 table@^4.0.1:
   version "4.0.1"

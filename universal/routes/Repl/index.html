@@ -777,6 +777,8 @@
 						console.warn( warning.message );
 					}
 				}).then( bundle => {
+					if ( cancelled ) return;
+
 					return bundle.generate({
 						format: 'iife',
 						moduleName: 'SvelteComponent',
@@ -786,19 +788,17 @@
 							return name;
 						},
 						sourceMap: true
-					});
-				}).then(({ code, map }) => {
-					if ( cancelled ) return;
-
-					this.set({
-						bundle: {
-							code,
-							map,
-							imports: bundle.imports,
-							importMap
-						},
-						bundleError: null,
-						runtimeError: null
+					}).then(({ code, map }) => {
+						this.set({
+							bundle: {
+								code,
+								map,
+								imports: bundle.imports,
+								importMap
+							},
+							bundleError: null,
+							runtimeError: null
+						});
 					});
 				}).catch( err => {
 					console.error( err.stack );
