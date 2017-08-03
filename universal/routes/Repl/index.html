@@ -3,7 +3,7 @@
 		<section class='input'>
 			<div class='app-controls'>
 				<ExampleSelector :exampleGroups bind:selectedExample/>
-				
+
 				<div style='position: absolute; right: 0.5em; z-index: 2;'>
 					<button style='width: 6em;' disabled='{{downloading}}' class='btn {{downloading ? "active" : ""}}' on:click='download()'>{{downloading ? 'zipping' : 'download'}}</button>
 					<button disabled='{{saving}}' class='btn {{saving ? "active" : ""}}' on:click='save()'>{{saving ? 'saving' : 'save'}}</button>
@@ -777,9 +777,7 @@
 						console.warn( warning.message );
 					}
 				}).then( bundle => {
-					if ( cancelled ) return;
-
-					const { code, map } = bundle.generate({
+					return bundle.generate({
 						format: 'iife',
 						moduleName: 'SvelteComponent',
 						globals: id => {
@@ -789,6 +787,8 @@
 						},
 						sourceMap: true
 					});
+				}).then(({ code, map }) => {
+					if ( cancelled ) return;
 
 					this.set({
 						bundle: {
