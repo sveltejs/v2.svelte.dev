@@ -7,7 +7,9 @@
     "prebuild": "rm -rf client/dist && mkdir -p client/dist && rm -rf service-worker/dist && mkdir -p service-worker/dist",
     "dev": "rollup -c -w & node scripts/prep && npm start",
     "build": "node scripts/prep && rollup -c",
+    "update_template": "sh ./scripts/update_template.sh",
     "zip": "sh ./scripts/zip.sh",
+    "prezip": "npm run update_template",
     "stage": "now",
     "deploy": "now && now alias",
     "deploy:ci": "now --token $NOW_TOKEN && now alias --token $NOW_TOKEN",
@@ -32,6 +34,7 @@
   "devDependencies": {
     "chalk": "^2.0.1",
     "clean-css": "^4.0.12",
+    "degit": "^1.2.2",
     "eslint": "^4.0.0",
     "eslint-plugin-html": "^3.0.0",
     "eslint-plugin-import": "^2.2.0",

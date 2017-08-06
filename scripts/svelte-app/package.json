@@ -12,7 +12,7 @@
     "serve": "^6.0.2"
   },
   "scripts": {
-    "build": "rollup -c --environment production",
+    "build": "rollup -c",
     "dev": "serve public & rollup -c -w",
     "start": "serve public"
   }
