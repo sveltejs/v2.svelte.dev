@@ -4,7 +4,7 @@ import commonjs from 'rollup-plugin-commonjs';
 import buble from 'rollup-plugin-buble';
 import uglify from 'rollup-plugin-uglify';
 
-const production = !!process.env.production;
+const production = !process.env.ROLLUP_WATCH;
 
 export default {
 	entry: 'src/main.js',
