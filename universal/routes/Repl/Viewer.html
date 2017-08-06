@@ -214,6 +214,7 @@
 						try {
 							evalInIframe( `${bundle.code}
 								document.body.innerHTML = '';
+								window._svelteTransitionManager = null;
 								var component = new SvelteComponent({
 									target: document.body,
 									data: ${JSON.stringify(data)}
