@@ -59,7 +59,7 @@ As with tags, you can use any JavaScript expression in triples, and it will auto
 
 Control whether or not part of your template is rendered by wrapping it in an if block.
 
-```html
+```html-no-repl
 {{#if user.loggedIn}}
 	<a href='/logout'>log out</a>
 {{/if}}
@@ -69,26 +69,14 @@ Control whether or not part of your template is rendered by wrapping it in an if
 {{/if}}
 ```
 
-```hidden-data
-{
-	"user": { "loggedIn": false }
-}
-```
-
 You can combine the two blocks above with `{{else}}`:
 
-```html
+```html-no-repl
 {{#if user.loggedIn}}
 	<a href='/logout'>log out</a>
 {{else}}
 	<a href='/login'>log in</a>
 {{/if}}
-```
-
-```hidden-data
-{
-	"user": { "loggedIn": false }
-}
 ```
 
 You can also use `{{elseif ...}}`:
