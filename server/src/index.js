@@ -1,4 +1,5 @@
 import path from 'path';
+import needle from 'needle';
 import express from 'express';
 import compression from 'compression';
 
@@ -17,7 +18,7 @@ const app = express();
 
 const root = path.resolve( '.' );
 
-app.use( compression({ threshold: 0 }) );
+app.use(compression({ threshold: 0 }));
 
 // TODO this is unfortunate... would be nice to have a neater solution
 const hashed = __dev__ ? {
@@ -90,6 +91,37 @@ app.get( '/guide', ( req, res ) => {
 
 app.get( '/repl', ( req, res ) => {
 	serve(req, res, replPage, { hashed });
+});
+
+app.get( '/gists/:id', (req, res) => {
+	needle.get(`https://api.github.com/gists/${req.params.id}`, {
+		decode: false,
+		parse: false
+	}).pipe(res);
+});
+
+app.post( '/gists', (req, res) => {
+	// TODO it must be possible to stream the request body to api.github.com,
+	// and stream the response back again. but it has eluded me
+	function error(err) {
+		res.status(500);
+		res.end(err.message);
+	}
+	let body = [];
+	req.on('data', chunk => {
+		body.push(chunk);
+	}).on('end', () => {
+		body = Buffer.concat(body).toString();
+
+		needle.post(`https://api.github.com/gists`, body, (err, response) => {
+			if (err) {
+				error(err);
+			} else {
+				res.status(200);
+				res.end(JSON.stringify(response.body));
+			}
+		});
+	}).on('error', error);
 });
 
 app.listen( 3000, () => {
