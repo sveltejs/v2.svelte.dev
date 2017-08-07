@@ -20,13 +20,11 @@ function post(url, data) {
 	});
 }
 
-// https://api.github.com
-
 export function getComponentFromGist ( id ) {
 	let cancelled = false;
 
 	if ( !cache[ id ] ) {
-		cache[ id ] = get(`/gists/${id}`)
+		cache[ id ] = get(`https://api.github.com/gists/${id}`)
 			.catch( () => get(`/gists/${id}`))
 			.then( r => JSON.parse(r.responseText) )
 			.then( gist => {
@@ -97,9 +95,7 @@ export function saveComponentAsGist ( components, json ) {
 	});
 
 	return post(`/gists`, body)
-		.catch(() => post(`/gists`, body))
+		.catch(() => post(`https://api.github.com/gists`, body))
 		.then(r => JSON.parse(r.responseText))
 		.then(gist => gist.id);
 }
-
-// https://api.github.com
