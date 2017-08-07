@@ -61,4 +61,4 @@ Once you've tinkered a bit and understood how everything fits together, you can 
 degit your-name/template my-new-project
 ```
 
-And that's it! Do `npm run build` to create a production-ready version of your app, and check the project template's README for instructions on how to easily deploy your app to the web with [Now](https://zeit.co/now) or [Surge](http://surge.sh/).
+And that's it! Do `npm run build` to create a production-ready version of your app, and check the project template's [README](https://github.com/sveltejs/template/blob/master/README.md) for instructions on how to easily deploy your app to the web with [Now](https://zeit.co/now) or [Surge](http://surge.sh/).
