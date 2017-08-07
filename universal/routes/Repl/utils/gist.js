@@ -1,16 +1,31 @@
 const cache = {};
 
+function get(url) {
+	return new Promise((fulfil, reject) => {
+		const request = new XMLHttpRequest();
+		request.open('GET', url);
+		request.onload = () => fulfil( request );
+		request.onerror = () => reject( new TypeError('Network request failed') );
+		request.send();
+	});
+}
+
+function post(url, data) {
+	return new Promise((fulfil, reject) => {
+		const request = new XMLHttpRequest();
+		request.open('POST', url);
+		request.onload = () => fulfil(request);
+		request.onerror = () => reject(new TypeError('Network request failed'));
+		request.send(data);
+	});
+}
+
 export function getComponentFromGist ( id ) {
 	let cancelled = false;
 
 	if ( !cache[ id ] ) {
-		cache[ id ] = new Promise( ( resolve, reject ) => {
-			const request = new XMLHttpRequest();
-			request.open( 'GET', `https://api.github.com/gists/${id}` );
-			request.onload = () => resolve( request );
-			request.onerror = () => reject( new TypeError('Network request failed') );
-			request.send();
-		} )
+		cache[ id ] = get(`https://api.github.com/gists/${id}`)
+			.catch( () => get(`/gists/${id}`))
 			.then( r => JSON.parse(r.responseText) )
 			.then( gist => {
 				const components = [];
@@ -79,13 +94,8 @@ export function saveComponentAsGist ( components, json ) {
 		files
 	});
 
-	return new Promise( ( resolve, reject ) => {
-		const request = new XMLHttpRequest();
-		request.open( 'POST', `https://api.github.com/gists` );
-		request.onload = () => resolve( request );
-		request.onerror = () => reject( new TypeError('Network request failed') );
-		request.send(body);
-	} )
-		.then( r => JSON.parse(r.responseText) )
-		.then( gist => gist.id );
+	return post(`/gists`, body)
+		.catch(() => post(`https://api.github.com/gists`, body))
+		.then(r => JSON.parse(r.responseText))
+		.then(gist => gist.id);
 }

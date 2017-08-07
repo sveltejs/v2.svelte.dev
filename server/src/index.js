@@ -1,6 +1,7 @@
 import path from 'path';
 import express from 'express';
 import compression from 'compression';
+import * as gist from './gist.js';
 
 import home from '../../universal/pages/home.html';
 import blogIndex from '../../universal/pages/blog.html';
@@ -17,7 +18,7 @@ const app = express();
 
 const root = path.resolve( '.' );
 
-app.use( compression({ threshold: 0 }) );
+app.use(compression({ threshold: 0 }));
 
 // TODO this is unfortunate... would be nice to have a neater solution
 const hashed = __dev__ ? {
@@ -90,6 +91,42 @@ app.get( '/guide', ( req, res ) => {
 
 app.get( '/repl', ( req, res ) => {
 	serve(req, res, replPage, { hashed });
+});
+
+app.get( '/gists/:id', async (req, res) => {
+	try {
+		const body = await gist.get(req.params.id);
+		res.status(200);
+		res.end(body);
+	} catch (err) {
+		console.error(err);
+		res.status(err.statusCode);
+		res.end(err.message);
+	}
+});
+
+app.post( '/gists', (req, res) => {
+	// TODO it must be possible to stream the request body to api.github.com,
+	// and stream the response back again. but it has eluded me
+	function error(err) {
+		res.status(500);
+		res.end(err.message);
+	}
+
+	let body = [];
+	req.on('data', chunk => {
+		body.push(chunk);
+	}).on('end', async () => {
+		body = Buffer.concat(body).toString();
+
+		try {
+			const json = await gist.post(body);
+			res.status(200);
+			res.end(json);
+		} catch (err) {
+			error(err);
+		}
+	}).on('error', error);
 });
 
 app.listen( 3000, () => {

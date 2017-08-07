@@ -15,3 +15,4 @@ universal/components/guide-summary.json
 universal/routes/Repl/examples.js
 server/components
 server/routes
+credentials.json

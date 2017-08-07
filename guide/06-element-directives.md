@@ -84,12 +84,12 @@ Events are an excellent way for [nested components](#nested-components) to commu
 <p>Select a category:</p>
 
 {{#each categories as category}}
-	<button on:click='fire( "select", { category } )'>select {{category}}</button>
+	<button on:click='fire("select", { category })'>select {{category}}</button>
 {{/each}}
 
 <script>
 	export default {
-		data () {
+		data() {
 			return {
 				categories: [
 					'animal',
@@ -105,7 +105,7 @@ Events are an excellent way for [nested components](#nested-components) to commu
 When the user clicks a button, the component will fire a `select` event, where the `event` object has a `category` property. Any component that nests `<CategoryChooser>` can listen for events like so:
 
 ```html-no-repl
-<CategoryChooser on:select='playTwentyQuestions( event.category )'/>
+<CategoryChooser on:select='playTwentyQuestions(event.category)'/>
 
 <script>
 	import CategoryChooser from './CategoryChooser.html';
@@ -116,13 +116,15 @@ When the user clicks a button, the component will fire a `select` event, where t
 		},
 
 		methods: {
-			playTwentyQuestions ( category ) {
+			playTwentyQuestions (category) {
 				// TODO implement
 			}
 		}
 	};
 </script>
 ```
+
+Just as `this` in an element's event handler refers to the element itself, in a component event handler `this` refers to the component firing the event.
 
 
 ### Refs
@@ -201,7 +203,7 @@ If the attribute and the bound property share a name, you can use this shorthand
 <CategoryChooser bind:category/>
 ```
 
-Here is a complete example of using two way bindings with a form: 
+Here is a complete example of using two way bindings with a form:
 
 ```html
 <form on:submit='handleSubmit( event )'>
