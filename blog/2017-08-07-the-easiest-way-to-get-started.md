@@ -15,9 +15,9 @@ Because of that, getting started with it can be a little bit confusing at first.
 
 The [Svelte REPL](https://svelte.technology/repl) is the easiest way to begin. You can choose from a list of examples to get you started, and tweak them until they do what you want.
 
-At some point, your app will outgrow the REPL. Click the **download** button to save a `svelte-app.zip` file to your computer and uncompress it.
+<aside>You'll need to have [Node.js](https://nodejs.org/) installed, and know how to use the terminal</aside>
 
-<aside>From this point forward, you'll need to have [Node.js](https://nodejs.org/) installed, and have some basic familiarity with the terminal</aside>
+At some point, your app will outgrow the REPL. Click the **download** button to save a `svelte-app.zip` file to your computer and uncompress it.
 
 Open a terminal window and set the project up...
 
@@ -60,3 +60,5 @@ Once you've tinkered a bit and understood how everything fits together, you can 
 ```bash
 degit your-name/template my-new-project
 ```
+
+And that's it! Do `npm run build` to create a production-ready version of your app, and check the project template's README for instructions on how to easily deploy your app to the web with [Now](https://zeit.co/now) or [Surge](http://surge.sh/).

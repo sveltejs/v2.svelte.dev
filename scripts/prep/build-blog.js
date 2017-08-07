@@ -1,5 +1,6 @@
 const fs = require( 'fs' );
 const path = require( 'path' );
+const hljs = require( 'highlight.js' );
 const { mkdirp } = require( './utils.js' );
 const marked = require( 'marked' );
 
@@ -24,7 +25,14 @@ const posts = fs.readdirSync( `${root}/blog` )
 		const date = new Date( metadata.pubdate );
 		metadata.dateString = date.toDateString();
 
-		const html = marked( content.replace( /^\t+/gm, match => match.split( '\t' ).join( '  ' ) ) );
+		const html = marked( content.replace( /^\t+/gm, match => match.split( '\t' ).join( '  ' ) ) )
+
+		// console.log(html);
+
+			.replace( /<pre><code class="lang-(\w+)">([\s\S]+?)<\/code><\/pre>/g, ( match, lang, value ) => {
+				const highlighted = hljs.highlight( lang, value ).value;
+				return `<pre class="lang-${lang}"><code>${highlighted}</code></pre>`;
+			});
 
 		return {
 			html,
