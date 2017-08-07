@@ -1,7 +1,7 @@
 import path from 'path';
-import needle from 'needle';
 import express from 'express';
 import compression from 'compression';
+import * as gist from './gist.js';
 
 import home from '../../universal/pages/home.html';
 import blogIndex from '../../universal/pages/blog.html';
@@ -93,11 +93,16 @@ app.get( '/repl', ( req, res ) => {
 	serve(req, res, replPage, { hashed });
 });
 
-app.get( '/gists/:id', (req, res) => {
-	needle.get(`https://api.github.com/gists/${req.params.id}`, {
-		decode: false,
-		parse: false
-	}).pipe(res);
+app.get( '/gists/:id', async (req, res) => {
+	try {
+		const body = await gist.get(req.params.id);
+		res.status(200);
+		res.end(body);
+	} catch (err) {
+		console.error(err);
+		res.status(err.statusCode);
+		res.end(err.message);
+	}
 });
 
 app.post( '/gists', (req, res) => {
@@ -107,20 +112,20 @@ app.post( '/gists', (req, res) => {
 		res.status(500);
 		res.end(err.message);
 	}
+
 	let body = [];
 	req.on('data', chunk => {
 		body.push(chunk);
-	}).on('end', () => {
+	}).on('end', async () => {
 		body = Buffer.concat(body).toString();
 
-		needle.post(`https://api.github.com/gists`, body, (err, response) => {
-			if (err) {
-				error(err);
-			} else {
-				res.status(200);
-				res.end(JSON.stringify(response.body));
-			}
-		});
+		try {
+			const json = await gist.post(body);
+			res.status(200);
+			res.end(json);
+		} catch (err) {
+			error(err);
+		}
 	}).on('error', error);
 });
 
