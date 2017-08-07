@@ -8,7 +8,7 @@ authorURL: https://twitter.com/Rich_Harris
 
 Svelte is a [new kind of framework](/blog/frameworks-without-the-framework). Rather than putting a `<script src='svelte.js'>` tag on the page, or bringing it into your app with `import` or `require`, Svelte is a compiler that works behind the scenes to turn your component files into beautifully optimised JavaScript.
 
-Because of that, getting started with it can be a little bit confusing at first. How, you might reasonably ask, do you get it into your app?
+Because of that, getting started with it can be a little bit confusing at first. How, you might reasonably ask, do you make a Svelte app?
 
 
 ## 1. Use the REPL
@@ -62,3 +62,5 @@ degit your-name/template my-new-project
 ```
 
 And that's it! Do `npm run build` to create a production-ready version of your app, and check the project template's [README](https://github.com/sveltejs/template/blob/master/README.md) for instructions on how to easily deploy your app to the web with [Now](https://zeit.co/now) or [Surge](http://surge.sh/).
+
+You're not restricted to using Rollup — there are also integrations for [webpack](https://github.com/sveltejs/svelte-loader), [Browserify](https://github.com/tehshrike/sveltify) and others, or you can use the [Svelte CLI](https://github.com/sveltejs/svelte-cli) or the [API](https://github.com/sveltejs/svelte#api) directly.
