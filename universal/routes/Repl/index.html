@@ -727,7 +727,8 @@
 
 				const lookup = {};
 				let warningCount = 0;
-				components.forEach( component => {
+				for ( let i = 0; i < components.length; i += 1 ) {
+					const component = components[i];
 					const w = component.compiled.warnings.length;
 					warningCount += w;
 
@@ -740,11 +741,20 @@
 						console.groupEnd();
 					}
 
-					lookup[ `./${component.name}.html` ] = {
+					const path = `./${component.name}.html`;
+
+					if ( path in lookup ) {
+						this.set({
+							bundleError: new Error( `Multiple ${component.name}.html components` )
+						});
+						return;
+					}
+
+					lookup[ path ] = {
 						code: component.compiled.code,
 						map: component.compiled.map
 					};
-				});
+				}
 
 				this.set({ warningCount });
 

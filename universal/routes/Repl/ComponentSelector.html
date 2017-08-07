@@ -260,6 +260,7 @@
 				}
 			},
 			closeEdit (selectedComponent) {
+				selectedComponent.name = selectedComponent.name.replace(/\.html$/, '');
 				selectedComponent.edit = false;
 				this.set({ selectedComponent });
 			},
