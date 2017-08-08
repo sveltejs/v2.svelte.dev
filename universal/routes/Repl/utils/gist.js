@@ -1,23 +1,27 @@
 const cache = {};
 
-function get(url) {
+function request(method, url, data) {
 	return new Promise((fulfil, reject) => {
-		const request = new XMLHttpRequest();
-		request.open('GET', url);
-		request.onload = () => fulfil( request );
-		request.onerror = () => reject( new TypeError('Network request failed') );
-		request.send();
+		const xhr = new XMLHttpRequest();
+		xhr.open(method, url);
+		xhr.onload = () => {
+			const response = JSON.parse(xhr.responseText);
+			if (xhr.status >= 400) {
+				reject(new Error(response.message));
+			}
+			fulfil(response);
+		};
+		xhr.onerror = reject;
+		xhr.send(data);
 	});
 }
 
+function get(url) {
+	return request('GET', url);
+}
+
 function post(url, data) {
-	return new Promise((fulfil, reject) => {
-		const request = new XMLHttpRequest();
-		request.open('POST', url);
-		request.onload = () => fulfil(request);
-		request.onerror = () => reject(new TypeError('Network request failed'));
-		request.send(data);
-	});
+	return request('POST', url, data);
 }
 
 export function getComponentFromGist ( id ) {
@@ -26,7 +30,6 @@ export function getComponentFromGist ( id ) {
 	if ( !cache[ id ] ) {
 		cache[ id ] = get(`https://api.github.com/gists/${id}`)
 			.catch( () => get(`/gists/${id}`))
-			.then( r => JSON.parse(r.responseText) )
 			.then( gist => {
 				const components = [];
 
@@ -96,6 +99,5 @@ export function saveComponentAsGist ( components, json ) {
 
 	return post(`/gists`, body)
 		.catch(() => post(`https://api.github.com/gists`, body))
-		.then(r => JSON.parse(r.responseText))
 		.then(gist => gist.id);
 }
