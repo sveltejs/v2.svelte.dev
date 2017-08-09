@@ -84,10 +84,17 @@
 			let updating = false;
 
 			const modeName = this.get( 'mode' );
-			const mode = modeName === 'json' ? {
-				name: 'javascript',
-				json: true
-			} : {
+			const modes = {
+				json: {
+					name: 'javascript',
+					json: true
+				},
+				handlebars: {
+					name: 'handlebars',
+					base: 'text/html'
+				}
+			};
+			const mode = modes[modeName] || {
 				name: modeName
 			};
 
