@@ -1444,8 +1444,8 @@ regex-cache@^0.4.2:
     is-primitive "^2.0.0"
 
 remove-trailing-separator@^1.0.1:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/remove-trailing-separator/-/remove-trailing-separator-1.0.2.tgz#69b062d978727ad14dc6b56ba4ab772fd8d70511"
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/remove-trailing-separator/-/remove-trailing-separator-1.1.0.tgz#c24bce2a283adad5bc3f58e0d48249b92379d8ef"
 
 repeat-element@^1.1.2:
   version "1.1.2"
@@ -1728,9 +1728,9 @@ supports-color@^4.0.0:
   dependencies:
     has-flag "^2.0.0"
 
-svelte@^1.25.1:
-  version "1.29.3"
-  resolved "https://registry.yarnpkg.com/svelte/-/svelte-1.29.3.tgz#362a2b2dacb6522857e9345fcb250eb6db8f44ca"
+svelte@^1.25.1, svelte@^1.30.0:
+  version "1.30.0"
+  resolved "https://registry.yarnpkg.com/svelte/-/svelte-1.30.0.tgz#58b6a56616b082ec012fabdf9f5371785655a076"
 
 table@^4.0.1:
   version "4.0.1"
@@ -1744,8 +1744,8 @@ table@^4.0.1:
     string-width "^2.0.0"
 
 tar@^3.1.9:
-  version "3.1.12"
-  resolved "https://registry.yarnpkg.com/tar/-/tar-3.1.12.tgz#7c46610330ca9088af11b961c95e64dcacc31ac8"
+  version "3.1.13"
+  resolved "https://registry.yarnpkg.com/tar/-/tar-3.1.13.tgz#f035a4f5b8b0b51b94530e20080f8bc696e3e320"
   dependencies:
     minipass "^2.0.2"
     minizlib "^1.0.3"
