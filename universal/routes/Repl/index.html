@@ -34,7 +34,7 @@
 						{{else}}
 							<CodeMirror
 								ref:editor
-								mode='htmlmixed'
+								mode='handlebars'
 								bind:code='selectedComponent.source'
 								error='{{sourceError}}'
 								errorLoc='{{sourceErrorLoc || runtimeErrorLoc}}'
@@ -353,12 +353,6 @@
 		.gist-link {
 			display: block;
 		}
-	}
-
-	select {
-		position: absolute;
-		left: 0.5em;
-		top: 50%;
 	}
 
 	.mousecatcher {

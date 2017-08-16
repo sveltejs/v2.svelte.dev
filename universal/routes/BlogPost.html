@@ -10,7 +10,7 @@
 <style>
 	.post {
 		max-width: 48em;
-		margin: 0 auto;
+		margin: 0 auto 4em auto;
 		padding: 1em;
 		/*padding: 0 0 2em 0;*/
 	}
@@ -28,23 +28,23 @@
 		color: #333;
 	}
 
-	.post :global(p:last-child) {
+	.post :global(p):last-child {
 		margin: 0;
 	}
 
-	strong {
+	.post :global(strong) {
 		color: #333;
 		font-weight: 700;
+	}
+
+	.post {
+		padding: 1em;
 	}
 
 	.post :global(code) {
 		background-color: #f9f9f9;
 		padding: 0.2em 0.4em;
 		border-radius: 3px;
-	}
-
-	.post {
-		padding: 1em;
 	}
 
 	h1, .post :global(h2) {
@@ -87,9 +87,49 @@
 		color: #666;
 	}
 
-	@media (min-width: 768px) {
-		h1, .post :global(h2) {
+	.post :global(aside) {
+		float: right;
+		margin: 0 0 1em 1em;
+		width: 10em;
+		font-size: 0.8em;
+		line-height: 1.4;
+		color: #999;
+	}
+
+	.post :global(pre) {
+		background-color: #f9f9f9;
+		padding: 0.5em;
+		border-radius: 2px;
+	}
+
+	.post :global(pre).lang-bash {
+		background-color: #666;
+		color: white;
+	}
+
+	.post :global(pre) :global(code) {
+		background: none;
+		padding: 0;
+		font-size: 14px;
+		font-weight: 300;
+	}
+
+	@media (min-width: 48em) {
+		h1 {
 			font-size: 2.4em;
+		}
+
+		.post :global(h2) {
+			font-size: 1.8em;
+		}
+	}
+
+	@media (min-width: 70em) {
+		.post :global(aside) {
+			position: absolute;
+			padding: 0.5em 0 0 0;
+			width: 10em;
+			right: -10em;
 		}
 	}
 </style>
