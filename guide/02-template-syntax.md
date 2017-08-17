@@ -158,44 +158,9 @@ You can access the index of the current element with *expression* as *name*, *in
 }
 ```
 
-By default, each instance of the each-block only considers its position in the list. This means that if the list `a, b, c` becomes `a, c`, rather than removing the second instance (representing `b`), Svelte actually removes the third instance and changes the value of the second instance from `b` to `c`.
+> By default, if the list `a, b, c` becomes `a, c`, Svelte will *remove* the third block and *change* the second from `b` to `c`, rather than removing `b`. If that's not what you want, use a [keyed each block](#keyed-each-blocks).
 
-The solution to this is to use *keyed* each-blocks, which gives each instance an 'identity'. We do that with the `@` symbol, followed by a property that uniquely identifies each object in the list such as `@name`:
 
-```html
-<button on:click='update()'>update</button>
-
-<!-- try removing the @name -->
-{{#each people as person @name}}
-	<div transition:slide>{{person.name}}</div>
-{{/each}}
-
-<script>
-	import { slide } from 'svelte-transitions';
-
-	var people = ['Alice', 'Barry', 'Cecilia', 'Douglas', 'Eleanor', 'Felix', 'Grace', 'Horatio', 'Isabelle'];
-
-	function random() {
-		return people
-			.filter(() => Math.random() < 0.5)
-			.map(name => ({ name }))
-	}
-
-	export default {
-		data() {
-			return { people: random() };
-		},
-
-		methods: {
-			update() {
-				this.set({ people: random() });
-			}
-		},
-
-		transitions: { slide }
-	};
-</script>
-```
 
 ### Directives
 
