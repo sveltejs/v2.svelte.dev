@@ -181,7 +181,6 @@
 
 					if ( el.href.startsWith( top.location.href ) ) {
 						const hash = el.href.replace( top.location.href, '' );
-						console.log({ hash });
 						if ( hash[0] === '#' ) {
 							iframe.contentWindow.location.hash = hash;
 							return;

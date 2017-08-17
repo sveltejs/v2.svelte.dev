@@ -723,7 +723,8 @@
 				if ( !components || !components.length ) return;
 				if ( components.some( c => !c.compiled ) ) return;
 
-				// console.clear();
+				console.clear();
+				console.log( `running Svelte compiler version %c${svelte.VERSION}`, 'font-weight: bold' );
 
 				if ( this.bundlePromise ) this.bundlePromise.cancel();
 
@@ -949,9 +950,8 @@ export default app;` );
 				get( `/examples/${id}.json` ).then( JSON.parse ).then( example => {
 					exampleComponents = stringifyComponents( example.components );
 
-					// compile non-selected components
 					if ( window.svelte ) {
-						example.components.slice( 1 ).forEach( component => {
+						example.components.forEach( component => {
 							component.compiled = compile( component );
 						});
 					}
@@ -979,9 +979,8 @@ export default app;` );
 
 				this.promise
 					.then( ({ components, json }) => {
-						// compile non-selected components
 						if ( window.svelte ) {
-							components.slice( 1 ).forEach( component => {
+							components.forEach( component => {
 								component.compiled = compile( component );
 							});
 						}
@@ -998,15 +997,11 @@ export default app;` );
 			});
 
 			loadSvelte().then( svelte => {
-				console.log( `running Svelte compiler version %c${svelte.VERSION}`, 'font-weight: bold' );
 				window.svelte = svelte;
 
 				this.set({ loadedSvelte: true });
 
 				this.get( 'components' ).forEach( component => {
-					// skip the selected component, that'll come soon enough
-					if ( component === this.get( 'selectedComponent' ) ) return;
-
 					try {
 						component.compiled = compile( component );
 					} catch ( err ) {
@@ -1019,8 +1014,9 @@ export default app;` );
 					}
 				});
 
-				this.observe( 'selectedComponent', selectedComponent => {
+				this.observe( 'selectedComponent', (selectedComponent, previousComponent) => {
 					if ( !selectedComponent ) return;
+					if ( previousComponent && selectedComponent !== previousComponent ) return;
 
 					// if component has been edited, unset selectedExample
 					if ( stringifyComponents( this.get('components') ) !== exampleComponents ) {
