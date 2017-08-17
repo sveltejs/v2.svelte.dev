@@ -40,6 +40,10 @@ manifest.forEach( group => {
 				if ( a.name === 'App' ) return -1;
 				if ( b.name === 'App' ) return 1;
 
+				if ( a.type !== b.type ) {
+					return a.type === 'js' ? 1 : -1;
+				}
+
 				return a.name < b.name ? -1 : 1;
 			});
 

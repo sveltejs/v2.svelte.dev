@@ -1,0 +1,40 @@
+{{#if !comment.deleted}}
+	<article>
+		<p class='meta'>{{comment.by}} <TimeAgo time='{{comment.time}}'/></p>
+
+		{{{comment.text}}}
+
+		<div class='replies'>
+			{{#each comment.children as child}}
+				<:Self comment='{{child}}'/>
+			{{/each}}
+		</div>
+	</article>
+{{/if}}
+
+<style>
+	article {
+		border-top: 1px solid #eee;
+		margin: 1em 0 0 0;
+		padding: 1em 0 0 0;
+		font-size: 14px;
+	}
+
+	.meta {
+		color: #999;
+	}
+
+	.replies {
+		padding: 0 0 0 1em;
+	}
+</style>
+
+<script>
+	import TimeAgo from './TimeAgo.html';
+
+	export default {
+		components: {
+			TimeAgo
+		},
+	};
+</script>

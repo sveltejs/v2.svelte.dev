@@ -164,6 +164,33 @@
 				const body = iframe.contentDocument.body;
 				const evalInIframe = iframe.contentWindow.eval;
 
+				// intercept links, so that we can use #hashes inside the iframe
+				body.addEventListener( 'click', event => {
+					if ( event.which !== 1 ) return;
+					if ( event.metaKey || event.ctrlKey || event.shiftKey ) return;
+					if ( event.defaultPrevented ) return;
+
+					// ensure target is a link
+					let el = event.target;
+					while ( el && el.nodeName !== 'A' ) el = el.parentNode;
+					if ( !el || el.nodeName !== 'A' ) return;
+
+					if ( el.hasAttribute( 'download' ) || el.getAttribute( 'rel' ) === 'external' || el.target ) return;
+
+					event.preventDefault();
+
+					if ( el.href.startsWith( top.location.href ) ) {
+						const hash = el.href.replace( top.location.href, '' );
+						console.log({ hash });
+						if ( hash[0] === '#' ) {
+							iframe.contentWindow.location.hash = hash;
+							return;
+						}
+					}
+
+					window.open( el.href, '_blank' );
+				});
+
 				let promise = null;
 				let observers = null;
 				let updating = null;
@@ -214,7 +241,9 @@
 						try {
 							evalInIframe( `${bundle.code}
 								document.body.innerHTML = '';
+								window.location.hash = '';
 								window._svelteTransitionManager = null;
+
 								var component = new SvelteComponent({
 									target: document.body,
 									data: ${JSON.stringify(data)}
