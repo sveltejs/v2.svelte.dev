@@ -42,9 +42,12 @@
 
 				window.scrollTo(0,0);
 
+				// preload the next page...
 				await store.getPage(page + 1);
 
+				// ...and the comments for items on this page
 				for (let i = 0; i < top.items.length; i += 1) {
+					if (this.get('page') !== page) return;
 					await store.getComments(top.items[i].id);
 				}
 			});
