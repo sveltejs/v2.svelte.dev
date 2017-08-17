@@ -34,7 +34,7 @@
 						{{else}}
 							<CodeMirror
 								ref:editor
-								mode='handlebars'
+								mode='{{selectedComponent.type === "js" ? "javascript" : "handlebars"}}'
 								bind:code='selectedComponent.source'
 								error='{{sourceError}}'
 								errorLoc='{{sourceErrorLoc || runtimeErrorLoc}}'
@@ -465,6 +465,9 @@
 
 	function compile ( component ) {
 		const warnings = [];
+
+		if ( component.type === 'js' ) return { code: component.source, map: null, warnings };
+
 		const { code, map } = svelte.compile( component.source || '', {
 			cascade: false,
 			name: component.name,
@@ -498,12 +501,16 @@
 					components = [
 						{
 							name: 'App',
+							type: 'html',
 							entry: true,
 							source: parsed.source
 						}
 					];
 				} else {
 					components = parsed.components;
+					components.forEach(component => {
+						if (!component.type) component.type = 'html';
+					});
 				}
 
 				data = parsed.data;
@@ -564,6 +571,7 @@
 
 				const newComponent = {
 					name: this.uid++ ? `Component${this.uid}` : 'Component1',
+					type: 'html',
 					source: '',
 					edit: true
 				};
@@ -715,7 +723,7 @@
 				if ( !components || !components.length ) return;
 				if ( components.some( c => !c.compiled ) ) return;
 
-				console.clear();
+				// console.clear();
 
 				if ( this.bundlePromise ) this.bundlePromise.cancel();
 
@@ -727,7 +735,7 @@
 					warningCount += w;
 
 					if ( w > 0 ) {
-						console.group( `${component.name}.html: ${w} ${w === 1 ? 'warning' : 'warnings'}` );
+						console.group( `${component.name}.${component.type}: ${w} ${w === 1 ? 'warning' : 'warnings'}` );
 						component.compiled.warnings.forEach( warning => {
 							console.warn( warning.message );
 							console.log( warning.frame );
@@ -735,11 +743,11 @@
 						console.groupEnd();
 					}
 
-					const path = `./${component.name}.html`;
+					const path = `./${component.name}.${component.type}`;
 
 					if ( path in lookup ) {
 						this.set({
-							bundleError: new Error( `Multiple ${component.name}.html components` )
+							bundleError: new Error( `Multiple ${component.name}.${component.type} components` )
 						});
 						return;
 					}

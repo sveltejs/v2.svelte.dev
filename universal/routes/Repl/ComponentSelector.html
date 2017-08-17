@@ -14,7 +14,7 @@
 						</div>
 					{{else}}
 						<div class='editable' title='edit component name' on:click='editTab(component, selectedComponent)'>
-							{{component.name}}.html
+							{{component.name}}.{{component.type}}
 						</div>
 					{{/if}}
 					<span class='remove' on:click='remove(component)'>&times;</span>
@@ -250,7 +250,9 @@
 				}
 			},
 			closeEdit (selectedComponent) {
-				selectedComponent.name = selectedComponent.name.replace(/\.html$/, '');
+				const match = /(.+)\.(html|js)$/.exec(selectedComponent.name);
+				selectedComponent.name = match ? match[1] : selectedComponent.name;
+				if (match && match[2]) selectedComponent.type = match[2];
 				selectedComponent.edit = false;
 				this.set({ selectedComponent });
 			},

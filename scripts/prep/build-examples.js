@@ -24,10 +24,14 @@ manifest.forEach( group => {
 
 		example.data = example.data || {};
 
-		example.components = glob.sync( '**/*.html', { cwd: `${root}/examples/${id}` })
+		example.components = glob.sync( '**/*.+(html|js)', { cwd: `${root}/examples/${id}` })
 			.map( file => {
+				const ext = path.extname(file);
+				const type = ext.slice(1);
+
 				return {
-					name: file.replace( /\.html$/, '' ),
+					name: file.replace( ext, '' ),
+					type,
 					entry: file === 'App.html' ? true : undefined,
 					source: fs.readFileSync( `${root}/examples/${id}/${file}`, 'utf-8' )
 				};

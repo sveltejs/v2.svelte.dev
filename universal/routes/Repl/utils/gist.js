@@ -33,21 +33,25 @@ export function getComponentFromGist ( id ) {
 			.then( gist => {
 				const components = [];
 
-				const componentFiles = Object.keys( gist.files ).filter( file => /\.html$/.test( file ) );
+				const componentFiles = Object.keys( gist.files ).filter( file => /\.(html|js)$/.test( file ) );
 
 				if ( componentFiles.length === 1 && componentFiles[0] === 'component.html' ) {
 					// legacy
 					components.push({
 						name: 'App',
+						type: 'html',
 						entry: true,
 						source: gist.files[ 'component.html' ].content
 					});
 				} else {
 					componentFiles.forEach( file => {
-						const name = file.slice( 0, -5 );
+						const ext = /\.(html|js)$/.exec(file)[0];
+						const name = file.slice( 0, -ext.length );
+						const type = ext.slice(1);
+
 						const source = gist.files[ file ].content;
 
-						components.push({ name, entry: name === 'App', source });
+						components.push({ name, type, entry: name === 'App', source });
 					});
 				}
 
@@ -86,7 +90,7 @@ export function saveComponentAsGist ( components, json ) {
 	};
 
 	components.forEach( component => {
-		files[ `${component.name}.html` ] = {
+		files[ `${component.name}.${component.type}` ] = {
 			content: component.source
 		};
 	});
