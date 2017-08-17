@@ -1,0 +1,66 @@
+<article>
+	<a href='{{item.url}}'>
+		<h1>{{item.title}}</h1>
+		<small>{{hostname(item.url)}}</small>
+	</a>
+
+	<p class='meta'>submitted by {{item.by}} <TimeAgo time='{{item.time}}'/>
+</article>
+
+{{#if comments}}
+	<div class='comments' in:fly='{x:0, y:50}'>
+		{{#each comments as comment}}
+			<Comment :comment/>
+		{{/each}}
+	</div>
+{{else}}
+	<p>loading comments...</p>
+{{/if}}
+
+<style>
+	article {
+		margin: 0 0 1em 0;
+	}
+
+	a {
+		display: block;
+		margin: 0 0 1em 0;
+	}
+
+	h1 {
+		font-size: 1.4em;
+		margin: 0;
+	}
+</style>
+
+<script>
+	import { fly } from 'svelte-transitions';
+	import Comment from './Comment.html';
+	import TimeAgo from './TimeAgo.html';
+	import * as store from './store.js';
+
+	export default {
+		async oncreate () {
+			this.observe('item', async item => {
+				const comments = await store.getComments(item.id);
+				this.set({ comments });
+			});
+		},
+
+		helpers: {
+			hostname(url) {
+				const match = /^https?:\/\/(?:w{3}\.)?([^\/]+)/.exec( url );
+				return match ? match[1] : '...';
+			}
+		},
+
+		components: {
+			Comment,
+			TimeAgo
+		},
+
+		transitions: {
+			fly
+		}
+	};
+</script>

@@ -81,53 +81,15 @@
 <script>
 	export default {
 		oncreate () {
-			let updating = false;
+			this.updating = false;
 
-			const modeName = this.get( 'mode' );
-			const modes = {
-				json: {
-					name: 'javascript',
-					json: true
-				},
-				handlebars: {
-					name: 'handlebars',
-					base: 'text/html'
-				}
-			};
-			const mode = modes[modeName] || {
-				name: modeName
-			};
-
-			this.editor = window.CodeMirror.fromTextArea( this.refs.editor, {
-				lineNumbers: true,
-				lineWrapping: true,
-				indentWithTabs: true,
-				indentUnit: 2,
-				tabSize: 2,
-				value: this.get( 'code' ),
-				mode,
-				readOnly: this.get( 'readonly' )
-			});
-
-			// TODO this is a bug. oncreate should only be called once
-			// the component is actually in the DOM
-			setTimeout( () => {
-				this.editor.refresh();
-			});
-
-			this.editor.on( 'change', instance => {
-				if ( !updating ) {
-					updating = true;
-					this.set({ code: instance.getValue() });
-					updating = false;
-				}
-			});
+			this.observe( 'mode', this.createEditor );
 
 			this.observe( 'code', code => {
-				if ( !updating && code != null ) {
-					updating = true;
+				if ( !this.updating && code != null ) {
+					this.updating = true;
 					this.editor.setValue( code );
-					updating = false;
+					this.updating = false;
 				}
 			});
 
@@ -158,9 +120,55 @@
 			this.on( 'destroy', () => {
 				this.editor.toTextArea();
 			});
+
+			// TODO this is a bug. oncreate should only be called once
+			// the component is actually in the DOM
+			setTimeout( () => {
+				this.editor.refresh();
+			});
 		},
 
 		methods: {
+			createEditor() {
+				if (this.editor) {
+					this.editor.toTextArea();
+				}
+
+				const { mode, code, readonly } = this.get();
+
+				const modes = {
+					json: {
+						name: 'javascript',
+						json: true
+					},
+					handlebars: {
+						name: 'handlebars',
+						base: 'text/html'
+					}
+				};
+
+				this.editor = window.CodeMirror.fromTextArea( this.refs.editor, {
+					lineNumbers: true,
+					lineWrapping: true,
+					indentWithTabs: true,
+					indentUnit: 2,
+					tabSize: 2,
+					value: code,
+					mode: modes[mode] || {
+						name: mode
+					},
+					readOnly: readonly
+				});
+
+				this.editor.on( 'change', instance => {
+					if ( !this.updating ) {
+						this.updating = true;
+						this.set({ code: instance.getValue() });
+						this.updating = false;
+					}
+				});
+			},
+
 			resize () {
 				this.editor.refresh();
 			}

@@ -56,5 +56,12 @@
 		"examples": [
 			"parallax"
 		]
+	},
+
+	{
+		"name": "Miscellaneous",
+		"examples": [
+			"hacker-news"
+		]
 	}
 ]

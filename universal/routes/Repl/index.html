@@ -34,7 +34,7 @@
 						{{else}}
 							<CodeMirror
 								ref:editor
-								mode='handlebars'
+								mode='{{selectedComponent.type === "js" ? "javascript" : "handlebars"}}'
 								bind:code='selectedComponent.source'
 								error='{{sourceError}}'
 								errorLoc='{{sourceErrorLoc || runtimeErrorLoc}}'
@@ -465,6 +465,9 @@
 
 	function compile ( component ) {
 		const warnings = [];
+
+		if ( component.type === 'js' ) return { code: component.source, map: null, warnings };
+
 		const { code, map } = svelte.compile( component.source || '', {
 			cascade: false,
 			name: component.name,
@@ -498,12 +501,16 @@
 					components = [
 						{
 							name: 'App',
+							type: 'html',
 							entry: true,
 							source: parsed.source
 						}
 					];
 				} else {
 					components = parsed.components;
+					components.forEach(component => {
+						if (!component.type) component.type = 'html';
+					});
 				}
 
 				data = parsed.data;
@@ -564,6 +571,7 @@
 
 				const newComponent = {
 					name: this.uid++ ? `Component${this.uid}` : 'Component1',
+					type: 'html',
 					source: '',
 					edit: true
 				};
@@ -716,6 +724,7 @@
 				if ( components.some( c => !c.compiled ) ) return;
 
 				console.clear();
+				console.log( `running Svelte compiler version %c${svelte.VERSION}`, 'font-weight: bold' );
 
 				if ( this.bundlePromise ) this.bundlePromise.cancel();
 
@@ -727,7 +736,7 @@
 					warningCount += w;
 
 					if ( w > 0 ) {
-						console.group( `${component.name}.html: ${w} ${w === 1 ? 'warning' : 'warnings'}` );
+						console.group( `${component.name}.${component.type}: ${w} ${w === 1 ? 'warning' : 'warnings'}` );
 						component.compiled.warnings.forEach( warning => {
 							console.warn( warning.message );
 							console.log( warning.frame );
@@ -735,11 +744,11 @@
 						console.groupEnd();
 					}
 
-					const path = `./${component.name}.html`;
+					const path = `./${component.name}.${component.type}`;
 
 					if ( path in lookup ) {
 						this.set({
-							bundleError: new Error( `Multiple ${component.name}.html components` )
+							bundleError: new Error( `Multiple ${component.name}.${component.type} components` )
 						});
 						return;
 					}
@@ -941,9 +950,8 @@ export default app;` );
 				get( `/examples/${id}.json` ).then( JSON.parse ).then( example => {
 					exampleComponents = stringifyComponents( example.components );
 
-					// compile non-selected components
 					if ( window.svelte ) {
-						example.components.slice( 1 ).forEach( component => {
+						example.components.forEach( component => {
 							component.compiled = compile( component );
 						});
 					}
@@ -953,6 +961,8 @@ export default app;` );
 						selectedComponent: example.components[0],
 						json: JSON.stringify( example.data , null, '  ' )
 					});
+
+					this.updateBundle();
 				});
 
 				this.set({ gist: null });
@@ -971,9 +981,8 @@ export default app;` );
 
 				this.promise
 					.then( ({ components, json }) => {
-						// compile non-selected components
 						if ( window.svelte ) {
-							components.slice( 1 ).forEach( component => {
+							components.forEach( component => {
 								component.compiled = compile( component );
 							});
 						}
@@ -990,15 +999,11 @@ export default app;` );
 			});
 
 			loadSvelte().then( svelte => {
-				console.log( `running Svelte compiler version %c${svelte.VERSION}`, 'font-weight: bold' );
 				window.svelte = svelte;
 
 				this.set({ loadedSvelte: true });
 
 				this.get( 'components' ).forEach( component => {
-					// skip the selected component, that'll come soon enough
-					if ( component === this.get( 'selectedComponent' ) ) return;
-
 					try {
 						component.compiled = compile( component );
 					} catch ( err ) {
@@ -1011,8 +1016,9 @@ export default app;` );
 					}
 				});
 
-				this.observe( 'selectedComponent', selectedComponent => {
+				this.observe( 'selectedComponent', (selectedComponent, previousComponent) => {
 					if ( !selectedComponent ) return;
+					if ( previousComponent && selectedComponent !== previousComponent ) return;
 
 					// if component has been edited, unset selectedExample
 					if ( stringifyComponents( this.get('components') ) !== exampleComponents ) {

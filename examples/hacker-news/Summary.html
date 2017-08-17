@@ -1,0 +1,43 @@
+<article>
+	<span>{{i + offset + 1}}</span>
+	<h2><a target='_blank' href='{{item.url}}'>{{item.title}}</a></h2>
+	<p class='meta'><a href='#/item/{{item.id}}'>{{numComments}}</a> by {{item.by}} <TimeAgo time='{{item.time}}'/></p>
+</article>
+
+<style>
+	article {
+		padding: 0 0 0 2em;
+		border-bottom: 1px solid #eee;
+	}
+
+	h2 {
+		font-size: 1em;
+		margin: 0.5em 0;
+	}
+
+	span {
+		position: absolute;
+		left: 0;
+	}
+
+	a {
+		color: #333;
+	}
+</style>
+
+<script>
+	import TimeAgo from './TimeAgo.html';
+
+	export default {
+		computed: {
+			numComments(item) {
+				const i = item.kids ? item.kids.length : 0;
+				return `${i} ${i === 1 ? 'comment' : 'comments'}`;
+			}
+		},
+
+		components: {
+			TimeAgo
+		}
+	};
+</script>

@@ -24,10 +24,14 @@ manifest.forEach( group => {
 
 		example.data = example.data || {};
 
-		example.components = glob.sync( '**/*.html', { cwd: `${root}/examples/${id}` })
+		example.components = glob.sync( '**/*.+(html|js)', { cwd: `${root}/examples/${id}` })
 			.map( file => {
+				const ext = path.extname(file);
+				const type = ext.slice(1);
+
 				return {
-					name: file.replace( /\.html$/, '' ),
+					name: file.replace( ext, '' ),
+					type,
 					entry: file === 'App.html' ? true : undefined,
 					source: fs.readFileSync( `${root}/examples/${id}/${file}`, 'utf-8' )
 				};
@@ -35,6 +39,10 @@ manifest.forEach( group => {
 			.sort( ( a, b ) => {
 				if ( a.name === 'App' ) return -1;
 				if ( b.name === 'App' ) return 1;
+
+				if ( a.type !== b.type ) {
+					return a.type === 'js' ? 1 : -1;
+				}
 
 				return a.name < b.name ? -1 : 1;
 			});
