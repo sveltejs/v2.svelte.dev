@@ -257,7 +257,7 @@
 				this.set({ selectedComponent });
 			},
 			remove (component) {
-				let result = confirm(`Are you sure you want to delete ${component.name}.html?`);
+				let result = confirm(`Are you sure you want to delete ${component.name}.${component.type}?`);
 				if ( result ) {
 					this.fire( 'remove' );
 					let components = this.get('components');

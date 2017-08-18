@@ -556,7 +556,7 @@
 		computed: {
 			runtimeErrorLoc ( runtimeError, selectedComponent ) {
 				if ( !runtimeError || !selectedComponent ) return null;
-				if ( runtimeError.filename !== `${selectedComponent.name}.html` ) return;
+				if ( runtimeError.filename !== `${selectedComponent.name}.${selectedComponent.type}` ) return;
 
 				return runtimeError.loc;
 			},
@@ -884,7 +884,7 @@
 
 							// add component files
 							components.forEach( component => {
-								zip.file( `src/${component.name}.html`, component.source );
+								zip.file( `src/${component.name}.${component.type}`, component.source );
 							});
 
 							// add entry point
