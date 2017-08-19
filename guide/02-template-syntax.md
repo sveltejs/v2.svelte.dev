@@ -24,13 +24,16 @@ You can also use tags in attributes:
 
 ```html
 <h1 style='color: {{color}};'>{{color}}</h1>
+<p hidden='{{hideParagraph}}'>You can hide this paragraph.</p>
 ```
 
 ```hidden-data
 {
-	"color": "steelblue"
+	"color": "steelblue",
+	"hideParagraph": false 
 }
 ```
+[Boolean attributes](https://www.w3.org/TR/html5/infrastructure.html#boolean-attributes) like `hidden` will be removed if the tag expression evaluates to false.
 
 > While tags are delimited using `{{` and `}}`, Svelte does not use [Mustache](https://mustache.github.io/) syntax. Tags are just JavaScript expressions.
 
