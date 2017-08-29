@@ -24,8 +24,9 @@
 	{
 		"name": "Nested components",
 		"examples": [
-			"self-references",
-			"nested-components"
+			"nested-components",
+			"modal-with-slot",
+			"self-references"
 		]
 	},
 
