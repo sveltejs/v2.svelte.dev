@@ -1732,9 +1732,13 @@ supports-color@^4.0.0:
   dependencies:
     has-flag "^2.0.0"
 
-svelte@^1.25.1, svelte@^1.30.0:
+svelte@^1.25.1:
   version "1.30.0"
   resolved "https://registry.yarnpkg.com/svelte/-/svelte-1.30.0.tgz#58b6a56616b082ec012fabdf9f5371785655a076"
+
+svelte@^1.33.0:
+  version "1.33.0"
+  resolved "https://registry.yarnpkg.com/svelte/-/svelte-1.33.0.tgz#b31bb15cd76c7f7cb911c671e2fe5ad70978049b"
 
 table@^4.0.1:
   version "4.0.1"
