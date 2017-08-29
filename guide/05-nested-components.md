@@ -46,66 +46,114 @@ const widget = new Widget({
 > Component names should be capitalised, following the widely-used JavaScript convention of capitalising constructor names. It's also an easy way to distinguish components from elements in your template.
 
 
-### Yield tags
+### Composing with `<slot>`
 
-A component can contain a `{{yield}}` tag, which allows the parent component to inject content:
+A component can contain a `<slot></slot>` element, which allows the parent component to inject content:
 
 ```html
-{{#if showModal}}
-	<Modal on:destroy='set({ showModal: false })'>
-		<h2>Hello!</h2>
-		<p>This is a modal dialog box. it can contain anything</p>
-	</Modal>
-{{else}}
-	<button on:click='set({ showModal: true })'>show modal</button>
-{{/if}}
+<Box>
+	<h2>Hello!</h2>
+	<p>This is a box. It can contain anything.</p>
+</Box>
 
 <script>
-	import Modal from './Modal.html';
-	
+	import Box from './Box.html';
+
 	export default {
-		components: { Modal }
+		components: { Box }
 	};
-</script> 
+</script>
 ```
 
-```html-nested-Modal
-<div class='modal-background' on:click='destroy()'></div>
-
-<div class='modal'>
-	{{yield}} <!-- content is injected here -->
-	<button on:click='destroy()'>close modal</button>
+```html-nested-Box
+<div class='box'>
+	<slot><!-- content is injected here --></slot>
 </div>
 
 <style>
-	.modal-background {
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		background: rgba(0,0,0,0.3);
-	}
-
-	.modal {
-		position: absolute;
-		left: 50%;
-		top: 50%;
-		width: calc(100% - 4em);
-		max-width: 32em;
-		transform: translate(-50%,-50%);
-		padding: 1em;
-		border-radius: 0.2em;
-		background: white;
-		text-align: center;
+	.box {
+		border: 2px solid black;
+		padding: 0.5em;
 	}
 </style>
 ```
 
 ```hidden-data
-{
-	"showModal": true
-}
+{}
+```
+
+The `<slot>` element can contain 'fallback content', which will be used if no children are provided for the component:
+
+```html
+<Box></Box>
+
+<script>
+	import Box from './Box.html';
+
+	export default {
+		components: { Box }
+	};
+</script>
+```
+
+```html-nested-Box
+<div class='box'>
+	<slot>
+		<p class='fallback'>the box is empty!</p>
+	</slot>
+</div>
+
+<style>
+	.box {
+		border: 2px solid black;
+		padding: 0.5em;
+	}
+
+	.fallback {
+		color: #999;
+	}
+</style>
+```
+
+```hidden-data
+{}
+```
+
+You can also have *named* slots. Any elements with a corresponding `slot` attribute will fill these slots:
+
+```html
+<ContactCard>
+	<span slot='name'>P. Sherman</span>
+	<span slot='address'>42 Wallaby Way, Sydney</span>
+</ContactCard>
+
+<script>
+	import ContactCard from './ContactCard.html';
+
+	export default {
+		components: { ContactCard }
+	};
+</script>
+```
+
+```html-nested-ContactCard
+<div class='contact-card'>
+	<h2><slot name='name'></slot></h2>
+	<slot name='address'>Unknown address</slot>
+	<br>
+	<slot name='email'>Unknown email</slot>
+</div>
+
+<style>
+	.contact-card {
+		border: 2px solid black;
+		padding: 0.5em;
+	}
+</style>
+```
+
+```hidden-data
+{}
 ```
 
 
