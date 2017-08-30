@@ -14,12 +14,6 @@ cd svelte.technology
 yarn
 ```
 
-Build everything:
-
-```bash
-yarn run prep
-```
-
 Run Rollup in watch mode and start the server:
 
 ```bash
