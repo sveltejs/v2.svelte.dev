@@ -5,7 +5,7 @@ import * as gist from './gist.js';
 
 import home from '../../universal/pages/home.html';
 import blogIndex from '../../universal/pages/blog.html';
-import blogPost from '../../universal/pages/blog/:id.html';
+import blogPost from '../../universal/pages/blog/id.html';
 import guidePage from '../../universal/pages/guidePage.html';
 import replPage from '../../universal/pages/replPage.html';
 
