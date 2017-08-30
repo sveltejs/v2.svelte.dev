@@ -6,11 +6,13 @@ import pkg from '../package.json';
 const dev = !!process.env.ROLLUP_WATCH;
 
 export default {
-	entry: 'server/src/index.js',
-	dest: 'server/dist/index.js',
-	format: 'cjs',
+	input: 'server/src/index.js',
+	output: {
+		file: 'server/dist/index.js',
+		format: 'cjs',
+	},
 	external: Object.keys(pkg.dependencies).concat([
-		'path', 'fs'	
+		'path', 'fs'
 	]),
 	plugins: [
 		json(),

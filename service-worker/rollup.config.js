@@ -34,9 +34,11 @@ const manifest = [].concat(
 );
 
 export default {
-	entry: 'service-worker/src/main.js',
-	dest: 'service-worker/dist/sw.js',
-	format: 'iife',
+	input: 'service-worker/src/main.js',
+	output: {
+		file: 'service-worker/dist/sw.js',
+		format: 'iife',
+	},
 	plugins: [
 		replace({
 			__CACHEVERSION__: Date.now(),
@@ -45,5 +47,5 @@ export default {
 		buble(),
 		!dev && uglify()
 	],
-	sourceMap: true
+	sourcemap: true
 };

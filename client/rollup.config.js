@@ -1,5 +1,4 @@
 import * as fs from 'fs';
-import * as path from 'path';
 import hasha from 'hasha';
 import hash from 'rollup-plugin-hash';
 import svelte from 'rollup-plugin-svelte';
@@ -14,9 +13,11 @@ const dev = !!process.env.ROLLUP_WATCH;
 console.log( `creating ${dev ? 'development' : 'production'} client bundle` );
 
 export default {
-	entry: 'client/src/main.js',
-	dest: 'client/dist/bundle.js',
-	format: 'iife',
+	input: 'client/src/main.js',
+	output: {
+		file: 'client/dist/bundle.js',
+		format: 'iife',
+	},
 	plugins: [
 		json(),
 		nodeResolve(),
@@ -42,5 +43,5 @@ export default {
 		}),
 		!dev && uglify()
 	],
-	sourceMap: true
+	sourcemap: true
 };
