@@ -765,10 +765,10 @@
 
 				let uid = 1;
 				const importMap = new Map();
-				const entry = './App.html';
+				const input = './App.html';
 
 				this.bundlePromise = rollup.rollup({
-					entry,
+					input,
 					external: id => {
 						return id[0] !== '.';
 					},
@@ -794,13 +794,13 @@
 
 					return bundle.generate({
 						format: 'iife',
-						moduleName: 'SvelteComponent',
+						name: 'SvelteComponent',
 						globals: id => {
 							const name = `import_${uid++}`;
 							importMap.set( id, name );
 							return name;
 						},
-						sourceMap: true
+						sourcemap: true
 					}).then(({ code, map }) => {
 						this.set({
 							bundle: {
