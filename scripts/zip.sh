@@ -1,7 +1,7 @@
-rm -rf client/dist/svelte-app.zip
+rm -rf public/svelte-app.zip
 
 ( cd scripts/svelte-app
 	rm -rf src
 	rm -rf node_modules
-	zip -r -X ../../client/dist/svelte-app.zip .
+	zip -r -X ../../public/svelte-app.zip .
 )

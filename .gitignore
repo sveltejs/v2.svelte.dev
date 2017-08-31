@@ -11,9 +11,11 @@ public/blog
 public/codemirror*
 public/rollup.browser.js
 public/svelte.js
+public/svelte-app.zip
 scripts/svelte-app/
 universal/components/guide-summary.json
 universal/routes/Repl/examples.js
 server/components
 server/routes
+server/manifests
 credentials.json

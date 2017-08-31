@@ -69,6 +69,19 @@
     "svelte": "^1.33.0"
   },
   "now": {
-    "alias": "svelte.technology"
+    "alias": "svelte.technology",
+    "files": [
+      "blog",
+      "client",
+      "examples",
+      "guide",
+      "public",
+      "rollup.config.js",
+      "scripts",
+      "server",
+      "service-worker",
+      "templates",
+      "universal"
+    ]
   }
 }
