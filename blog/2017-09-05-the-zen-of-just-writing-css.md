@@ -1,6 +1,6 @@
 ---
 title: The zen of Just Writing CSS
-description: The reason you hate writing CSS? It's already been fixed.
+description: I would say this is the future, but we're already doing it.
 pubdate: 2017-09-05
 author: Rich Harris
 authorURL: https://twitter.com/Rich_Harris
@@ -41,7 +41,7 @@ Several wonderful things happen as a result:
 Let's see what that looks like in practice.
 
 <figure>
-	<video controls>
+	<video controls poster='https://svelte-technology-assets.surge.sh/just-write-css.jpg'>
 		<source type='video/mp4' src='https://svelte-technology-assets.surge.sh/just-write-css.mp4'>
 	</video>
 

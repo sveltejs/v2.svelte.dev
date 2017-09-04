@@ -22,7 +22,7 @@ const posts = fs.readdirSync( `${root}/blog` )
 			metadata[ pair.slice( 0, colonIndex ).trim() ] = pair.slice( colonIndex + 1 ).trim();
 		});
 
-		const date = new Date( metadata.pubdate );
+		const date = new Date( `${metadata.pubdate} EDT` ); // cheeky hack
 		metadata.dateString = date.toDateString();
 
 		const html = marked( content.replace( /^\t+/gm, match => match.split( '\t' ).join( '  ' ) ) )
