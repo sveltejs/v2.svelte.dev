@@ -42,7 +42,7 @@ Let's see what that looks like in practice.
 
 <figure>
 	<video controls>
-		<source type='video/mp4' src='http://svelte-technology-assets.surge.sh/just-write-css.mp4'>
+		<source type='video/mp4' src='https://svelte-technology-assets.surge.sh/just-write-css.mp4'>
 	</video>
 
 	<figcaption>
