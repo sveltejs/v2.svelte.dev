@@ -1,6 +1,6 @@
 ---
 title: The zen of Just Writing CSS
-description: TKTKTK
+description: The reason you hate writing CSS? It's already been fixed.
 pubdate: 2017-09-05
 author: Rich Harris
 authorURL: https://twitter.com/Rich_Harris
@@ -10,9 +10,9 @@ It's fashionable to dislike CSS. There are lots of reasons why that's the case, 
 
 So the JavaScript community rolled up its sleeves and got to work. Over the last couple of years, there's been a Cambrian explosion of libraries aimed at making CSS behave, collectively referred to as *CSS-in-JS*.
 
-What you might not realise is that **the biggest problems with CSS can be solved without CSS-in-JS**. Without those problems, writing CSS isn't just tolerable — it's enjoyable. And you don't have to find solutions to the problems that CSS-in-JS introduces.
+What you might not realise is that **the biggest problems with CSS can be solved without CSS-in-JS**. Without those problems, writing CSS isn't just tolerable — it's enjoyable. And you don't have to find solutions to the additional problems that CSS-in-JS introduces.
 
-This article isn't in any way intended as criticism of the hard work the CSS-in-JS community has done, but rather to illustrate why an alternative approach — based on Single File Components — is so damn delightful.
+This article isn't in any way intended as criticism of the hard work the CSS-in-JS community has done. It's one of the most active corners of the JS ecosystem, and new ideas are springing up every week. Instead, my purpose is to illustrate why an alternative approach — based on Single File Components with real CSS — is so damn delightful.
 
 
 ## The biggest problem with CSS
@@ -54,7 +54,9 @@ Every code editor already knows about CSS, so there's a good chance that you'll 
 
 And because it's real CSS, rather than some camelCased quotes-everywhere impostor, we can take advantage of the 'tweak in devtools, paste back into our source code' workflow, which I personally couldn't live without. Notice that we get CSS sourcemaps out of the box, so you can instantly pinpoint the lines in question. It's hard to overstate the importance of this: when you're in WYSIWYG mode, you're not thinking in terms of your component tree, so having a robust way to figure out *where these damn styles came from* is essential. Doubly so if someone else originally wrote the component. (I promise you, this is the single biggest productivity boost to your CSS workflow. If you're writing styles without sourcemaps, you are almost certainly wasting a lot of time. I know I was.)
 
-Svelte transforms your selectors (using an attribute that's also applied to affected elements, though the exact mechanism is unimportant and subject to change) to achieve the scoping. It warns on and removes any unused rules, then it minifies the result. There's also an experimental new option to compile to web components, using shadow DOM to encapsulate the styles, if that's your jam.
+Svelte transforms your selectors (using an attribute that's also applied to affected elements, though the exact mechanism is unimportant and subject to change) to achieve the scoping. It warns on and removes any unused rules, then it minifies the result and lets you write it out to a `.css` file. There's also an experimental new option to compile to web components, using shadow DOM to encapsulate the styles, if that's your jam.
+
+This is all possible because your CSS is parsed (with [css-tree](https://github.com/csstree/csstree)) and statically analysed in the context of your markup. Static analysis opens the doors to all kinds of exciting future possibilities — smarter optimisations, a11y hints — that are much harder if your styles are computed dynamically at runtime. We're just getting started.
 
 
 ## But we can add tools to do [x]!
@@ -64,7 +66,7 @@ If your reaction to the video was 'fine, but if we use TypeScript and write plug
 
 ## We don't have all the answers — yet
 
-Having said all that, CSS-in-JS does provide answers to some lingering questions:
+Having said all that, CSS-in-JS does point to answers to some lingering questions:
 
 * How can we install styles from npm?
 * How can we reuse constants that are defined in a single place?
@@ -72,4 +74,4 @@ Having said all that, CSS-in-JS does provide answers to some lingering questions
 
 Personally, I haven't found these issues to outweigh the benefits of the approach outlined above. You may well have a different set of priorities, and they may be reason enough for you to abandon CSS.
 
-But at the end of the day, you have to know CSS *anyway*. Love it or loathe it, you must at least learn it. As custodians of the web, we have a choice: create abstractions that steepen the web dev learning curve yet further, or work together to fix the bad parts of CSS. I know which I choose.
+But at the end of the day, you have to know CSS anyway. Love it or loathe it, you must at least *learn* it. As custodians of the web, we have a choice: create abstractions that steepen the web dev learning curve yet further, or work together to fix the bad parts of CSS. I know which I choose.
