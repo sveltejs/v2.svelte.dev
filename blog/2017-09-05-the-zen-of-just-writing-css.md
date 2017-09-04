@@ -38,19 +38,32 @@ Several wonderful things happen as a result:
 * You don't need to go spelunking through your folder structure to find the rules that are breaking your stuff.
 * The compiler (in Svelte's case) can **identify and remove unused styles**. No more append-only stylesheets!
 
+Let's see what that looks like in practice.
+
+```
+TODO video showing writing CSS, and editing in devtools with sourcemaps
+```
+
+Every code editor already knows about CSS, so there's a good chance that you'll get autocomplete, linting, syntax highlighting and so on — all without additional JS-fatigue-inducing tools.
+
+And because it's real CSS, rather than some camelCased quotes-everywhere impostor, we can take advantage of the 'tweak in devtools, paste back into our source code' workflow, which I personally couldn't live without. Notice that we get CSS sourcemaps out of the box, so you can instantly pinpoint the lines in question. It's hard to overstate the importance of this: when you're in WYSIWYG mode, you're not thinking in terms of your component tree, so having a robust way to figure out *where these damn styles came from* is essential. Doubly so if someone else originally wrote the component. (I promise you, this is the single biggest productivity boost to your CSS workflow. If you're writing styles without sourcemaps, you are almost certainly wasting a lot of time. I know I was.)
+
+Svelte transforms your selectors (using an attribute that's also applied to affected elements, though the exact mechanism is unimportant and subject to change) to achieve the scoping. It warns on and removes any unused rules, then it minifies the result. There's also an experimental new option to compile to web components, using shadow DOM to encapsulate the styles, if that's your jam.
 
 
+## But we can add tools to do [x]!
+
+If your reaction to the video was 'fine, but if we use TypeScript and write plugins for each editor then we can get all the autocomplete and syntax highlighting stuff' — in other words, if you believe that in order to achieve parity with CSS it makes sense to build, document, promote and maintain a fleet of ancillary projects — then, well, you and I may never see eye to eye.
 
 
-### Notes...
+## We don't have all the answers — yet
 
-* how the scoping works
-* tight coupling between separate files
-* 'but tools can fix [x]'
-* single file components
-* what we can't do yet
-* devtools workflow
-* sourcemaps
-* linting, highlighting, codepen
-* scrapable web, readable classes, anti-patterns
-* love it or loathe it, you must learn it
+Having said all that, CSS-in-JS does provide answers to some lingering questions:
+
+* How can we install styles from npm?
+* How can we reuse constants that are defined in a single place?
+* How can we compose declarations?
+
+Personally, I haven't found these issues to outweigh the benefits of the approach outlined above. You may well have a different set of priorities, and they may be reason enough for you to abandon CSS.
+
+But at the end of the day, you have to know CSS *anyway*. Love it or loathe it, you must at least learn it. As custodians of the web, we have a choice: create abstractions that steepen the web dev learning curve yet further, or work together to fix the bad parts of CSS. I know which I choose.
