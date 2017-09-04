@@ -19,3 +19,4 @@ server/components
 server/routes
 server/manifests
 credentials.json
+assets

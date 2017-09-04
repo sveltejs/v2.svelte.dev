@@ -28,9 +28,9 @@ The consequence of all this is the **append-only stylesheet**. There's no way of
 
 The idea behind SFCs is simple: you write your components in an HTML file that (optionally) contains a `<style>` and `<script>` attribute describing the component's styles and behaviour. Svelte, Ractive, Vue and Polymer all follow this basic pattern.
 
-(For the rest of this article we'll be using Svelte, obviously. But if the idea of using a template language makes you shudder — your fears are misplaced, but that's a topic for another day — then just use Vue which lets you use JSX in your SFCs.)
-
 <aside>[Read the introductory blog post](https://svelte.technology/blog/frameworks-without-the-framework) if you're new to Svelte. Or [read](https://twitter.com/padolsey/status/899717303234908160) [the](https://twitter.com/sveltejs/status/901818357644701696) [testimonials](https://twitter.com/sveltejs/status/901818106309476352).</aside>
+
+(For the rest of this article we'll be using Svelte, obviously. But if the idea of using a template language makes you shudder — your fears are misplaced, but that's a topic for another day — then just use Vue which lets you use JSX in your SFCs.)
 
 Several wonderful things happen as a result:
 
@@ -40,9 +40,15 @@ Several wonderful things happen as a result:
 
 Let's see what that looks like in practice.
 
-```
-TODO video showing writing CSS, and editing in devtools with sourcemaps
-```
+<figure>
+	<video controls>
+		<source type='video/mp4' src='http://svelte-technology-assets.surge.sh/just-write-css.mp4'>
+	</video>
+
+	<figcaption>
+		Is this what they mean by 'use the platform'?
+	</figcaption>
+</figure>
 
 Every code editor already knows about CSS, so there's a good chance that you'll get autocomplete, linting, syntax highlighting and so on — all without additional JS-fatigue-inducing tools.
 
@@ -53,7 +59,7 @@ Svelte transforms your selectors (using an attribute that's also applied to affe
 
 ## But we can add tools to do [x]!
 
-If your reaction to the video was 'fine, but if we use TypeScript and write plugins for each editor then we can get all the autocomplete and syntax highlighting stuff' — in other words, if you believe that in order to achieve parity with CSS it makes sense to build, document, promote and maintain a fleet of ancillary projects — then, well, you and I may never see eye to eye.
+If your reaction to the video was 'fine, but if we use TypeScript and write plugins for each editor then we can get all the autocomplete and syntax highlighting stuff' — in other words, if you believe that in order to achieve parity with CSS it makes sense to build, document, promote and maintain a fleet of ancillary projects — then, well, you and I may never see eye to eye!
 
 
 ## We don't have all the answers — yet
