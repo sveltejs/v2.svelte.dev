@@ -3,14 +3,14 @@ import express from 'express';
 import compression from 'compression';
 import * as gist from './gist.js';
 
-import home from '../../universal/pages/home.html';
-import blogIndex from '../../universal/pages/blog.html';
-import blogPost from '../../universal/pages/blog/id.html';
-import guidePage from '../../universal/pages/guidePage.html';
-import replPage from '../../universal/pages/replPage.html';
+import home from '../universal/pages/home.html';
+import blogIndex from '../universal/pages/blog.html';
+import blogPost from '../universal/pages/blog/id.html';
+import guidePage from '../universal/pages/guidePage.html';
+import replPage from '../universal/pages/replPage.html';
 
-import blogPosts from '../../public/blog.json';
-import guideSections from '../../public/guide.json';
+const blogPosts = require('./build/blog.[hash].json');
+const guideSections = require('./build/guide.[hash].json');
 
 const dev = !!process.env.DEV;
 
@@ -22,11 +22,13 @@ app.use(compression({ threshold: 0 }));
 
 // TODO this is unfortunate... would be nice to have a neater solution
 const hashed = __dev__ ? {
+	sw: '/sw.js',
 	bundle: '/bundle.js',
 	css: '/main.css'
 } : {
-	bundle: require( '../manifests/bundle.json' )[ 'bundle.js' ].replace( 'client/dist', '' ),
-	css: require( '../manifests/css.json' )[ 'main.css' ].replace( 'client/dist', '' )
+	sw: require( './manifests/sw.json' )[ 'sw.js' ].replace( 'build/', '' ),
+	bundle: require( './manifests/bundle.json' )[ 'bundle.js' ].replace( 'build/', '' ),
+	css: require( './manifests/css.json' )[ 'main.css' ].replace( 'build/', '' )
 };
 
 const preload = [
@@ -64,8 +66,7 @@ app.get( '/blog', ( req, res ) => {
 	serve(req, res, blogIndex, { hashed, posts: blogPosts });
 });
 
-app.use( express.static( 'service-worker/dist' ) );
-app.use( express.static( 'client/dist', { maxAge: dev ? '1s' : '1y' }));
+app.use( express.static( 'build', { maxAge: dev ? '1s' : '1y' }));
 
 app.use( '/examples', express.static( 'public/examples', {
 	maxAge: 60 * 1000

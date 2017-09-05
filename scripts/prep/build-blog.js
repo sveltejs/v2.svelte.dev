@@ -1,16 +1,17 @@
 const fs = require( 'fs' );
 const path = require( 'path' );
 const hljs = require( 'highlight.js' );
-const { mkdirp } = require( './utils.js' );
+const hasha = require( 'hasha' );
+const { updateManifest, mkdirp } = require( './utils.js' );
 const marked = require( 'marked' );
 
 const root = path.resolve( __dirname, '../..' );
 
-const posts = fs.readdirSync( `${root}/blog` )
+const posts = fs.readdirSync( `${root}/content/blog` )
 	.map( file => {
 		if ( file[0] === '.' || path.extname( file ) !== '.md' ) return;
 
-		const markdown = fs.readFileSync( `${root}/blog/${file}`, 'utf-8' );
+		const markdown = fs.readFileSync( `${root}/content/blog/${file}`, 'utf-8' );
 
 		const match = /---\n([\s\S]+?)\n---/.exec( markdown );
 		const frontMatter = match[1];
@@ -48,9 +49,13 @@ const preview = posts.map( post => {
 	return { slug: post.slug, metadata: post.metadata };
 });
 
-fs.writeFileSync( `${root}/public/blog.json`, JSON.stringify( preview ) );
+const previewJson = JSON.stringify( preview );
+const hash = hasha(previewJson, { algorithm: 'md5' });
+fs.writeFileSync( `${root}/build/blog.${hash}.json`, previewJson );
+updateManifest({ 'blog.json': `blog.${hash}.json` });
 
-mkdirp( `${root}/public/blog` );
+// TODO hash individual posts?
+mkdirp(`${root}/public/blog`);
 posts.forEach( post => {
 	fs.writeFileSync( `${root}/public/blog/${post.slug}.json`, JSON.stringify( post ) );
 });
