@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "Docs and examples for Svelte",
   "scripts": {
-    "start": "node server/dist",
-    "prebuild": "rm -rf client/dist && mkdir -p client/dist && rm -rf service-worker/dist && mkdir -p service-worker/dist",
-    "dev": "rollup -c -w & node scripts/prep && npm start",
+    "start": "node server",
+    "prebuild": "rm -rf build && mkdir -p build",
+    "dev": "node scripts/prep && rollup -c -w & npm start",
     "build": "node scripts/prep && rollup -c",
     "update_template": "sh ./scripts/update_template.sh",
     "zip": "sh ./scripts/zip.sh",
@@ -48,7 +48,7 @@
     "rollup-plugin-hash": "^1.2.0",
     "rollup-plugin-json": "^2.1.1",
     "rollup-plugin-node-resolve": "^3.0.0",
-    "rollup-plugin-replace": "^1.1.1",
+    "rollup-plugin-replace": "^2.0.0",
     "rollup-plugin-svelte": "^3.0.0",
     "rollup-plugin-uglify": "^2.0.1",
     "uglify-js": "^3.0.0"

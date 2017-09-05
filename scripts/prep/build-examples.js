@@ -5,7 +5,7 @@ const { mkdirp } = require( './utils.js' );
 
 const root = path.resolve( __dirname, '../..' );
 
-const manifest = require( `${root}/examples/manifest.json` );
+const manifest = require( `${root}/content/examples/manifest.json` );
 
 mkdirp( `${root}/public/examples` );
 
@@ -15,7 +15,7 @@ manifest.forEach( group => {
 	const groupSummary = [];
 
 	group.examples.forEach( id => {
-		const example = require( `${root}/examples/${id}/example.json` );
+		const example = require( `${root}/content/examples/${id}/example.json` );
 
 		if ( example.redirect ) {
 			redirects[ id ] = example.redirect;
@@ -24,7 +24,7 @@ manifest.forEach( group => {
 
 		example.data = example.data || {};
 
-		example.components = glob.sync( '**/*.+(html|js)', { cwd: `${root}/examples/${id}` })
+		example.components = glob.sync( '**/*.+(html|js)', { cwd: `${root}/content/examples/${id}` })
 			.map( file => {
 				const ext = path.extname(file);
 				const type = ext.slice(1);
@@ -33,7 +33,7 @@ manifest.forEach( group => {
 					name: file.replace( ext, '' ),
 					type,
 					entry: file === 'App.html' ? true : undefined,
-					source: fs.readFileSync( `${root}/examples/${id}/${file}`, 'utf-8' )
+					source: fs.readFileSync( `${root}/content/examples/${id}/${file}`, 'utf-8' )
 				};
 			})
 			.sort( ( a, b ) => {
@@ -61,7 +61,7 @@ manifest.forEach( group => {
 	});
 });
 
-fs.writeFileSync( `${root}/universal/routes/Repl/examples.js`, `
+fs.writeFileSync( `${root}/src/universal/routes/Repl/examples.js`, `
 // this file is auto-generated, don't edit it
 export const exampleGroups = ${JSON.stringify( summary )};
 export const redirects = ${JSON.stringify( redirects )};

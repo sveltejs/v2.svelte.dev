@@ -9,7 +9,7 @@
 	<meta name='theme-color' content='#333'>
 
 	<link rel='stylesheet' href='/global.css'>
-	<link rel='stylesheet' href='/main.css'>
+	<link rel='stylesheet' href='{{hashed.css}}'>
 
 	<meta name='twitter:card' content='summary_large_image'>
 	<meta name='twitter:site' content='@sveltejs'>
@@ -18,12 +18,12 @@
 	<meta name='twitter:description' content='The magical disappearing UI framework'>
 	<meta name='twitter:image' content='https://svelte.technology/images/twitter-card.png'>
 
-	<title>__title__</title>
+	<title>{{title}}</title>
 
 	<script>
 		if ( 'serviceWorker' in navigator ) {
 			window.addEventListener( 'load', function () {
-				navigator.serviceWorker.register( '/sw.js' )
+				navigator.serviceWorker.register( '{{hashed.sw}}' )
 					.then( function ( registration ) {
 						console.log( 'ServiceWorker registration successful' );
 					})
@@ -37,8 +37,7 @@
 	<link rel='alternate' type='application/rss+xml' href='http://svelte.technology/blog/rss.xml'>
 </head>
 <body>
-	<header>__nav__</header>
-	<main>__route__</main>
+	{{yield}}
 
 	<script src='/curl.js'></script>
 	<script>
@@ -58,6 +57,6 @@
 		ga('create', 'UA-5602942-11', 'auto');
 		ga('send', 'pageview');
 	</script>
-	<script src='/bundle.js'></script>
+	<script src='{{hashed.bundle}}'></script>
 </body>
 </html>

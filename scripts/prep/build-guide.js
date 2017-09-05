@@ -1,7 +1,9 @@
 const fs = require( 'fs' );
 const path = require( 'path' );
 const marked = require( 'marked' );
+const hasha = require( 'hasha' );
 const hljs = require( 'highlight.js' );
+const { updateManifest } = require('./utils.js');
 
 const root = path.resolve( __dirname, '../..' );
 
@@ -32,10 +34,10 @@ function unescape ( str ) {
 	return String( str ).replace( /&.+?;/g, match => unescaped[ match ] || match );
 }
 
-const sections = fs.readdirSync( `${root}/guide` )
+const sections = fs.readdirSync( `${root}/content/guide` )
 	.filter( file => file[0] !== '.' && path.extname( file ) === '.md' )
 	.map( file => {
-		const markdown = fs.readFileSync( `${root}/guide/${file}`, 'utf-8' );
+		const markdown = fs.readFileSync( `${root}/content/guide/${file}`, 'utf-8' );
 
 		let match = /---\n([\s\S]+?)\n---/.exec( markdown );
 		const frontMatter = match[1];
@@ -131,5 +133,10 @@ const sections = fs.readdirSync( `${root}/guide` )
 		};
 	});
 
-fs.writeFileSync( `${root}/public/guide.json`, JSON.stringify( sections ) );
-fs.writeFileSync( `${root}/universal/components/guide-summary.json`, JSON.stringify( sections ) );
+const json = JSON.stringify(sections);
+const hash = hasha(json, { algorithm: 'md5' });
+updateManifest({ 'guide.json' : `guide.${hash}.json` });
+fs.writeFileSync( `${root}/build/guide.${hash}.json`, json );
+
+
+fs.writeFileSync( `${root}/src/universal/components/guide-summary.json`, JSON.stringify( sections ) );
