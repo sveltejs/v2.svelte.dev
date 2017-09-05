@@ -71,17 +71,11 @@
   "now": {
     "alias": "svelte.technology",
     "files": [
-      "blog",
-      "client",
-      "examples",
-      "guide",
+      "content",
+      "src",
       "public",
       "rollup.config.js",
-      "scripts",
-      "server",
-      "service-worker",
-      "templates",
-      "universal"
+      "scripts"
     ]
   }
 }
