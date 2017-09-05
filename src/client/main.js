@@ -1,10 +1,10 @@
 import roadtrip from 'roadtrip';
-import Index from '../../universal/routes/Index.html';
-import BlogIndex from '../../universal/routes/BlogIndex.html';
-import BlogPost from '../../universal/routes/BlogPost.html';
-import Guide from '../../universal/routes/Guide.html';
-import Repl from '../../universal/routes/Repl/index.html';
-import Nav from '../../universal/components/Nav.html';
+import Index from '../universal/routes/Index.html';
+import BlogIndex from '../universal/routes/BlogIndex.html';
+import BlogPost from '../universal/routes/BlogPost.html';
+import Guide from '../universal/routes/Guide.html';
+import Repl from '../universal/routes/Repl/index.html';
+import Nav from '../universal/components/Nav.html';
 import * as store from './store.js';
 
 const header = document.querySelector( 'header' );
@@ -56,8 +56,8 @@ roadtrip
 			window.scrollTo( route.scrollX, route.scrollY );
 
 			// preload blog and guide
-			store.getJSON( `/blog.json` ).then( () => {
-				return store.getJSON( `/guide.json` );
+			store.getJSON( `/blog.[hash].json` ).then( () => {
+				return store.getJSON( `/guide.[hash].json` );
 			});
 		}
 	})
@@ -75,7 +75,7 @@ roadtrip
 				main.innerHTML = '';
 			}
 
-			return store.getJSON( `/blog.json` ).then( posts => {
+			return store.getJSON( `/blog.[hash].json` ).then( posts => {
 				view = new BlogIndex({
 					target: main,
 					data: {
@@ -91,7 +91,7 @@ roadtrip
 				}, Promise.resolve() )
 
 					// then preload the guide
-					.then( () => store.getJSON( `/guide.json` ) );
+					.then( () => store.getJSON( `/guide.[hash].json` ) );
 			});
 		}
 	})
@@ -121,8 +121,8 @@ roadtrip
 				window.scrollTo( route.scrollX, route.scrollY );
 
 				// preload blog index and guide
-				store.getJSON( `/blog.json` ).then( () => {
-					return store.getJSON( `/guide.json` );
+				store.getJSON( `/blog.[hash].json` ).then( () => {
+					return store.getJSON( `/guide.[hash].json` );
 				});
 			});
 		}
@@ -139,7 +139,7 @@ roadtrip
 				main.innerHTML = '';
 			}
 
-			return store.getJSON( `/guide.json` ).then( sections => {
+			return store.getJSON( `/guide.[hash].json` ).then( sections => {
 				view = new Guide({
 					target: main,
 					data: {
@@ -160,7 +160,7 @@ roadtrip
 				}
 
 				// preload blog index
-				store.getJSON( `/blog.json` );
+				store.getJSON( `/blog.[hash].json` );
 			});
 		},
 

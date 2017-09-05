@@ -19,3 +19,17 @@ exports.mkdirp = function mkdirp ( dir ) {
 exports.copy = function copy ( from, to ) {
 	fs.writeFileSync( `${root}/${to}`, fs.readFileSync( `${root}/${from}` ) );
 };
+
+exports.updateManifest = function (data) {
+	const manifest = tryRequire('../../manifests/content.json') || {};
+	Object.assign(manifest, data);
+	fs.writeFileSync('manifests/content.json', JSON.stringify(manifest, null, '  '));
+};
+
+function tryRequire(file) {
+	try {
+		return require(file);
+	} catch (err) {
+		return null;
+	}
+}
