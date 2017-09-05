@@ -20,4 +20,4 @@ server/routes
 manifests
 credentials.json
 build
-
+server.js
