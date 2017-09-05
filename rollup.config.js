@@ -88,8 +88,9 @@ export default [
 		},
 		plugins: [
 			replace({
-				__CACHEVERSION__: () => Date.now(),
-				__MANIFEST__: generateCacheManifest
+				__CACHEVERSION__: () => '' + Date.now(),
+				__MANIFEST__: generateCacheManifest,
+				delimiters: ['', '']
 			}),
 			buble(),
 			!dev && hash({
