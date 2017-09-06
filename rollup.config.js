@@ -47,10 +47,10 @@ export default [
 					} else {
 						const hash = hasha(css.code, { algorithm: 'md5' });
 						hashed.css = `main.${hash}.css`;
-
 						css.write(`build/${hashed.css}`);
-						fs.writeFileSync(`manifests/css.json`, JSON.stringify({ 'main.css': hashed.css }));
 					}
+
+					fs.writeFileSync(`manifests/css.json`, JSON.stringify({ 'main.css': hashed.css }));
 				}
 			}),
 			buble(),
