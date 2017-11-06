@@ -17,7 +17,6 @@ universal/components/guide-summary.json
 universal/routes/Repl/examples.js
 server/components
 server/routes
-manifests
 credentials.json
 assets
 build
