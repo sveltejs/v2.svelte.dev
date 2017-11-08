@@ -43,6 +43,18 @@ const widget = new Widget({
 
 ...except that Svelte will ensure that the value of `baz` is kept in sync with the value of `dynamic` in the parent component, and takes care of destroying the child component when the parent is destroyed.
 
+In the case where the value in the child component has the same name as that in the parent component, there a shorter way to write this. Instead of
+
+```html-no-repl
+<Widget foo='{{foo}}'/>
+```
+
+you can use
+
+```html-no-repl
+<Widget :foo/>
+```
+
 > Component names should be capitalised, following the widely-used JavaScript convention of capitalising constructor names. It's also an easy way to distinguish components from elements in your template.
 
 
