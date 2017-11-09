@@ -26,10 +26,6 @@ const escaped = {
 
 const unescaped = Object.keys( escaped ).reduce( ( unescaped, key ) => ( unescaped[ escaped[ key ] ] = key, unescaped ), {} );
 
-function escape ( html ) {
-	return String( html ).replace( /["'&<>]/g, match => escaped[ match ] );
-}
-
 function unescape ( str ) {
 	return String( str ).replace( /&.+?;/g, match => unescaped[ match ] || match );
 }
@@ -120,7 +116,7 @@ const sections = fs.readdirSync( `${root}/content/guide` )
 			const slug = match[1];
 			const title = unescape( match[2]
 				.replace( /<\/?code>/g, '' )
-				.replace( /\.(\w+).+/, '.$1' ) );
+				.replace( /\.(\w+)\W.*/, '.$1' ) );
 
 			subsections.push({ slug, title });
 		}
