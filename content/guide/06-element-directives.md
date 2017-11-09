@@ -189,7 +189,14 @@ Bindings are declared with the `bind:[attribute]` directive:
 <p>Hello {{name || 'stranger'}}!</p>
 ```
 
-> Two-way binding is not yet fully implemented. Check back soon for the full list of available bindings!
+Here are the current bindable attributes and properties for each element:
+
+- `<input>`, `<textarea>`, `<select>`, `<option>`
+	- `value`
+- `<input type="checkbox">`, `<input type="radio">`
+	- `checked`, `group`
+- `<audio>`, `<video>`
+	- `buffered`, `currentTime`, `duration`, `paused`, `played`, `seekable`
 
 As well as DOM elements, you can bind to component data properties:
 

@@ -205,7 +205,7 @@ The special `<:Window>` tag gives you a convenient way to declaratively add even
 </style>
 ```
 
-You can also bind to certain values — so far `innerWidth`, `outerWidth`, `innerHeight`, `outerHeight`, `scrollX` and `scrollY`:
+You can also bind to certain values — so far `innerWidth`, `outerWidth`, `innerHeight`, `outerHeight`, `scrollX`, `scrollY` and `online`:
 
 ```html
 <:Window bind:scrollY='y'/>
