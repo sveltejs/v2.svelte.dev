@@ -22,9 +22,9 @@ app.use(compression({ threshold: 0 }));
 
 // TODO this is unfortunate... would be nice to have a neater solution
 const hashed = __dev__ ? {
-	sw: '/sw.js',
-	bundle: '/bundle.js',
-	css: '/main.css'
+	sw: 'sw.js',
+	bundle: 'bundle.js',
+	css: 'main.css'
 } : {
 	sw: require( './manifests/sw.json' )[ 'sw.js' ].replace( 'build/', '' ),
 	bundle: require( './manifests/bundle.json' )[ 'bundle.js' ].replace( 'build/', '' ),
