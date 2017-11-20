@@ -1,9 +1,6 @@
 .DS_Store
 node_modules
 .gobble*
-dist
-public/js/bundle.*
-public/sw.*
 public/main.css
 public/guide.json
 public/examples
@@ -13,12 +10,8 @@ public/rollup.browser.js
 public/svelte.js
 public/svelte-app.zip
 scripts/svelte-app/
-universal/components/guide-summary.json
-universal/routes/Repl/examples.js
-server/components
-server/routes
-manifests
+src/universal/components/guide-summary.json
+src/universal/routes/Repl/examples.js
 credentials.json
-assets
 build
 server.js
