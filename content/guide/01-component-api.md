@@ -159,3 +159,22 @@ component.on( 'destroy', () => {
 
 component.destroy();
 ```
+
+
+### component.options
+
+The options used to instantiate the component are available in `component.options`.
+
+```html
+Check the console.
+
+<script>
+	export default {
+		oncreate () {
+			console.log( this.options );
+		}
+	}
+</script>
+```
+
+This gives you access to standard options like `target` and `data`, but can also be used to access any other custom options you may choose to implement for your component.
