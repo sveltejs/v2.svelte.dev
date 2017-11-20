@@ -983,7 +983,16 @@ export default app;` );
 					.then( ({ components, json }) => {
 						if ( window.svelte ) {
 							components.forEach( component => {
-								component.compiled = compile( component );
+								try {
+									component.compiled = compile( component );
+								} catch ( err ) {
+									console.error( err.stack );
+
+									this.set({
+										sourceError: err,
+										sourceErrorLoc: err.loc
+									});
+								}
 							});
 						}
 

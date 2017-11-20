@@ -42,7 +42,7 @@ When the user clicks the button, Svelte calls `component.set(...)` with the prov
 
 		methods: {
 			select ( name ) {
-				alert( `selected ${name}` );
+				alert( `selected ${name}` ); // seriously, please don't do this
 			}
 		}
 	};
@@ -126,6 +126,8 @@ When the user clicks a button, the component will fire a `select` event, where t
 
 Just as `this` in an element's event handler refers to the element itself, in a component event handler `this` refers to the component firing the event.
 
+There is also shorthand for listening for and re-firing an event unchanged. `<Widget on:foo/>` is equivalent to `<Widget on:foo="fire('foo', event)"/>`. Since component events do not propagate as DOM events do, this can be used to pass events through intermediate components.
+
 
 ### Refs
 
@@ -189,7 +191,14 @@ Bindings are declared with the `bind:[attribute]` directive:
 <p>Hello {{name || 'stranger'}}!</p>
 ```
 
-> Two-way binding is not yet fully implemented. Check back soon for the full list of available bindings!
+Here are the current bindable attributes and properties for each element:
+
+- `<input>`, `<textarea>`, `<select>`, `<option>`
+	- `value`
+- `<input type="checkbox">`, `<input type="radio">`
+	- `checked`, `group`
+- `<audio>`, `<video>`
+	- `buffered`, `currentTime`, `duration`, `paused`, `played`, `seekable`
 
 As well as DOM elements, you can bind to component data properties:
 
@@ -225,3 +234,5 @@ export default {
 };
 </script>
 ```
+
+> Do not confuse the `<Widget bind:foo/>` syntax (two-way binding) with the `<Widget :foo/>` syntax (one-way binding)

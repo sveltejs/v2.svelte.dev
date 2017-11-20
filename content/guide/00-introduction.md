@@ -57,9 +57,15 @@ Normally, this is the part where the instructions might tell you to add the fram
 
 The best way to use Svelte is to integrate it into your build system – there are plugins for Rollup, Browserify, Gulp and others, with more on the way. See [here](https://github.com/sveltejs/svelte/#svelte) for an up-to-date list.
 
-Right now, for the purposes of demonstration, we'll use [svelte-cli](https://github.com/sveltejs/svelte-cli), the command line interface.
-
 > You will need to have [Node.js](https://nodejs.org/en/) installed, and have some familiarity with the command line
+
+#### Getting started using a project template
+
+Going to the [REPL](/repl) and pressing the *download* button on any of the examples will give you a .zip file containing everything you need to run that example locally. Just unzip it, `cd` to the directory, and run `npm install` and `npm run dev`. See [this blog post](/blog/the-easiest-way-to-get-started) for more information.
+
+#### Getting started using svelte-cli
+
+Another option is to use [svelte-cli](https://github.com/sveltejs/svelte-cli), the command line interface.
 
 First, install the CLI:
 

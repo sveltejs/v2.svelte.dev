@@ -37,3 +37,8 @@ This is vastly simpler than achieving the same effect via [Shadow DOM](http://ca
 The usual cascading mechanism still applies – any global `.foo` styles would still be applied, and if our template had [nested components](#nested-components) with `class="foo"` elements, they would inherit our styles.
 
 > Scoped styles are *not* dynamic – they are shared between all instances of a component. In other words you can't use `{{tags}}` inside your CSS.
+
+
+### Special selectors
+
+If you have a [ref](#refs) on an element, you can use this as a CSS selector. An element with `ref:foo` can be styled with `ref:foo { color: whatever; }`. The `ref:*` selector has the same specificity as a class or attribute selector.
