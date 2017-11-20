@@ -42,7 +42,7 @@ When the user clicks the button, Svelte calls `component.set(...)` with the prov
 
 		methods: {
 			select ( name ) {
-				alert( `selected ${name}` );
+				alert( `selected ${name}` ); // seriously, please don't do this
 			}
 		}
 	};
