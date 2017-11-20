@@ -234,3 +234,5 @@ export default {
 };
 </script>
 ```
+
+> Do not confuse the `<Widget bind:foo/>` syntax (two-way binding) with the `<Widget :foo/>` syntax (one-way binding)
