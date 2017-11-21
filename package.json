@@ -34,7 +34,7 @@
   "devDependencies": {
     "chalk": "^2.0.1",
     "clean-css": "^4.0.12",
-    "degit": "^1.2.2",
+    "degit": "^2.0.1",
     "eslint": "^4.0.0",
     "eslint-plugin-html": "^3.0.0",
     "eslint-plugin-import": "^2.2.0",

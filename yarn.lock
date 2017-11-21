@@ -320,14 +320,14 @@ deep-is@~0.1.3:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/deep-is/-/deep-is-0.1.3.tgz#b369d6fb5dbc13eecf524f91b070feedc357cf34"
 
-degit@^1.2.2:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/degit/-/degit-1.2.2.tgz#247f066290dcc03281907b6df7058e03fecbea06"
+degit@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/degit/-/degit-2.0.1.tgz#0a83f6d9b8d7253a57de4c33e373e77c8156aa43"
   dependencies:
     chalk "^2.0.1"
     home-or-tmp "^3.0.0"
     mri "^1.1.0"
-    tar "^3.1.9"
+    tar "^4.0.2"
 
 del@^2.0.2:
   version "2.2.2"
@@ -1155,17 +1155,17 @@ minimist@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.0.tgz#a35008b20f41383eec1fb914f4cd5df79a264284"
 
-minipass@^2.0.0, minipass@^2.0.2:
+minipass@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/minipass/-/minipass-2.2.1.tgz#5ada97538b1027b4cf7213432428578cb564011f"
   dependencies:
     yallist "^3.0.0"
 
-minizlib@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/minizlib/-/minizlib-1.0.3.tgz#d5c1abf77be154619952e253336eccab9b2a32f5"
+minizlib@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/minizlib/-/minizlib-1.0.4.tgz#8ebb51dd8bbe40b0126b5633dbb36b284a2f523c"
   dependencies:
-    minipass "^2.0.0"
+    minipass "^2.2.1"
 
 mkdirp@^0.5.0, mkdirp@^0.5.1:
   version "0.5.1"
@@ -1751,13 +1751,13 @@ table@^4.0.1:
     slice-ansi "0.0.4"
     string-width "^2.0.0"
 
-tar@^3.1.9:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/tar/-/tar-3.2.0.tgz#534255ba01befa11f91257cc7fa9cea773596852"
+tar@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/tar/-/tar-4.0.2.tgz#e8e22bf3eec330e5c616d415a698395e294e8fad"
   dependencies:
     chownr "^1.0.1"
-    minipass "^2.0.2"
-    minizlib "^1.0.3"
+    minipass "^2.2.1"
+    minizlib "^1.0.4"
     mkdirp "^0.5.0"
     yallist "^3.0.2"
 
