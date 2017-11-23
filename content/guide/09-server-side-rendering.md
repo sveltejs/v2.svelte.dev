@@ -13,6 +13,14 @@ To use the server-side renderer, we must first *register* it. This means that wh
 require( 'svelte/ssr/register' );
 ```
 
+If on the other hand you use a different extension than `.html` (eg. `.svelte`), you need to bootstrap the SSR compiler by passing an [options](#ssr-options) object:
+
+```js
+require( 'svelte/ssr/register' )({
+  extensions: ['.svelte']
+});
+```
+
 After that, you can load components like so:
 
 ```js
@@ -42,3 +50,8 @@ const { css, components } = thing.renderCss();
 You could put the resulting `css` in a separate stylesheet, or include them in the page inside a `<style>` tag. If you do this, you will probably want to prevent the client-side compiler from including the CSS again. For `svelte-cli`, use the `--no-css` flag. In build tool integrations like `rollup-plugin-svelte`, pass the `css: false` option.
 
 > The `components` array contains an object for each nested component that contains styles, allowing you to dedupe styles across multiple top-level components. Most of the time, you won't need to do this.
+
+### SSR Options
+| | **Values** | **Description** | **Default** |
+|---|---|---|---|
+| `extensions` | `array` | An array of extensions to intercept | `undefined` |
