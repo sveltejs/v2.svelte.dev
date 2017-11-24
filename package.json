@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node server",
     "prebuild": "rm -rf build && mkdir -p build",
-    "dev": "npm run prebuild && node scripts/prep && rollup -c -w & npm start",
+    "dev": "npm run prebuild && node scripts/prep && rollup -c -w",
     "build": "node scripts/prep && rollup -c",
     "update_template": "sh ./scripts/update_template.sh",
     "zip": "sh ./scripts/zip.sh",

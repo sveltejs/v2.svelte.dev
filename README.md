@@ -14,13 +14,7 @@ cd svelte.technology
 yarn
 ```
 
-Run Rollup in watch mode and start the server:
-
-```bash
-yarn run dev
-```
-
-This process is a little bit clunky and may change in future.
+Run Rollup in watch mode with `yarn run dev`, start the server in a separate terminal with `yarn start`, and navigate to [localhost:3000](http://localhost:3000).
 
 ## License
 
