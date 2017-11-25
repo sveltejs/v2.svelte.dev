@@ -52,12 +52,6 @@
 		},
 
 		oncreate () {
-			console.log('this.store', this.store);
-
-			this.store.observe('activeGuideSection', section => {
-				console.log({ section });
-			});
-
 			const onhashchange = () => {
 				this.store.set({ activeGuideSection: window.location.hash.slice( 1 ) });
 			};
