@@ -8,6 +8,7 @@ import blogIndex from '../universal/pages/blog.html';
 import blogPost from '../universal/pages/blog/id.html';
 import guidePage from '../universal/pages/guidePage.html';
 import replPage from '../universal/pages/replPage.html';
+import store from '../universal/store.js';
 
 const blogPosts = require('./build/blog.[hash].json');
 const guideSections = require('./build/guide.[hash].json');
@@ -46,11 +47,12 @@ function serve (req, res, page, data) {
 		Link: preload
 	});
 
-	res.write(page.render(data));
+	res.write(page.render(data, { store }));
 	res.end();
 }
 
 app.get( '/', ( req, res ) => {
+	store.set({ route: 'index' });
 	serve(req, res, home, { hashed });
 });
 
@@ -63,6 +65,7 @@ app.use( ( req, res, next ) => {
 });
 
 app.get( '/blog', ( req, res ) => {
+	store.set({ route: 'blog' });
 	serve(req, res, blogIndex, { hashed, posts: blogPosts });
 });
 
@@ -77,6 +80,7 @@ app.use( express.static( 'public', {
 }));
 
 app.get( '/blog/:slug', ( req, res ) => {
+	store.set({ route: 'blog' });
 	try {
 		const post = require( `${root}/public/blog/${req.params.slug}.json` );
 		serve(req, res, blogPost, { hashed, post });
@@ -87,10 +91,12 @@ app.get( '/blog/:slug', ( req, res ) => {
 });
 
 app.get( '/guide', ( req, res ) => {
+	store.set({ route: 'guide' });
 	serve(req, res, guidePage, { hashed, sections: guideSections });
 });
 
 app.get( '/repl', ( req, res ) => {
+	store.set({ route: 'repl' });
 	serve(req, res, replPage, { hashed });
 });
 

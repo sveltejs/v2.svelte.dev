@@ -7,15 +7,15 @@
 
 <nav ref:nav class='{{open ? "open": "closed"}}' on:click='set({ open: false })'>
 	<ul class='primary'>
-		<li><a class='{{route === "guide" ? "active": ""}}' href='/guide'>Guide</a></li>
-		<li><a class='{{route === "repl" ? "active": ""}}' href='/repl'>REPL</a></li>
-		<li><a class='{{route === "blog" ? "active": ""}}' href='/blog'>Blog</a></li>
+		<li><a class='{{$route === "guide" ? "active": ""}}' href='/guide'>Guide</a></li>
+		<li><a class='{{$route === "repl" ? "active": ""}}' href='/repl'>REPL</a></li>
+		<li><a class='{{$route === "blog" ? "active": ""}}' href='/blog'>Blog</a></li>
 		<li><a href='https://gitter.im/sveltejs/svelte'>Chat</a></li>
 		<li><a href='https://github.com/sveltejs/svelte'>GitHub</a></li>
 	</ul>
 
 	<div class='secondary'>
-		<GuideContents active='{{active}}'/>
+		<GuideContents/>
 	</div>
 </nav>
 

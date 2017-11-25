@@ -242,7 +242,7 @@
 						const { id } = anchor;
 
 						if ( id !== lastId ) {
-							this.refs.contents.set({ active: id });
+							this.store.set({ activeGuideSection: id });
 							this.fire( 'scroll', id );
 
 							lastId = id;

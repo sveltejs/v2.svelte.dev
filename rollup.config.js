@@ -51,7 +51,8 @@ export default [
 					}
 
 					fs.writeFileSync(`manifests/css.json`, JSON.stringify({ 'main.css': hashed.css }));
-				}
+				},
+				store: true
 			}),
 			buble(),
 			!dev && hash({
@@ -112,8 +113,9 @@ export default [
 		},
 		external: Object.keys(pkg.dependencies).concat([
 			'path', 'fs'
-		]),
+		]).filter(d => d !== 'svelte/store.js'),
 		plugins: [
+			resolve(),
 			replace({
 				__dev__: !!dev,
 				'blog.[hash].json': hashed.blog,
@@ -123,7 +125,8 @@ export default [
 			svelte({
 				generate: 'ssr',
 				cascade: false,
-				css: false
+				css: false,
+				store: true
 			})
 		]
 	}

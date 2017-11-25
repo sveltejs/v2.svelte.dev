@@ -5,13 +5,15 @@ import BlogPost from '../universal/routes/BlogPost.html';
 import Guide from '../universal/routes/Guide.html';
 import Repl from '../universal/routes/Repl/index.html';
 import Nav from '../universal/components/Nav.html';
-import * as store from './store.js';
+import store from '../universal/store.js';
+import * as ajax from './ajax.js';
 
 const header = document.querySelector( 'header' );
 const main = document.querySelector( 'main' );
 
-const nav = new Nav({
-	target: ( header.innerHTML = '', header )
+new Nav({
+	target: ( header.innerHTML = '', header ),
+	store
 });
 
 let view;
@@ -37,7 +39,7 @@ redirect( '/repl/', route => {
 roadtrip
 	.add( '/', {
 		enter ( route ) {
-			nav.set({ route: 'index' });
+			store.set({ route: 'index' });
 
 			if ( route.isInitial ) return; // page is static
 
@@ -50,20 +52,21 @@ roadtrip
 			}
 
 			view = new Index({
-				target: main
+				target: main,
+				store
 			});
 
 			window.scrollTo( route.scrollX, route.scrollY );
 
 			// preload blog and guide
-			store.getJSON( `/blog.[hash].json` ).then( () => {
-				return store.getJSON( `/guide.[hash].json` );
+			ajax.getJSON( `/blog.[hash].json` ).then( () => {
+				return ajax.getJSON( `/guide.[hash].json` );
 			});
 		}
 	})
 	.add( '/blog', {
 		enter ( route ) {
-			nav.set({ route: 'blog' });
+			store.set({ route: 'blog' });
 
 			if ( route.isInitial ) return; // page is static
 
@@ -75,33 +78,34 @@ roadtrip
 				main.innerHTML = '';
 			}
 
-			return store.getJSON( `/blog.[hash].json` ).then( posts => {
+			return ajax.getJSON( `/blog.[hash].json` ).then( posts => {
 				view = new BlogIndex({
 					target: main,
 					data: {
 						posts
-					}
+					},
+					store
 				});
 
 				window.scrollTo( route.scrollX, route.scrollY );
 
 				// start preloading blog posts
 				posts.reduce( ( promise, post ) => {
-					return promise.then( () => store.getJSON( `/blog/${post.slug}.json` ) );
+					return promise.then( () => ajax.getJSON( `/blog/${post.slug}.json` ) );
 				}, Promise.resolve() )
 
 					// then preload the guide
-					.then( () => store.getJSON( `/guide.[hash].json` ) );
+					.then( () => ajax.getJSON( `/guide.[hash].json` ) );
 			});
 		}
 	})
 	.add( '/blog/:slug', {
 		enter ( route ) {
-			nav.set({ route: 'blog' });
+			store.set({ route: 'blog' });
 
 			if ( route.isInitial ) return; // page is static
 
-			return store.getJSON( `/blog/${route.params.slug}.json` ).then( post => {
+			return ajax.getJSON( `/blog/${route.params.slug}.json` ).then( post => {
 				document.title = `${post.metadata.title} • Svelte`;
 
 				if ( view ) {
@@ -114,22 +118,23 @@ roadtrip
 					target: main,
 					data: {
 						post
-					}
+					},
+					store
 				});
 
 				// TODO this doesn't work because it's the <main> that scrolls, not the window
 				window.scrollTo( route.scrollX, route.scrollY );
 
 				// preload blog index and guide
-				store.getJSON( `/blog.[hash].json` ).then( () => {
-					return store.getJSON( `/guide.[hash].json` );
+				ajax.getJSON( `/blog.[hash].json` ).then( () => {
+					return ajax.getJSON( `/guide.[hash].json` );
 				});
 			});
 		}
 	})
 	.add( '/guide', {
 		enter ( route ) {
-			nav.set({ route: 'guide' });
+			store.set({ route: 'guide' });
 
 			document.title = 'Learn Svelte';
 
@@ -139,16 +144,17 @@ roadtrip
 				main.innerHTML = '';
 			}
 
-			return store.getJSON( `/guide.[hash].json` ).then( sections => {
+			return ajax.getJSON( `/guide.[hash].json` ).then( sections => {
 				view = new Guide({
 					target: main,
 					data: {
 						sections
-					}
+					},
+					store
 				});
 
 				view.on( 'scroll', id => {
-					nav.set({ active: id });
+					store.set({ activeGuideSection: id });
 				});
 
 				if ( route.scrollY === 0 && route.hash ) {
@@ -160,7 +166,7 @@ roadtrip
 				}
 
 				// preload blog index
-				store.getJSON( `/blog.[hash].json` );
+				ajax.getJSON( `/blog.[hash].json` );
 			});
 		},
 
@@ -171,7 +177,7 @@ roadtrip
 	})
 	.add( '/repl', {
 		enter () {
-			nav.set({ route: 'repl' });
+			store.set({ route: 'repl' });
 
 			document.title = 'Svelte REPL';
 
@@ -182,7 +188,8 @@ roadtrip
 			}
 
 			view = new Repl({
-				target: main
+				target: main,
+				store
 			});
 		}
 	});
