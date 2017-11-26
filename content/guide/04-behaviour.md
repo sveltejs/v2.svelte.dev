@@ -19,7 +19,7 @@ As well as scoped styles and a template, components can encapsulate *behaviours*
 
 ### Default data
 
-Often, it makes sense for a component to have default data. This should be expressed as a function that returns a POJO:
+Often, it makes sense for a component to have default data. This should be expressed as a function that returns a plain JavaScript object:
 
 ```html
 <p>Count: {{count}}</p>
@@ -36,7 +36,17 @@ Often, it makes sense for a component to have default data. This should be expre
 </script>
 ```
 
-Data supplied at instantiation (i.e. `new Component(...)`) takes priority over defaults.
+Data supplied at instantiation takes priority over defaults. In other words, if we instantiated the component above like so...
+
+```js
+const counter = new Counter({
+	data: {
+		count: 99
+	}
+});
+```
+
+...then `{{count}}`, or `counter.get('count')`, would initially be 99 rather than 0.
 
 > The example above, like many of the examples below, uses ES2015 syntax – i.e. `data () {...}` rather than `data: function {...}`. While Svelte will generate ES5 code that runs everywhere, it *won't* convert your ES2015 code into ES5 – so if you use ES2015 and need to support older browsers, you will need an additional transpilation step in your build process, added __after__ the `svelte()` step, using [Babel](https://babeljs.io) or [Bublé](https://buble.surge.sh).
 
