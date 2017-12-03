@@ -31,8 +31,8 @@ const hashed = __dev__ ? {
 };
 
 const preload = [
-	`<${hashed.bundle}>; rel=preload; as=script`,
-	`<${hashed.css}>; rel=preload; as=style`,
+	`</${hashed.bundle}>; rel=preload; as=script`,
+	`</${hashed.css}>; rel=preload; as=style`,
 
 	// only preload the essential fonts for initial render
 	`</fonts/rajdhani-light.woff2>; rel=preload; as=font; type='font/woff2'`,
