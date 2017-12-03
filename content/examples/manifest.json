@@ -41,6 +41,13 @@
 	},
 
 	{
+		"name": "Async data",
+		"examples": [
+			"await-block"
+		]
+	},
+
+	{
 		"name": "7guis",
 		"examples": [
 			"7guis-counter",
