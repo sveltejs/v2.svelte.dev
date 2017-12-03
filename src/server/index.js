@@ -10,8 +10,8 @@ import guidePage from '../universal/pages/guidePage.html';
 import replPage from '../universal/pages/replPage.html';
 import store from '../universal/store.js';
 
-const blogPosts = require('./build/blog.[hash].json');
-const guideSections = require('./build/guide.[hash].json');
+const blogPosts = require('./build/hashed/blog.[hash].json');
+const guideSections = require('./build/hashed/guide.[hash].json');
 
 const dev = !!process.env.DEV;
 
@@ -23,13 +23,11 @@ app.use(compression({ threshold: 0 }));
 
 // TODO this is unfortunate... would be nice to have a neater solution
 const hashed = __dev__ ? {
-	sw: 'sw.js',
 	bundle: 'bundle.js',
 	css: 'main.css'
 } : {
-	sw: require( './manifests/sw.json' )[ 'sw.js' ].replace( 'build/', '' ),
-	bundle: require( './manifests/bundle.json' )[ 'bundle.js' ].replace( 'build/', '' ),
-	css: require( './manifests/css.json' )[ 'main.css' ].replace( 'build/', '' )
+	bundle: require( './manifests/bundle.json' )[ 'bundle.js' ].replace( 'build/hashed/', '' ),
+	css: require( './manifests/css.json' )[ 'main.css' ].replace( 'build/hashed/', '' )
 };
 
 const preload = [
@@ -56,6 +54,10 @@ app.get( '/', ( req, res ) => {
 	serve(req, res, home, { hashed });
 });
 
+app.use( '/sw.:hash.js', ( req, res ) => {
+	res.redirect( '/sw.js' );
+});
+
 app.use( ( req, res, next ) => {
 	if ( req.url.slice( -1 ) === '/' && req.url.length > 1 ) {
 		res.redirect( 301, req.url.slice( 0, -1 ) );
@@ -69,7 +71,8 @@ app.get( '/blog', ( req, res ) => {
 	serve(req, res, blogIndex, { hashed, posts: blogPosts });
 });
 
-app.use( express.static( 'build', { maxAge: dev ? '1s' : '1y' }));
+app.use( express.static( 'build/hashed', { maxAge: dev ? '1s' : '1y' } ));
+app.use( express.static( 'build/unhashed' ) );
 
 app.use( '/examples', express.static( 'public/examples', {
 	maxAge: 60 * 1000
