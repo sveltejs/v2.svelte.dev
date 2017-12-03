@@ -30,7 +30,7 @@ You can also use tags in attributes:
 ```hidden-data
 {
 	"color": "steelblue",
-	"hideParagraph": false 
+	"hideParagraph": false
 }
 ```
 [Boolean attributes](https://www.w3.org/TR/html5/infrastructure.html#boolean-attributes) like `hidden` will be omitted if the tag expression evaluates to false.
@@ -193,6 +193,35 @@ Also, if you wish, you can perform one level of array destructuring on the eleme
 	]
 }
 ```
+
+
+### Await blocks
+
+You can represent the three states of a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) — pending, fulfilled and rejected — with an `await` block:
+
+```html
+{{#await promise}}
+	<p>wait for it...</p>
+{{then answer}}
+	<p>the answer is {{answer}}!</p>
+{{catch error}}
+	<p>well that's odd</p>
+{{/await}}
+
+<script>
+	export default {
+		data() {
+			return {
+				promise: new Promise(fulfil => {
+					setTimeout(() => fulfil(42), 3000);
+				})
+			};
+		}
+	};
+</script>
+```
+
+If the expression in `{{#await expression}}` *isn't* a promise, Svelte skips ahead to the `then` section.
 
 
 ### Directives
