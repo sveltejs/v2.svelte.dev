@@ -5,6 +5,7 @@ import BlogPost from '../universal/routes/BlogPost.html';
 import Guide from '../universal/routes/Guide.html';
 import Repl from '../universal/routes/Repl/index.html';
 import Nav from '../universal/components/Nav.html';
+import Toast from '../universal/components/Toast.html';
 import store from '../universal/store.js';
 import * as ajax from './ajax.js';
 
@@ -195,3 +196,11 @@ roadtrip
 	});
 
 roadtrip.start();
+
+if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+	navigator.serviceWorker.controller.onstatechange = function(e) {
+		if (e.target.state === 'redundant') {
+			Toast.show();
+		}
+	};
+}
