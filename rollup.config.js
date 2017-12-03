@@ -94,11 +94,6 @@ export default [
 				delimiters: ['', '']
 			}),
 			buble(),
-			!dev && hash({
-				dest: 'build/sw.[hash].js',
-				manifest: 'manifests/sw.json',
-				manifestKey: 'sw.js'
-			}),
 			!dev && uglify()
 		],
 		sourcemap: true
