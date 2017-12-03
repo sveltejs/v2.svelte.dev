@@ -1,0 +1,41 @@
+<div class='toast' on:click='reload()'>
+	Site has been updated — tap here to reload
+</div>
+
+<style>
+	.toast {
+		position: fixed;
+		left: 0;
+		bottom: 0;
+		width: 100%;
+		background-color: rgb(170,30,30);
+		color: white;
+		padding: 1em;
+		font-weight: 500;
+		z-index: 99;
+		animation: slide-up 0.4s ease-out;
+	}
+
+	@keyframes slide-up {
+		0% { transform: translate(0,100%); }
+		100% { transform: translate(0,0); }
+	}
+</style>
+
+<script>
+	export default {
+		methods: {
+			reload() {
+				window.location.reload();
+			}
+		},
+
+		setup(Toast) {
+			Toast.show = () => {
+				new Toast({
+					target: document.body
+				});
+			};
+		}
+	};
+</script>
