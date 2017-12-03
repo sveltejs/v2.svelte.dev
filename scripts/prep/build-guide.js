@@ -132,7 +132,7 @@ const sections = fs.readdirSync( `${root}/content/guide` )
 const json = JSON.stringify(sections);
 const hash = hasha(json, { algorithm: 'md5' });
 updateManifest({ 'guide.json' : `guide.${hash}.json` });
-fs.writeFileSync( `${root}/build/guide.${hash}.json`, json );
+fs.writeFileSync( `${root}/build/hashed/guide.${hash}.json`, json );
 
 
 fs.writeFileSync( `${root}/src/universal/components/guide-summary.json`, JSON.stringify( sections ) );

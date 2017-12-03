@@ -51,7 +51,7 @@ const preview = posts.map( post => {
 
 const previewJson = JSON.stringify( preview );
 const hash = hasha(previewJson, { algorithm: 'md5' });
-fs.writeFileSync( `${root}/build/blog.${hash}.json`, previewJson );
+fs.writeFileSync( `${root}/build/hashed/blog.${hash}.json`, previewJson );
 updateManifest({ 'blog.json': `blog.${hash}.json` });
 
 // TODO hash individual posts?

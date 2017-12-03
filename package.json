@@ -4,7 +4,7 @@
   "description": "Docs and examples for Svelte",
   "scripts": {
     "start": "node server",
-    "prebuild": "rm -rf build && mkdir -p build",
+    "prebuild": "rm -rf build && mkdir -p build/hashed",
     "dev": "npm run prebuild && node scripts/prep && rollup -c -w",
     "build": "node scripts/prep && rollup -c",
     "update_template": "sh ./scripts/update_template.sh",

@@ -27,7 +27,7 @@ export default [
 	{
 		input: 'src/client/main.js',
 		output: {
-			file: 'build/bundle.js',
+			file: 'build/hashed/bundle.js',
 			format: 'iife',
 		},
 		plugins: [
@@ -42,12 +42,12 @@ export default [
 				cascade: false,
 				css (css) {
 					if (dev) {
-						css.write(`build/main.css`);
+						css.write(`build/hashed/main.css`);
 						hashed.css = 'main.css';
 					} else {
 						const hash = hasha(css.code, { algorithm: 'md5' });
 						hashed.css = `main.${hash}.css`;
-						css.write(`build/${hashed.css}`);
+						css.write(`build/hashed/${hashed.css}`);
 					}
 
 					fs.writeFileSync(`manifests/css.json`, JSON.stringify({ 'main.css': hashed.css }));
@@ -56,7 +56,7 @@ export default [
 			}),
 			buble(),
 			!dev && hash({
-				dest: 'build/bundle.[hash].js',
+				dest: 'build/hashed/bundle.[hash].js',
 				manifest: 'manifests/bundle.json',
 				manifestKey: 'bundle.js'
 			}),
@@ -84,7 +84,7 @@ export default [
 	{
 		input: 'src/service-worker/main.js',
 		output: {
-			file: 'build/sw.js',
+			file: 'build/unhashed/sw.js',
 			format: 'iife',
 		},
 		plugins: [
@@ -129,7 +129,7 @@ export default [
 
 function generateCacheManifest() {
 	// https://github.com/phamann/rollup-plugin-hash/issues/14
-	hashed.bundle = readJson('manifests/bundle.json')['bundle.js'].replace('build/', '');
+	hashed.bundle = readJson('manifests/bundle.json')['bundle.js'].replace('build/hashed/', '');
 
 	const manifest = [].concat(
 		// routes
