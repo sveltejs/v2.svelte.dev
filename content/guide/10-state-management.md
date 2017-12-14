@@ -236,7 +236,7 @@ Just as in templates, you can access store properties in component computed prop
 ```html-no-repl
 <!-- Todo.html -->
 {{#if isVisible}}
-	<div class='todo class="{{todo.done ? "done": ""}}'>
+	<div class='todo {{todo.done ? "done": ""}}'>
 		{{todo.description}}
 	</div>
 {{/if}}
