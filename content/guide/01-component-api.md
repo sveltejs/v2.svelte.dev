@@ -56,6 +56,12 @@ console.log( component.get( 'answer' ) ); // 'ask your mother'
 
 This will also retrieve the value of [computed properties](#computed-properties).
 
+You can also call `component.get()` without any arguments to retrieve an object of all keys and values, including computed properties. This works particularly nicely with ES6 destructuring:
+
+```js
+const { foo, bar, baz } = component.get();
+```
+
 
 ### component.observe(key, callback[, options])
 
