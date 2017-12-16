@@ -1,0 +1,174 @@
+@font-face {
+	font-family: 'Roboto';
+	src: url('/fonts/Roboto/Roboto-LightItalic.woff2') format('woff2'),
+		url('/fonts/Roboto/Roboto-LightItalic.woff') format('woff');
+	font-weight: 300;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'Roboto';
+	src: url('/fonts/Roboto/Roboto-Light.woff2') format('woff2'),
+		url('/fonts/Roboto/Roboto-Light.woff') format('woff');
+	font-weight: 300;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Roboto';
+	src: url('/fonts/Roboto/Roboto-Bold.woff2') format('woff2'),
+		url('/fonts/Roboto/Roboto-Bold.woff') format('woff');
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Rajdhani';
+	src: url('/fonts/Rajdhani/Rajdhani-Bold.woff2') format('woff2'),
+		url('/fonts/Rajdhani/Rajdhani-Bold.woff') format('woff');
+	font-weight: 700;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Rajdhani';
+	src: url('/fonts/Rajdhani/Rajdhani-Medium.woff2') format('woff2'),
+		url('/fonts/Rajdhani/Rajdhani-Medium.woff') format('woff');
+	font-weight: 500;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Rajdhani';
+	src: url('/fonts/Rajdhani/Rajdhani-Regular.woff2') format('woff2'),
+		url('/fonts/Rajdhani/Rajdhani-Regular.woff') format('woff');
+	font-weight: 300;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Inconsolata';
+	src: local('Inconsolata Bold'), local('Inconsolata-Bold'),
+		url('/fonts/Inconsolata/Inconsolata-Bold.woff2') format('woff2'),
+		url('/fonts/Inconsolata/Inconsolata-Bold.woff') format('woff');
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Inconsolata';
+	src: local('Inconsolata'), local('Inconsolata-Regular'),
+		url('/fonts/Inconsolata/Inconsolata-Regular.woff2') format('woff2'),
+		url('/fonts/Inconsolata/Inconsolata-Regular.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+
+* {
+	position: relative;
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	background: #fff;
+	font-family: Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+	font-weight: 300;
+	color: #333;
+}
+
+main {
+	/* padding: 3em 0 0 0;
+	overflow-x: hidden; */
+	/*overflow-y: auto;*/
+	/*height: calc(100vh - 4em);*/
+	/*position: absolute;*/
+	/*width: 100%;*/
+	/*top: 4em;*/
+	/*top: 0;*/
+}
+
+code, pre {
+	font-family: 'Inconsolata', monospace;
+	font-weight: 400;
+	line-height: 1.2;
+}
+
+pre {
+	overflow-x: auto;
+}
+
+h1, h2, h3 {
+	font-family: Rajdhani, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+	margin: 0;
+	font-weight: 300;
+	padding: 0.5em 0;
+	line-height: 1.2;
+}
+
+a {
+	text-decoration: none;
+	color: rgb(170,30,30);
+}
+
+strong {
+	font-weight: 800;
+}
+
+/* @media (min-width: 768px) {
+	main {
+		padding: 4em 0 0 0;
+	}
+} */
+
+.hljs,
+.hljs-subst {
+	color: #333;
+}
+
+.hljs-comment {
+	color: #999;
+}
+
+.hljs-tag {
+	color: #170;
+}
+
+.hljs-keyword {
+	color: #708;
+}
+
+.hljs-attr {
+	color: #333;
+}
+
+.hljs-number {
+	color: #164;
+}
+
+.hljs-type,
+.hljs-string,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-quote,
+.hljs-template-tag,
+.hljs-deletion {
+	color: #aa1e1e;
+}
+
+.hljs-title,
+.hljs-section {
+	color: #aa1e1e;
+}
+
+.hljs-literal {
+	color: #170;
+}
+
+.hljs-meta {
+	color: #555;
+}
+
+.hljs-meta-string {
+	color: #555;
+}
