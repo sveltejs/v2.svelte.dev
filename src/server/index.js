@@ -45,7 +45,7 @@ function serve (req, res, page, data) {
 		Link: preload
 	});
 
-	res.write(page.render(data, { store }));
+	res.write(page.render(data, { store }).html);
 	res.end();
 }
 
