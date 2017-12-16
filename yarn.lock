@@ -591,7 +591,7 @@ combined-stream@^1.0.5, combined-stream@~1.0.5:
   dependencies:
     delayed-stream "~1.0.0"
 
-commander@~2.12.1:
+commander@^2.9.0, commander@~2.12.1:
   version "2.12.2"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.12.2.tgz#0f5946c427ed9ec0d91a46bb9def53e54650e555"
 
@@ -1578,6 +1578,12 @@ getpass@^0.1.1:
   resolved "https://registry.yarnpkg.com/getpass/-/getpass-0.1.7.tgz#5eff8e3e684d569ae4cb2b1282604e8ba62149fa"
   dependencies:
     assert-plus "^1.0.0"
+
+git-branch-is@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/git-branch-is/-/git-branch-is-0.1.0.tgz#bef5a6113a30f4007e7c002f9ba4cf37925c171f"
+  dependencies:
+    commander "^2.9.0"
 
 glob-base@^0.3.0:
   version "0.3.0"
