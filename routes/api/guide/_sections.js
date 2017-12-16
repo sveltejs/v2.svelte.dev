@@ -102,7 +102,7 @@ export default fs
 					data
 				});
 
-				const href = `/repl?data=${btoa(encodeURIComponent(json))}`;
+				const href = `/repl?data=${encodeURIComponent(btoa(json))}`;
 				return `<a class='open-in-repl' href='${href}'></a>${pre}`;
 			})
 			.replace(/^\t+/gm, match => match.split('\t').join('  '));

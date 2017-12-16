@@ -426,7 +426,7 @@
 	import store from '../_store.js';
 
 	function loadCodemirror() {
-		return import('./_codemirror.js').then(CodeMirror => {
+		return import(/* webpackChunkName: "codemirror" */ './_codemirror.js').then(CodeMirror => {
 			return (window.CodeMirror = CodeMirror);
 		});
 	}
@@ -436,14 +436,17 @@
 
 	function loadSvelte() {
 		const version = versionMatch ? versionMatch[1] : 'latest';
-		if (version === 'local') return import('svelte');
+		if (version === 'local') return import(/* webpackChunkName: "svelte" */ 'svelte');
 		return load.script(`https://unpkg.com/svelte@${version}/compiler/svelte.js`).then(() => window.svelte);
 	}
 
 	function tryParseData(encoded) {
 		try {
-			return JSON.parse(decodeURIComponent(atob(encoded)));
+			const base64 = decodeURIComponent(encoded);
+			const json = atob(base64);
+			return JSON.parse(json);
 		} catch (err) {
+			console.error(err.message);
 			return {};
 		}
 	}
@@ -850,8 +853,8 @@
 				});
 
 				Promise.all([
-					import('jszip'),
-					import('file-saver')
+					import(/* webpackChunkName: "jszip" */ 'jszip'),
+					import(/* webpackChunkName: "file-saver" */'file-saver')
 				]).then(([JSZip, saveAs]) => {
 					const zip = new JSZip();
 
@@ -1065,7 +1068,7 @@ export default app;` );
 				this.updateUrl();
 			});
 
-			import('rollup/dist/rollup.browser.js').then(rollup => {
+			import(/* webpackChunkName: "rollup" */ 'rollup/dist/rollup.browser.js').then(rollup => {
 				this.set({ loadedRollup: true });
 				window.rollup = rollup;
 
