@@ -3,7 +3,7 @@
 	"theme_color": "#aa1e1e",
 	"name": "Svelte",
 	"short_name": "Svelte",
-	"display": "browser",
+	"display": "minimal-ui",
 	"start_url": "/",
 	"icons": [
 		{
