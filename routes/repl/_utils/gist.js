@@ -1,80 +1,46 @@
-const cache = {};
-
-function request(method, url, data) {
-	return new Promise((fulfil, reject) => {
-		const xhr = new XMLHttpRequest();
-		xhr.open(method, url);
-		xhr.onload = () => {
-			const response = JSON.parse(xhr.responseText);
-			if (xhr.status >= 400) {
-				reject(new Error(response.message));
-			}
-			fulfil(response);
-		};
-		xhr.onerror = reject;
-		xhr.send(data);
-	});
-}
-
-function get(url) {
-	return request('GET', url);
-}
-
-function post(url, data) {
-	return request('POST', url, data);
-}
-
 export function getComponentFromGist(id) {
 	let cancelled = false;
 
-	if (!cache[id]) {
-		cache[id] = get(`https://api.github.com/gists/${id}`)
-			.catch(() => get(`/gists/${id}`))
-			.then(gist => {
-				const components = [];
+	const promise = fetch(`https://api.github.com/gists/${id}`)
+		.catch(() => fetch(`/api/gists/${id}`))
+		.then(r => r.json())
+		.then(gist => {
+			if (cancelled) throw new Error(`Request was cancelled`);
 
-				const componentFiles = Object.keys(gist.files).filter(file =>
-					/\.(html|js)$/.test(file)
-				);
+			const components = [];
 
-				if (
-					componentFiles.length === 1 &&
-					componentFiles[0] === 'component.html'
-				) {
-					// legacy
-					components.push({
-						name: 'App',
-						type: 'html',
-						entry: true,
-						source: gist.files['component.html'].content
-					});
-				} else {
-					componentFiles.forEach(file => {
-						const ext = /\.(html|js)$/.exec(file)[0];
-						const name = file.slice(0, -ext.length);
-						const type = ext.slice(1);
+			const componentFiles = Object.keys(gist.files).filter(file =>
+				/\.(html|js)$/.test(file)
+			);
 
-						const source = gist.files[file].content;
+			if (
+				componentFiles.length === 1 &&
+				componentFiles[0] === 'component.html'
+			) {
+				// legacy
+				components.push({
+					name: 'App',
+					type: 'html',
+					entry: true,
+					source: gist.files['component.html'].content
+				});
+			} else {
+				componentFiles.forEach(file => {
+					const ext = /\.(html|js)$/.exec(file)[0];
+					const name = file.slice(0, -ext.length);
+					const type = ext.slice(1);
 
-						components.push({ name, type, entry: name === 'App', source });
-					});
-				}
+					const source = gist.files[file].content;
 
-				const jsonFile = gist.files['data.json'];
-				const json = (jsonFile && jsonFile.content) || '{}';
+					components.push({ name, type, entry: name === 'App', source });
+				});
+			}
 
-				return { components, json };
-			})
-			.catch(err => {
-				cache[id] = null;
-				throw err;
-			});
-	}
+			const jsonFile = gist.files['data.json'];
+			const json = (jsonFile && jsonFile.content) || '{}';
 
-	const promise = cache[id].then(component => {
-		if (cancelled) throw new Error(`Request was cancelled`);
-		return component;
-	});
+			return { components, json };
+		});
 
 	promise.cancel = () => {
 		cancelled = true;
@@ -106,7 +72,8 @@ export function saveComponentAsGist(components, json) {
 		files
 	});
 
-	return post(`/gists`, body)
-		.catch(() => post(`https://api.github.com/gists`, body))
+	return fetch(`https://api.github.com/gists`, { method: 'POST', body })
+		.catch(() => fetch(`/api/gists`, { method: 'POST', body }))
+		.then(r => r.json())
 		.then(gist => gist.id);
 }

@@ -855,7 +855,7 @@
 				Promise.all([
 					import(/* webpackChunkName: "jszip" */ 'jszip'),
 					import(/* webpackChunkName: "file-saver" */'file-saver')
-				]).then(([JSZip, saveAs]) => {
+				]).then(([JSZip, FileSaver]) => {
 					const zip = new JSZip();
 
 					get('/svelte-app.zip', { responseType: 'arraybuffer' })
@@ -890,7 +890,7 @@ export default app;` );
 										this.set({
 											downloading: false
 										});
-										saveAs(blob, 'svelte-app.zip');
+										FileSaver.saveAs(blob, 'svelte-app.zip');
 									});
 							};
 
