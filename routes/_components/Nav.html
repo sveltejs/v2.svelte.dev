@@ -7,9 +7,9 @@
 
 <nav ref:nav class='{{open ? "open": "closed"}}' on:click='set({ open: false })'>
 	<ul class='primary'>
-		<li><a class='{{page === "guide" ? "active": ""}}' href='/guide'>Guide</a></li>
-		<li><a class='{{page === "repl" ? "active": ""}}' href='/repl'>REPL</a></li>
-		<li><a class='{{page === "blog" ? "active": ""}}' href='/blog'>Blog</a></li>
+		<li><a rel='prefetch' class='{{page === "guide" ? "active": ""}}' href='/guide'>Guide</a></li>
+		<li><a rel='prefetch' class='{{page === "repl" ? "active": ""}}' href='/repl'>REPL</a></li>
+		<li><a rel='prefetch' class='{{page === "blog" ? "active": ""}}' href='/blog'>Blog</a></li>
 		<li><a href='https://gitter.im/sveltejs/svelte'>Chat</a></li>
 		<li><a href='https://github.com/sveltejs/svelte'>GitHub</a></li>
 	</ul>
