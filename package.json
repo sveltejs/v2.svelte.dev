@@ -6,14 +6,12 @@
     "dev": "node server.js",
     "start": "cross-env NODE_ENV=production node server.js",
     "update_template": "sh ./scripts/update_template.sh",
-    "zip": "sh ./scripts/zip.sh",
-    "prezip": "npm run update_template",
     "stage": "now -e client_id=@svelte-gist-client-id -e client_secret=@svelte-gist-client-secret",
     "deploy": "npm run stage && now alias",
     "deploy:ci": "now -e client_id=@svelte-gist-client-id -e client_secret=@svelte-gist-client-secret --token $NOW_TOKEN && now alias --token $NOW_TOKEN",
-    "prestage": "npm run zip",
-    "predeploy": "npm run zip",
-    "predeploy:ci": "npm run zip",
+    "prestage": "npm run update_template",
+    "predeploy": "npm run update_template",
+    "predeploy:ci": "npm run update_template",
     "lint": "eslint server client shared"
   },
   "repository": {
