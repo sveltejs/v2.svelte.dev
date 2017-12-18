@@ -1,11 +1,10 @@
-import app from 'sapper/runtime/app.js';
+import { init } from '__app__';
 
-app.init(document.querySelector('#sapper'), __routes__);
+init(document.querySelector('#sapper'), __routes__);
 
-if (__dev__) {
-	import('sapper/webpack/hmr');
-
-	if (module.hot) {
-		module.hot.accept();
-	}
-}
+// Sadly need to comment this out pending
+// https://github.com/sveltejs/sapper-template/issues/2
+// if (__dev__) {
+// 	import('sapper/webpack/hmr');
+// 	if (module.hot) module.hot.accept();
+// }
