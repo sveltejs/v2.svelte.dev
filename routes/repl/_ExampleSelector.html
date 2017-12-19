@@ -1,0 +1,62 @@
+<div class='select-wrapper'>
+	<select bind:value='selectedExample'>
+		<option value='{{null}}' disabled>Select an example</option>
+
+		{{#each example_contents as group}}
+			<optgroup label='{{group.name}}'>
+				{{#each group.examples as example}}
+					<option value='{{example}}'>{{example.title}}</option>
+				{{/each}}
+			</optgroup>
+		{{/each}}
+	</select>
+
+	<div class='visible'>
+		<span>{{selectedExample ? selectedExample.title : 'Select an example'}}</span>
+	</div>
+</div>
+
+<style>
+	.select-wrapper {
+		position: relative;
+		display: block;
+		float: left;
+		padding: 0 1.5em 0 0;
+		/* background-color: white;
+		border: 1px solid #333;
+		border-radius: 2px; */
+		font-family: Rajdhani;
+		font-weight: 300;
+		font-size: 1em;
+		line-height: 1.2;
+	}
+
+	.select-wrapper::after {
+		content: '▼';
+		position: absolute;
+		right: 0.8rem;
+		top: 0.85rem;
+		font-size: 0.7em;
+		color: rgba(0,0,0,0.4);
+		pointer-events: none;
+	}
+
+	select {
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		opacity: 0;
+	}
+
+	.visible {
+		pointer-events: none;
+		padding: 5px 0.4em;
+		font-size: 20px;
+	}
+
+	.visible span {
+		top: 0.05em;
+	}
+</style>

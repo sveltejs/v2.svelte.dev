@@ -1,0 +1,188 @@
+
+<:Head>
+	<title>{{post.metadata.title}}</title>
+</:Head>
+
+<Layout page='blog'>
+	<article class='post'>
+		<h1>{{post.metadata.title}}</h1>
+		<p class='standfirst'>{{post.metadata.description}}</p>
+
+		<p class='byline'><a href='{{post.metadata.authorURL}}'>{{post.metadata.author}}</a> <time datetime='{{post.metadata.pubdate}}'>{{post.metadata.dateString}}</time></p>
+
+		{{{post.html}}}
+	</article>
+</Layout>
+
+<style>
+	.post {
+		max-width: 48em;
+		margin: 0 auto 4em auto;
+		padding: 1em;
+		/*padding: 0 0 2em 0;*/
+	}
+
+	.byline {
+		font-size: 0.8em;
+		border-top: 1px solid #eee;
+		padding: 0.5em 0;
+	}
+
+	.post .standfirst {
+		font-size: 1.4em;
+		font-family: Rajdhani, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+		line-height: 1.2;
+		color: #888;
+		font-weight: 500;
+	}
+
+	.post :global(p) {
+		margin: 0 0 1em 0;
+		line-height: 1.5;
+		font-weight: 300;
+		color: #333;
+	}
+
+	.post :global(p):last-child {
+		margin: 0;
+	}
+
+	.post :global(ul) {
+		color: #333;
+		line-height: 1.5;
+	}
+
+	.post :global(strong) {
+		color: #333;
+		font-weight: 700;
+	}
+
+	.post :global(figure) {
+		margin: 0 0 2em 0;
+	}
+
+	.post :global(figcaption) {
+		font-size: 14px;
+		color: #999;
+	}
+
+	.post :global(video) {
+		width: 100%;
+	}
+
+	.post {
+		padding: 1em;
+	}
+
+	.post :global(code) {
+		background-color: #f9f9f9;
+		padding: 0.2em 0.4em;
+		border-radius: 3px;
+	}
+
+	h1, .post :global(h2) {
+		font-size: 1.8em;
+		margin: 0;
+		font-weight: 500;
+	}
+
+	.post :global(h2) {
+		color: #333;
+	}
+
+	.standfirst {
+		font-size: 1.4em;
+		font-family: Rajdhani, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+		line-height: 1.2;
+		color: #888;
+		font-weight: 500;
+	}
+
+	.post :global(blockquote) {
+		color: #999;
+		margin: 1em 0;
+		padding: 0.5em 0 0.5em 1em;
+		max-width: 48em;
+		background-color: #f9f9f9;
+		border-left: 2px solid #ddd;
+		/*border-top: 1px solid #eee;
+		border-bottom: 1px solid #eee;*/
+	}
+
+	.post :global(blockquote) :global(p) {
+		color: #666;
+	}
+
+	.post :global(blockquote) :global(strong) {
+		display: block;
+		font-weight: 300;
+		font-style: italic;
+		color: #666;
+	}
+
+	.post :global(aside) {
+		float: right;
+		margin: 0 0 1em 1em;
+		width: 10em;
+		font-size: 0.8em;
+		line-height: 1.4;
+		color: #999;
+		z-index: 2;
+	}
+
+	.post :global(pre) {
+		background-color: #f9f9f9;
+		padding: 0.5em;
+		border-radius: 2px;
+	}
+
+	.post :global(pre).lang-bash {
+		background-color: #666;
+		color: white;
+	}
+
+	.post :global(pre) :global(code) {
+		background: none;
+		padding: 0;
+		font-size: 14px;
+		font-weight: 300;
+	}
+
+	@media (min-width: 48em) {
+		h1 {
+			font-size: 2.4em;
+		}
+
+		.post :global(h2) {
+			font-size: 1.8em;
+		}
+	}
+
+	@media (min-width: 70em) {
+		.post :global(aside) {
+			position: absolute;
+			padding: 0.5em 0 0 0;
+			width: 10em;
+			right: -10em;
+		}
+	}
+</style>
+
+<script>
+	import Layout from '../_components/Layout.html';
+	import store from '../_store.js';
+
+	export default {
+		components: {
+			Layout
+		},
+
+		store: () => store,
+
+		preload({ params }) {
+			return fetch(`/api/blog/${params.slug}`).then(r => r.json()).then(post => {
+				return { post };
+			});
+		}
+	};
+</script>
