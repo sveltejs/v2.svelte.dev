@@ -31,6 +31,7 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
 	const url = new URL(event.request.url);
 	if (!/^https?/.test(url.protocol)) return;
+	if (event.request.method === 'POST') return;
 
 	// always serve assets and webpack-generated files from cache
 	if (cached.has(url.pathname)) {
