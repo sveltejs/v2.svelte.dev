@@ -5,7 +5,6 @@
   "scripts": {
     "dev": "node server.js",
     "start": "cross-env NODE_ENV=production node server.js",
-    "prestart": "npm run build && echo \"build succeeded\"",
     "build": "sapper build",
     "update_template": "sh ./scripts/update_template.sh",
     "stage": "now -e client_id=@svelte-gist-client-id -e client_secret=@svelte-gist-client-secret",
