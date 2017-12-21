@@ -39,14 +39,6 @@ self.addEventListener('fetch', event => {
 		return;
 	}
 
-	// for pages, serve a shell index.html
-	// if (url.origin === self.origin && routes.find(route => route.pattern.test(url.pathname))) {
-	// 	event.respondWith(caches.match('/index.html'));
-	// 	return;
-	// }
-
-	console.log(event.request);
-
 	// for everything else, try the cache first, falling back to
 	// network if item is not in cache
 	event.respondWith(
