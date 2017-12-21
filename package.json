@@ -5,11 +5,12 @@
   "scripts": {
     "dev": "node server.js",
     "start": "cross-env NODE_ENV=production node server.js",
-    "prestart": "npm run build",
+    "prestart": "npm run build && echo \"build succeeded\"",
     "build": "sapper build",
     "update_template": "sh ./scripts/update_template.sh",
     "stage": "now -e client_id=@svelte-gist-client-id -e client_secret=@svelte-gist-client-secret",
     "deploy": "git-branch-is master && npm run stage && now alias",
+    "predeploy": "npm run build",
     "deploy:ci": "git-branch-is master && now -e client_id=@svelte-gist-client-id -e client_secret=@svelte-gist-client-secret --token $NOW_TOKEN && now alias --token $NOW_TOKEN",
     "prestage": "npm run update_template",
     "predeploy:ci": "npm run update_template",
@@ -67,8 +68,12 @@
     "webpack": "^3.10.0"
   },
   "now": {
+    "env": {
+      "NODE_ENV": "production"
+    },
     "alias": "svelte.technology",
     "files": [
+      ".sapper",
       "assets",
       "content",
       "routes",
