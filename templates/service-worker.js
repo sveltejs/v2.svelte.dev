@@ -39,28 +39,18 @@ self.addEventListener('fetch', event => {
 		return;
 	}
 
-	// for pages, serve a shell index.html
-	if (url.origin === self.origin && routes.find(route => route.pattern.test(url.pathname))) {
-		event.respondWith(caches.match('/index.html'));
-		return;
-	}
-
-	// for everything else, try the network first, falling back to
-	// cache if the user is offline
+	// for everything else, try the cache first, falling back to
+	// network if item is not in cache
 	event.respondWith(
 		caches
 			.open('offline')
 			.then(async cache => {
-				try {
-					const response = await fetch(event.request);
-					cache.put(event.request, response.clone());
-					return response;
-				} catch(err) {
-					const response = await cache.match(event.request);
-					if (response) return response;
+				let response = await cache.match(event.request);
+				if (response) return response;
 
-					throw err;
-				}
+				response = await fetch(event.request);
+				if (response) cache.put(event.request, response.clone());
+				return response;
 			})
 	);
 });
