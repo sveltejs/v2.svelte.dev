@@ -3310,11 +3310,12 @@ safe-buffer@5.1.1, safe-buffer@^5.0.1, safe-buffer@^5.1.0, safe-buffer@^5.1.1, s
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.1.1.tgz#893312af69b2123def71f57889001671eeb2c853"
 
-sapper@^0.2.2:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/sapper/-/sapper-0.2.2.tgz#4e84af28f3b92b67afd87de5b6f9eb438483d23d"
+sapper@^0.2.6:
+  version "0.2.6"
+  resolved "https://registry.yarnpkg.com/sapper/-/sapper-0.2.6.tgz#9616eb973db02da2a284a0adadcc2c4d7f500e38"
   dependencies:
     chalk "^2.3.0"
+    chokidar "^1.7.0"
     escape-html "^1.0.3"
     mkdirp "^0.5.1"
     relative "^3.0.2"
