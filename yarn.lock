@@ -3316,9 +3316,9 @@ safe-buffer@5.1.1, safe-buffer@^5.0.1, safe-buffer@^5.1.0, safe-buffer@^5.1.1, s
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.1.1.tgz#893312af69b2123def71f57889001671eeb2c853"
 
-sapper@^0.2.7:
-  version "0.2.7"
-  resolved "https://registry.yarnpkg.com/sapper/-/sapper-0.2.7.tgz#14f13284e6389127e54b5263b42137a179e93eca"
+sapper@^0.2.10:
+  version "0.2.10"
+  resolved "https://registry.yarnpkg.com/sapper/-/sapper-0.2.10.tgz#2ae0499e5278f3b7c6d1c8a60bdbae9ebcf30442"
   dependencies:
     chalk "^2.3.0"
     chokidar "^1.7.0"
