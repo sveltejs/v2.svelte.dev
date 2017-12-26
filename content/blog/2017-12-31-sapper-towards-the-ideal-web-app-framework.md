@@ -19,7 +19,7 @@ If you had to list the characteristics of the perfect Node.js web application fr
 7. No compromise on performance
 8. First-rate developer experience, with hot module reloading and all the trimmings
 9. The resulting codebase should be easy to grok and maintain
-10. It should be possible to understand and customise every aspect of the system — no hidden webpack configs, and as little 'magic' as possible
+10. It should be possible to understand and customise every aspect of the system — no webpack configs locked up in the framework, and as little hidden 'plumbing' as possible
 11. Learning the entire framework in under an hour should be easy, and not just for experienced developers
 
 [Next.js](https://github.com/zeit/next.js) is close to this ideal. If you haven't encountered it yet, I strongly recommend going through the tutorials at [learnnextjs.com](https://learnnextjs.com). Next introduced a brilliant idea: all the pages of your app are files in a `your-project/pages` directory, and each of those files is just a React component.
