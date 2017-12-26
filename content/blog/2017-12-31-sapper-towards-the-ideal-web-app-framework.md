@@ -20,6 +20,7 @@ If you had to list the characteristics of the perfect Node.js web application fr
 8. First-rate developer experience, with hot module reloading and all the trimmings
 9. The resulting codebase should be easy to grok and maintain
 10. It should be possible to understand and customise every aspect of the system — no hidden webpack configs, and as little 'magic' as possible
+11. Learning the entire framework in under an hour should be easy, and not just for experienced developers
 
 [Next.js](https://github.com/zeit/next.js) is close to this ideal. If you haven't encountered it yet, I strongly recommend going through the tutorials at [learnnextjs.com](https://learnnextjs.com). Next introduced a brilliant idea: all the pages of your app are files in a `your-project/pages` directory, and each of those files is just a React component.
 
@@ -49,7 +50,7 @@ What happens if we use the new model as a starting point?
 
 <aside>The [name comes from](https://sapper.svelte.technology/guide#why-the-name-) the term for combat engineers, and is also short for <strong>S</strong>velte <strong>app</strong> mak<strong>er</strong></aside>
 
-[Sapper](https://sapper.svelte.technology) is the answer to that question. It's a Next.js-style framework that aims to meet the ten criteria at the top of this article while dramatically reducing the amount of code that gets sent to the browser.
+[Sapper](https://sapper.svelte.technology) is the answer to that question. It's a Next.js-style framework that aims to meet the eleven criteria at the top of this article while dramatically reducing the amount of code that gets sent to the browser.
 
 The same 'hello world' app that took 204kb with React and Next weighs just 7kb with Sapper. That number is likely to fall further in the future as we explore the space of optimisation possibilities, such as not shipping any JavaScript *at all* for pages that aren't interactive, beyond the tiny Sapper runtime that handles client-side routing.
 
@@ -70,7 +71,7 @@ If you're in that camp, I'd invite you to at least try alternative frameworks. Y
 
 But there are trade-offs nonetheless. Some people have a pathological aversion to any form of 'template language', and maybe that applies to you. JSX proponents will literally clobber you with the 'it's just JavaScript' mantra, and therein lies React's greatest strength, which is that it is infinitely flexible. That flexibility comes with its own set of trade-offs, but we're not here to discuss those.
 
-And then there's *ecosystem*. The universe around React in particular — the devtools, editor integrations, ancillary libraries, tutorials, StackOverflow answers, hell, even job opportunities — is unrivalled. While it's true that citing 'ecosystem' as the main reason to choose a tool is a sign that you're stuck on a local maximum, apt to be marooned by the rising waters of progress, it's still a major point in favour of incumbent tools.
+And then there's *ecosystem*. The universe around React in particular — the devtools, editor integrations, ancillary libraries, tutorials, StackOverflow answers, hell, even job opportunities — is unrivalled. While it's true that citing 'ecosystem' as the main reason to choose a tool is a sign that you're stuck on a local maximum, apt to be marooned by the rising waters of progress, it's still a major point in favour of incumbents.
 
 
 ## Roadmap
