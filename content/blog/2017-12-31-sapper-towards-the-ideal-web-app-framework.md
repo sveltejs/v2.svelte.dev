@@ -38,16 +38,16 @@ We can do better!
 
 ## The compiler-as-framework paradigm shift
 
-[Svelte](https://svelte.technology/blog/frameworks-without-the-framework) introduced a radical idea: what if your UI framework wasn't a framework at all, but a compiler that turned your components into standalone JavaScript modules? Instead of using a library like React or Vue, which knows nothing about your app and must therefore be a one-size-fits-all solution, we can ship highly-optimised vanilla JavaScript. Just the code your app needs, and without the memory and performance overhead of solutions based on a virtual DOM.
+[Svelte introduced a radical idea](https://svelte.technology/blog/frameworks-without-the-framework): what if your UI framework wasn't a framework at all, but a compiler that turned your components into standalone JavaScript modules? Instead of using a library like React or Vue, which knows nothing about your app and must therefore be a one-size-fits-all solution, we can ship highly-optimised vanilla JavaScript. Just the code your app needs, and without the memory and performance overhead of solutions based on a virtual DOM.
 
-The JavaScript world is [moving towards this model](https://tomdale.net/2017/09/compilers-are-the-new-frameworks/). [Stencil](https://stenciljs.com), a Svelte-inspired framework from the Ionic team, compiles to web components. [Glimmer](https://glimmerjs.com) *doesn't* compile to standalone JavaScript (the pros and cons of which deserve a separate blog post), but is doing some fascinating research around compiling templates to bytecode. (React is [getting in on the action](https://twitter.com/trueadm/status/944908776896978946), though their current research focuses on optimising your JSX app code, which is arguably more similar to the ahead-of-time optimisations that Angular, Ractive and Vue have been doing for a few years.)
+The JavaScript world is [moving towards this model](https://tomdale.net/2017/09/compilers-are-the-new-frameworks/). [Stencil](https://stenciljs.com), a Svelte-inspired framework from the Ionic team, compiles to web components. [Glimmer](https://glimmerjs.com) *doesn't* compile to standalone JavaScript (the pros and cons of which deserve a separate blog post), but the team is doing some fascinating research around compiling templates to bytecode. (React is [getting in on the action](https://twitter.com/trueadm/status/944908776896978946), though their current research focuses on optimising your JSX app code, which is arguably more similar to the ahead-of-time optimisations that Angular, Ractive and Vue have been doing for a few years.)
 
 What happens if we use the new model as a starting point?
 
 
 ## Introducing Sapper
 
-<aside>The [name comes from](https://sapper.svelte.technology/guide#why-the-name-) the slang term for combat engineers, and is also short for <strong>S</strong>velte <strong>app</strong> mak<strong>er</strong></aside>
+<aside>The [name comes from](https://sapper.svelte.technology/guide#why-the-name-) the term for combat engineers, and is also short for <strong>S</strong>velte <strong>app</strong> mak<strong>er</strong></aside>
 
 [Sapper](https://sapper.svelte.technology) is the answer to that question. It's a Next.js-style framework that aims to meet the ten criteria at the top of this article while dramatically reducing the amount of code that gets sent to the browser.
 
