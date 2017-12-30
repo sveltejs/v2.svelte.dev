@@ -33,7 +33,7 @@ You can also use tags in attributes:
 	"hideParagraph": false
 }
 ```
-[Boolean attributes](https://www.w3.org/TR/html5/infrastructure.html#boolean-attributes) like `hidden` will be omitted if the tag expression evaluates to false.
+[Boolean attributes](https://www.w3.org/TR/html5/infrastructure.html#sec-boolean-attributes) like `hidden` will be omitted if the tag expression evaluates to false.
 
 > While tags are delimited using `{{` and `}}`, Svelte does not use [Mustache](https://mustache.github.io/) syntax. Tags are just JavaScript expressions.
 
