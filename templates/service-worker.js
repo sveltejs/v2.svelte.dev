@@ -1,4 +1,5 @@
-const ASSETS = `cache__timestamp__`;
+const timestamp = '__timestamp__';
+const ASSETS = `cache${timestamp}`;
 
 const to_cache = __shell__.concat(__assets__);
 const cached = new Set(to_cache);
@@ -43,7 +44,7 @@ self.addEventListener('fetch', event => {
 	// network if item is not in cache
 	event.respondWith(
 		caches
-			.open('offline')
+			.open(`offline${timestamp}`)
 			.then(async cache => {
 				let response = await cache.match(event.request);
 				if (response) return response;

@@ -10,7 +10,7 @@ const summary = JSON.stringify(posts.map(post => {
 export function get(req, res) {
 	res.set({
 		'Content-Type': 'application/json',
-		'Cache-Control': `max-age=${30 * 60 * 1e3}` // 30 minutes
+		'Cache-Control': `max-age=${5 * 60 * 1e3}` // 5 minutes
 	});
 	res.end(summary);
 }
