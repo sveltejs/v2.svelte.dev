@@ -22,6 +22,8 @@ Svelte components can be used as custom elements by doing the following:
 </script>
 ```
 
+Importing this file will now register a globally-available `<hello-world>` custom element that accepts a `name` property:
+
 ```js
 import './HelloWorld.html';
 document.body.innerHTML = `<hello-world name="world"/>`;
@@ -41,19 +43,13 @@ el.set({ name: 'folks' }); // equivalent to el.name = 'folks'
 
 One crucial difference is that styles are *fully encapsulated* — whereas Svelte will prevent component styles from leaking *out*, custom elements use [shadow DOM](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Shadow_DOM) which also prevents styles from leaking *in*.
 
-### Content distribution with `<slot>`
+### Using `<slot>`
 
-Custom elements can use [slots](#composing-with-slot-), just like regular Svelte components.
+Custom elements can use [slots](#composing-with-slot-) to place child elements, just like regular Svelte components.
 
-### Communication with main DOM tree
+### Firing events
 
-As we've seen, data can be passed to custom elements as props.
-
-```html-no-repl
-<hello-world name="Dolly"></hello-world>
-```
-
-You can dispatch events inside custom elements to pass data back out:
+You can dispatch events inside custom elements to pass data out:
 
 ```js
 // inside a component method
@@ -89,7 +85,24 @@ export default {
 };
 ```
 
-### Transpiling considerations
+### Compiler options
+
+Earlier, we saw the use of `customElement: true` to instruct the Svelte compiler to generate a custom element using the `tag` and (optional) `props` declared inside the component file.
+
+Alternatively, you can pass `tag` and `props` direct to the compiler:
+
+```js
+const { code } = svelte.compile(source, {
+	customElement: {
+		tag: 'overridden-tag-name',
+		props: ['yar', 'boo']
+	}
+});
+```
+
+These options will override the component's own settings, if any.
+
+### Transpiling
 
 * Custom elements use ES2015 classes (`MyThing extends HTMLElement`). Make sure you don't transpile the custom element code to ES5, and use a ES2015-aware minifier such as [uglify-es](https://www.npmjs.com/package/uglify-es).
 
