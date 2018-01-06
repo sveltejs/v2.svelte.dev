@@ -36,7 +36,7 @@ const html = thing.render( data );
 
 Any [default data](#default-data), [computed properties](#computed-properties), [helpers](#helpers) and [nested components](#nested-components) will work as expected.
 
-> The SSR compiler will generate a CommonJS module for each of your components – meaning that `import` and `export` statements are converted into their `require` and `module.exports` equivalents. If your components have non-component dependencies, they must also work as CommonJS modules in Node. If you're using ES2015 modules, we recommend [reify](https://github.com/benjamn/reify) for automatically converting them to CommonJS.
+> The SSR compiler will generate a CommonJS module for each of your components – meaning that `import` and `export` statements are converted into their `require` and `module.exports` equivalents. If your components have non-component dependencies, they must also work as CommonJS modules in Node. If you're using ES2015 modules, we recommend [@std/esm](https://github.com/standard-things/esm) for automatically converting them to CommonJS.
 
 
 ### Rendering CSS
