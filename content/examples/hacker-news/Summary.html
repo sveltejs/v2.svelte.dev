@@ -1,7 +1,7 @@
 <article>
 	<span>{{i + offset + 1}}</span>
 	<h2><a target='_blank' href='{{item.url}}'>{{item.title}}</a></h2>
-	<p class='meta'><a href='#/item/{{item.id}}'>{{numComments}}</a> by {{item.by}} <TimeAgo time='{{item.time}}'/></p>
+	<p class='meta'><a href='#/item/{{item.id}}'>{{comment_text}}</a> by {{item.user}} {{item.time_ago}}</p>
 </article>
 
 <style>
@@ -27,18 +27,12 @@
 </style>
 
 <script>
-	import TimeAgo from './TimeAgo.html';
-
 	export default {
 		computed: {
-			numComments(item) {
-				const i = item.kids ? item.kids.length : 0;
-				return `${i} ${i === 1 ? 'comment' : 'comments'}`;
+			comment_text(item) {
+				const c = item.comments_count;
+				return `${c} ${c === 1 ? 'comment' : 'comments'}`;
 			}
-		},
-
-		components: {
-			TimeAgo
 		}
 	};
 </script>

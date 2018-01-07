@@ -31,13 +31,9 @@
 <script>
 	import List from './List.html';
 	import Item from './Item.html';
-	import * as store from './store.js';
 
 	export default {
-		components: {
-			List,
-			Item
-		},
+		components: { List, Item },
 
 		oncreate() {
 			this.hashchange();
@@ -50,9 +46,10 @@
 
 				if (path.startsWith('/item')) {
 					const id = path.slice(6);
-					this.set({
-						item: await store.getItem(+id)
-					});
+					const item = await fetch(`https://node-hnapi.herokuapp.com/item/${id}`).then(r => r.json());
+
+					this.set({ item });
+
 					window.scrollTo(0,0);
 				} else if (path.startsWith('/top')) {
 					const page = +path.slice(5);
