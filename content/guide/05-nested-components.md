@@ -13,7 +13,7 @@ As well as containing elements (and `if` blocks and `each` blocks), Svelte compo
 	import Widget from './Widget.html';
 
 	export default {
-		data () {
+		data() {
 			return {
 				dynamic: 'this can change'
 			}
@@ -32,7 +32,7 @@ The example above is equivalent to the following...
 import Widget from './Widget.html';
 
 const widget = new Widget({
-	target: document.querySelector( '.widget-container' ),
+	target: document.querySelector('.widget-container'),
 	data: {
 		foo: true,
 		bar: 'static',

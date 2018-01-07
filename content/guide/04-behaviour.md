@@ -27,7 +27,7 @@ Often, it makes sense for a component to have default data. This should be expre
 
 <script>
 	export default {
-		data () {
+		data() {
 			return {
 				count: 0
 			};
@@ -65,7 +65,7 @@ Svelte allows you to express these dependencies in computed properties, which ar
 
 <script>
 	export default {
-		data () {
+		data() {
 			return {
 				time: new Date()
 			};
@@ -628,17 +628,17 @@ There are two 'hooks' provided by Svelte for adding control logic – `oncreate
 
 <script>
 	export default {
-		oncreate () {
-			this.interval = setInterval( () => {
+		oncreate() {
+			this.interval = setInterval(() => {
 				this.set({ time: new Date() });
-			}, 1000 );
+			}, 1000);
 		},
 
-		ondestroy () {
-			clearInterval( this.interval );
+		ondestroy() {
+			clearInterval(this.interval);
 		},
 
-		data () {
+		data() {
 			return {
 				time: new Date()
 			};
@@ -672,17 +672,17 @@ Helpers are simple functions that are used in your template. In the example abov
 			leftPad
 		},
 
-		oncreate () {
-			this.interval = setInterval( () => {
+		oncreate() {
+			this.interval = setInterval(() => {
 				this.set({ time: new Date() });
-			}, 1000 );
+			}, 1000);
 		},
 
-		ondestroy () {
-			clearInterval( this.interval );
+		ondestroy() {
+			clearInterval(this.interval);
 		},
 
-		data () {
+		data() {
 			return {
 				time: new Date()
 			};
@@ -710,8 +710,8 @@ In addition to the [built-in methods](#component-api), you can add methods of yo
 <script>
 	export default {
 		methods: {
-			say: function ( message ) {
-				alert( message ); // again, please don't do this
+			say(message) {
+				alert(message); // again, please don't do this
 			}
 		}
 	};
@@ -724,10 +724,10 @@ These become part of the component's API:
 import MyComponent from './MyComponent.html';
 
 var component = new MyComponent({
-	target: document.querySelector( 'main' )
+	target: document.querySelector('main')
 });
 
-component.say( '👋' );
+component.say('👋');
 ```
 
 Methods (whether built-in or custom) can also be called inside [event handlers](#event-handlers):
@@ -755,23 +755,23 @@ Custom events are just functions that take a node and a callback as their argume
 <script>
 	export default {
 		events: {
-			longpress ( node, callback ) {
-				function onmousedown ( event ) {
-					const timeout = setTimeout( () => callback( event ), 1000 );
+			longpress(node, callback) {
+				function onmousedown(event) {
+					const timeout = setTimeout(() => callback( event ), 1000);
 
-					function cancel () {
-						clearTimeout( timeout );
-						node.removeEventListener( 'mouseup', cancel, false );
+					function cancel() {
+						clearTimeout(timeout);
+						node.removeEventListener('mouseup', cancel, false);
 					}
 
-					node.addEventListener( 'mouseup', cancel, false );
+					node.addEventListener('mouseup', cancel, false);
 				}
 
-				node.addEventListener( 'mousedown', onmousedown, false );
+				node.addEventListener('mousedown', onmousedown, false);
 
 				return {
-					teardown () {
-						node.removeEventListener( 'mousedown', onmousedown, false );
+					teardown() {
+						node.removeEventListener('mousedown', onmousedown, false);
 					}
 				};
 			}
@@ -824,7 +824,7 @@ Components are assumed to be in the HTML namespace. If your component is designe
 		// which one I prefer.)
 		namespace: 'svg',
 
-		data () {
+		data() {
 			return {
 				x: 100,
 				y: 100,

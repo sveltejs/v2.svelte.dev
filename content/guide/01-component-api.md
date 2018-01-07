@@ -10,7 +10,7 @@ import MyComponent from './MyComponent.html';
 const component = new MyComponent({
 	// `target` is the only required option – the element
 	// to render the component to
-	target: document.querySelector( 'main' ),
+	target: document.querySelector('main'),
 
 	// `data` is optional. A component can also have
 	// default data – we'll learn about that later.
@@ -51,7 +51,7 @@ component.set({
 Returns the current value of `key`:
 
 ```js
-console.log( component.get( 'answer' ) ); // 'ask your mother'
+console.log(component.get('answer')); // 'ask your mother'
 ```
 
 This will also retrieve the value of [computed properties](#computed-properties).
@@ -68,7 +68,7 @@ const { foo, bar, baz } = component.get();
 This method allows you to respond to changes in state, which is particularly useful when combined with [lifecycle hooks](#lifecycle-hooks) and [two-way bindings](#two-way-binding).
 
 ```js
-const observer = component.observe( 'answer', answer => {
+const observer = component.observe('answer', answer => {
 	console.log( `the answer is ${answer}` );
 });
 // fires immediately with current answer:
@@ -83,17 +83,17 @@ observer.cancel(); // further changes will be ignored
 The callback takes two arguments – the current value and the previous value. (The first time it is called, the second argument will be `undefined`):
 
 ```js
-thermometer.observe( 'temperature', ( newValue, oldValue ) => {
-	if ( oldValue === undefined ) return;
-	console.log( `it's getting ${newValue > oldValue ? 'warmer' : 'colder'}` );
+thermometer.observe('temperature', (newValue, oldValue) => {
+	if (oldValue === undefined) return;
+	console.log(`it's getting ${newValue > oldValue ? 'warmer' : 'colder'}`);
 });
 ```
 
 If you don't want the callback to fire when you first attach the observer, use `init: false`:
 
 ```js
-thermometer.observe( 'temperature', ( newValue, oldValue ) => {
-	console.log( `it's getting ${newValue > oldValue ? 'warmer' : 'colder'}` );
+thermometer.observe('temperature', (newValue, oldValue) => {
+	console.log(`it's getting ${newValue > oldValue ? 'warmer' : 'colder'}`);
 }, { init: false });
 ```
 
@@ -102,24 +102,24 @@ thermometer.observe( 'temperature', ( newValue, oldValue ) => {
 By default, observers are called *before* the DOM updates, giving you a chance to perform any additional updates without touching the DOM more than is necessary. In some cases – for example, if you need to measure an element after the DOM has been updated – use `defer: true`:
 
 ```js
-function redraw () {
-	canvas.width = drawingApp.get( 'width' );
-	canvas.height = drawingApp.get( 'height' );
+function redraw() {
+	canvas.width = drawingApp.get('width');
+	canvas.height = drawingApp.get('height');
 	updateCanvas();
 }
 
-drawingApp.observe( 'width', redraw, { defer: true });
-drawingApp.observe( 'height', redraw, { defer: true });
+drawingApp.observe('width', redraw, { defer: true });
+drawingApp.observe('height', redraw, { defer: true });
 ```
 
-To observe on a nested component, use refs:
+To observe properties of a nested component, use refs:
 
 ```html-no-repl
 <Widget ref:widget/>
 <script>
 	export default {
-		oncreate () {
-			this.refs.widget.observe( 'xxx', () => {...});
+		oncreate() {
+			this.refs.widget.observe('xxx', () => {...});
 		}
 	};
 </script>
@@ -130,8 +130,8 @@ To observe on a nested component, use refs:
 Allows you to respond to *events*:
 
 ```js
-const listener = component.on( 'thingHappened', event => {
-	console.log( `A thing happened: ${event.thing}` );
+const listener = component.on('thingHappened', event => {
+	console.log(`A thing happened: ${event.thing}`);
 });
 
 // some time later...
@@ -143,7 +143,7 @@ listener.cancel();
 The companion to `component.on(...)`:
 
 ```js
-component.fire( 'thingHappened', {
+component.fire('thingHappened', {
 	thing: 'this event was fired'
 });
 ```
@@ -159,8 +159,8 @@ At first glance `component.on(...)` and `component.fire(...)` aren't particularl
 Removes the component from the DOM and removes any observers and event listeners that were created. This will also fire a `destroy` event:
 
 ```js
-component.on( 'destroy', () => {
-	alert( 'goodbye!' ); // please don't do this
+component.on('destroy', () => {
+	alert('goodbye!'); // please don't do this
 });
 
 component.destroy();
@@ -176,8 +176,8 @@ Check the console.
 
 <script>
 	export default {
-		oncreate () {
-			console.log( this.options );
+		oncreate() {
+			console.log(this.options);
 		}
 	}
 </script>

@@ -37,7 +37,7 @@ Svelte turns this into a JavaScript module that you can import into your app:
 import App from './App.html';
 
 const app = new App({
-	target: document.querySelector( 'main' ),
+	target: document.querySelector('main'),
 	data: { name: 'world' }
 });
 
@@ -107,7 +107,7 @@ Create an `index.html` page and include the script we just generated:
 	<script src='HelloWorld.js'></script>
 	<script>
 		var app = new HelloWorld({
-			target: document.querySelector( 'main' ),
+			target: document.querySelector('main'),
 			data: {
 				name: 'world'
 			}
