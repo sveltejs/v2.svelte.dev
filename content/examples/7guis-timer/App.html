@@ -15,20 +15,20 @@
 
 <script>
 	export default {
-		data () {
+		data() {
 			return { elapsed: 0, duration: 5000 };
 		},
 
-		oncreate () {
+		oncreate() {
 			this.reset();
 
 			const update = () => {
-				this.frame = requestAnimationFrame( update );
+				this.frame = requestAnimationFrame(update);
 
 				const { start, duration } = this.get();
 				const elapsed = window.performance.now() - start;
 
-				if ( elapsed > duration ) return;
+				if (elapsed > duration) return;
 
 				this.set({ elapsed });
 			};
@@ -36,14 +36,14 @@
 			update();
 		},
 
-		ondestroy () {
-			if ( this.frame ) {
-				cancelAnimationFrame( this.frame );
+		ondestroy() {
+			if (this.frame) {
+				cancelAnimationFrame(this.frame);
 			}
 		},
 
 		methods: {
-			reset () {
+			reset() {
 				this.set({
 					start: window.performance.now()
 				});

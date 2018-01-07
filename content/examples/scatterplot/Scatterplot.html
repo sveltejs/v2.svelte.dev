@@ -62,58 +62,54 @@
 <script>
 	import { scaleLinear } from 'd3-scale';
 
-	var xScale = scaleLinear();
-	var yScale = scaleLinear();
+	const xScale = scaleLinear();
+	const yScale = scaleLinear();
 
 	export default {
-		data () {
+		data() {
 			return {
 				padding: { top: 20, right: 40, bottom: 40, left: 25 },
 				height: 200,
 				width: 500,
-				xTicks: [ 0, 4, 8, 12, 16, 20 ],
-				yTicks: [ 0, 2, 4, 6, 8, 10, 12 ]
+				xTicks: [0, 4, 8, 12, 16, 20],
+				yTicks: [0, 2, 4, 6, 8, 10, 12]
 			};
 		},
 
 		computed: {
-			xTicks: function ( width ) {
+			xTicks: (width) => {
 				return width > 180 ?
-					[ 0, 4, 8, 12, 16, 20 ] :
-					[ 0, 10, 20 ];
+					[0, 4, 8, 12, 16, 20] :
+					[0, 10, 20];
 			},
 
-			yTicks: function ( height ) {
+			yTicks: (height) => {
 				return height > 180 ?
-					[ 0, 2, 4, 6, 8, 10, 12 ] :
-					[ 0, 4, 8, 12 ];
+					[0, 2, 4, 6, 8, 10, 12] :
+					[0, 4, 8, 12];
 			},
 
-			xScale: function ( padding, width ) {
+			xScale: (padding, width) => {
 				return xScale
-					.domain([ 0, 20 ])
-					.range([ padding.left, width - padding.right ]);
+					.domain([0, 20])
+					.range([padding.left, width - padding.right]);
 			},
 
-			yScale: function ( padding, height ) {
+			yScale: (padding, height) => {
 				return yScale
-					.domain([ 0, 12 ])
-					.range([ height - padding.bottom, padding.top ]);
+					.domain([0, 12])
+					.range([height - padding.bottom, padding.top]);
 			}
 		},
 
-		oncreate () {
+		oncreate() {
 			this.resize();
 		},
 
 		methods: {
-			resize: function () {
-				var boundingClientRect = this.refs.svg.getBoundingClientRect();
-
-				this.set({
-					width: boundingClientRect.width,
-					height: boundingClientRect.height
-				});
+			resize() {
+				const { width, height } = this.refs.svg.getBoundingClientRect();
+				this.set({ width, height });
 			}
 		}
 	};

@@ -63,21 +63,21 @@
 </style>
 
 <script>
-	function pad ( num ) {
+	function pad(num) {
 		return num < 10 ? '0' + num : num;
 	}
 
 	export default {
 		computed: {
-			src: function ( track, client_id ) {
+			src: (track, client_id) => {
 				return `https://api.soundcloud.com/tracks/${track}/stream?client_id=${client_id}`;
 			},
 
-			icon: function ( paused ) {
+			icon: (paused) => {
 				return `https://icon.now.sh/${paused ? 'play' : 'pause'}_circle_filled`;
 			},
 
-			bg: function ( t, d ) {
+			bg: (t, d) => {
 				var p = d ? t / d : 0;
 				var h = 90 + 90 * p;
 				var l = 10 + p * 30;
@@ -86,21 +86,21 @@
 		},
 
 		helpers: {
-			format: function ( time ) {
-				if ( isNaN( time ) ) return '--:--.-';
-				var minutes = Math.floor( time / 60 );
-				var seconds = ( time % 60 ).toFixed( 1 );
+			format: time => {
+				if (isNaN(time)) return '--:--.-';
+				var minutes = Math.floor(time / 60);
+				var seconds = (time % 60).toFixed(1);
 
-				return minutes + ':' + pad( seconds )
+				return minutes + ':' + pad(seconds)
 			}
 		},
 
 		methods: {
-			seek: function ( event ) {
-				if ( event.buttons === 1 ) {
+			seek(event) {
+				if (event.buttons === 1) {
 					event.preventDefault();
 					var p = event.clientX / window.innerWidth;
-					this.set({ t: p * this.get( 'd' ) });
+					this.set({ t: p * this.get('d') });
 				}
 			}
 		}
