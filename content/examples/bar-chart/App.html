@@ -84,37 +84,37 @@
 				padding: { top: 20, right: 15, bottom: 20, left: 25 },
 				height: 200,
 				width: 500,
-				xTicks: [ 1990, 1995, 2000, 2005, 2010, 2015 ],
-				yTicks: [ 0, 5, 10, 15, 20 ]
+				xTicks: [1990, 1995, 2000, 2005, 2010, 2015],
+				yTicks: [0, 5, 10, 15, 20]
 			};
 		},
 
 		helpers: {
-			formatMobile: function ( tick ) {
+			formatMobile: function (tick) {
 				return "'" + tick % 100;
 			}
 		},
 
 		computed: {
-			barWidth: function ( xTicks, width, padding ) {
-				var innerWidth = width - ( padding.left + padding.right );
+			barWidth: function (xTicks, width, padding) {
+				var innerWidth = width - (padding.left + padding.right);
 				return innerWidth / xTicks.length;
 			},
 
-			xScale: function ( padding, width, xTicks ) {
+			xScale: function (padding, width, xTicks) {
 				return xScale
 					.domain([0, xTicks.length])
 					.range([padding.left, width - padding.right]);
 			},
 
-			yScale: function ( padding, height, yTicks ) {
+			yScale: function (padding, height, yTicks) {
 				return yScale
 					.domain([0, Math.max.apply(null, yTicks)])
 					.range([height - padding.bottom, padding.top]);
 			}
 		},
 
-		oncreate () {
+		oncreate() {
 			this.resize();
 		},
 

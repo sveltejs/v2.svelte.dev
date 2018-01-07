@@ -12,7 +12,7 @@ In some situations, you might want to add static properties to your component co
 
 <script>
 	export default {
-		setup: function(MyComponent) {
+		setup(MyComponent) {
 			// someone importing this component will be able
 			// to access any properties or methods defined here:
 			//
@@ -21,7 +21,7 @@ In some situations, you might want to add static properties to your component co
 			MyComponent.ANSWER = 42;
 		},
 
-		oncreate: function() {
+		oncreate() {
 			console.log('the answer is', this.constructor.ANSWER);
 			console.dir(this.constructor);
 		}

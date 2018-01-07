@@ -56,7 +56,7 @@
 
 <script>
 	export default {
-		data () {
+		data() {
 			return {
 				time: new Date()
 			};
@@ -68,14 +68,14 @@
 			seconds: time => time.getSeconds()
 		},
 
-		oncreate () {
-			this.interval = setInterval( () => {
+		oncreate() {
+			this.interval = setInterval(() => {
 				this.set({ time: new Date() });
-			}, 1000 );
+			}, 1000);
 		},
 
-		ondestroy () {
-			clearInterval( this.interval );
+		ondestroy() {
+			clearInterval(this.interval);
 		}
 	};
 </script>

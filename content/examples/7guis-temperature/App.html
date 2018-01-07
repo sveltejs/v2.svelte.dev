@@ -11,15 +11,15 @@
 <script>
 	export default {
 		oncreate: function () {
-			this.observe( 'celsius', c => {
+			this.observe('celsius', c => {
 				this.set({
-					fahrenheit: +( 32 + ( 9 / 5 * c ) ).toFixed( 1 )
+					fahrenheit: +(32 + (9 / 5 * c)).toFixed(1)
 				});
 			});
 
-			this.observe( 'fahrenheit', f => {
+			this.observe('fahrenheit', f => {
 				this.set({
-					celsius: +( 5 / 9 * ( f - 32 ) ).toFixed( 1 )
+					celsius: +(5 / 9 * (f - 32)).toFixed(1)
 				});
 			});
 		}

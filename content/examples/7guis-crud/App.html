@@ -40,7 +40,7 @@
 
 <script>
 	export default {
-		data () {
+		data() {
 			return {
 				prefix: '',
 				first: '',
@@ -51,29 +51,29 @@
 		},
 
 		computed: {
-			selected: ( filteredPeople, i ) => {
+			selected: (filteredPeople, i) => {
 				return filteredPeople[i];
 			},
 
-			filteredPeople ( people, prefix ) {
-				if ( !prefix ) return people;
+			filteredPeople(people, prefix) {
+				if (!prefix) return people;
 
 				prefix = prefix.toLowerCase();
-				return people.filter( person => {
+				return people.filter(person => {
 					const name = `${person.last}, ${person.first}`;
-					return name.toLowerCase().startsWith( prefix );
+					return name.toLowerCase().startsWith(prefix);
 				});
 			}
 		},
 
-		oncreate () {
-			this.observe( 'selected', selected => {
-				if ( selected ) this.set( selected );
+		oncreate() {
+			this.observe('selected', selected => {
+				if (selected) this.set(selected);
 			});
 		},
 
 		methods: {
-			create () {
+			create() {
 				const { first, last, people } = this.get();
 
 				people.push({ first, last });
@@ -86,7 +86,7 @@
 				});
 			},
 
-			update () {
+			update() {
 				const { first, last, selected, people } = this.get();
 
 				selected.first = first;
@@ -95,16 +95,16 @@
 				this.set({ people, selected });
 			},
 
-			remove () {
+			remove() {
 				const { people, selected, i } = this.get();
-				const index = people.indexOf( selected );
-				people.splice( index, 1 );
+				const index = people.indexOf(selected);
+				people.splice(index, 1);
 
 				this.set({
 					people,
 					first: '',
 					last: '',
-					i: Math.min( i, people.length - 1 )
+					i: Math.min(i, people.length - 1)
 				});
 			}
 		}

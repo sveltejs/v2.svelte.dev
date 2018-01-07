@@ -62,10 +62,10 @@ radius of the selected circle.
 
 <script>
 	export default {
-		data () {
+		data() {
 			return {
 				i: 0,
-				undoStack: [ [] ],
+				undoStack: [[]],
 				adjusting: false,
 				adjusted: false,
 				circles: []
@@ -73,12 +73,12 @@ radius of the selected circle.
 		},
 
 		methods: {
-			handleClick ( event ) {
-				if ( this.get( 'adjusting' ) ) {
+			handleClick(event) {
+				if (this.get('adjusting')) {
 					this.set({ adjusting: false });
 
 					// if nothing changed, rewind
-					if ( this.get( 'adjusted' ) ) this.push();
+					if (this.get('adjusted')) this.push();
 					return;
 				}
 
@@ -88,43 +88,43 @@ radius of the selected circle.
 					r: 50
 				};
 
-				const circles = this.get( 'circles' );
-				circles.push( circle );
+				const circles = this.get('circles');
+				circles.push(circle);
 				this.set({ circles, selected: circle });
 
 				this.push();
 			},
 
-			adjust ( event ) {
+			adjust(event) {
 				event.preventDefault();
-				if ( !this.get( 'selected' ) ) return;
+				if (!this.get('selected')) return;
 				this.set({ adjusting: true, adjusted: false });
 			},
 
-			select ( circle, event ) {
-				if ( !this.get( 'adjusting' ) ) {
+			select(circle, event) {
+				if (!this.get('adjusting')) {
 					event.stopPropagation();
 					this.set({ selected: circle });
 				}
 			},
 
 			// undo stack management
-			push () {
+			push() {
 				let { i, undoStack, circles } = this.get();
-				undoStack.splice( ++i );
-				undoStack.push( clone( circles ) );
+				undoStack.splice(++i);
+				undoStack.push(clone(circles));
 				this.set({ i, undoStack });
 			},
 
-			travel ( d ) {
+			travel(d) {
 				let { i, undoStack } = this.get();
-				const circles = clone( undoStack[ i += d ] );
+				const circles = clone(undoStack[i += d]);
 				this.set({ circles, i, adjusting: false });
 			}
 		}
 	};
 
-	function clone ( circles ) {
-		return circles.map( ({ cx, cy, r }) => ({ cx, cy, r }) );
+	function clone(circles) {
+		return circles.map(({ cx, cy, r }) => ({ cx, cy, r }));
 	}
 </script>

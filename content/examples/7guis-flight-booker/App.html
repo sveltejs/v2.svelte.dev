@@ -22,14 +22,14 @@
 
 <script>
 	export default {
-		data () {
-			const tomorrow = new Date( Date.now() + 86400000 );
+		data() {
+			const tomorrow = new Date(Date.now() + 86400000);
 
 			const tomorrowAsString = [
 				tomorrow.getFullYear(),
-				pad( tomorrow.getMonth() + 1, 2 ),
-				pad( tomorrow.getDate(), 2 )
-			].join( '-' );
+				pad(tomorrow.getMonth() + 1, 2),
+				pad(tomorrow.getDate(), 2)
+			].join('-');
 
 			return {
 				start: tomorrowAsString,
@@ -39,33 +39,33 @@
 		},
 
 		computed: {
-			startDate: start => convertToDate( start ),
-			endDate: end => convertToDate( end )
+			startDate: start => convertToDate(start),
+			endDate: end => convertToDate(end)
 		},
 
 		methods: {
-			bookFlight () {
+			bookFlight() {
 				const { startDate, endDate, isReturn } = this.get();
 				const type = isReturn ? 'return' : 'one-way';
 
 				let message = `You have booked a ${type} flight, leaving ${startDate.toDateString()}`;
-				if ( type === 'return' ) {
+				if (type === 'return') {
 					message += ` and returning ${endDate.toDateString()}`;
 				}
 
-				alert( message );
+				alert(message);
 			}
 		}
 	};
 
-	function convertToDate ( str ) {
-		var split = str.split( '-' );
-		return new Date( +split[0], +split[1] - 1, +split[2] );
+	function convertToDate(str) {
+		var split = str.split('-');
+		return new Date(+split[0], +split[1] - 1, +split[2]);
 	}
 
-	function pad ( x, len ) {
-		x = String( x );
-		while ( x.length < len ) x = `0${x}`;
+	function pad(x, len) {
+		x = String(x);
+		while (x.length < len) x = `0${x}`;
 		return x;
 	}
 </script>

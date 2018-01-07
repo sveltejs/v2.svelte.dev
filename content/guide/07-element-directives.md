@@ -25,12 +25,12 @@ When the user clicks the button, Svelte calls `component.set(...)` with the prov
 <p>Select a category:</p>
 
 {{#each categories as category}}
-	<button on:click='select( category )'>select {{category}}</button>
+	<button on:click='select(category)'>select {{category}}</button>
 {{/each}}
 
 <script>
 	export default {
-		data () {
+		data() {
 			return {
 				categories: [
 					'animal',
@@ -41,8 +41,8 @@ When the user clicks the button, Svelte calls `component.set(...)` with the prov
 		},
 
 		methods: {
-			select ( name ) {
-				alert( `selected ${name}` ); // seriously, please don't do this
+			select(name) {
+				alert(`selected ${name}`); // seriously, please don't do this
 			}
 		}
 	};
@@ -116,7 +116,7 @@ When the user clicks a button, the component will fire a `select` event, where t
 		},
 
 		methods: {
-			playTwentyQuestions (category) {
+			playTwentyQuestions(category) {
 				// TODO implement
 			}
 		}
@@ -138,37 +138,37 @@ Refs are a convenient way to store a reference to particular DOM nodes or compon
 
 <script>
 	export default {
-		oncreate () {
+		oncreate() {
 			const canvas = this.refs.canvas;
-			const ctx = canvas.getContext( '2d' );
+			const ctx = canvas.getContext('2d');
 
 			let destroyed = false;
-			this.on( 'destroy', () => destroyed = true );
+			this.on('destroy', () => destroyed = true);
 
-			function loop () {
-				if ( destroyed ) return;
-				requestAnimationFrame( loop );
+			function loop() {
+				if (destroyed) return;
+				requestAnimationFrame(loop);
 
-				const imageData = ctx.getImageData( 0, 0, canvas.width, canvas.height );
+				const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
-				for ( let p = 0; p < imageData.data.length; p += 4 ) {
+				for (let p = 0; p < imageData.data.length; p += 4) {
 					const i = p / 4;
 					const x = i % canvas.width;
 					const y = i / canvas.height >>> 0;
 
 					const t = window.performance.now();
 
-					const r = 64 + ( 128 * x / canvas.width ) + ( 64 * Math.sin( t / 1000 ) );
-					const g = 64 + ( 128 * y / canvas.height ) + ( 64 * Math.cos( t / 1000 ) );
+					const r = 64 + (128 * x / canvas.width) + (64 * Math.sin(t / 1000));
+					const g = 64 + (128 * y / canvas.height) + (64 * Math.cos(t / 1000));
 					const b = 128;
 
-					imageData.data[ p + 0 ] = r;
-					imageData.data[ p + 1 ] = g;
-					imageData.data[ p + 2 ] = b;
-					imageData.data[ p + 3 ] = 255;
+					imageData.data[p + 0] = r;
+					imageData.data[p + 1] = g;
+					imageData.data[p + 2] = b;
+					imageData.data[p + 3] = 255;
 				}
 
-				ctx.putImageData( imageData, 0, 0 );
+				ctx.putImageData(imageData, 0, 0);
 			}
 
 			loop();
@@ -223,12 +223,12 @@ Here is a complete example of using two way bindings with a form:
 <script>
 export default {
 	methods: {
-		handleSubmit: function ( event ) {
+		handleSubmit(event) {
 			// prevent the page from reloading
 			event.preventDefault();
 
-			var value = this.get( 'test' );
-			console.log( 'value', value );
+			var value = this.get('test');
+			console.log('value', value);
 		}
 	}
 };

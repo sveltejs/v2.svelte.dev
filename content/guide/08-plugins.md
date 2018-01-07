@@ -69,7 +69,7 @@ The [svelte-extras](https://github.com/sveltejs/svelte-extras) package includes 
 	import { push, splice } from 'svelte-extras';
 
 	export default {
-		data: function () {
+		data() {
 			return {
 				newTodo: '',
 				todos: []
