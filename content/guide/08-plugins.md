@@ -4,7 +4,7 @@ title: Plugins
 
 Svelte can be extended with plugins and extra methods.
 
-### Transitions
+### Transition plugins
 
 The [svelte-transitions](https://github.com/sveltejs/svelte-transitions) package includes a selection of officially supported transition plugins, such as [fade](https://github.com/sveltejs/svelte-transitions-fade), [fly](https://github.com/sveltejs/svelte-transitions-fly) and [slide](https://github.com/sveltejs/svelte-transitions-slide). You can include them in a component like so:
 
