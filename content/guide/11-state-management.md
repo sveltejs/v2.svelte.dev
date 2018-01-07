@@ -87,6 +87,29 @@ Components that depend on store properties will re-render whenever they change.
 > To tell Svelte that you're going to be using `Store`, you must pass the `store: true` compiler option. This will change in version 2, when the compiler will automatically generate store-aware components.
 
 
+### Declarative stores
+
+As an alternative to adding the `store` option when instantiating, the component itself can declare a dependency on a store:
+
+```html
+<!-- App.html -->
+<h1>Hello {{$name}}!</h1>
+<Greeting/>
+
+<script>
+	import Greeting from './Greeting.html';
+	import store from './store.js';
+
+	export default {
+		store: () => store,
+		components: { Greeting }
+	};
+</script>
+```
+
+Note that the `store` option is a function that *returns* a store, rather than the store itself — this provides greater flexibility.
+
+
 ### Computed store properties
 
 Just like components, stores can have computed properties:
