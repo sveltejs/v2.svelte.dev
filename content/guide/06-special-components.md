@@ -25,6 +25,81 @@ Sometimes, a component needs to embed itself recursively — for example if you 
 ```
 
 
+### <:Component> tags
+
+If you don't know what kind of component to render until the app runs — in other words, it's driven by state — you can use `<:Component>`:
+
+```html
+<input type=checkbox bind:checked=foo> foo
+<:Component {foo ? Red : Blue} name='thing'/>
+
+<script>
+	import Red from './Red.html';
+	import Blue from './Blue.html';
+
+	export default {
+		data() {
+			return { Red, Blue }
+		}
+	};
+</script>
+```
+
+```html-nested-Red
+<p style='color: red'>Red {{name}}</p>
+```
+
+```html-nested-Blue
+<p style='color: blue'>Blue {{name}}</p>
+```
+
+> Note that `Red` and `Blue` are items in `data`, *not* `components`, unlike if we were doing `<Red>` or `<Blue>`.
+
+The expression inside the `{...}` can be any valid JavaScript expression. For example, it could be a [computed property](#computed-properties):
+
+```html
+<label><input type=radio bind:group=size value='small'> small</label>
+<label><input type=radio bind:group=size value='medium'> medium</label>
+<label><input type=radio bind:group=size value='large'> large</label>
+
+<:Component {Size}/>
+
+<script>
+	import Small from './Small.html';
+	import Medium from './Medium.html';
+	import Large from './Large.html';
+
+	export default {
+		computed: {
+			Size: size => {
+				if (size === 'small') return Small;
+				if (size === 'medium') return Medium;
+				return Large;
+			}
+		}
+	};
+</script>
+```
+
+```html-nested-Small
+<p style='font-size: 12px'>small</p>
+```
+
+```html-nested-Medium
+<p style='font-size: 18px'>medium</p>
+```
+
+```html-nested-Large
+<p style='font-size: 32px'>LARGE</p>
+```
+
+```hidden-data
+{
+	"size": "medium"
+}
+```
+
+
 ### <:Window> tags
 
 The `<:Window>` tag gives you a convenient way to declaratively add event listeners to `window`. Event listeners are automatically removed when the component is destroyed.
