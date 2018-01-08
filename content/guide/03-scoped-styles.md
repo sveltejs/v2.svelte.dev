@@ -53,8 +53,8 @@ If the `cascade: false` option is passed to the compiler, styles will *only* app
 	}
 
 	div :global(p) {
-		/* this block will be applied to any <p>
-		   elements inside the <div> */
+		/* this block will be applied to any <p> elements
+		   inside the <div>, i.e. in <Widget> */
 		font-weight: bold;
 	}
 </style>
@@ -66,10 +66,6 @@ If the `cascade: false` option is passed to the compiler, styles will *only* app
 		components: { Widget }
 	};
 </script>
-```
-
-```html-nested-Widget
-<p>only the :global(...) styles apply here</p>
 ```
 
 The `cascade: false` behaviour is recommended, and will be switched on by default in future versions of Svelte.
