@@ -34,9 +34,52 @@ This is vastly simpler than achieving the same effect via [Shadow DOM](http://ca
 
 ### Cascading rules
 
-The usual cascading mechanism still applies – any global `.foo` styles would still be applied, and if our template had [nested components](#nested-components) with `class="foo"` elements, they would inherit our styles.
+By default, the usual cascading mechanism still applies – any global `.foo` styles would still be applied, and if our template had [nested components](#nested-components) with `class="foo"` elements, they would inherit our styles.
+
+If the `cascade: false` option is passed to the compiler, styles will *only* apply to the current component, unless you opt in to cascading with the `:global(...)` modifier:
+
+<!-- TODO `cascade: false` in the REPL -->
+
+```html-no-repl
+<div>
+	<Widget/>
+</div>
+
+<style>
+	p {
+		/* this block will be disregarded, since
+		   there are no <p> elements here */
+		color: red;
+	}
+
+	div :global(p) {
+		/* this block will be applied to any <p>
+		   elements inside the <div> */
+		font-weight: bold;
+	}
+</style>
+
+<script>
+	import Widget from './Widget.html';
+
+	export default {
+		components: { Widget }
+	};
+</script>
+```
+
+```html-nested-Widget
+<p>only the :global(...) styles apply here</p>
+```
+
+The `cascade: false` behaviour is recommended, and will be switched on by default in future versions of Svelte.
 
 > Scoped styles are *not* dynamic – they are shared between all instances of a component. In other words you can't use `{{tags}}` inside your CSS.
+
+
+### Unused style removal
+
+If you're using the recommended `cascade: false` option, Svelte will identify and remove any styles that it can guarantee are not being used in your app. It will also emit a warning so that you can remove them from the source.
 
 
 ### Special selectors
