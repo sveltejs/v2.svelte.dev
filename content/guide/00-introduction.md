@@ -70,7 +70,7 @@ Another option is to use [svelte-cli](https://github.com/sveltejs/svelte-cli), t
 First, install the CLI:
 
 ```bash
-npm install -g svelte-cli
+npm install -g svelte svelte-cli
 ```
 
 Then, create a directory for the project:
