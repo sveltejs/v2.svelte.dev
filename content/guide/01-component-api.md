@@ -125,6 +125,7 @@ To observe properties of a nested component, use refs:
 </script>
 ```
 
+
 ### component.on(eventName, callback)
 
 Allows you to respond to *events*:
@@ -138,6 +139,7 @@ const listener = component.on('thingHappened', event => {
 listener.cancel();
 ```
 
+
 ### component.fire(eventName, event)
 
 The companion to `component.on(...)`:
@@ -147,7 +149,6 @@ component.fire('thingHappened', {
 	thing: 'this event was fired'
 });
 ```
-
 
 At first glance `component.on(...)` and `component.fire(...)` aren't particularly useful, but it'll become more so when we learn about [nested components](#nested-components).
 
@@ -184,3 +185,8 @@ Check the console.
 ```
 
 This gives you access to standard options like `target` and `data`, but can also be used to access any other custom options you may choose to implement for your component.
+
+
+### component.root
+
+In [nested components](#nested-components), each component has a `root` property pointing to the top-level root component – that is, the one instantiated with `new MyComponent({ ... })`.
