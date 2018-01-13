@@ -4,7 +4,7 @@ const months = ',Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec'.split( ',' );
 
 function formatPubdate ( str ) {
 	const [ y, m, d ] = str.split( '-' );
-	return `${d} ${months[m]} ${y}`;
+	return `${d} ${months[+m]} ${y}`;
 }
 
 const rss = `
