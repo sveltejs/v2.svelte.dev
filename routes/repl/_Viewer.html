@@ -250,7 +250,7 @@
 
 							component = window.app = window.component = iframe.contentWindow.component;
 
-							observers = Object.keys(data).map(key => {
+							observers = Object.keys(component.get()).map(key => {
 								return component.observe(key, value => {
 									if (updating) return;
 
@@ -324,7 +324,7 @@
 							component.set(data);
 							updating = false;
 
-							observers = Object.keys(data).map(key => {
+							observers = Object.keys(component.get()).map(key => {
 								return component.observe(key, value => {
 									if (updating) return;
 
