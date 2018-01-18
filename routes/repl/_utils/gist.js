@@ -2,6 +2,12 @@ export function getComponentFromGist(id) {
 	let cancelled = false;
 
 	const promise = fetch(`https://api.github.com/gists/${id}`)
+		.then(res => {
+			if (res.status < 200 || res.status >= 300) {
+				throw new Error(res.status);
+			}
+			return res;
+		})
 		.catch(() => fetch(`/api/gists/${id}`))
 		.then(r => r.json())
 		.then(gist => {
