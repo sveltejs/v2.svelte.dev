@@ -73,6 +73,12 @@ export function saveComponentAsGist(components, json) {
 	});
 
 	return fetch(`https://api.github.com/gists`, { method: 'POST', body })
+		.then(res => {
+			if (res.status < 200 || res.status >= 300) {
+				throw new Error(res.status);
+			}
+			return res;
+		})
 		.catch(() => fetch(`/api/gists`, { method: 'POST', body }))
 		.then(r => r.json())
 		.then(gist => gist.id);

@@ -18,26 +18,31 @@ console.log(`has client_id: ${!!credentials.id}`);
 console.log(`has client_secret: ${!!credentials.secret}`);
 
 export function post(req, res) {
-	console.log(req.body);
+	let body = '';
 
-	needle.post(
-		`https://api.github.com/gists?client_id=${credentials.id}&client_secret=${credentials.secret}`,
-		req.body,
-		(err, response) => {
-			if (err) {
-				console.error(err.message);
-				res.status(500).end(err.message);
-			} else {
-				const json = JSON.stringify(response.body);
-				console.log(json);
-				cache.set(response.body.id, json);
+	req.on('data', chunk => {
+		body += chunk;
+	});
 
-				res.set({
-					'Content-Type': 'application/json',
-					'Cache-Control': `max-age=31536000`
-				});
-				res.end(json);
+	req.on('end', () => {
+		needle.post(
+			`https://api.github.com/gists?client_id=${credentials.id}&client_secret=${credentials.secret}`,
+			body,
+			(err, response) => {
+				if (err) {
+					console.error(err.message);
+					res.status(500).end(err.message);
+				} else {
+					const json = JSON.stringify(response.body);
+					cache.set(response.body.id, json);
+
+					res.set({
+						'Content-Type': 'application/json',
+						'Cache-Control': `max-age=31536000`
+					});
+					res.end(json);
+				}
 			}
-		}
-	);
+		);
+	});
 }
