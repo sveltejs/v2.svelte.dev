@@ -1,4 +1,4 @@
-import { init } from '__app__';
+import { init } from 'sapper/runtime.js';
 
 init(document.querySelector('#sapper'), __routes__);
 

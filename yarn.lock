@@ -1353,7 +1353,7 @@ expand-range@^1.8.1:
   dependencies:
     fill-range "^2.1.0"
 
-express@^4.15.2:
+express@^4.15.2, express@^4.16.2:
   version "4.16.2"
   resolved "https://registry.yarnpkg.com/express/-/express-4.16.2.tgz#e35c6dfe2d64b7dca0a5cd4f21781be3299e076c"
   dependencies:
@@ -3407,17 +3407,20 @@ sander@^0.6.0:
     mkdirp "^0.5.1"
     rimraf "^2.5.2"
 
-sapper@^0.5.1:
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/sapper/-/sapper-0.5.1.tgz#47c0d0e121b13112091d20b50015961b0373b769"
+sapper@^0.6.3:
+  version "0.6.3"
+  resolved "https://registry.yarnpkg.com/sapper/-/sapper-0.6.3.tgz#93db518b900ba8695db75b03baaebd9a83f495b9"
   dependencies:
     chalk "^2.3.0"
     cheerio "^1.0.0-rc.2"
     chokidar "^1.7.0"
     code-frame "^5.0.0"
     escape-html "^1.0.3"
+    express "^4.16.2"
+    glob "^7.1.2"
     locate-character "^2.0.5"
     mkdirp "^0.5.1"
+    node-fetch "^1.7.3"
     relative "^3.0.2"
     require-relative "^0.8.7"
     rimraf "^2.6.2"
