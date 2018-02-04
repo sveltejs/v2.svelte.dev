@@ -291,7 +291,7 @@ Here are the current bindable attributes and properties for each element:
 - `<input type="checkbox">`, `<input type="radio">`
 	- `checked`, `group`
 - `<audio>`, `<video>`
-	- `buffered`, `currentTime`, `duration`, `paused`, `played`, `seekable`
+	- `buffered`, `currentTime`, `duration`, `paused`, `played`, `seekable`, `volume`
 
 As well as DOM elements, you can bind to component data properties:
 
