@@ -82,7 +82,16 @@ Svelte allows you to express these dependencies in computed properties, which ar
 
 Notice that all we need to do to tell Svelte that `hours`, `minutes` and `seconds` depend on `time` is include it as a parameter to the function. There's no costly dependency tracking involved – the dependency graph is resolved at compile time.
 
-> `computed` must be an object literal, and the properties must be function expressions or arrow function expressions.
+> `computed` must be an object literal, and the properties must be function expressions or arrow function expressions. Any external functions used in computed must be wrapped _here_:
+
+```js
+import externalFunc from '_external_file';
+export default {
+  computed: {
+    externalFunc: (dep1, dep2) => externalFunc(dep1, dep2);
+  }
+}
+```
 
 Computed properties can of course return functions. For example, we could dynamically generate a filter function for a list of items:
 
