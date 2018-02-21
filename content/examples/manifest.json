@@ -41,6 +41,16 @@
 	},
 
 	{
+		"name": "Transitions",
+		"examples": [
+			"transitions-fade",
+			"transitions-fly",
+			"transitions-in-out",
+			"transitions-custom"
+		]
+	},
+
+	{
 		"name": "Async data",
 		"examples": [
 			"await-block"
