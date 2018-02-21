@@ -1,10 +1,10 @@
 <:Window on:click='seek(event)' on:mousemove='seek(event)'/>
 
-<audio bind:currentTime='t' bind:duration='d' bind:paused>
-	<source type='audio/mp3' src='{{src}}'>
+<audio bind:currentTime=t bind:duration=d bind:paused>
+	<source type='audio/mp3' src='http://deepnote.surge.sh/deepnote.mp3'>
 </audio>
 
-<p>Via <a on:click='event.stopPropagation()' href='{{url}}'>SoundCloud</a></p>
+<p>THX Deep Note</p>
 <div class='status' on:click='event.stopPropagation()'>
 	<img on:click='set({ paused: !paused })' src='{{icon}}/333333'>
 	<span class='elapsed'>{{format(t)}}</span>
@@ -12,8 +12,8 @@
 </div>
 
 <div class='progress' style='width: {{d ? 100 * t/d : 0}}%; background: {{bg}};'>
-	<p>Via <a href='{{url}}'>SoundCloud</a></p>
-	<div class='status'>
+	<p>THX Deep Note</p>
+	<div class='status' on:click='event.stopPropagation()'>
 		<img src='{{icon}}/ffffff'>
 		<span class='elapsed'>{{format(t)}}</span>
 		<span class='duration'>{{format(d)}}</span>
@@ -69,10 +69,6 @@
 
 	export default {
 		computed: {
-			src: (track, client_id) => {
-				return `https://api.soundcloud.com/tracks/${track}/stream?client_id=${client_id}`;
-			},
-
 			icon: (paused) => {
 				return `https://icon.now.sh/${paused ? 'play' : 'pause'}_circle_filled`;
 			},
