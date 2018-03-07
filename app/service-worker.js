@@ -23,15 +23,16 @@ self.addEventListener('activate', event => {
 				if (key !== ASSETS) await caches.delete(key);
 			}
 
-			await self.clients.claim();
+			self.clients.claim();
 		})
 	);
 });
 
 self.addEventListener('fetch', event => {
 	const url = new URL(event.request.url);
-	if (!/^https?/.test(url.protocol)) return;
-	if (event.request.method === 'POST') return;
+
+	// don't try to handle e.g. data: URIs
+	if (!url.protocol.startsWith('http')) return;
 
 	// ignore dev server requests
 	if (url.hostname === self.location.hostname && url.port !== self.location.port) return;
@@ -42,18 +43,23 @@ self.addEventListener('fetch', event => {
 		return;
 	}
 
-	// for everything else, try the cache first, falling back to
-	// network if item is not in cache
+	// for everything else, try the network first, falling back to
+	// cache if the user is offline. (If the pages never change, you
+	// might prefer a cache-first approach to a network-first one.)
 	event.respondWith(
 		caches
 			.open(`offline${timestamp}`)
 			.then(async cache => {
-				let response = await cache.match(event.request);
-				if (response) return response;
+				try {
+					const response = await fetch(event.request);
+					cache.put(event.request, response.clone());
+					return response;
+				} catch(err) {
+					const response = await cache.match(event.request);
+					if (response) return response;
 
-				response = await fetch(event.request);
-				if (response) cache.put(event.request, response.clone());
-				return response;
+					throw err;
+				}
 			})
 	);
 });
