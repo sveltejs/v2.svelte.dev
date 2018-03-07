@@ -61,7 +61,7 @@
     "serve-static": "^1.13.1",
     "sourcemap-codec": "^1.3.1",
     "style-loader": "^0.19.1",
-    "svelte": "^1.49.1",
+    "svelte": "^1.56.4",
     "svelte-loader": "^2.2.1",
     "uglifyjs-webpack-plugin": "^1.1.4",
     "webpack": "^3.10.0"
