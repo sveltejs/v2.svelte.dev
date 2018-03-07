@@ -1,6 +1,7 @@
 import { init } from 'sapper/runtime.js';
+import { routes } from './manifest/client.js';
 
-init(document.querySelector('#sapper'), __routes__);
+init(document.querySelector('#sapper'), routes);
 
 if (navigator.serviceWorker && navigator.serviceWorker.controller) {
 	navigator.serviceWorker.controller.onstatechange = function(e) {

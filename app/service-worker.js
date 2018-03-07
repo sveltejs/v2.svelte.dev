@@ -1,10 +1,9 @@
-const timestamp = '__timestamp__';
+import { assets, shell, routes, timestamp } from './manifest/service-worker.js';
+
 const ASSETS = `cache${timestamp}`;
 
-const to_cache = __shell__.concat(__assets__);
+const to_cache = shell.concat(assets);
 const cached = new Set(to_cache);
-
-const routes = __routes__;
 
 self.addEventListener('install', event => {
 	event.waitUntil(
@@ -34,8 +33,11 @@ self.addEventListener('fetch', event => {
 	if (!/^https?/.test(url.protocol)) return;
 	if (event.request.method === 'POST') return;
 
+	// ignore dev server requests
+	if (url.hostname === self.location.hostname && url.port !== self.location.port) return;
+
 	// always serve assets and webpack-generated files from cache
-	if (cached.has(url.pathname)) {
+	if (url.host === self.location.host && cached.has(url.pathname)) {
 		event.respondWith(caches.match(event.request));
 		return;
 	}
