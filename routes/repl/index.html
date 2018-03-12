@@ -426,7 +426,7 @@
 	import store from '../_store.js';
 
 	function loadCodemirror() {
-		return import(/* webpackChunkName: "codemirror" */ './_codemirror.js').then(CodeMirror => {
+		return import(/* webpackChunkName: "codemirror" */ './_codemirror.js').then(({ default: CodeMirror }) => {
 			return (window.CodeMirror = CodeMirror);
 		});
 	}
@@ -856,7 +856,7 @@
 				Promise.all([
 					import(/* webpackChunkName: "jszip" */ 'jszip'),
 					import(/* webpackChunkName: "file-saver" */'file-saver')
-				]).then(([JSZip, FileSaver]) => {
+				]).then(([{ default: JSZip }, { default: FileSaver }]) => {
 					const zip = new JSZip();
 
 					get('/svelte-app.zip', { responseType: 'arraybuffer' })
