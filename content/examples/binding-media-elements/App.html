@@ -6,7 +6,7 @@
 
 <p>THX Deep Note</p>
 <div class='status' on:click='event.stopPropagation()'>
-	<img on:click='set({ paused: !paused })' src='{{icon}}/333333'>
+	<img alt='play/pause button' on:click='set({ paused: !paused })' src='{{icon}}/333333'>
 	<span class='elapsed'>{{format(t)}}</span>
 	<span class='duration'>{{format(d)}}</span>
 </div>
@@ -14,7 +14,7 @@
 <div class='progress' style='width: {{d ? 100 * t/d : 0}}%; background: {{bg}};'>
 	<p>THX Deep Note</p>
 	<div class='status' on:click='event.stopPropagation()'>
-		<img src='{{icon}}/ffffff'>
+		<img alt='play/pause button' src='{{icon}}/ffffff'>
 		<span class='elapsed'>{{format(t)}}</span>
 		<span class='duration'>{{format(d)}}</span>
 	</div>
@@ -30,10 +30,6 @@
 		color: white;
 		overflow: hidden;
 		pointer-events: none;
-	}
-
-	.progress a {
-		color: white;
 	}
 
 	p {
