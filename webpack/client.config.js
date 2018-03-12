@@ -21,7 +21,7 @@ module.exports = {
 						hydratable: true,
 						cascade: false,
 						store: true,
-						hotReload: true
+						hotReload: false // TODO
 					}
 				}
 			},
