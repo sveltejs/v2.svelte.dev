@@ -2,14 +2,6 @@
 # yarn lockfile v1
 
 
-"@arr/every@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@arr/every/-/every-1.0.0.tgz#314f8168f50ae48a032cfdad5fdb436f464a97ac"
-
-"@arr/filter@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@arr/filter/-/filter-1.0.0.tgz#3d70902de9b5424bb5d5ceec00fd05f3d635e50f"
-
 "@types/node@*":
   version "9.4.6"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-9.4.6.tgz#d8176d864ee48753d053783e4e463aec86b8d82e"
@@ -2457,13 +2449,6 @@ matcher-collection@^1.0.0:
   dependencies:
     minimatch "^3.0.2"
 
-matchit@^1.0.0:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/matchit/-/matchit-1.0.5.tgz#b24ee14d9957855398e6e9ccf42e9408c00b4274"
-  dependencies:
-    "@arr/every" "^1.0.0"
-    "@arr/filter" "^1.0.0"
-
 math-expression-evaluator@^1.2.14:
   version "1.2.17"
   resolved "https://registry.yarnpkg.com/math-expression-evaluator/-/math-expression-evaluator-1.2.17.tgz#de819fdbcd84dccd8fae59c6aeb79615b9d266ac"
@@ -2972,7 +2957,7 @@ parse5@^3.0.1:
   dependencies:
     "@types/node" "*"
 
-parseurl@^1.3.2, parseurl@~1.3.2:
+parseurl@~1.3.2:
   version "1.3.2"
   resolved "https://registry.yarnpkg.com/parseurl/-/parseurl-1.3.2.tgz#fc289d4ed8993119460c156253262cdc8de65bf3"
 
@@ -3073,13 +3058,6 @@ plur@^2.1.2:
 pluralize@^7.0.0:
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/pluralize/-/pluralize-7.0.0.tgz#298b89df8b93b0221dbf421ad2b1b1ea23fc6777"
-
-polka@^0.3.4:
-  version "0.3.4"
-  resolved "https://registry.yarnpkg.com/polka/-/polka-0.3.4.tgz#685bc3529a4582378853d568aa15d78eb3318eb3"
-  dependencies:
-    parseurl "^1.3.2"
-    trouter "^1.0.0"
 
 port-authority@^1.0.2:
   version "1.0.2"
@@ -3742,9 +3720,9 @@ sander@^0.6.0:
     mkdirp "^0.5.1"
     rimraf "^2.5.2"
 
-sapper@^0.9.4:
-  version "0.9.4"
-  resolved "https://registry.yarnpkg.com/sapper/-/sapper-0.9.4.tgz#1a58a56bf8b355e4308b72926da883b169832273"
+sapper@^0.9.6:
+  version "0.9.6"
+  resolved "https://registry.yarnpkg.com/sapper/-/sapper-0.9.6.tgz#3494ee9a6c8938d5d49b253c47617f27192d24d9"
   dependencies:
     cheerio "^1.0.0-rc.2"
     chokidar "^1.7.0"
@@ -3754,7 +3732,6 @@ sapper@^0.9.4:
     html-minifier "^3.5.10"
     mkdirp "^0.5.1"
     node-fetch "^1.7.3"
-    polka "^0.3.4"
     port-authority "^1.0.2"
     pretty-bytes "^4.0.2"
     pretty-ms "^3.1.0"
@@ -4305,12 +4282,6 @@ tough-cookie@~2.3.0:
   resolved "https://registry.yarnpkg.com/tough-cookie/-/tough-cookie-2.3.4.tgz#ec60cee38ac675063ffc97a5c18970578ee83655"
   dependencies:
     punycode "^1.4.1"
-
-trouter@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/trouter/-/trouter-1.0.0.tgz#4f845e0cdf4749276565d60f6dc9d61f55d6c0bb"
-  dependencies:
-    matchit "^1.0.0"
 
 tslib@^1.9.0:
   version "1.9.0"
