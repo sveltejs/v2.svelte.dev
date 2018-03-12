@@ -1,15 +1,14 @@
 const config = require('sapper/webpack/config.js');
-const webpack = require('webpack');
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const pkg = require('../package.json');
 
 module.exports = {
 	entry: config.server.entry(),
 	output: config.server.output(),
 	target: 'node',
 	resolve: {
-		extensions: ['.js', '.html']
+		extensions: ['.js', '.json', '.html']
 	},
+	externals: new RegExp(`^${Object.keys(pkg.dependencies).filter(d => d !== 'svelte').join('|')}`),
 	module: {
 		rules: [
 			{
@@ -27,8 +26,12 @@ module.exports = {
 			},
 			{
 				test: /\.css$/,
-				use: ['style-loader', 'css-loader']
+				use: [
+					'style-loader',
+					'css-loader'
+				]
 			}
 		]
-	}
+	},
+	mode: process.env.NODE_ENV
 };

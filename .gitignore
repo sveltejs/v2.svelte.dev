@@ -3,4 +3,5 @@ node_modules
 .sapper
 assets/svelte-app.zip
 credentials.json
-templates/.*
+app/manifest
+build
