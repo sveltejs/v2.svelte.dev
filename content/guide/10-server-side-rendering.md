@@ -56,7 +56,7 @@ All your [default data](#default-data), [computed properties](#computed-properti
 
 Any `oncreate` functions or component methods will *not* run — these only apply to client-side components.
 
-> The SSR compiler will generate a CommonJS module for each of your components – meaning that `import` and `export` statements are converted into their `require` and `module.exports` equivalents. If your components have non-component dependencies, they must also work as CommonJS modules in Node. If you're using ES2015 modules, we recommend [@std/esm](https://github.com/standard-things/esm) for automatically converting them to CommonJS.
+> The SSR compiler will generate a CommonJS module for each of your components – meaning that `import` and `export` statements are converted into their `require` and `module.exports` equivalents. If your components have non-component dependencies, they must also work as CommonJS modules in Node. If you're using ES2015 modules, we recommend the [`esm`](https://github.com/standard-things/esm) module for automatically converting them to CommonJS.
 
 
 
