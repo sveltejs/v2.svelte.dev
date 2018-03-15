@@ -98,7 +98,7 @@ Computed properties can of course return functions. For example, we could dynami
 ```html
 <input bind:value=search>
 
-{{#each words.filter(predicate) as word}}
+{{#each items.filter(predicate) as word}}
 	<p><strong>{{word.slice(0, search.length)}}</strong>{{word.slice(search.length)}}</p>
 {{else}}
 	<p>no matches!</p>

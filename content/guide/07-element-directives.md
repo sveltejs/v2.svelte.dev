@@ -328,4 +328,10 @@ export default {
 </script>
 ```
 
+```hidden-data
+{
+	"test": ""
+}
+```
+
 > Do not confuse the `<Widget bind:foo/>` syntax (two-way binding) with the `<Widget :foo/>` syntax (one-way binding)
