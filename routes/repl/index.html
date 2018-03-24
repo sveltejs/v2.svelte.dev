@@ -196,9 +196,6 @@
 	import * as load from './_utils/load.js';
 	import { get } from './_utils/get.js';
 
-	const versionMatch = typeof window !== 'undefined' && /version=([^&]+)/.exec(window.location.search);
-	let dataQuery;
-
 	function loadSvelte(version) {
 		if (version === 'local') return import(/* webpackChunkName: "svelte" */ 'svelte');
 		return load.script(`https://unpkg.com/svelte@${version}/compiler/svelte.js`).then(() => window.svelte);
