@@ -13,8 +13,8 @@
 		/>
 
 		<div class='repl-inner'>
-			<div class='left' style='width: {{verticalDividerPos}}%;'>
-				<section class='input'>
+			<SplitPane type=horizontal on:resize='resizePanes(["editor", "data"])'>
+				<section slot=a class='input'>
 					<div class='module-controls'>
 						{{#if selectedComponent}}
 							<ComponentSelector
@@ -53,37 +53,33 @@
 						<p class='loading'>loading editor...</p>
 					{{/if}}
 				</section>
-			</div>
 
-			<div ref:right class='right' style='width: {{100 - verticalDividerPos}}%;'>
-				<h2 class='show-if-mobile'>data.json</h2>
-				<div class='bottom' style='height: {{100 - horizontalDividerPos}}%;'>
-					{{#if loadedCodemirror}}
-						<CodeMirror ref:data mode='javascript' bind:code='json' error='{{dataError}}' errorLoc='{{dataErrorLoc}}'/>
-					{{else}}
-						<p class='loading'>loading editor...</p>
-					{{/if}}
+				<div slot=b style='height: 100%;'>
+					<SplitPane type=vertical on:resize='resizePanes(["data"])'>
+						<div class=pane slot=a >
+							<h2 class='show-if-mobile'>Rendered component</h2>
+
+							{{#if loadedSvelte}}
+								{{#if bundle}}
+									<Viewer :bundle :data :bundleError bind:error='runtimeError' on:change='updateData(event)' on:navigate='navigate(event)'/>
+								{{/if}}
+							{{else}}
+								<p class='loading'>loading Svelte compiler...</p>
+							{{/if}}
+						</div>
+
+						<div class=pane slot=b >
+							<h2 class='show-if-mobile'>data.json</h2>
+
+							{{#if loadedCodemirror}}
+								<CodeMirror ref:data mode='javascript' bind:code='json' error='{{dataError}}' errorLoc='{{dataErrorLoc}}'/>
+							{{else}}
+								<p class='loading'>loading editor...</p>
+							{{/if}}
+						</div>
+					</SplitPane>
 				</div>
-
-				<h2 class='show-if-mobile'>Rendered component</h2>
-				<div class='top' style='height: {{horizontalDividerPos}}%;'>
-					{{#if loadedSvelte}}
-						{{#if bundle}}
-							<Viewer :bundle :data :bundleError bind:error='runtimeError' on:change='updateData(event)' on:navigate='navigate(event)'/>
-						{{/if}}
-					{{else}}
-						<p class='loading'>loading Svelte compiler...</p>
-					{{/if}}
-
-					{{#if dragging}}
-						<div class='mousecatcher'></div>
-					{{/if}}
-				</div>
-
-				<div class='divider horizontal-divider' style='top: calc({{horizontalDividerPos}}% - 8px)' on:drag='setHorizontal(event)'></div>
-			</div>
-
-			<div class='divider vertical-divider' style='left: calc({{verticalDividerPos}}% - 8px)' on:drag='setVertical(event)'></div>
+			</SplitPane>
 		</div>
 	</div>
 </Layout>
@@ -135,10 +131,9 @@
 		}
 	}
 
-	.divider {
-		position: absolute;
-		z-index: 10;
-		display: none;
+	.pane {
+		width: 100%;
+		height: 100%;
 	}
 
 	h2 {
@@ -232,7 +227,7 @@
 		.top { top: 0; }
 		.bottom { bottom: 0; }
 
-		.left .editor-wrapper {
+		.editor-wrapper {
 			/* make it easier to interact with scrollbar */
 			padding-right: 8px;
 			height: auto;
@@ -242,40 +237,6 @@
 		section {
 			height: 100%;
 		}
-	}
-
-	.divider::after {
-		content: '';
-		position: absolute;
-		background-color: #eee;
-	}
-
-	.vertical-divider {
-		padding: 0 8px;
-		width: 0;
-		height: 100%;
-		cursor: ew-resize;
-	}
-
-	.vertical-divider::after {
-		left: 8px;
-		top: 0;
-		width: 1px;
-		height: 100%;
-	}
-
-	.horizontal-divider {
-		padding: 8px 0;
-		width: 100%;
-		height: 0;
-		cursor: ns-resize;
-	}
-
-	.horizontal-divider::after {
-		top: 8px;
-		left: 0;
-		width: 100%;
-		height: 1px;
 	}
 
 	.loading {
@@ -343,15 +304,6 @@
 		}
 	}
 
-	.mousecatcher {
-		position: absolute;
-		left: 0;
-		top: 0;
-		width: 100%;
-		height: 100%;
-		background: rgba(255,255,255,0.01);
-	}
-
 	.repl-inner :global(.message) {
 		position: relative;
 		border-radius: 0.2em;
@@ -400,9 +352,8 @@
 	import CodeMirror from './_CodeMirror.html';
 	import Viewer from './_Viewer.html';
 	import ComponentSelector from './_ComponentSelector.html';
-	import ExampleSelector from './_ExampleSelector.html';
 	import AppControls from './_AppControls.html';
-	import UserMenu from './_UserMenu.html';
+	import SplitPane from './_SplitPane.html';
 	import { getComponentFromGist, saveComponentAsGist } from './_utils/gist.js';
 	import debounce from './_utils/debounce.js';
 	import * as load from './_utils/load.js';
@@ -628,23 +579,10 @@
 				window.scrollTo(0, window.scrollY + d);
 			},
 
-			setHorizontal(event) {
-				const { top, bottom } = this.refs.right.getBoundingClientRect();
-
-				this.set({
-					horizontalDividerPos: 100 * (event.clientY - top) / (bottom - top)
+			resizePanes(panes) {
+				panes.forEach(pane => {
+					this.refs[pane].resize();
 				});
-
-				this.refs.data.resize();
-			},
-
-			setVertical(event) {
-				this.set({
-					verticalDividerPos: 100 * event.clientX / window.innerWidth
-				});
-
-				this.refs.editor.resize();
-				this.refs.data.resize();
 			},
 
 			updateData({ key, value }) {
@@ -992,44 +930,13 @@
 			});
 		},
 
-		events: {
-			drag(node, callback) {
-				const mousedown = event => {
-					if (event.which !== 1) return;
-
-					event.preventDefault();
-
-					this.set({ dragging: true });
-
-					const onmouseup = () => {
-						this.set({ dragging: false });
-
-						window.removeEventListener('mousemove', callback, false);
-						window.removeEventListener('mouseup', onmouseup, false);
-					};
-
-					window.addEventListener('mousemove', callback, false);
-					window.addEventListener('mouseup', onmouseup, false);
-				}
-
-				node.addEventListener('mousedown', mousedown, false);
-
-				return {
-					teardown() {
-						node.removeEventListener('mousedown', onmousedown, false);
-					}
-				};
-			}
-		},
-
 		components: {
 			Layout,
 			CodeMirror,
 			Viewer,
 			ComponentSelector,
-			ExampleSelector,
-			UserMenu,
-			AppControls
+			AppControls,
+			SplitPane
 		}
 	};
 
