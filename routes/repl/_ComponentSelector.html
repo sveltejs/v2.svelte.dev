@@ -1,37 +1,48 @@
-<div class="panel-header">
-	<ul ref:files class="file-tabs" on:dblclick='fire("create")'>
-		{{#each components as component}}
-		<li id='{{component.name}}' class='{{ selectedComponent == component ? "active" : "" }}' data-name='{{component.name}}' on:dblclick='event.stopPropagation()'>
-			<button class='file-tabs-item {{ component.edit ? "edit-mode" : ""}}' on:click='selectComponent(component, selectedComponent)'>
-				{{#if component.name == 'App'}}
-					<div class='uneditable'>
-						App.html
-					</div>
-				{{else}}
-					{{#if component.edit}}
-						<div class='input-wrapper'>
-							<input autofocus ref:name bind:value='component.name' on:focus='selectInput(this)' on:blur='closeEdit(selectedComponent)' on:enter='this.blur()' />
+<div class='component-selector'>
+	<div class="panel-header">
+		<ul ref:files class="file-tabs" on:dblclick='fire("create")'>
+			{{#each components as component}}
+			<li id='{{component.name}}' class='{{ selectedComponent == component ? "active" : "" }}' data-name='{{component.name}}' on:dblclick='event.stopPropagation()'>
+				<button class='file-tabs-item {{ component.edit ? "edit-mode" : ""}}' on:click='selectComponent(component, selectedComponent)'>
+					{{#if component.name == 'App'}}
+						<div class='uneditable'>
+							App.html
 						</div>
 					{{else}}
-						<div class='editable' title='edit component name' on:click='editTab(component, selectedComponent)'>
-							{{component.name}}.{{component.type}}
-						</div>
+						{{#if component.edit}}
+							<div class='input-wrapper'>
+								<input autofocus ref:name bind:value='component.name' on:focus='selectInput(this)' on:blur='closeEdit(selectedComponent)' on:enter='this.blur()' />
+							</div>
+						{{else}}
+							<div class='editable' title='edit component name' on:click='editTab(component, selectedComponent)'>
+								{{component.name}}.{{component.type}}
+							</div>
+						{{/if}}
+						<span class='remove' on:click='remove(component)'>&times;</span>
 					{{/if}}
-					<span class='remove' on:click='remove(component)'>&times;</span>
-				{{/if}}
-			</button>
-		</li>
-		{{/each}}
-	</ul>
-</div>
+				</button>
+			</li>
+			{{/each}}
+		</ul>
+	</div>
 
-<div class="btn-action-container">
-	<button class='add-new' on:click='fire("create")' title="add new component">
-		<span>+</span>
-	</button>
+	<div class="btn-action-container">
+		<button class='add-new' on:click='fire("create")' title="add new component">
+			<span>+</span>
+		</button>
+	</div>
 </div>
 
 <style>
+	.component-selector {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		border-bottom: 1px solid #eee;
+		height: 2.4em;
+	}
+
 	.module-name {
 		position: relative;
 		display: block;

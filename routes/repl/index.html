@@ -15,43 +15,35 @@
 		<div class='repl-inner'>
 			<SplitPane type=horizontal on:resize='resizePanes(["editor", "data"])'>
 				<section slot=a class='input'>
-					<div class='module-controls'>
+					<ComponentSelector
+						ref:selector
+						:components
+						bind:selectedComponent
+						on:create='createComponent()'
+						on:remove='removeComponent(selectedComponent)'
+					/>
+
+					<div ref:editorWrapper class='editor-wrapper {{flip}}'>
 						{{#if selectedComponent}}
-							<ComponentSelector
-								ref:selector
-								:components
-								bind:selectedComponent
-								on:create='createComponent()'
-								on:remove='removeComponent(selectedComponent)'
-							/>
-						{{/if}}
-					</div>
-
-					{{#if loadedCodemirror}}
-						<div ref:editorWrapper class='editor-wrapper {{flip}}'>
-							{{#if selectedComponent}}
-								{{#if showGenerated && selectedComponent.compiled}}
-									<CodeMirror ref:editor mode='javascript' code='{{selectedComponent.compiled.code}}' readonly/>
-								{{else}}
-									<CodeMirror
-										ref:editor
-										mode='{{selectedComponent.type === "js" ? "javascript" : "handlebars"}}'
-										bind:code='selectedComponent.source'
-										error='{{sourceError}}'
-										errorLoc='{{sourceErrorLoc || runtimeErrorLoc}}'
-										warningCount='{{warningCount}}'
-										on:navigate='navigate(event)'
-									/>
-								{{/if}}
+							{{#if showGenerated && selectedComponent.compiled}}
+								<CodeMirror ref:editor mode='javascript' code='{{selectedComponent.compiled.code}}' readonly/>
+							{{else}}
+								<CodeMirror
+									ref:editor
+									mode='{{selectedComponent.type === "js" ? "javascript" : "handlebars"}}'
+									bind:code='selectedComponent.source'
+									error='{{sourceError}}'
+									errorLoc='{{sourceErrorLoc || runtimeErrorLoc}}'
+									warningCount='{{warningCount}}'
+									on:navigate='navigate(event)'
+								/>
 							{{/if}}
+						{{/if}}
 
-							<button class='btn editor-toggle' on:click='flip()'>
-								<span class='flip-text'>{{showGenerated ? 'output' : 'input'}}</span>
-							</button>
-						</div>
-					{{else}}
-						<p class='loading'>loading editor...</p>
-					{{/if}}
+						<button class='btn editor-toggle' on:click='flip()'>
+							<span class='flip-text'>{{showGenerated ? 'output' : 'input'}}</span>
+						</button>
+					</div>
 				</section>
 
 				<div slot=b style='height: 100%;'>
@@ -71,11 +63,7 @@
 						<div class=pane slot=b >
 							<h2 class='show-if-mobile'>data.json</h2>
 
-							{{#if loadedCodemirror}}
-								<CodeMirror ref:data mode='javascript' bind:code='json' error='{{dataError}}' errorLoc='{{dataErrorLoc}}'/>
-							{{else}}
-								<p class='loading'>loading editor...</p>
-							{{/if}}
+							<CodeMirror ref:data mode='javascript' bind:code='json' error='{{dataError}}' errorLoc='{{dataErrorLoc}}'/>
 						</div>
 					</SplitPane>
 				</div>
@@ -258,15 +246,6 @@
 		}
 	}
 
-	.module-controls {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		border-bottom: 1px solid #eee;
-		height: 2.4em;
-	}
-
 	.repl-outer :global(button) {
 		font-family: Rajdhani, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 		font-size: inherit;
@@ -359,12 +338,6 @@
 	import * as load from './_utils/load.js';
 	import { get } from './_utils/get.js';
 
-	function loadCodemirror() {
-		return import(/* webpackChunkName: "codemirror" */ './_codemirror.js').then(({ default: CodeMirror }) => {
-			return (window.CodeMirror = CodeMirror);
-		});
-	}
-
 	const versionMatch = typeof window !== 'undefined' && /version=([^&]+)/.exec(window.location.search);
 	let dataQuery;
 
@@ -448,7 +421,6 @@
 
 				selectedExample: null,
 
-				loadedCodemirror: false,
 				editorRotation: 0,
 				flip: ''
 			};
@@ -770,10 +742,6 @@
 			this.uid = 0;
 			this.flipping = false;
 			this.bundlePromise = null;
-
-			loadCodemirror().then(() => {
-				this.set({ loadedCodemirror: true });
-			});
 
 			let exampleComponents;
 			let lastSelectedExample;

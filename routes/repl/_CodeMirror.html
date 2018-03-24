@@ -1,26 +1,32 @@
-<div class='codemirror-container'>
-	<textarea tabindex='2' ref:editor></textarea>
+{{#await codemirrorPromise}}
+	<p class='loading'>loading editor...</p>
+{{then _}}
+	<div class='codemirror-container'>
+		<textarea tabindex='2' ref:editor></textarea>
 
-	{{#if error}}
-		<p class='error message'>
-			{{#if error.loc}}
-				<strong>
-					{{#if error.filename}}
-						<span class='filename' on:click='fire("navigate", error.filename)'>{{error.filename}}</span>
-					{{/if}}
+		{{#if error}}
+			<p class='error message'>
+				{{#if error.loc}}
+					<strong>
+						{{#if error.filename}}
+							<span class='filename' on:click='fire("navigate", error.filename)'>{{error.filename}}</span>
+						{{/if}}
 
-					({{error.loc.line}}:{{error.loc.column}})
-				</strong>
-			{{/if}}
+						({{error.loc.line}}:{{error.loc.column}})
+					</strong>
+				{{/if}}
 
-			{{error.message}}
-		</p>
-	{{elseif warningCount > 0}}
-		<p class='warning message'>
-			Compiled, but with {{warningCount}} {{warningCount === 1 ? 'warning' : 'warnings'}} — check the console for details
-		</p>
-	{{/if}}
-</div>
+				{{error.message}}
+			</p>
+		{{elseif warningCount > 0}}
+			<p class='warning message'>
+				Compiled, but with {{warningCount}} {{warningCount === 1 ? 'warning' : 'warnings'}} — check the console for details
+			</p>
+		{{/if}}
+	</div>
+{{catch err}}
+	<p class='error'>error loading CodeMirror</p>
+{{/await}}
 
 <style>
 	.codemirror-container {
@@ -76,60 +82,84 @@
 	.codemirror-container :global(.error-line) {
 		background-color: rgba(200,0,0,0.05);
 	}
+
+	.loading, .error {
+		text-align: center;
+		color: #999;
+		font-weight: 300;
+		margin: 2em 0 0 0;
+	}
 </style>
 
 <script>
+	let codemirrorPromise;
+
+	function loadCodemirror() {
+		console.log('loading CodeMirror')
+		return import(/* webpackChunkName: "codemirror" */ './_codemirror.js').then(({ default: CodeMirror }) => {
+			return CodeMirror;
+		});
+	}
+
 	export default {
+		data() {
+			return {
+				codemirrorPromise: process.browser
+					? codemirrorPromise || (codemirrorPromise = loadCodemirror())
+					: null
+			};
+		},
+
 		oncreate() {
-			this.updating = false;
+			codemirrorPromise.then(CodeMirror => {
+				this.updating = false;
 
-			this.observe('mode', this.createEditor);
+				this.observe('mode', () => {
+					this.createEditor(CodeMirror);
+				});
 
-			this.observe('code', code => {
-				if (!this.updating && code != null) {
-					this.updating = true;
-					this.editor.setValue(code);
-					this.updating = false;
-				}
-			});
+				this.observe('code', code => {
+					if (!this.updating && code != null) {
+						this.updating = true;
+						this.editor.setValue(code);
+						this.updating = false;
+					}
+				});
 
-			let marker;
-			let line;
-			this.observe('errorLoc', loc => {
-				if (marker) marker.clear();
+				let marker;
+				let line;
+				this.observe('errorLoc', loc => {
+					if (marker) marker.clear();
 
-				if (loc == null) {
-					this.set({ errorLine: null });
-				} else {
-					const line = loc.line - 1;
-					const ch = loc.column;
+					if (loc == null) {
+						this.set({ errorLine: null });
+					} else {
+						const line = loc.line - 1;
+						const ch = loc.column;
 
-					marker = this.editor.markText({ line, ch }, { line, ch: ch + 1 }, {
-						className: 'error-loc'
-					});
+						marker = this.editor.markText({ line, ch }, { line, ch: ch + 1 }, {
+							className: 'error-loc'
+						});
 
-					this.set({ errorLine: line });
-				}
-			});
+						this.set({ errorLine: line });
+					}
+				});
 
-			this.observe('errorLine', (line, previousLine) => {
-				if (previousLine != null) this.editor.removeLineClass(previousLine, 'wrap', 'error-line');
-				if (line != null) this.editor.addLineClass(line, 'wrap', 'error-line');
-			});
+				this.observe('errorLine', (line, previousLine) => {
+					if (previousLine != null) this.editor.removeLineClass(previousLine, 'wrap', 'error-line');
+					if (line != null) this.editor.addLineClass(line, 'wrap', 'error-line');
+				});
 
-			this.on('destroy', () => {
-				this.editor.toTextArea();
-			});
+				this.on('destroy', () => {
+					this.editor.toTextArea();
+				});
 
-			// TODO this is a bug. oncreate should only be called once
-			// the component is actually in the DOM
-			setTimeout(() => {
 				this.editor.refresh();
 			});
 		},
 
 		methods: {
-			createEditor() {
+			createEditor(CodeMirror) {
 				if (this.editor) {
 					this.editor.toTextArea();
 				}
@@ -147,7 +177,7 @@
 					}
 				};
 
-				this.editor = window.CodeMirror.fromTextArea(this.refs.editor, {
+				this.editor = CodeMirror.fromTextArea(this.refs.editor, {
 					lineNumbers: true,
 					lineWrapping: true,
 					indentWithTabs: true,
