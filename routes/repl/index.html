@@ -199,8 +199,7 @@
 	const versionMatch = typeof window !== 'undefined' && /version=([^&]+)/.exec(window.location.search);
 	let dataQuery;
 
-	function loadSvelte() {
-		const version = versionMatch ? versionMatch[1] : 'latest';
+	function loadSvelte(version) {
 		if (version === 'local') return import(/* webpackChunkName: "svelte" */ 'svelte');
 		return load.script(`https://unpkg.com/svelte@${version}/compiler/svelte.js`).then(() => window.svelte);
 	}
@@ -236,6 +235,8 @@
 
 	export default {
 		preload({ query }) {
+			if (!process.browser) return null;
+
 			let gist = null;
 			let components = [];
 			let selectedComponent;
@@ -262,6 +263,8 @@
 				return {
 					example_contents,
 
+					version: query.version || 'latest',
+
 					gist,
 					components,
 					selectedComponent,
@@ -273,6 +276,9 @@
 
 		data() {
 			return {
+				example_contents: [],
+				components: [],
+
 				horizontalDividerPos: 50,
 				verticalDividerPos: 50,
 				showGenerated: false,
@@ -487,22 +493,21 @@
 			updateUrl() {
 				if (typeof history === 'undefined') return;
 
-				const gist = this.get('gist');
-				const selectedExample = this.get('selectedExample');
+				const { gist, selectedExample, version, query } = this.get();
 
 				const params = {};
 				if (typeof svelte !== 'undefined') {
-					params.version = versionMatch && versionMatch[1] === 'local' ? 'local' : svelte.VERSION;
-				} else if (versionMatch) {
-					params.version = versionMatch[1];
+					params.version = version === 'local' ? 'local' : svelte.VERSION;
+				} else {
+					params.version = version
 				}
 
 				if (gist) {
 					params.gist = gist;
 				} else if (selectedExample) {
 					params.example = selectedExample.id;
-				} else if (dataQuery) {
-					params.data = dataQuery;
+				} else if (query.data) {
+					params.data = query.data;
 				}
 
 				const queryString = Object.keys(params).map(key => `${key}=${params[key]}`).join('&');
@@ -544,7 +549,7 @@
 			let exampleComponents;
 			let lastSelectedExample;
 
-			const { gist, components } = this.get();
+			const { gist, components, version } = this.get();
 			if (!gist && components.length === 0) {
 				const exampleMatch = /example=([^&]+)$/.exec(window.location.search);
 				const selectedExample = this.findExample(exampleMatch ? exampleMatch[1] : 'hello-world');
@@ -616,7 +621,7 @@
 				this.updateUrl();
 			});
 
-			loadSvelte().then(svelte => {
+			loadSvelte(version).then(svelte => {
 				window.svelte = svelte;
 
 				this.set({ loadedSvelte: true });
