@@ -1,9 +1,9 @@
 <ul class='guide-toc'>
 	{{#each $guide_contents as section}}
 		<li>
-			<a class='section {{section.slug === $activeGuideSection ? "active": ""}}' href='/guide#{{section.slug}}'>{{section.metadata.title}}</a>
+			<a class='section {{section.slug === $activeGuideSection ? "active": ""}}' href='guide#{{section.slug}}'>{{section.metadata.title}}</a>
 			{{#each section.subsections as subsection}}
-				<a class='subsection {{subsection.slug === $activeGuideSection ? "active": ""}}' href='/guide#{{subsection.slug}}'>{{subsection.title}}</a>
+				<a class='subsection {{subsection.slug === $activeGuideSection ? "active": ""}}' href='guide#{{subsection.slug}}'>{{subsection.title}}</a>
 			{{/each}}
 		</li>
 	{{/each}}

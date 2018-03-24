@@ -36,7 +36,11 @@ module.exports = {
 	},
 	mode,
 	plugins: [
-		dev && new webpack.HotModuleReplacementPlugin()
+		dev && new webpack.HotModuleReplacementPlugin(),
+		new webpack.DefinePlugin({
+			'process.browser': true,
+			'process.env.NODE_ENV': JSON.stringify(mode)
+		})
 	].filter(Boolean),
 	devtool: dev ? 'inline-source-map' : false
 };
