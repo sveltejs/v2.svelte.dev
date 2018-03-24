@@ -453,65 +453,49 @@
 	}
 
 	export default {
-		data() {
-			const search = typeof window !== 'undefined' ? window.location.search : '';
-			const gistMatch = /gist=([^&]+)$/.exec(search);
-			const dataMatch = /data=([^&]+)$/.exec(search);
-
+		preload({ query }) {
 			let gist = null;
 			let components = [];
-			let selectedExample = null;
+			let selectedComponent;
 			let data = {};
 
-			if (dataMatch) {
-				dataQuery = dataMatch[1]; // so we don't lose it from the URL later
-				const parsed = tryParseData(dataMatch[1]);
+			if (query.data) {
+				const parsed = tryParseData(query.data);
 
-				if (parsed.source && !parsed.components) {
-					// legacy
-					components = [
-						{
-							name: 'App',
-							type: 'html',
-							entry: true,
-							source: parsed.source
-						}
-					];
-				} else {
-					components = parsed.components;
-					components.forEach(component => {
-						if (!component.type) component.type = 'html';
-					});
-				}
+				components = parsed.components;
+				components.forEach(component => {
+					if (!component.type) component.type = 'html';
+				});
 
 				data = parsed.data;
 			}
 
-			let selectedComponent = null;
-
 			if (components && components.length > 0) {
 				selectedComponent = components[0];
-			} else if (gistMatch) {
-				gist = gistMatch[1];
+			} else if (query.gist) {
+				gist = query.gist;
 			}
 
+			return this.fetch(`api/examples`).then(r => r.json()).then(example_contents => {
+				return {
+					example_contents,
+
+					gist,
+					components,
+					selectedComponent,
+					data,
+					json: JSON.stringify(data, null, '  ')
+				};
+			});
+		},
+
+		data() {
 			return {
 				horizontalDividerPos: 50,
 				verticalDividerPos: 50,
 				showGenerated: false,
 
-				// TODO remove this post-https://github.com/sveltejs/svelte/issues/424
-				false: false,
-				true: true,
-				null: null,
-
 				selectedExample: null,
-				selectedComponent,
-
-				gist,
-				components,
-				data,
-				json: JSON.stringify(data, null, '  '),
 
 				loadedCodemirror: false,
 				editorRotation: 0,
@@ -829,75 +813,6 @@
 				});
 			},
 
-			download() {
-				this.set({
-					downloading: true
-				});
-
-				Promise.all([
-					import(/* webpackChunkName: "jszip" */ 'jszip'),
-					import(/* webpackChunkName: "file-saver" */'file-saver')
-				]).then(([{ default: JSZip }, { default: FileSaver }]) => {
-					const zip = new JSZip();
-
-					get('/svelte-app.zip', { responseType: 'arraybuffer' })
-						.then(JSZip.loadAsync)
-						.then(zip => {
-							const { bundle, components, data } = this.get();
-
-							// remove any dotfiles that snuck in
-							Object.keys(zip.files).forEach(key => {
-								const file = key.split('/').pop();
-								if (file[0] === '.') zip.remove(key);
-							});
-
-							// add component files
-							components.forEach(component => {
-								zip.file(`src/${component.name}.${component.type}`, component.source);
-							});
-
-							// add entry point
-							zip.file(`src/main.js`, `import App from './App.html';
-
-var app = new App({
-	target: document.body,
-	data: ${JSON.stringify(data, null, '\t').replace(/\n/g, '\n\t')}
-});
-
-export default app;` );
-
-							const go = () => {
-								zip.generateAsync({ type: 'blob' })
-									.then(blob => {
-										this.set({
-											downloading: false
-										});
-										FileSaver.saveAs(blob, 'svelte-app.zip');
-									});
-							};
-
-							if (bundle.imports.length > 0) {
-								zip.file('package.json')
-									.async('string')
-									.then(JSON.parse)
-									.then(pkg => {
-										const deps = {};
-										bundle.imports.forEach(mod => {
-											const match = /^[^@\/]+/.exec(mod);
-											deps[match[0]] = 'latest';
-										});
-										pkg.dependencies = deps;
-
-										zip.file('package.json', JSON.stringify(pkg, null, '  '));
-									})
-									.then(go);
-							} else {
-								go();
-							}
-						});
-				});
-			},
-
 			findExample(id) {
 				const { example_contents } = this.get();
 
@@ -911,12 +826,6 @@ export default app;` );
 					}
 				}
 			}
-		},
-
-		preload() {
-			return this.fetch(`api/examples`).then(r => r.json()).then(example_contents => {
-				return { example_contents };
-			});
 		},
 
 		oncreate() {
