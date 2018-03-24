@@ -7,7 +7,7 @@
 	<div class='posts'>
 		{{#each posts as post}}
 			<article class='post'>
-				<a rel='prefetch' href='/blog/{{post.slug}}'>
+				<a rel='prefetch' href='blog/{{post.slug}}'>
 					<h2>{{post.metadata.title}}</h2>
 					<p class='standfirst'>{{post.metadata.description}}</p>
 				</a>
@@ -16,7 +16,7 @@
 					<a href='{{post.metadata.authorURL}}'>{{post.metadata.author}}</a>
 					<time datetime='{{post.metadata.pubdate}}'>{{post.metadata.dateString}}</time>
 
-					<a rel='prefetch' class='continue-reading' href='/blog/{{post.slug}}'>continue reading &raquo;</a>
+					<a rel='prefetch' class='continue-reading' href='blog/{{post.slug}}'>continue reading &raquo;</a>
 				</p>
 			</article>
 		{{/each}}
@@ -90,7 +90,7 @@
 		store: () => store,
 
 		preload() {
-			return fetch(`/api/blog`).then(r => r.json()).then(posts => {
+			return this.fetch(`api/blog`).then(r => r.json()).then(posts => {
 				return { posts };
 			});
 		}

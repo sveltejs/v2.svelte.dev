@@ -933,7 +933,7 @@ export default app;` );
 		},
 
 		preload() {
-			return fetch(`/api/examples`).then(r => r.json()).then(example_contents => {
+			return this.fetch(`api/examples`).then(r => r.json()).then(example_contents => {
 				return { example_contents };
 			});
 		},
@@ -962,7 +962,7 @@ export default app;` );
 				const id = example.id;
 
 				lastSelectedExample = id;
-				fetch(`/api/examples/${id}`).then(r => r.json()).then(example => {
+				fetch(`api/examples/${id}`).then(r => r.json()).then(example => {
 					exampleComponents = stringifyComponents(example.components);
 
 					if (window.svelte) {

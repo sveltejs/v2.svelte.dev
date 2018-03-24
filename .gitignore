@@ -5,3 +5,4 @@ assets/svelte-app.zip
 credentials.json
 app/manifest
 build
+yarn-error.log

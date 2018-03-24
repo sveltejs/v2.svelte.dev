@@ -5,54 +5,56 @@
 	<meta name='viewport' content='width=device-width'>
 	<meta name='theme-color' content='#aa1e1e'>
 
-	<link rel='manifest' href='/manifest.json'>
-	<link rel='icon' type='image/png' href='/favicon.png'>
+	%sapper.base%
+
+	<link rel='manifest' href='manifest.json'>
+	<link rel='icon' type='image/png' href='favicon.png'>
 
 	<style>
 		@font-face {
 			font-family: 'Roboto';
-			src: url('/fonts/Roboto/Roboto-LightItalic.woff2') format('woff2'),
-				url('/fonts/Roboto/Roboto-LightItalic.woff') format('woff');
+			src: url('fonts/Roboto/Roboto-LightItalic.woff2') format('woff2'),
+				url('fonts/Roboto/Roboto-LightItalic.woff') format('woff');
 			font-weight: 300;
 			font-style: italic;
 		}
 
 		@font-face {
 			font-family: 'Roboto';
-			src: url('/fonts/Roboto/Roboto-Light.woff2') format('woff2'),
-				url('/fonts/Roboto/Roboto-Light.woff') format('woff');
+			src: url('fonts/Roboto/Roboto-Light.woff2') format('woff2'),
+				url('fonts/Roboto/Roboto-Light.woff') format('woff');
 			font-weight: 300;
 			font-style: normal;
 		}
 
 		@font-face {
 			font-family: 'Roboto';
-			src: url('/fonts/Roboto/Roboto-Bold.woff2') format('woff2'),
-				url('/fonts/Roboto/Roboto-Bold.woff') format('woff');
+			src: url('fonts/Roboto/Roboto-Bold.woff2') format('woff2'),
+				url('fonts/Roboto/Roboto-Bold.woff') format('woff');
 			font-weight: bold;
 			font-style: normal;
 		}
 
 		@font-face {
 			font-family: 'Rajdhani';
-			src: url('/fonts/Rajdhani/Rajdhani-Bold.woff2') format('woff2'),
-				url('/fonts/Rajdhani/Rajdhani-Bold.woff') format('woff');
+			src: url('fonts/Rajdhani/Rajdhani-Bold.woff2') format('woff2'),
+				url('fonts/Rajdhani/Rajdhani-Bold.woff') format('woff');
 			font-weight: 700;
 			font-style: normal;
 		}
 
 		@font-face {
 			font-family: 'Rajdhani';
-			src: url('/fonts/Rajdhani/Rajdhani-Medium.woff2') format('woff2'),
-				url('/fonts/Rajdhani/Rajdhani-Medium.woff') format('woff');
+			src: url('fonts/Rajdhani/Rajdhani-Medium.woff2') format('woff2'),
+				url('fonts/Rajdhani/Rajdhani-Medium.woff') format('woff');
 			font-weight: 500;
 			font-style: normal;
 		}
 
 		@font-face {
 			font-family: 'Rajdhani';
-			src: url('/fonts/Rajdhani/Rajdhani-Regular.woff2') format('woff2'),
-				url('/fonts/Rajdhani/Rajdhani-Regular.woff') format('woff');
+			src: url('fonts/Rajdhani/Rajdhani-Regular.woff2') format('woff2'),
+				url('fonts/Rajdhani/Rajdhani-Regular.woff') format('woff');
 			font-weight: 300;
 			font-style: normal;
 		}
@@ -60,8 +62,8 @@
 		@font-face {
 			font-family: 'Inconsolata';
 			src: local('Inconsolata Bold'), local('Inconsolata-Bold'),
-				url('/fonts/Inconsolata/Inconsolata-Bold.woff2') format('woff2'),
-				url('/fonts/Inconsolata/Inconsolata-Bold.woff') format('woff');
+				url('fonts/Inconsolata/Inconsolata-Bold.woff2') format('woff2'),
+				url('fonts/Inconsolata/Inconsolata-Bold.woff') format('woff');
 			font-weight: bold;
 			font-style: normal;
 		}
@@ -69,8 +71,8 @@
 		@font-face {
 			font-family: 'Inconsolata';
 			src: local('Inconsolata'), local('Inconsolata-Regular'),
-				url('/fonts/Inconsolata/Inconsolata-Regular.woff2') format('woff2'),
-				url('/fonts/Inconsolata/Inconsolata-Regular.woff') format('woff');
+				url('fonts/Inconsolata/Inconsolata-Regular.woff2') format('woff2'),
+				url('fonts/Inconsolata/Inconsolata-Regular.woff') format('woff');
 			font-weight: normal;
 			font-style: normal;
 		}
@@ -121,12 +123,6 @@
 		.hljs-meta { color: #555; }
 		.hljs-meta-string { color: #555; }
 	</style>
-
-	<script>
-		if ('serviceWorker' in navigator) {
-			navigator.serviceWorker.register('/service-worker.js');
-		}
-	</script>
 
 	%sapper.styles%
 

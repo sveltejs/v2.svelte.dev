@@ -180,7 +180,7 @@
 		store: () => store,
 
 		preload({ params }) {
-			return fetch(`/api/blog/${params.slug}`).then(r => r.json()).then(post => {
+			return this.fetch(`api/blog/${params.slug}`).then(r => r.json()).then(post => {
 				return { post };
 			});
 		}

@@ -236,7 +236,7 @@
 		},
 
 		preload() {
-			return fetch(`/api/guide`).then(r => r.json()).then(sections => {
+			return this.fetch(`api/guide`).then(r => r.json()).then(sections => {
 				return { sections };
 			});
 		},
