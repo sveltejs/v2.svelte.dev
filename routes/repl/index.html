@@ -23,27 +23,14 @@
 						on:remove='removeComponent(selectedComponent)'
 					/>
 
-					<div ref:editorWrapper class='editor-wrapper {{flip}}'>
-						{{#if selectedComponent}}
-							{{#if showGenerated && selectedComponent.compiled}}
-								<CodeMirror ref:editor mode='javascript' code='{{selectedComponent.compiled.code}}' readonly/>
-							{{else}}
-								<CodeMirror
-									ref:editor
-									mode='{{selectedComponent.type === "js" ? "javascript" : "handlebars"}}'
-									bind:code='selectedComponent.source'
-									error='{{sourceError}}'
-									errorLoc='{{sourceErrorLoc || runtimeErrorLoc}}'
-									warningCount='{{warningCount}}'
-									on:navigate='navigate(event)'
-								/>
-							{{/if}}
-						{{/if}}
-
-						<button class='btn editor-toggle' on:click='flip()'>
-							<span class='flip-text'>{{showGenerated ? 'output' : 'input'}}</span>
-						</button>
-					</div>
+					<ModuleEditor
+						ref:editor
+						bind:selectedComponent
+						error='{{sourceError}}'
+						errorLoc='{{sourceErrorLoc || runtimeErrorLoc}}'
+						:warningCount
+						on:navigate='navigate(event)'
+					/>
 				</section>
 
 				<div slot=b style='height: 100%;'>
@@ -105,20 +92,6 @@
 		100% { opacity: 1; }
 	}
 
-	.left, .right {
-		position: relative;
-	}
-
-	@media (max-width: 767px) {
-		.left, .right {
-			width: 100% !important; /* override divider-set width */
-		}
-
-		.top, .bottom {
-			height: auto !important;
-		}
-	}
-
 	.pane {
 		width: 100%;
 		height: 100%;
@@ -131,56 +104,6 @@
 		font-size: 1.2em;
 	}
 
-	.editor-wrapper {
-		z-index: 5;
-		transform-style: preserve-3d;
-		animation-fill-mode: forwards;
-	}
-
-	.repl-inner .editor-toggle {
-		position: absolute;
-		bottom: 1em;
-		right: 1em;
-		z-index: 10;
-		background: white url(/icons/flip.svg) no-repeat calc(100% - 0.7em) 50%;
-		background-size: 1.4em 1em;
-		padding-right: 2.5em;
-	}
-
-	.flip-text {
-		/*display: none;*/
-	}
-
-	.editor-toggle:hover .flip-text {
-		/*display: inline-block;*/
-	}
-
-	.flip-out {
-		animation-name: flip-out;
-		animation-duration: 0.2s;
-		animation-timing-function: ease-in;
-	}
-
-	.flip-pause {
-		opacity: 0;
-	}
-
-	.flip-in {
-		animation-name: flip-in;
-		animation-duration: 0.2s;
-		animation-timing-function: ease-out;
-	}
-
-	@keyframes flip-out {
-		from { transform: rotateY(0deg); }
-		to { transform: rotateY(90deg); }
-	}
-
-	@keyframes flip-in {
-		from { transform: rotateY(-90deg); }
-		to { transform: rotateY(0deg); }
-	}
-
 	@media (min-width: 768px) {
 		.show-if-mobile {
 			display: none;
@@ -191,35 +114,6 @@
 			height: calc(100vh - 4em);
 			background-color: white;
 			overflow: hidden;
-		}
-
-		.screen-too-small {
-			display: none;
-		}
-
-		.left, .right, .divider {
-			display: block;
-
-		}
-
-		.left, .right {
-			height: 100%;
-			float: left;
-		}
-
-		.top, .bottom {
-			position: absolute;
-			width: 100%;
-		}
-
-		.top { top: 0; }
-		.bottom { bottom: 0; }
-
-		.editor-wrapper {
-			/* make it easier to interact with scrollbar */
-			padding-right: 8px;
-			height: auto;
-			height: 100%;
 		}
 
 		section {
@@ -268,21 +162,6 @@
 		box-sizing: border-box;
 	}
 
-	.gist-link {
-		float: right;
-		line-height: 2;
-		font-family: Rajdhani;
-		font-weight: 400;
-		padding: 0 0.1em;
-		display: none;
-	}
-
-	@media (min-width: 768px) {
-		.gist-link {
-			display: block;
-		}
-	}
-
 	.repl-inner :global(.message) {
 		position: relative;
 		border-radius: 0.2em;
@@ -329,6 +208,7 @@
 	import { locate } from 'locate-character';
 	import Layout from '../_components/Layout.html';
 	import CodeMirror from './_CodeMirror.html';
+	import ModuleEditor from './_ModuleEditor.html';
 	import Viewer from './_Viewer.html';
 	import ComponentSelector from './_ComponentSelector.html';
 	import AppControls from './_AppControls.html';
@@ -421,8 +301,7 @@
 
 				selectedExample: null,
 
-				editorRotation: 0,
-				flip: ''
+				editorRotation: 0
 			};
 		},
 
@@ -491,64 +370,6 @@
 					components,
 					selectedComponent
 				});
-			},
-
-			flip() {
-				if (window.innerWidth < 768) {
-					this.flipMobile();
-					return;
-				}
-
-				if (this.flipping) return;
-				this.flipping = true;
-
-				const wrapper = this.refs.editorWrapper;
-				const showGenerated = this.get('showGenerated');
-
-				const handleFlipOutEnd = () => {
-					wrapper.removeEventListener('animationend', handleFlipOutEnd);
-					wrapper.removeEventListener('webkitAnimationEnd', handleFlipOutEnd);
-
-					this.set({
-						showGenerated: !showGenerated,
-						flip: 'flip-pause'
-					});
-
-					const handleFlipInEnd = () => {
-						wrapper.removeEventListener('animationend', handleFlipInEnd);
-						wrapper.removeEventListener('webkitAnimationEnd', handleFlipInEnd);
-
-						this.flipping = false;
-
-						this.set({ flip: '' });
-					}
-
-					wrapper.addEventListener('animationend', handleFlipInEnd);
-					wrapper.addEventListener('webkitAnimationEnd', handleFlipInEnd);
-
-					setTimeout(() => {
-						this.set({ flip: 'flip-in' });
-					});
-				}
-
-				wrapper.addEventListener('animationend', handleFlipOutEnd);
-				wrapper.addEventListener('webkitAnimationEnd', handleFlipOutEnd);
-
-				this.set({ flip: 'flip-out' });
-			},
-
-			flipMobile() {
-				const bcr1 = this.refs.editorWrapper.getBoundingClientRect();
-				this.set({
-					showGenerated: !this.get('showGenerated')
-				});
-
-				// if top is visible, keep it that way
-				if (bcr1.top > 0) return;
-
-				const bcr2 = this.refs.editorWrapper.getBoundingClientRect();
-				const d = bcr2.bottom - bcr1.bottom;
-				window.scrollTo(0, window.scrollY + d);
 			},
 
 			resizePanes(panes) {
@@ -740,7 +561,6 @@
 
 		oncreate() {
 			this.uid = 0;
-			this.flipping = false;
 			this.bundlePromise = null;
 
 			let exampleComponents;
@@ -900,6 +720,7 @@
 
 		components: {
 			Layout,
+			ModuleEditor,
 			CodeMirror,
 			Viewer,
 			ComponentSelector,
