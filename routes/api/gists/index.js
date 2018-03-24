@@ -14,9 +14,6 @@ try {
 	// noop
 }
 
-console.log(`has client_id: ${!!credentials.id}`);
-console.log(`has client_secret: ${!!credentials.secret}`);
-
 export function post(req, res) {
 	let body = '';
 

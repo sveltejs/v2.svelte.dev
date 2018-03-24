@@ -1,0 +1,181 @@
+<div class='app-controls'>
+	<ExampleSelector :example_contents bind:selectedExample/>
+
+	<div style='text-align: right;'>
+		{{#if $user}}
+			<UserMenu/>
+
+			<button disabled={{downloading}} on:click='download()' title='download zip file' class=icon style='background-image: url(icons/download.svg)'>download</button>
+			<button disabled={{forking}} on:click='fork()' title='fork' class=icon style='background-image: url(icons/fork.svg)'>fork</button>
+			<button disabled={{saving}} on:click='save()' title='save' class=icon style='background-image: url(icons/save.svg)'>save</button>
+			<a href='.' title='link to gist' class=icon style='background-image: url(icons/link.svg)'>link to gist</a>
+
+			{{#if gist}}
+				<a class='gist-link' href="{{githubGist}}" title="Link to saved gist" target="_blank">gist</a>
+			{{/if}}
+		{{else}}
+			<a class='login' on:click='login(event)' href='auth/login'>Login to save</a>
+		{{/if}}
+	</div>
+</div>
+
+<style>
+	.app-controls {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		border-bottom: 1px solid #eee;
+		background-color: #f4f4f4;
+		padding: 0.5em;
+		height: 3em;
+	}
+
+	.icon {
+		display: block;
+		float: right;
+		width: 2em;
+		height: 2em;
+		text-indent: -9999px;
+		background: transparent no-repeat 0 50%;
+		background-size: 1.6em 1.6em;
+		opacity: 0.6;
+	}
+
+	a.icon {
+		line-height: 0;
+		color: transparent;
+	}
+
+	.icon:hover {
+		opacity: 1;
+	}
+
+	.icon:disabled {
+		filter: grayscale(1);
+		opacity: 0.4;
+	}
+
+	.login {
+		/* position: relative;
+		padding: 0 2em 0 0; */
+		line-height: 1.2;
+		display: block;
+		padding: 0.5em;
+		font-family: Rajdhani;
+		font-weight: 400;
+		color: #333;
+	}
+</style>
+
+<script>
+	import ExampleSelector from './_ExampleSelector.html';
+	import UserMenu from './_UserMenu.html';
+
+	export default {
+		components: {
+			ExampleSelector,
+			UserMenu
+		},
+
+		methods: {
+			login(event) {
+				event.preventDefault();
+				const loginWindow = window.open(`${window.location.origin}/auth/login`, 'login', 'width=600,height=400');
+
+				const handleLogin = event => {
+					console.log(event);
+					loginWindow.close();
+					window.user = event.data.user;
+					console.log('user', window.user);
+					this.store.set({ user: event.data.user });
+					window.removeEventListener('message', handleLogin);
+				};
+
+				loginWindow.addEventListener('message', handleLogin);
+			},
+
+			fork() {
+				this.set({ forking: true });
+
+				// TODO actually save
+			},
+
+			save() {
+				this.set({ saving: true });
+
+				// TODO actually save
+			},
+
+			download() {
+				this.set({
+					downloading: true
+				});
+
+				Promise.all([
+					import(/* webpackChunkName: "jszip" */ 'jszip'),
+					import(/* webpackChunkName: "file-saver" */'file-saver')
+				]).then(([{ default: JSZip }, { default: FileSaver }]) => {
+					const zip = new JSZip();
+
+					fetch('svelte-app.zip')
+						.then(r => r.arrayBuffer())
+						.then(JSZip.loadAsync)
+						.then(zip => {
+							const { bundle, components, data } = this.get();
+
+							// remove any dotfiles that snuck in
+							Object.keys(zip.files).forEach(key => {
+								const file = key.split('/').pop();
+								if (file[0] === '.') zip.remove(key);
+							});
+
+							// add component files
+							components.forEach(component => {
+								zip.file(`src/${component.name}.${component.type}`, component.source);
+							});
+
+							// add entry point
+							zip.file(`src/main.js`, `import App from './App.html';
+
+var app = new App({
+	target: document.body,
+	data: ${JSON.stringify(data, null, '\t').replace(/\n/g, '\n\t')}
+});
+
+export default app;` );
+
+							const go = () => {
+								zip.generateAsync({ type: 'blob' })
+									.then(blob => {
+										this.set({
+											downloading: false
+										});
+										FileSaver.saveAs(blob, 'svelte-app.zip');
+									});
+							};
+
+							if (bundle.imports.length > 0) {
+								zip.file('package.json')
+									.async('string')
+									.then(JSON.parse)
+									.then(pkg => {
+										const deps = {};
+										bundle.imports.forEach(mod => {
+											const match = /^[^@\/]+/.exec(mod);
+											deps[match[0]] = 'latest';
+										});
+										pkg.dependencies = deps;
+
+										zip.file('package.json', JSON.stringify(pkg, null, '  '));
+									})
+									.then(go);
+							} else {
+								go();
+							}
+						});
+				});
+			}
+		}
+	};
+</script>

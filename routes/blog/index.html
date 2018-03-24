@@ -80,14 +80,11 @@
 
 <script>
 	import Layout from '../_components/Layout.html';
-	import store from '../_store.js';
 
 	export default {
 		components: {
 			Layout
 		},
-
-		store: () => store,
 
 		preload() {
 			return this.fetch(`api/blog`).then(r => r.json()).then(posts => {

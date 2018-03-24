@@ -2,9 +2,9 @@
 	<title>{{error.message}} • The magical disappearing UI framework</title>
 </:Head>
 
-<Layout>
+<!-- <Layout> -->
 	<h1>{{error.message}}</h1>
-</Layout>
+<!-- </Layout> -->
 
 <style>
 	h1 {
@@ -22,13 +22,10 @@
 
 <script>
 	import Layout from './_components/Layout.html';
-	import store from './_store.js';
 
 	export default {
 		components: {
 			Layout
-		},
-
-		store: () => store
+		}
 	};
 </script>

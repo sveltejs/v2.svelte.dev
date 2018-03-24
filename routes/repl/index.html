@@ -3,98 +3,100 @@
 </:Head>
 
 <Layout page='repl'>
-	<div class='repl-container'>
-		<div class='left' style='width: {{verticalDividerPos}}%;'>
-			<section class='input'>
-				<div class='app-controls'>
-					<ExampleSelector :example_contents bind:selectedExample/>
+	<div class='repl-outer'>
+		<AppControls
+			:example_contents
+			:bundle
+			:components
+			:data
+			bind:selectedExample
+		/>
 
-					<div style='position: absolute; right: 0.5em; z-index: 2;'>
-						<button style='width: 6em;' disabled='{{downloading}}' class='btn {{downloading ? "active" : ""}}' on:click='download()'>{{downloading ? 'zipping' : 'download'}}</button>
-						<button disabled='{{saving}}' class='btn {{saving ? "active" : ""}}' on:click='save()'>{{saving ? 'saving' : 'save'}}</button>
-
-						{{#if gist}}
-							<a class='gist-link' href="{{githubGist}}" title="Link to saved gist" target="_blank">gist</a>
-						{{/if}}
-					</div>
-				</div>
-
-				<div class='module-controls'>
-					{{#if selectedComponent}}
-						<ComponentSelector
-							ref:selector
-							:components
-							bind:selectedComponent
-							on:create='createComponent()'
-							on:remove='removeComponent(selectedComponent)'
-						/>
-					{{/if}}
-				</div>
-
-				{{#if loadedCodemirror}}
-					<div ref:editorWrapper class='editor-wrapper {{flip}}'>
+		<div class='repl-inner'>
+			<div class='left' style='width: {{verticalDividerPos}}%;'>
+				<section class='input'>
+					<div class='module-controls'>
 						{{#if selectedComponent}}
-							{{#if showGenerated && selectedComponent.compiled}}
-								<CodeMirror ref:editor mode='javascript' code='{{selectedComponent.compiled.code}}' readonly/>
-							{{else}}
-								<CodeMirror
-									ref:editor
-									mode='{{selectedComponent.type === "js" ? "javascript" : "handlebars"}}'
-									bind:code='selectedComponent.source'
-									error='{{sourceError}}'
-									errorLoc='{{sourceErrorLoc || runtimeErrorLoc}}'
-									warningCount='{{warningCount}}'
-									on:navigate='navigate(event)'
-								/>
-							{{/if}}
+							<ComponentSelector
+								ref:selector
+								:components
+								bind:selectedComponent
+								on:create='createComponent()'
+								on:remove='removeComponent(selectedComponent)'
+							/>
 						{{/if}}
-
-						<button class='btn editor-toggle' on:click='flip()'>
-							<span class='flip-text'>{{showGenerated ? 'output' : 'input'}}</span>
-						</button>
 					</div>
-				{{else}}
-					<p class='loading'>loading editor...</p>
-				{{/if}}
-			</section>
-		</div>
 
-		<div ref:right class='right' style='width: {{100 - verticalDividerPos}}%;'>
-			<h2 class='show-if-mobile'>data.json</h2>
-			<div class='bottom' style='height: {{100 - horizontalDividerPos}}%;'>
-				{{#if loadedCodemirror}}
-					<CodeMirror ref:data mode='javascript' bind:code='json' error='{{dataError}}' errorLoc='{{dataErrorLoc}}'/>
-				{{else}}
-					<p class='loading'>loading editor...</p>
-				{{/if}}
-			</div>
+					{{#if loadedCodemirror}}
+						<div ref:editorWrapper class='editor-wrapper {{flip}}'>
+							{{#if selectedComponent}}
+								{{#if showGenerated && selectedComponent.compiled}}
+									<CodeMirror ref:editor mode='javascript' code='{{selectedComponent.compiled.code}}' readonly/>
+								{{else}}
+									<CodeMirror
+										ref:editor
+										mode='{{selectedComponent.type === "js" ? "javascript" : "handlebars"}}'
+										bind:code='selectedComponent.source'
+										error='{{sourceError}}'
+										errorLoc='{{sourceErrorLoc || runtimeErrorLoc}}'
+										warningCount='{{warningCount}}'
+										on:navigate='navigate(event)'
+									/>
+								{{/if}}
+							{{/if}}
 
-			<h2 class='show-if-mobile'>Rendered component</h2>
-			<div class='top' style='height: {{horizontalDividerPos}}%;'>
-				{{#if loadedSvelte}}
-					{{#if bundle}}
-						<Viewer :bundle :data :bundleError bind:error='runtimeError' on:change='updateData(event)' on:navigate='navigate(event)'/>
+							<button class='btn editor-toggle' on:click='flip()'>
+								<span class='flip-text'>{{showGenerated ? 'output' : 'input'}}</span>
+							</button>
+						</div>
+					{{else}}
+						<p class='loading'>loading editor...</p>
 					{{/if}}
-				{{else}}
-					<p class='loading'>loading Svelte compiler...</p>
-				{{/if}}
-
-				{{#if dragging}}
-					<div class='mousecatcher'></div>
-				{{/if}}
+				</section>
 			</div>
 
-			<div class='divider horizontal-divider' style='top: calc({{horizontalDividerPos}}% - 8px)' on:drag='setHorizontal(event)'></div>
-		</div>
+			<div ref:right class='right' style='width: {{100 - verticalDividerPos}}%;'>
+				<h2 class='show-if-mobile'>data.json</h2>
+				<div class='bottom' style='height: {{100 - horizontalDividerPos}}%;'>
+					{{#if loadedCodemirror}}
+						<CodeMirror ref:data mode='javascript' bind:code='json' error='{{dataError}}' errorLoc='{{dataErrorLoc}}'/>
+					{{else}}
+						<p class='loading'>loading editor...</p>
+					{{/if}}
+				</div>
 
-		<div class='divider vertical-divider' style='left: calc({{verticalDividerPos}}% - 8px)' on:drag='setVertical(event)'></div>
+				<h2 class='show-if-mobile'>Rendered component</h2>
+				<div class='top' style='height: {{horizontalDividerPos}}%;'>
+					{{#if loadedSvelte}}
+						{{#if bundle}}
+							<Viewer :bundle :data :bundleError bind:error='runtimeError' on:change='updateData(event)' on:navigate='navigate(event)'/>
+						{{/if}}
+					{{else}}
+						<p class='loading'>loading Svelte compiler...</p>
+					{{/if}}
+
+					{{#if dragging}}
+						<div class='mousecatcher'></div>
+					{{/if}}
+				</div>
+
+				<div class='divider horizontal-divider' style='top: calc({{horizontalDividerPos}}% - 8px)' on:drag='setHorizontal(event)'></div>
+			</div>
+
+			<div class='divider vertical-divider' style='left: calc({{verticalDividerPos}}% - 8px)' on:drag='setVertical(event)'></div>
+		</div>
 	</div>
 </Layout>
 
 <style>
-	.repl-container {
+	.repl-outer {
 		min-height: calc(100vh - 3em);
+		padding: 3em 0 0 0;
 		background-color: #f4f4f4;
+	}
+
+	.repl-inner {
+		height: 100%;
 	}
 
 	@keyframes pulse {
@@ -152,7 +154,7 @@
 		animation-fill-mode: forwards;
 	}
 
-	.repl-container .editor-toggle {
+	.repl-inner .editor-toggle {
 		position: absolute;
 		bottom: 1em;
 		right: 1em;
@@ -201,7 +203,7 @@
 			display: none;
 		}
 
-		.repl-container {
+		.repl-outer {
 			min-height: auto;
 			height: calc(100vh - 4em);
 			background-color: white;
@@ -284,7 +286,7 @@
 	}
 
 	.input {
-		padding: 5.4em 0 0 0;
+		padding: 2.4em 0 0 0;
 		perspective: 1500px;
 		perspective-origin: 50% 0%;
 	}
@@ -295,37 +297,26 @@
 		}
 	}
 
-	.app-controls, .module-controls {
+	.module-controls {
 		position: absolute;
+		top: 0;
 		left: 0;
 		width: 100%;
-	}
-
-	.app-controls {
-		top: 0;
-		border-bottom: 1px solid #eee;
-		background-color: #f4f4f4;
-		padding: 0.5em;
-		height: 3em;
-	}
-
-	.module-controls {
-		top: 3em;
 		border-bottom: 1px solid #eee;
 		height: 2.4em;
 	}
 
-	.repl-container :global(button) {
+	.repl-outer :global(button) {
 		font-family: Rajdhani, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 		font-size: inherit;
-		background-color: white;
-		cursor: pointer;
+		/* background-color: white;
+		cursor: pointer; */
 		outline: none;
 		line-height: 1;
 		border: none;
 	}
 
-	.repl-container :global(.btn) {
+	.repl-outer :global(.btn) {
 		display: block;
 		float: right;
 		padding: calc(0.5em - 1px) 1em;
@@ -335,15 +326,6 @@
 		border: 1px solid rgba(170,30,30,0.3);
 		font-weight: 500;
 		box-sizing: border-box;
-	}
-
-	.repl-container :global(.btn):hover {
-		border: 1px solid rgb(170,30,30);
-	}
-
-	.repl-container :global(.btn).active {
-		background-color: rgb(170,30,30);
-		color: white;
 	}
 
 	.gist-link {
@@ -370,7 +352,7 @@
 		background: rgba(255,255,255,0.01);
 	}
 
-	.repl-container :global(.message) {
+	.repl-inner :global(.message) {
 		position: relative;
 		border-radius: 0.2em;
 		margin: 0;
@@ -378,7 +360,7 @@
 		color: white;
 	}
 
-	.repl-container :global(.message::before) {
+	.repl-inner :global(.message::before) {
 		content: '!';
 		position: absolute;
 		left: 0.7em;
@@ -395,19 +377,19 @@
 		border: 2px solid white;
 	}
 
-	.repl-container :global(.error.message) {
+	.repl-inner :global(.error.message) {
 		background-color: rgb(170,30,30);
 	}
 
-	.repl-container :global(.warning.message) {
+	.repl-inner :global(.warning.message) {
 		background-color: rgb(160,100,30);
 	}
 
-	.repl-container :global(.info.message) {
+	.repl-inner :global(.info.message) {
 		background-color: #666;
 	}
 
-	.repl-container :global(.error) :global(.filename) {
+	.repl-inner :global(.error) :global(.filename) {
 		cursor: pointer;
 	}
 </style>
@@ -419,11 +401,12 @@
 	import Viewer from './_Viewer.html';
 	import ComponentSelector from './_ComponentSelector.html';
 	import ExampleSelector from './_ExampleSelector.html';
+	import AppControls from './_AppControls.html';
+	import UserMenu from './_UserMenu.html';
 	import { getComponentFromGist, saveComponentAsGist } from './_utils/gist.js';
 	import debounce from './_utils/debounce.js';
 	import * as load from './_utils/load.js';
 	import { get } from './_utils/get.js';
-	import store from '../_store.js';
 
 	function loadCodemirror() {
 		return import(/* webpackChunkName: "codemirror" */ './_codemirror.js').then(({ default: CodeMirror }) => {
@@ -470,8 +453,6 @@
 	}
 
 	export default {
-		store: () => store,
-
 		data() {
 			const search = typeof window !== 'undefined' ? window.location.search : '';
 			const gistMatch = /gist=([^&]+)$/.exec(search);
@@ -1137,7 +1118,9 @@ export default app;` );
 			CodeMirror,
 			Viewer,
 			ComponentSelector,
-			ExampleSelector
+			ExampleSelector,
+			UserMenu,
+			AppControls
 		}
 	};
 

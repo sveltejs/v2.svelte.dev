@@ -6,3 +6,5 @@ credentials.json
 app/manifest
 build
 yarn-error.log
+.env
+.sessions
