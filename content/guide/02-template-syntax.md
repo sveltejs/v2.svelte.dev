@@ -161,7 +161,7 @@ You can access the index of the current element with *expression* as *name*, *in
 }
 ```
 
-> By default, if the list `a, b, c` becomes `a, c`, Svelte will *remove* the third block and *change* the second from `b` to `c`, rather than removing `b`. If that's not what you want, use a [keyed each block](#keyed-each-blocks).
+> By default, if the list `a, b, c` becomes `a, c`, Svelte will *remove* the third block and *change* the second from `b` to `c`, rather than removing `b`. If that's not what you want, use a [keyed each block](guide#keyed-each-blocks).
 
 Also, if you wish, you can perform one level of array destructuring on the elements of the array directly in the each block:
 
@@ -226,7 +226,7 @@ If the expression in `{{#await expression}}` *isn't* a promise, Svelte skips ahe
 
 ### Directives
 
-The last place where Svelte template syntax differs from regular HTML: *directives* allow you to add special instructions for adding [event handlers](#event-handlers), [two-way bindings](#two-way-binding), [refs](#refs) and so on. We'll cover each of those in later stages of this guide – for now, all you need to know is that directives can be identified by the `:` character:
+The last place where Svelte template syntax differs from regular HTML: *directives* allow you to add special instructions for adding [event handlers](guide#event-handlers), [two-way bindings](guide#two-way-binding), [refs](guide#refs) and so on. We'll cover each of those in later stages of this guide – for now, all you need to know is that directives can be identified by the `:` character:
 
 ```html
 <p>Count: {{count}}</p>

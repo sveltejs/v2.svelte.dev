@@ -25,7 +25,7 @@ const component = new MyComponent({
 });
 ```
 
-Every Svelte component instance has a small number of methods you can use to control it, in addition to any [custom methods](#custom-methods) you add.
+Every Svelte component instance has a small number of methods you can use to control it, in addition to any [custom methods](guide#custom-methods) you add.
 
 
 ### component.set(data)
@@ -54,7 +54,7 @@ Returns the current value of `key`:
 console.log(component.get('answer')); // 'ask your mother'
 ```
 
-This will also retrieve the value of [computed properties](#computed-properties).
+This will also retrieve the value of [computed properties](guide#computed-properties).
 
 You can also call `component.get()` without any arguments to retrieve an object of all keys and values, including computed properties. This works particularly nicely with ES6 destructuring:
 
@@ -65,7 +65,7 @@ const { foo, bar, baz } = component.get();
 
 ### component.observe(key, callback[, options])
 
-This method allows you to respond to changes in state, which is particularly useful when combined with [lifecycle hooks](#lifecycle-hooks) and [two-way bindings](#two-way-binding).
+This method allows you to respond to changes in state, which is particularly useful when combined with [lifecycle hooks](guide#lifecycle-hooks) and [two-way bindings](guide#two-way-binding).
 
 ```js
 const observer = component.observe('answer', answer => {
@@ -150,7 +150,7 @@ component.fire('thingHappened', {
 });
 ```
 
-At first glance `component.on(...)` and `component.fire(...)` aren't particularly useful, but it'll become more so when we learn about [nested components](#nested-components).
+At first glance `component.on(...)` and `component.fire(...)` aren't particularly useful, but it'll become more so when we learn about [nested components](guide#nested-components).
 
 > `component.on(...)` and `component.observe(...)` look quite similar, but they have different purposes. Observers are useful for reacting to data flowing through your application and changing continuously over time, whereas events are good for modeling discrete moments such as 'the user made a selection, and this is what it is'.
 
@@ -189,4 +189,4 @@ This gives you access to standard options like `target` and `data`, but can also
 
 ### component.root
 
-In [nested components](#nested-components), each component has a `root` property pointing to the top-level root component – that is, the one instantiated with `new MyComponent({ ... })`.
+In [nested components](guide#nested-components), each component has a `root` property pointing to the top-level root component – that is, the one instantiated with `new MyComponent({ ... })`.

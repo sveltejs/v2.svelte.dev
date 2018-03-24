@@ -39,7 +39,7 @@ store.set({ name: 'everybody' }); // 'hello everybody'
 
 ### Creating components with stores
 
-Let's adapt our [very first example](#understanding-svelte-components):
+Let's adapt our [very first example](guide#understanding-svelte-components):
 
 ```html-no-repl
 <!-- App.html -->

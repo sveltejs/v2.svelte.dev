@@ -19,7 +19,7 @@ In most applications, you'll need to respond to the user's actions. In Svelte, t
 }
 ```
 
-When the user clicks the button, Svelte calls `component.set(...)` with the provided arguments. You can call any method belonging to the component (whether [built-in](#component-api) or [custom](#custom-methods)), and any data property (or computed property) that's in scope:
+When the user clicks the button, Svelte calls `component.set(...)` with the provided arguments. You can call any method belonging to the component (whether [built-in](guide#component-api) or [custom](guide#custom-methods)), and any data property (or computed property) that's in scope:
 
 ```html
 <p>Select a category:</p>
@@ -73,11 +73,11 @@ The target node can be referenced as `this`, meaning you can do this sort of thi
 
 ### Custom events
 
-You can define your own custom events to handle complex user interactions like dragging and swiping. See the earlier section on [custom event handlers](#custom-event-handlers) for more information.
+You can define your own custom events to handle complex user interactions like dragging and swiping. See the earlier section on [custom event handlers](guide#custom-event-handlers) for more information.
 
 ### Component events
 
-Events are an excellent way for [nested components](#nested-components) to communicate with their parents. Let's revisit our earlier example, but turn it into a `<CategoryChooser>` component:
+Events are an excellent way for [nested components](guide#nested-components) to communicate with their parents. Let's revisit our earlier example, but turn it into a `<CategoryChooser>` component:
 
 ```html-no-repl
 <!-- CategoryChooser.html -->

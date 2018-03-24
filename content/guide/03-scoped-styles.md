@@ -29,12 +29,12 @@ Open the example above in the REPL and inspect the element to see what has happe
 
 This is vastly simpler than achieving the same effect via [Shadow DOM](http://caniuse.com/#search=shadow%20dom) and works everywhere without polyfills.
 
-> Svelte will add a `<style>` tag to the page containing your scoped styles. Dynamically adding styles may be impossible if your site has a [Content Security Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP). If that's the case, you can use scoped styles by [server-rendering your CSS](#rendering-css) and using the `css: false` compiler option (or `--no-css` with the CLI).
+> Svelte will add a `<style>` tag to the page containing your scoped styles. Dynamically adding styles may be impossible if your site has a [Content Security Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP). If that's the case, you can use scoped styles by [server-rendering your CSS](guide#rendering-css) and using the `css: false` compiler option (or `--no-css` with the CLI).
 
 
 ### Cascading rules
 
-By default, the usual cascading mechanism still applies – any global `.foo` styles would still be applied, and if our template had [nested components](#nested-components) with `class="foo"` elements, they would inherit our styles.
+By default, the usual cascading mechanism still applies – any global `.foo` styles would still be applied, and if our template had [nested components](guide#nested-components) with `class="foo"` elements, they would inherit our styles.
 
 If the `cascade: false` option is passed to the compiler, styles will *only* apply to the current component, unless you opt in to cascading with the `:global(...)` modifier:
 
@@ -80,4 +80,4 @@ If you're using the recommended `cascade: false` option, Svelte will identify an
 
 ### Special selectors
 
-If you have a [ref](#refs) on an element, you can use this as a CSS selector. An element with `ref:foo` can be styled with `ref:foo { color: whatever; }`. The `ref:*` selector has the same specificity as a class or attribute selector.
+If you have a [ref](guide#refs) on an element, you can use this as a CSS selector. An element with `ref:foo` can be styled with `ref:foo { color: whatever; }`. The `ref:*` selector has the same specificity as a class or attribute selector.

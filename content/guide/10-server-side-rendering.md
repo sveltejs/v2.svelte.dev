@@ -30,7 +30,7 @@ Now you can `require` your components:
 const Thing = require('./components/Thing.html');
 ```
 
-If you prefer to use a different file extension, or need to use [stores](#state-management), you can pass options like so:
+If you prefer to use a different file extension, or need to use [stores](guide#state-management), you can pass options like so:
 
 ```js
 require('svelte/ssr/register')({
@@ -52,7 +52,7 @@ const data = { answer: 42 };
 const { html, css, head } = Thing.render(data);
 ```
 
-All your [default data](#default-data), [computed properties](#computed-properties), [helpers](#helpers) and [nested components](#nested-components) will work as expected.
+All your [default data](guide#default-data), [computed properties](guide#computed-properties), [helpers](guide#helpers) and [nested components](guide#nested-components) will work as expected.
 
 Any `oncreate` functions or component methods will *not* run — these only apply to client-side components.
 
@@ -62,7 +62,7 @@ Any `oncreate` functions or component methods will *not* run — these only appl
 
 #### Using stores
 
-If your components use [stores](#state-management), use the second argument:
+If your components use [stores](guide#state-management), use the second argument:
 
 ```js
 const { Store } = require('svelte/store.umd.js');
@@ -77,7 +77,7 @@ const { html } = Thing.render(data, {
 
 #### Rendering styles
 
-You can also extract any [scoped styles](#scoped-styles) that are used by the component or its children:
+You can also extract any [scoped styles](guide#scoped-styles) that are used by the component or its children:
 
 ```js
 const { css } = Thing.render(data);
@@ -89,7 +89,7 @@ You could put the resulting `css` in a separate stylesheet, or include them in t
 
 #### Rendering `<head>` contents
 
-If your component, any of its children, use the `<:Head>` [component](#-head-tags), you can extract the contents:
+If your component, any of its children, use the `<:Head>` [component](guide#-head-tags), you can extract the contents:
 
 ```js
 const { head } = Thing.render(data);

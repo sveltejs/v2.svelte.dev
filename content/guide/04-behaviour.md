@@ -713,7 +713,7 @@ Of course, you could use `leftPad` inside the computed properties instead of in 
 
 ### Custom methods
 
-In addition to the [built-in methods](#component-api), you can add methods of your own:
+In addition to the [built-in methods](guide#component-api), you can add methods of your own:
 
 ```html
 <script>
@@ -739,7 +739,7 @@ var component = new MyComponent({
 component.say('👋');
 ```
 
-Methods (whether built-in or custom) can also be called inside [event handlers](#event-handlers):
+Methods (whether built-in or custom) can also be called inside [event handlers](guide#event-handlers):
 
 ```html
 <button on:click='say("hello")'>say hello!</button>
@@ -748,7 +748,7 @@ Methods (whether built-in or custom) can also be called inside [event handlers](
 
 ### Custom event handlers
 
-Soon, we'll learn about [event handlers](#event-handlers) – if you want, skip ahead to that section first then come back here!
+Soon, we'll learn about [event handlers](guide#event-handlers) – if you want, skip ahead to that section first then come back here!
 
 Most of the time you can make do with the standard DOM events (the sort you'd add via `element.addEventListener`, such as `click`) but sometimes you might need custom events to handle gestures, for example.
 

@@ -55,7 +55,7 @@ If you don't know what kind of component to render until the app runs — in ot
 
 > Note that `Red` and `Blue` are items in `data`, *not* `components`, unlike if we were doing `<Red>` or `<Blue>`.
 
-The expression inside the `{...}` can be any valid JavaScript expression. For example, it could be a [computed property](#computed-properties):
+The expression inside the `{...}` can be any valid JavaScript expression. For example, it could be a [computed property](guide#computed-properties):
 
 ```html
 <label><input type=radio bind:group=size value='small'> small</label>
@@ -167,4 +167,4 @@ You can do that with the `<:Head>` tag:
 </:Head>
 ```
 
-When [server rendering](#server-side-rendering), the `<head>` contents can be extracted separately to the rest of the markup.
+When [server rendering](guide#server-side-rendering), the `<head>` contents can be extracted separately to the rest of the markup.
