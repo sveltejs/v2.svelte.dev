@@ -3804,9 +3804,9 @@ sander@^0.6.0:
     mkdirp "^0.5.1"
     rimraf "^2.5.2"
 
-sapper@^0.10.1:
-  version "0.10.1"
-  resolved "https://registry.yarnpkg.com/sapper/-/sapper-0.10.1.tgz#174f27e840a0acf2dbc7bb27cd379e84e50907b4"
+sapper@^0.10.2:
+  version "0.10.2"
+  resolved "https://registry.yarnpkg.com/sapper/-/sapper-0.10.2.tgz#da493c6564446ceee3f050f17019e486fd7f41de"
   dependencies:
     cheerio "^1.0.0-rc.2"
     chokidar "^2.0.2"

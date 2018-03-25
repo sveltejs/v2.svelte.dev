@@ -65,7 +65,7 @@
     "passport": "^0.4.0",
     "passport-github": "^1.1.0",
     "rollup": "^0.57.1",
-    "sapper": "^0.10.1",
+    "sapper": "^0.10.2",
     "serve-static": "^1.13.1",
     "session-file-store": "^1.2.0",
     "sourcemap-codec": "^1.4.1"
@@ -73,7 +73,7 @@
   "now": {
     "env": {
       "NODE_ENV": "production",
-      "ORIGIN": "svelte.technology",
+      "BASEURL": "https://svelte.technology",
       "GITHUB_CLIENT_ID": "@svelte-gist-client-id",
       "GITHUB_CLIENT_SECRET": "@svelte-gist-client-secret"
     },

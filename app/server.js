@@ -18,7 +18,8 @@ const FileStore = sessionFileStore(session);
 passport.use(new Strategy({
 	clientID: process.env.GITHUB_CLIENT_ID,
 	clientSecret: process.env.GITHUB_CLIENT_SECRET,
-	callbackURL: `http://${process.env.ORIGIN}/auth/callback`
+	callbackURL: `${process.env.BASEURL}/auth/callback`,
+	userAgent: 'svelte.technology'
 }, (accessToken, refreshToken, profile, callback) => {
 	return callback(null, {
 		token: accessToken,
