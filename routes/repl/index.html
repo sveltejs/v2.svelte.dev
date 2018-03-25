@@ -249,14 +249,7 @@
 			return {
 				example_contents: [],
 				components: [],
-
-				horizontalDividerPos: 50,
-				verticalDividerPos: 50,
-				showGenerated: false,
-
-				selectedExample: null,
-
-				editorRotation: 0
+				selectedExample: null
 			};
 		},
 
@@ -418,6 +411,7 @@
 					const { bundle, warningCount, error } = await instance.compile(components);
 
 					if (error) {
+						// TODO differentiate between bundleError and sourceError
 						this.set({
 							bundle: null,
 							bundleError: error,
@@ -521,60 +515,6 @@
 				this.set({ selectedExample: null });
 				this.updateUrl();
 			});
-
-			// loadSvelte(version).then(svelte => {
-			// 	window.svelte = svelte;
-
-			// 	this.set({ loadedSvelte: true });
-
-			// 	this.get('components').forEach(component => {
-			// 		try {
-			// 			component.compiled = compile(component);
-			// 		} catch (err) {
-			// 			console.error(err.stack);
-
-			// 			this.set({
-			// 				sourceError: err,
-			// 				sourceErrorLoc: err.loc
-			// 			});
-			// 		}
-			// 	});
-
-			// 	this.observe('selectedComponent', (selectedComponent, previousComponent) => {
-			// 		if (!selectedComponent) return;
-			// 		if (previousComponent && selectedComponent !== previousComponent) return;
-
-			// 		// if component has been edited, unset selectedExample
-			// 		if (stringifyComponents(this.get('components')) !== exampleComponents) {
-			// 			this.set({ selectedExample: null });
-			// 		}
-
-			// 		try {
-			// 			selectedComponent.compiled = compile(selectedComponent);
-			// 			this.set({ selectedComponent, sourceError: null, sourceErrorLoc: null });
-
-			// 			if (this.get('loadedRollup')) {
-			// 				this.updateBundle();
-			// 			}
-			// 		} catch (err) {
-			// 			console.error(err.stack);
-
-			// 			this.set({
-			// 				sourceError: err,
-			// 				sourceErrorLoc: err.loc
-			// 			});
-			// 		}
-			// 	});
-
-			// 	this.updateUrl();
-			// });
-
-			// import(/* webpackChunkName: "rollup" */ 'rollup/dist/rollup.browser.js').then(rollup => {
-			// 	this.set({ loadedRollup: true });
-			// 	window.rollup = rollup;
-
-			// 	this.updateBundle();
-			// });
 
 			this.observe('json', json => {
 				try {
