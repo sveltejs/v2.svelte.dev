@@ -250,7 +250,6 @@
 				name: 'loading...',
 				examples,
 				components: [],
-				selectedExample: null,
 				gist: null
 			};
 		},
@@ -336,7 +335,7 @@
 
 				if (typeof history === 'undefined') return;
 
-				const { selectedExample, version, query } = this.get();
+				const { version, query } = this.get();
 
 				const params = {};
 				if (typeof svelte !== 'undefined') {
@@ -347,8 +346,6 @@
 
 				if (gist) {
 					params.gist = gist;
-				} else if (selectedExample) {
-					params.example = selectedExample.id;
 				} else if (query.data) {
 					params.data = query.data;
 				}

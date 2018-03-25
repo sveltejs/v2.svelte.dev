@@ -1,6 +1,7 @@
 import fetch from 'node-fetch';
+import { body } from './_utils.js';
 
-export function post(req, res) {
+export async function post(req, res) {
 	const user = req.session.passport && req.session.passport.user;
 
 	if (!user) {
@@ -11,14 +12,8 @@ export function post(req, res) {
 		return;
 	}
 
-	let body = '';
-
-	req.on('data', chunk => {
-		body += chunk;
-	});
-
-	req.on('end', async () => {
-		const { name, components, json } = JSON.parse(body);
+	try {
+		const { name, components, json } = await body(req);
 
 		const files = {
 			'meta.json': {
@@ -64,5 +59,13 @@ export function post(req, res) {
 			html_url: gist.html_url,
 			files: gist.files
 		}));
-	});
+	} catch (err) {
+		res.writeHead(500, {
+			'Content-Type': 'application/json'
+		});
+
+		res.end(JSON.stringify({
+			error: err.message
+		}));
+	}
 }

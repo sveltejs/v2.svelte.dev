@@ -81,7 +81,7 @@
 			canSave: ($user, gist) => {
 				if (!$user) return false;
 				if (!gist) return false;
-				return $user.id === gist.owner.id;
+				return $user.id == gist.owner.id; // comparing number and string
 			}
 		},
 
@@ -100,15 +100,17 @@
 			},
 
 			async fork() {
-				const { components, json, selectedExample } = this.get();
+				const { name, components, json } = this.get();
 
 				this.set({ forking: true });
+
+				// TODO handle errors
 
 				const r = await fetch(`gist/create`, {
 					method: 'POST',
 					credentials: 'include',
 					body: JSON.stringify({
-						name: selectedExample ? selectedExample.title : 'Svelte REPL', // TODO make name editable
+						name,
 						components,
 						json
 					})
@@ -116,12 +118,52 @@
 
 				const gist = await r.json();
 				this.fire('forked', { gist });
+
+				this.set({ forking: false });
 			},
 
-			save() {
+			async save() {
+				const { name, components, json, gist } = this.get();
+
 				this.set({ saving: true });
 
-				// TODO actually save
+				try {
+					const files = {};
+
+					// null out any deleted files
+					const set = new Set(components.map(m => `${m.name}.${m.type}`));
+					Object.keys(gist.files).forEach(file => {
+						if (!set.has(file)) files[file] = null;
+					});
+
+					components.forEach(module => {
+						const file = `${module.name}.${module.type}`;
+
+						if (!gist.files[files] || module.source !== gist.files[file].content) {
+							files[file] = { content: module.source };
+						}
+					});
+
+					if (!gist.files['data.json'] || json !== gist.files['data.json'].content) {
+						files['data.json'] = json;
+					}
+
+					const r = await fetch(`gist/${gist.id}`, {
+						method: 'PATCH',
+						credentials: 'include',
+						body: JSON.stringify({
+							description: name,
+							files
+						})
+					});
+
+					const result = await r.json();
+
+					console.log(r.status, result);
+				} catch (err) {
+					console.error(err);
+					// TODO show in UI
+				}
 			},
 
 			download() {

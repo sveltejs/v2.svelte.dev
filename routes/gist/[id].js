@@ -1,4 +1,5 @@
 import fetch from 'node-fetch';
+import { body } from './_utils.js';
 
 export async function get(req, res) {
 	const { id } = req.params;
@@ -21,5 +22,54 @@ export async function get(req, res) {
 		}));
 	} else {
 		res.end(JSON.stringify(result));
+	}
+}
+
+export async function patch(req, res) {
+	const user = req.session.passport && req.session.passport.user;
+
+	if (!user) {
+		res.writeHead(403, {
+			'Content-Type': 'application/json'
+		});
+		res.end(JSON.stringify({ error: 'unauthorized' }));
+		return;
+	}
+
+	console.log(user);
+
+	try {
+		const { description, files } = await body(req);
+
+		const r = await fetch(`https://api.github.com/gists/${req.params.id}`, {
+			method: 'PATCH',
+			headers: {
+				Authorization: `token ${user.token}`
+			},
+			body: JSON.stringify({
+				description,
+				files
+			})
+		});
+
+		res.writeHead(r.status, {
+			'Content-Type': 'application/json'
+		});
+
+		if (r.status === 200) {
+			res.end(JSON.stringify({
+				ok: true
+			}));
+		} else {
+			res.end(await r.text());
+		}
+	} catch (err) {
+		res.writeHead(500, {
+			'Content-Type': 'application/json'
+		});
+
+		res.end(JSON.stringify({
+			error: err.message
+		}));
 	}
 }
