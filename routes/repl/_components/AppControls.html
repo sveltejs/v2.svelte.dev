@@ -137,7 +137,7 @@
 					// null out any deleted files
 					const set = new Set(components.map(m => `${m.name}.${m.type}`));
 					Object.keys(gist.files).forEach(file => {
-						if (/.(html|js)$/.test(file)) {
+						if (/\.(html|js)$/.test(file)) {
 							if (!set.has(file)) files[file] = null;
 						}
 					});
