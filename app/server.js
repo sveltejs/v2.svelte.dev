@@ -20,15 +20,12 @@ passport.use(new Strategy({
 	clientSecret: process.env.GITHUB_CLIENT_SECRET,
 	callbackURL: `http://${process.env.ORIGIN}/auth/callback`
 }, (accessToken, refreshToken, profile, callback) => {
-	console.log(profile);
-
 	return callback(null, {
+		token: accessToken,
 		id: profile.id,
 		username: profile.username,
 		displayName: profile.displayName,
-		photo: profile.photos && profile.photos[0] && profile.photos[0].value,
-
-		accessToken
+		photo: profile.photos && profile.photos[0] && profile.photos[0].value
 	});
 }));
 
@@ -71,7 +68,7 @@ express()
 
 	.get('/auth/callback', passport.authenticate('github', { failureRedirect: '/auth/error' }), (req, res) => {
 		const user = req.session.passport && req.session.passport.user;
-		if (user) delete user.accessToken;
+		if (user) delete user.token;
 
 		res.end(`
 			<script>

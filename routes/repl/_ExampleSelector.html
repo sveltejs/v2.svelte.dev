@@ -1,18 +1,18 @@
 <div class='select-wrapper'>
-	<select bind:value='selectedExample'>
+	<select on:change='fire("select", { slug: this.value })'>
 		<option value='{{null}}' disabled>Select an example</option>
 
-		{{#each example_contents as group}}
+		{{#each examples as group}}
 			<optgroup label='{{group.name}}'>
 				{{#each group.examples as example}}
-					<option value='{{example}}'>{{example.title}}</option>
+					<option value='{{example.slug}}'>{{example.title}}</option>
 				{{/each}}
 			</optgroup>
 		{{/each}}
 	</select>
 
 	<div class='visible'>
-		<span>{{selectedExample ? selectedExample.title : 'Select an example'}}</span>
+		<span>{{name}}</span>
 	</div>
 </div>
 
@@ -60,3 +60,11 @@
 		top: 0.05em;
 	}
 </style>
+
+<script>
+	export default {
+		oncreate() {
+
+		}
+	};
+</script>

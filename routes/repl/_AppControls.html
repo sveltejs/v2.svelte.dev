@@ -1,20 +1,19 @@
 <div class='app-controls'>
-	<ExampleSelector :example_contents bind:selectedExample/>
+	<ExampleSelector :examples bind:name on:select/>
 
 	<div style='text-align: right;'>
 		{{#if $user}}
 			<UserMenu/>
-
-			<button disabled={{downloading}} on:click='download()' title='download zip file' class=icon style='background-image: url(icons/download.svg)'>download</button>
-			<button disabled={{forking}} on:click='fork()' title='fork' class=icon style='background-image: url(icons/fork.svg)'>fork</button>
-			<button disabled={{saving}} on:click='save()' title='save' class=icon style='background-image: url(icons/save.svg)'>save</button>
-			<a href='.' title='link to gist' class=icon style='background-image: url(icons/link.svg)'>link to gist</a>
-
-			{{#if gist}}
-				<a class='gist-link' href="{{githubGist}}" title="Link to saved gist" target="_blank">gist</a>
-			{{/if}}
 		{{else}}
 			<a class='login' on:click='login(event)' href='auth/login'>Login to save</a>
+		{{/if}}
+
+		<button disabled={{downloading}} on:click='download()' title='download zip file' class=icon style='background-image: url(icons/download.svg)'>download</button>
+		<button disabled={{forking || !$user}} on:click='fork()' title='fork' class=icon style='background-image: url(icons/fork.svg)'>fork</button>
+		<button disabled={{saving || !canSave}} on:click='save()' title='save' class=icon style='background-image: url(icons/save.svg)'>save</button>
+
+		{{#if gist}}
+			<a href='{{gist.html_url}}' title='link to gist' class=icon style='background-image: url(icons/link.svg)'>link to gist</a>
 		{{/if}}
 	</div>
 </div>
@@ -78,16 +77,21 @@
 			UserMenu
 		},
 
+		computed: {
+			canSave: ($user, gist) => {
+				if (!$user) return false;
+				if (!gist) return false;
+				return $user.id === gist.owner.id;
+			}
+		},
+
 		methods: {
 			login(event) {
 				event.preventDefault();
 				const loginWindow = window.open(`${window.location.origin}/auth/login`, 'login', 'width=600,height=400');
 
 				const handleLogin = event => {
-					console.log(event);
 					loginWindow.close();
-					window.user = event.data.user;
-					console.log('user', window.user);
 					this.store.set({ user: event.data.user });
 					window.removeEventListener('message', handleLogin);
 				};
@@ -95,10 +99,23 @@
 				loginWindow.addEventListener('message', handleLogin);
 			},
 
-			fork() {
+			async fork() {
+				const { components, json, selectedExample } = this.get();
+
 				this.set({ forking: true });
 
-				// TODO actually save
+				const r = await fetch(`gist/create`, {
+					method: 'POST',
+					credentials: 'include',
+					body: JSON.stringify({
+						name: selectedExample ? selectedExample.title : 'Svelte REPL', // TODO make name editable
+						components,
+						json
+					})
+				});
+
+				const gist = await r.json();
+				this.fire('forked', { gist });
 			},
 
 			save() {

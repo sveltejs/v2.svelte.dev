@@ -25,7 +25,7 @@ let bundle;
 let currentToken;
 
 export async function compile(components) {
-	console.clear();
+	// console.clear();
 	console.log(`running Svelte compiler version %c${svelte.VERSION}`, 'font-weight: bold');
 
 	const token = currentToken = {};
@@ -35,6 +35,9 @@ export async function compile(components) {
 		const path = `./${component.name}.${component.type}`;
 		lookup[path] = component;
 	});
+
+	console.log(components);
+	console.log(lookup);
 
 	let warningCount = 0;
 	let error;

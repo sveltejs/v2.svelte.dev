@@ -5,11 +5,15 @@
 <Layout page='repl'>
 	<div class='repl-outer'>
 		<AppControls
-			:example_contents
+			:examples
 			:bundle
 			:components
 			:data
-			bind:selectedExample
+			:json
+			:gist
+			bind:name
+			on:select='selectExample(event.slug)'
+			on:forked='set({ gist: event.gist })'
 		/>
 
 		<div class='repl-inner'>
@@ -190,6 +194,7 @@
 	import AppControls from './_AppControls.html';
 	import SplitPane from './_SplitPane.html';
 	import { getComponentFromGist, saveComponentAsGist } from './_utils/gist.js';
+	import examples from './_examples.json';
 	import debounce from './_utils/debounce.js';
 	import * as load from './_utils/load.js';
 
@@ -205,7 +210,7 @@
 	}
 
 	export default {
-		preload({ query }) {
+		async preload({ query }) {
 			if (!process.browser) return null;
 
 			let gist = null;
@@ -226,30 +231,27 @@
 
 			if (components && components.length > 0) {
 				selectedComponent = components[0];
-			} else if (query.gist) {
-				gist = query.gist;
 			}
 
-			return this.fetch(`api/examples`).then(r => r.json()).then(example_contents => {
-				return {
-					example_contents,
+			return {
+				examples,
 
-					version: query.version || 'latest',
+				version: query.version || 'latest',
 
-					gist,
-					components,
-					selectedComponent,
-					data,
-					json: JSON.stringify(data, null, '  ')
-				};
-			});
+				components,
+				selectedComponent,
+				data,
+				json: JSON.stringify(data, null, '  ')
+			};
 		},
 
 		data() {
 			return {
-				example_contents: [],
+				name: 'loading...',
+				examples,
 				components: [],
-				selectedExample: null
+				selectedExample: null,
+				gist: null
 			};
 		},
 
@@ -259,9 +261,6 @@
 				if (runtimeError.filename !== `${selectedComponent.name}.${selectedComponent.type}`) return;
 
 				return runtimeError.loc;
-			},
-			githubGist(gist) {
-				return 'https://gist.github.com/anonymous/' + gist;
 			}
 		},
 
@@ -332,23 +331,12 @@
 				this.set({ json: JSON.stringify(data, null, '  ') });
 			},
 
-			save() {
-				this.set({ saving: true });
-
-				saveComponentAsGist(this.get('components'), this.get('json')).then(id => {
-					this.set({
-						saving: false,
-						gist: id,
-						selectedExample: null
-					});
-					this.updateUrl();
-				});
-			},
-
 			updateUrl() {
+				return; // TODO
+
 				if (typeof history === 'undefined') return;
 
-				const { gist, selectedExample, version, query } = this.get();
+				const { selectedExample, version, query } = this.get();
 
 				const params = {};
 				if (typeof svelte !== 'undefined') {
@@ -383,17 +371,28 @@
 			},
 
 			findExample(id) {
-				const { example_contents } = this.get();
+				const { examples } = this.get();
 
 				id = decodeURIComponent(id);
 
-				for (let i = 0; i < example_contents.length; i += 1) {
-					const group = example_contents[i];
+				for (let i = 0; i < examples.length; i += 1) {
+					const group = examples[i];
 					for (let j = 0; j < group.examples.length; j += 1) {
-						const example = group.examples[j];
-						if (example.id === id) return example;
+						const info = group.examples[j];
+						if (info.slug === id) return info;
 					}
 				}
+			},
+
+			selectExample(slug) {
+				const example = this.findExample(slug);
+				fetch(`gist/${example.gist}`).then(r => r.json()).then(gist => {
+					this.set({ gist });
+				});
+			},
+
+			setGist(gist) {
+
 			}
 		},
 
@@ -441,79 +440,54 @@
 
 			this.uid = 0;
 
-			let exampleComponents;
-			let lastSelectedExample;
+			const { query, components, version } = this.get();
 
-			const { gist, components, version } = this.get();
-			if (!gist && components.length === 0) {
-				const exampleMatch = /example=([^&]+)$/.exec(window.location.search);
-				const selectedExample = this.findExample(exampleMatch ? exampleMatch[1] : 'hello-world');
-				this.set({ selectedExample });
-			}
-
-			this.observe('selectedExample', example => {
-				if (!example) return;
-				const id = example.id;
-
-				lastSelectedExample = id;
-				fetch(`api/examples/${id}`).then(r => r.json()).then(example => {
-					exampleComponents = stringifyComponents(example.components);
-
-					if (window.svelte) {
-						example.components.forEach(component => {
-							component.compiled = compile(component);
-						});
-					}
-
-					this.set({
-						components: example.components,
-						selectedComponent: example.components[0],
-						json: JSON.stringify(example.data, null, '  ')
-					});
-
-					// this.updateBundle();
+			if (query.gist) {
+				fetch(`gist/${query.gist}`).then(r => r.json()).then(gist => {
+					this.set({ gist });
 				});
-
-				this.set({ gist: null });
-				this.updateUrl();
-			});
-
-			if (!this.get('gist')) {
-				this.set({ json: JSON.stringify(this.get('data'), null, '  ') });
+			} else if (components.length === 0) {
+				this.selectExample(query.example || 'hello-world');
 			}
 
 			this.observe('gist', gist => {
 				if (!gist) return;
 
-				if (this.promise) this.promise.cancel();
-				this.promise = getComponentFromGist(gist);
+				let json;
+				const components = Object.keys(gist.files)
+					.map(file => {
+						const dot = file.lastIndexOf('.');
+						if (!~dot) return;
 
-				this.promise
-					.then(({ components, json }) => {
-						if (window.svelte) {
-							components.forEach(component => {
-								try {
-									component.compiled = compile(component);
-								} catch (err) {
-									console.error(err.stack);
+						const source = gist.files[file].content;
 
-									this.set({
-										sourceError: err,
-										sourceErrorLoc: err.loc
-									});
-								}
-							});
-						}
+						// while we're here...
+						if (file === 'data.json') json = source;
 
-						this.set({ components, json, selectedComponent: components[0] });
+						return {
+							name: file.slice(0, dot),
+							type: file.slice(dot + 1),
+							source
+						};
 					})
-					.catch(err => {
-						alert('Error loading from gist.github.com – please try again later!');
-						console.error(err.stack);
+					.filter(x => x.type === 'html' || x.type === 'js')
+					.sort((a, b) => {
+						if (a.name === 'App' && a.type === 'html') return -1;
+						if (b.name === 'App' && b.type === 'html') return -1;
+
+						if (a.type !== b.type) return a.type === 'html' ? -1 : 1;
+
+						return a.name < b.name ? -1 : 1
 					});
 
-				this.set({ selectedExample: null });
-				this.updateUrl();
+				this.set({
+					name: gist.description,
+					selectedComponent: components[0],
+					components,
+					json
+				});
+
+				history.replaceState({}, 'x', `repl?gist=${gist.id}`);
 			});
 
 			this.observe('json', json => {
