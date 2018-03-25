@@ -230,10 +230,6 @@
 	}
 
 	export default {
-		store() {
-			return store;
-		},
-
 		preload() {
 			return this.fetch(`api/guide`).then(r => r.json()).then(sections => {
 				return { sections };
