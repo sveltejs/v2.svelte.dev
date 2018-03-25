@@ -18,7 +18,7 @@ export async function init(version) {
 		loadSvelte(version)
 	]);
 
-	return svelte.VERSION;
+	return version === 'local' ? version : svelte.VERSION;
 }
 
 let bundle;

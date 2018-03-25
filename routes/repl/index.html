@@ -260,6 +260,18 @@
 				if (runtimeError.filename !== `${selectedComponent.name}.${selectedComponent.type}`) return;
 
 				return runtimeError.loc;
+			},
+
+			url: (version, gist, query) => {
+				const params = [];
+				if (version !== 'latest') params.push(`version=${version}`);
+				if (gist) params.push(`gist=${gist.id}`);
+				else if (query.gist) params.push(`gist=${query.gist}`);
+				else if (query.data) params.push(`data=${query.data}`);
+
+				return params.length > 0
+					? `repl?${params.join('&')}`
+					: 'repl';
 			}
 		},
 
@@ -330,32 +342,6 @@
 				this.set({ json: JSON.stringify(data, null, '  ') });
 			},
 
-			updateUrl() {
-				return; // TODO
-
-				if (typeof history === 'undefined') return;
-
-				const { version, query } = this.get();
-
-				const params = {};
-				if (typeof svelte !== 'undefined') {
-					params.version = version === 'local' ? 'local' : svelte.VERSION;
-				} else {
-					params.version = version
-				}
-
-				if (gist) {
-					params.gist = gist;
-				} else if (query.data) {
-					params.data = query.data;
-				}
-
-				const queryString = Object.keys(params).map(key => `${key}=${params[key]}`).join('&');
-				const url = queryString ? `/repl?${queryString}` : '/repl';
-
-				history.replaceState({}, 'x', url);
-			},
-
 			navigate(filename) {
 				const name = filename.replace(/\.html$/, '');
 				const { components, selectedComponent } = this.get();
@@ -399,7 +385,7 @@
 				let { version } = this.get();
 
 				version = await instance.init(version);
-				// TODO update URL bar
+				this.set({ version });
 
 				const updateBundle = async () => {
 					const { components } = this.get();
@@ -483,8 +469,6 @@
 					components,
 					json
 				});
-
-				history.replaceState({}, 'x', `repl?gist=${gist.id}`);
 			});
 
 			this.observe('json', json => {
@@ -510,6 +494,10 @@
 						});
 					}
 				}
+			});
+
+			this.observe('url', url => {
+				history.replaceState({}, 'x', url);
 			});
 		},
 
