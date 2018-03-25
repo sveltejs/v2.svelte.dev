@@ -91,7 +91,7 @@ express()
 					user: user && {
 						// strip access token
 						id: user.id,
-						name: user.name,
+						username: user.username,
 						displayName: user.displayName,
 						photo: user.photo
 					},

@@ -60,7 +60,7 @@
 <script>
 	export default {
 		computed: {
-			name: $user => name || $user.username
+			name: $user => $user.displayName || $user.username
 		}
 	};
 </script>
