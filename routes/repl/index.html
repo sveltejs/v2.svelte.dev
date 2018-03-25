@@ -217,6 +217,7 @@
 			let components = [];
 			let selectedComponent;
 			let data = {};
+			let name = 'loading...';
 
 			if (query.data) {
 				const parsed = tryParseData(query.data);
@@ -227,6 +228,7 @@
 				});
 
 				data = parsed.data;
+				name = 'Example from guide';
 			}
 
 			if (components && components.length > 0) {
@@ -241,6 +243,7 @@
 				components,
 				selectedComponent,
 				data,
+				name,
 				json: JSON.stringify(data, null, '  ')
 			};
 		},

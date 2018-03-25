@@ -95,10 +95,8 @@
 	let codemirrorPromise;
 
 	function loadCodemirror() {
-		console.log('loading CodeMirror')
-		return import(/* webpackChunkName: "codemirror" */ './_codemirror.js').then(({ default: CodeMirror }) => {
-			return CodeMirror;
-		});
+		return import(/* webpackChunkName: "codemirror" */ './_codemirror.js')
+			.then(m => m.default);
 	}
 
 	export default {

@@ -9,8 +9,11 @@
 		{{/if}}
 
 		<button disabled={{downloading}} on:click='download()' title='download zip file' class=icon style='background-image: url(icons/download.svg)'>download</button>
-		<button disabled={{forking || !$user}} on:click='fork()' title='fork' class=icon style='background-image: url(icons/fork.svg)'>fork</button>
-		<button disabled={{saving || !canSave}} on:click='save()' title='save' class=icon style='background-image: url(icons/save.svg)'>save</button>
+
+		{{#if $user}}
+			<button disabled={{forking || !$user}} on:click='fork()' title='fork' class=icon style='background-image: url(icons/fork.svg)'>fork</button>
+			<button disabled={{saving || !canSave}} on:click='save()' title='save' class=icon style='background-image: url(icons/save.svg)'>save</button>
+		{{/if}}
 
 		{{#if gist}}
 			<a href='{{gist.html_url}}' title='link to gist' class=icon style='background-image: url(icons/link.svg)'>link to gist</a>
@@ -59,7 +62,8 @@
 		/* position: relative;
 		padding: 0 2em 0 0; */
 		line-height: 1.2;
-		display: block;
+		display: inline-block;
+		float: right;
 		padding: 0.5em;
 		font-family: Rajdhani;
 		font-weight: 400;
@@ -158,7 +162,6 @@
 					});
 
 					const result = await r.json();
-
 					console.log(r.status, result);
 				} catch (err) {
 					console.error(err);
