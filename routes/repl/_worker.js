@@ -25,7 +25,7 @@ let cache;
 let currentToken;
 
 export async function bundle(components) {
-	console.clear();
+	// console.clear();
 	console.log(`running Svelte compiler version %c${svelte.VERSION}`, 'font-weight: bold');
 
 	const token = currentToken = {};
