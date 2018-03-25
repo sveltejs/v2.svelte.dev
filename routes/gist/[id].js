@@ -36,8 +36,6 @@ export async function patch(req, res) {
 		return;
 	}
 
-	console.log(user);
-
 	try {
 		const { description, files } = await body(req);
 

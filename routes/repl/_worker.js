@@ -21,10 +21,10 @@ export async function init(version) {
 	return version === 'local' ? version : svelte.VERSION;
 }
 
-let bundle;
+let cache;
 let currentToken;
 
-export async function compile(components) {
+export async function bundle(components) {
 	console.clear();
 	console.log(`running Svelte compiler version %c${svelte.VERSION}`, 'font-weight: bold');
 
@@ -41,7 +41,7 @@ export async function compile(components) {
 	let erroredComponent;
 
 	try {
-		bundle = await rollup.rollup({
+		const bundle = await rollup.rollup({
 			input: './App.html',
 			external: id => {
 				return id[0] !== '.';
@@ -62,6 +62,7 @@ export async function compile(components) {
 								name: component.name,
 								filename: component.name + '.html',
 								dev: true,
+								shared: true,
 								onwarn: warning => {
 									console.warn(warning.message);
 									console.log(warning.frame);
@@ -83,10 +84,12 @@ export async function compile(components) {
 				warnings.push(warning);
 				warningCount += 1;
 			},
-			cache: bundle
+			cache
 		});
 
 		if (token !== currentToken) return;
+
+		cache = bundle;
 
 		let uid = 1;
 		const importMap = new Map();
@@ -134,4 +137,16 @@ export async function compile(components) {
 			})
 		};
 	}
+}
+
+export function compile(component) {
+	const { code } = svelte.compile(component.source, {
+		// TODO make options configurable
+		cascade: false,
+		name: component.name,
+		filename: component.name + '.html',
+		dev: true
+	});
+
+	return code;
 }
