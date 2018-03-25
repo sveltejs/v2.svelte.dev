@@ -187,16 +187,13 @@
 <script>
 	import { locate } from 'locate-character';
 	import Layout from '../_components/Layout.html';
-	import CodeMirror from './_CodeMirror.html';
-	import ModuleEditor from './_ModuleEditor.html';
-	import Viewer from './_Viewer.html';
-	import ComponentSelector from './_ComponentSelector.html';
-	import AppControls from './_AppControls.html';
-	import SplitPane from './_SplitPane.html';
-	import { getComponentFromGist, saveComponentAsGist } from './_utils/gist.js';
+	import CodeMirror from './_components/CodeMirror.html';
+	import ModuleEditor from './_components/ModuleEditor.html';
+	import Viewer from './_components/Viewer.html';
+	import ComponentSelector from './_components/ComponentSelector.html';
+	import AppControls from './_components/AppControls.html';
+	import SplitPane from './_components/SplitPane.html';
 	import examples from './_examples.json';
-	import debounce from './_utils/debounce.js';
-	import * as load from './_utils/load.js';
 
 	function tryParseData(encoded) {
 		try {
