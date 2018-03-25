@@ -4623,6 +4623,12 @@ worker-farm@^1.5.2:
   dependencies:
     errno "~0.1.7"
 
+workerize-loader@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/workerize-loader/-/workerize-loader-1.0.2.tgz#ec87bfd2f97a589907172c5ebbcc5c9abbeb7686"
+  dependencies:
+    loader-utils "^1.1.0"
+
 wrappy@1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/wrappy/-/wrappy-1.0.2.tgz#b5243d8f3ec1aa35f1364605bc0d1036e30ab69f"

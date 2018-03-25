@@ -38,10 +38,8 @@
 						<div class=pane slot=a >
 							<h2 class='show-if-mobile'>Rendered component</h2>
 
-							{{#if loadedSvelte}}
-								{{#if bundle}}
-									<Viewer :bundle :data :bundleError bind:error='runtimeError' on:change='updateData(event)' on:navigate='navigate(event)'/>
-								{{/if}}
+							{{#if bundle}}
+								<Viewer :bundle :data :bundleError bind:error='runtimeError' on:change='updateData(event)' on:navigate='navigate(event)'/>
 							{{else}}
 								<p class='loading'>loading Svelte compiler...</p>
 							{{/if}}
@@ -194,12 +192,6 @@
 	import { getComponentFromGist, saveComponentAsGist } from './_utils/gist.js';
 	import debounce from './_utils/debounce.js';
 	import * as load from './_utils/load.js';
-	import { get } from './_utils/get.js';
-
-	function loadSvelte(version) {
-		if (version === 'local') return import(/* webpackChunkName: "svelte" */ 'svelte');
-		return load.script(`https://unpkg.com/svelte@${version}/compiler/svelte.js`).then(() => window.svelte);
-	}
 
 	function tryParseData(encoded) {
 		try {
@@ -210,24 +202,6 @@
 			console.error(err.message);
 			return {};
 		}
-	}
-
-	function compile(component) {
-		const warnings = [];
-
-		if (component.type === 'js') return { code: component.source, map: null, warnings };
-
-		const { code, map } = svelte.compile(component.source || '', {
-			cascade: false,
-			name: component.name,
-			filename: component.name + '.html',
-			dev: true,
-			onwarn: warning => {
-				warnings.push(warning);
-			}
-		});
-
-		return { code, map, warnings };
 	}
 
 	export default {
@@ -378,115 +352,6 @@
 				});
 			},
 
-			updateBundle() {
-				// TODO do this in a worker
-				const components = this.get('components');
-
-				if (!components || !components.length) return;
-				if (components.some(c => !c.compiled)) return;
-
-				console.clear();
-				console.log(`running Svelte compiler version %c${svelte.VERSION}`, 'font-weight: bold');
-
-				if (this.bundlePromise) this.bundlePromise.cancel();
-
-				const lookup = {};
-				let warningCount = 0;
-				for (let i = 0; i < components.length; i += 1) {
-					const component = components[i];
-					const w = component.compiled.warnings.length;
-					warningCount += w;
-
-					if (w > 0) {
-						console.group(`${component.name}.${component.type}: ${w} ${w === 1 ? 'warning' : 'warnings'}`);
-						component.compiled.warnings.forEach(warning => {
-							console.warn(warning.message);
-							console.log(warning.frame);
-						});
-						console.groupEnd();
-					}
-
-					const path = `./${component.name}.${component.type}`;
-
-					if (path in lookup) {
-						this.set({
-							bundleError: new Error(`Multiple ${component.name}.${component.type} components`)
-						});
-						return;
-					}
-
-					lookup[path] = {
-						code: component.compiled.code,
-						map: component.compiled.map
-					};
-				}
-
-				this.set({ warningCount });
-
-				let cancelled = false;
-
-				let uid = 1;
-				const importMap = new Map();
-				const input = './App.html';
-
-				this.bundlePromise = rollup.rollup({
-					input,
-					external: id => {
-						return id[0] !== '.';
-					},
-					plugins: [{
-						resolveId(importee, importer) {
-							if (importee[0] === '.') return importee;
-						},
-						load(id) {
-							if (id in lookup) return lookup[id];
-							if (id[0] === '.') {
-								throw new Error(`file does not exist`);
-							}
-
-							return null;
-						}
-					}],
-					onwarn(warning) {
-						if (warning.code === 'MISSING_GLOBAL_NAME') return;
-						console.warn(warning.message);
-					}
-				}).then(bundle => {
-					if (cancelled) return;
-
-					return bundle.generate({
-						format: 'iife',
-						name: 'SvelteComponent',
-						globals: id => {
-							const name = `import_${uid++}`;
-							importMap.set(id, name);
-							return name;
-						},
-						sourcemap: true
-					}).then(({ code, map }) => {
-						this.set({
-							bundle: {
-								code,
-								map,
-								imports: bundle.imports,
-								importMap
-							},
-							bundleError: null,
-							runtimeError: null
-						});
-					});
-				}).catch(err => {
-					console.error(err.stack);
-					this.set({
-						bundleError: err
-					});
-				});
-
-				this.bundlePromise.cancel = () => {
-					cancelled = true;
-				};
-			},
-
 			updateUrl() {
 				if (typeof history === 'undefined') return;
 
@@ -540,8 +405,45 @@
 		},
 
 		oncreate() {
+			import('workerize-loader!./_worker.js').then(async ({ default: worker }) => {
+				const instance = worker();
+				let { version } = this.get();
+
+				version = await instance.init(version);
+				// TODO update URL bar
+
+				const updateBundle = async () => {
+					const { components } = this.get();
+
+					const { bundle, warningCount, error } = await instance.compile(components);
+
+					if (error) {
+						this.set({
+							bundle: null,
+							bundleError: new Error(error),
+							runtimeError: null,
+							warningCount
+						});
+					} else {
+						this.set({
+							bundle,
+							bundleError: null,
+							runtimeError: null,
+							warningCount
+						});
+					}
+				};
+
+				this.observe('components', updateBundle);
+				this.observe('selectedComponent', (n, o) => {
+					// slightly counterintuitively, we only want to recompile if
+					// this is the *same* component — not if we've just selected
+					// a different one
+					if (n === o) updateBundle();
+				});
+			});
+
 			this.uid = 0;
-			this.bundlePromise = null;
 
 			let exampleComponents;
 			let lastSelectedExample;
@@ -573,7 +475,7 @@
 						json: JSON.stringify(example.data, null, '  ')
 					});
 
-					this.updateBundle();
+					// this.updateBundle();
 				});
 
 				this.set({ gist: null });
@@ -618,59 +520,59 @@
 				this.updateUrl();
 			});
 
-			loadSvelte(version).then(svelte => {
-				window.svelte = svelte;
+			// loadSvelte(version).then(svelte => {
+			// 	window.svelte = svelte;
 
-				this.set({ loadedSvelte: true });
+			// 	this.set({ loadedSvelte: true });
 
-				this.get('components').forEach(component => {
-					try {
-						component.compiled = compile(component);
-					} catch (err) {
-						console.error(err.stack);
+			// 	this.get('components').forEach(component => {
+			// 		try {
+			// 			component.compiled = compile(component);
+			// 		} catch (err) {
+			// 			console.error(err.stack);
 
-						this.set({
-							sourceError: err,
-							sourceErrorLoc: err.loc
-						});
-					}
-				});
+			// 			this.set({
+			// 				sourceError: err,
+			// 				sourceErrorLoc: err.loc
+			// 			});
+			// 		}
+			// 	});
 
-				this.observe('selectedComponent', (selectedComponent, previousComponent) => {
-					if (!selectedComponent) return;
-					if (previousComponent && selectedComponent !== previousComponent) return;
+			// 	this.observe('selectedComponent', (selectedComponent, previousComponent) => {
+			// 		if (!selectedComponent) return;
+			// 		if (previousComponent && selectedComponent !== previousComponent) return;
 
-					// if component has been edited, unset selectedExample
-					if (stringifyComponents(this.get('components')) !== exampleComponents) {
-						this.set({ selectedExample: null });
-					}
+			// 		// if component has been edited, unset selectedExample
+			// 		if (stringifyComponents(this.get('components')) !== exampleComponents) {
+			// 			this.set({ selectedExample: null });
+			// 		}
 
-					try {
-						selectedComponent.compiled = compile(selectedComponent);
-						this.set({ selectedComponent, sourceError: null, sourceErrorLoc: null });
+			// 		try {
+			// 			selectedComponent.compiled = compile(selectedComponent);
+			// 			this.set({ selectedComponent, sourceError: null, sourceErrorLoc: null });
 
-						if (this.get('loadedRollup')) {
-							this.updateBundle();
-						}
-					} catch (err) {
-						console.error(err.stack);
+			// 			if (this.get('loadedRollup')) {
+			// 				this.updateBundle();
+			// 			}
+			// 		} catch (err) {
+			// 			console.error(err.stack);
 
-						this.set({
-							sourceError: err,
-							sourceErrorLoc: err.loc
-						});
-					}
-				});
+			// 			this.set({
+			// 				sourceError: err,
+			// 				sourceErrorLoc: err.loc
+			// 			});
+			// 		}
+			// 	});
 
-				this.updateUrl();
-			});
+			// 	this.updateUrl();
+			// });
 
-			import(/* webpackChunkName: "rollup" */ 'rollup/dist/rollup.browser.js').then(rollup => {
-				this.set({ loadedRollup: true });
-				window.rollup = rollup;
+			// import(/* webpackChunkName: "rollup" */ 'rollup/dist/rollup.browser.js').then(rollup => {
+			// 	this.set({ loadedRollup: true });
+			// 	window.rollup = rollup;
 
-				this.updateBundle();
-			});
+			// 	this.updateBundle();
+			// });
 
 			this.observe('json', json => {
 				try {
