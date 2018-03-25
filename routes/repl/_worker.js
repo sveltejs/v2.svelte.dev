@@ -25,10 +25,10 @@ let bundle;
 let currentToken;
 
 export async function compile(components) {
-	const token = currentToken = {};
-
 	console.clear();
 	console.log(`running Svelte compiler version %c${svelte.VERSION}`, 'font-weight: bold');
+
+	const token = currentToken = {};
 
 	const lookup = {};
 	components.forEach(component => {
@@ -37,6 +37,8 @@ export async function compile(components) {
 	});
 
 	let warningCount = 0;
+	let error;
+	let erroredComponent;
 
 	try {
 		bundle = await rollup.rollup({
@@ -54,19 +56,25 @@ export async function compile(components) {
 
 						if (component.type === 'js') return component.source;
 
-						const { code, map } = svelte.compile(component.source, {
-							cascade: false,
-							name: component.name,
-							filename: component.name + '.html',
-							dev: true,
-							onwarn: warning => {
-								console.warn(warning.message);
-								console.log(warning.frame);
-								warningCount += 1;
-							}
-						});
+						try {
+							const { code, map } = svelte.compile(component.source, {
+								cascade: false,
+								name: component.name,
+								filename: component.name + '.html',
+								dev: true,
+								onwarn: warning => {
+									console.warn(warning.message);
+									console.log(warning.frame);
+									warningCount += 1;
+								}
+							});
 
-						return { code, map };
+							return { code, map };
+						} catch (err) {
+							error = err;
+							erroredComponent = component;
+							throw err;
+						}
 					}
 				}
 			}],
@@ -105,10 +113,25 @@ export async function compile(components) {
 			error: null
 		};
 	} catch (err) {
+		const e = error || err;
+
+		if (erroredComponent && e.loc) {
+			const { line, column } = e.loc;
+			// for some reason error.loc gets borked up, maybe by Rollup?
+			// TODO investigation. In the meantime, fix it here
+			const { locate } = await import(/* webpackChunkName: "locate-character" */ 'locate-character');
+			e.loc = locate(erroredComponent.source, e.pos, { offsetLine: 1 });
+			e.loc.file = erroredComponent.name;
+			e.message = e.message.replace(` (${line}:${column})`, '');
+		}
+
 		return {
 			bundle: null,
 			warningCount,
-			error: err.message
+			error: Object.assign({}, e, {
+				message: e.message,
+				stack: e.stack
+			})
 		};
 	}
 }

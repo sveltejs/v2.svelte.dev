@@ -38,7 +38,7 @@
 						<div class=pane slot=a >
 							<h2 class='show-if-mobile'>Rendered component</h2>
 
-							{{#if bundle}}
+							{{#if compilerReady}}
 								<Viewer :bundle :data :bundleError bind:error='runtimeError' on:change='updateData(event)' on:navigate='navigate(event)'/>
 							{{else}}
 								<p class='loading'>loading Svelte compiler...</p>
@@ -420,16 +420,18 @@
 					if (error) {
 						this.set({
 							bundle: null,
-							bundleError: new Error(error),
+							bundleError: error,
 							runtimeError: null,
-							warningCount
+							warningCount,
+							compilerReady: true
 						});
 					} else {
 						this.set({
 							bundle,
 							bundleError: null,
 							runtimeError: null,
-							warningCount
+							warningCount,
+							compilerReady: true
 						});
 					}
 				};
