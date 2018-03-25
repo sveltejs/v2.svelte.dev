@@ -24,7 +24,7 @@
 						:components
 						bind:selectedComponent
 						on:create='createComponent()'
-						on:remove='removeComponent(selectedComponent)'
+						on:remove='removeComponent()'
 					/>
 
 					<ModuleEditor
@@ -305,12 +305,13 @@
 				this.refs.selector.focusLast();
 			},
 
-			removeComponent(component) {
-				const components = this.get('components');
+			removeComponent() {
+				const component = this.get('selectedComponent'); // TODO doesn't seem to work as argument...
+				const { components } = this.get();
 
 				let selectedComponent;
 
-				if (component.entry) {
+				if (component.name === 'App') {
 					// App.html can't be removed
 					component.source = '';
 					selectedComponent = component;
@@ -373,10 +374,6 @@
 				fetch(`gist/${example.gist}`).then(r => r.json()).then(gist => {
 					this.set({ gist });
 				});
-			},
-
-			setGist(gist) {
-
 			}
 		},
 

@@ -269,11 +269,7 @@
 			},
 			remove(component) {
 				let result = confirm(`Are you sure you want to delete ${component.name}.${component.type}?`);
-				if (result) {
-					this.fire('remove');
-					let components = this.get('components');
-					this.set({ selectedComponent: components[components.length - 1] });
-				}
+				if (result) this.fire('remove');
 			},
 			selectInput(input) {
 				setTimeout(() => {
