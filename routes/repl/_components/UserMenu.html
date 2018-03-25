@@ -1,6 +1,6 @@
 <div class='user' on:mouseenter='set({ showMenu: true })' on:mouseleave='set({ showMenu: false })'>
-	<span>{{$user.displayName}}</span>
-	<img alt='{{$user.displayName}} avatar' src='{{$user.photo}}'>
+	<span>{{name}}</span>
+	<img alt='{{name}} avatar' src='{{$user.photo}}'>
 
 	{{#if showMenu}}
 		<div class='menu'>
@@ -56,3 +56,11 @@
 		background-color: transparent;
 	}
 </style>
+
+<script>
+	export default {
+		computed: {
+			name: $user => name || $user.username
+		}
+	};
+</script>
