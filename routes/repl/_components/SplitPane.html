@@ -1,0 +1,164 @@
+<div ref:container>
+	<div class='pane' style='{{dimension}}: {{pos}}%;'>
+		<slot name='a'></slot>
+	</div>
+
+	<div class='pane' style='{{dimension}}: {{100 - pos}}%;'>
+		<slot name='b'></slot>
+	</div>
+
+	<div class='{{type}} divider' style='{{side}}: calc({{pos}}% - 8px)' on:drag='setPos(event)'></div>
+</div>
+
+{{#if dragging}}
+	<div class='mousecatcher'></div>
+{{/if}}
+
+<style>
+	ref:container {
+		position: relative;
+		width: 100%;
+		height: 100%;
+	}
+
+	.pane {
+		float: left;
+		width: 100%;
+		height: 100%;
+	}
+
+	.mousecatcher {
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(255,255,255,0.01);
+	}
+
+	.divider {
+		position: absolute;
+		z-index: 10;
+		display: none;
+	}
+
+	.divider::after {
+		content: '';
+		position: absolute;
+		background-color: #eee;
+	}
+
+	.horizontal {
+		padding: 0 8px;
+		width: 0;
+		height: 100%;
+		cursor: ew-resize;
+	}
+
+	.horizontal::after {
+		left: 8px;
+		top: 0;
+		width: 1px;
+		height: 100%;
+	}
+
+	.vertical {
+		padding: 8px 0;
+		width: 100%;
+		height: 0;
+		cursor: ns-resize;
+	}
+
+	.vertical::after {
+		top: 8px;
+		left: 0;
+		width: 100%;
+		height: 1px;
+	}
+
+	@media (max-width: 767px) {
+		.pane {
+			/* override divider-set dimensions */
+			width: 100% !important;
+			height: auto !important;
+		}
+	}
+
+	@media (min-width: 768px) {
+		.left, .right, .divider {
+			display: block;
+
+		}
+
+		.left, .right {
+			height: 100%;
+			float: left;
+		}
+
+		.top, .bottom {
+			position: absolute;
+			width: 100%;
+		}
+
+		.top { top: 0; }
+		.bottom { bottom: 0; }
+	}
+</style>
+
+<script>
+	export default {
+		data() {
+			return {
+				pos: 50
+			};
+		},
+
+		computed: {
+			side: type => type === 'horizontal' ? 'left' : 'top',
+			dimension: type => type === 'horizontal' ? 'width' : 'height'
+		},
+
+		methods: {
+			setPos(event) {
+				const { top, bottom, left, right } = this.refs.container.getBoundingClientRect();
+
+				const pos = 100 * (this.get('type') === 'vertical'
+					? (event.clientY - top) / (bottom - top)
+					: (event.clientX - left) / (right - left));
+
+				this.set({ pos });
+				this.fire('change');
+			}
+		},
+
+		events: {
+			drag(node, callback) {
+				const mousedown = event => {
+					if (event.which !== 1) return;
+
+					event.preventDefault();
+
+					this.set({ dragging: true });
+
+					const onmouseup = () => {
+						this.set({ dragging: false });
+
+						window.removeEventListener('mousemove', callback, false);
+						window.removeEventListener('mouseup', onmouseup, false);
+					};
+
+					window.addEventListener('mousemove', callback, false);
+					window.addEventListener('mouseup', onmouseup, false);
+				}
+
+				node.addEventListener('mousedown', mousedown, false);
+
+				return {
+					teardown() {
+						node.removeEventListener('mousedown', onmousedown, false);
+					}
+				};
+			}
+		}
+	};
+</script>

@@ -1,7 +1,19 @@
 import { init } from 'sapper/runtime.js';
+import store from '../client/store.js';
 import { routes } from './manifest/client.js';
 
-init(document.querySelector('#sapper'), routes);
+init(document.querySelector('#sapper'), routes, {
+	store: data => {
+		store.set(data);
+
+		fetch(`api/guide/contents`).then(r => r.json()).then(guide_contents => {
+			store.set({ guide_contents });
+		});
+
+		window.store = store;
+		return store;
+	}
+});
 
 if (navigator.serviceWorker && navigator.serviceWorker.controller) {
 	navigator.serviceWorker.controller.onstatechange = function(e) {

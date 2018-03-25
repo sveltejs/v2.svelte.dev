@@ -1,0 +1,292 @@
+<div class='component-selector'>
+	<div class="panel-header">
+		<ul ref:files class="file-tabs" on:dblclick='fire("create")'>
+			{{#each components as component}}
+			<li id='{{component.name}}' class='{{ selectedComponent == component ? "active" : "" }}' data-name='{{component.name}}' on:dblclick='event.stopPropagation()'>
+				<button class='file-tabs-item {{ component.edit ? "edit-mode" : ""}}' on:click='selectComponent(component, selectedComponent)'>
+					{{#if component.name == 'App'}}
+						<div class='uneditable'>
+							App.html
+						</div>
+					{{else}}
+						{{#if component.edit}}
+							<div class='input-wrapper'>
+								<input autofocus ref:name bind:value='component.name' on:focus='selectInput(this)' on:blur='closeEdit(selectedComponent)' on:enter='this.blur()' />
+							</div>
+						{{else}}
+							<div class='editable' title='edit component name' on:click='editTab(component, selectedComponent)'>
+								{{component.name}}.{{component.type}}
+							</div>
+						{{/if}}
+						<span class='remove' on:click='remove(component)'>&times;</span>
+					{{/if}}
+				</button>
+			</li>
+			{{/each}}
+		</ul>
+	</div>
+
+	<div class="btn-action-container">
+		<button class='add-new' on:click='fire("create")' title="add new component">
+			<span>+</span>
+		</button>
+	</div>
+</div>
+
+<style>
+	.component-selector {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		border-bottom: 1px solid #eee;
+		height: 2.4em;
+	}
+
+	.module-name {
+		position: relative;
+		display: block;
+	}
+
+	.panel-header {
+		padding: 0 40px 0.5em 0;
+	}
+
+	button {
+		display: block;
+		float: right;
+		padding: calc(0.5em - 1px);
+	}
+
+	.dropdown {
+		position: relative;
+		display: block;
+		float: left;
+		padding: 0 2em 0 0;
+	}
+
+	.dropdown::after {
+		content: '▼';
+		position: absolute;
+		right: 1rem;
+		top: 0.55rem;
+		font-size: 0.8em;
+		color: #999;
+		pointer-events: none;
+	}
+
+	.input-wrapper {
+		position: relative;
+		display: block;
+		float: left;
+		line-height: 1;
+		/* margin: 0 0.3em 0 0; */
+	}
+
+	.input-wrapper input {
+		width: 100%;
+		/* background-color: #e7e7e7; */
+		font-size: 16px;
+		font-family: Rajdhani, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+		border: none;
+		color: #aa1e1e;
+		padding: 4px 10px;
+		outline: none;
+	}
+
+	.widther {
+		display: block;
+		font-family: inherit;
+		font-size: inherit;
+		border: 1px solid #eee;
+		padding: calc(0.5em - 1px) 0.25em;
+		line-height: 1;
+	}
+
+	.file-extension {
+		display: inline-block;
+		padding: calc(0.5em - 1px) 0;
+		color: #999;
+		left: -0.2em;
+		pointer-events: none;
+	}
+
+	.file-tabs {
+		border: none;
+		padding-left: 0;
+		margin: 0;
+		list-style-type: none;
+		white-space: nowrap;
+		overflow-x: auto;
+		overflow-y: hidden;
+	}
+
+	.file-tabs > li {
+		display: inline-block;
+		float: none;
+		margin-bottom: 0;
+		margin: 0 0.5em 0 0;
+		vertical-align: top;
+	}
+
+	.file-tabs li.active {
+		background-color: #fff;
+	}
+
+	.file-tabs li.active button {
+		border-bottom: 1px solid #666;
+		/* font-weight: 500; */
+	}
+
+	button.file-tabs-item {
+		float: none;
+		border-bottom: 1px solid #eee;
+		border-radius: 0;
+		color: #333;
+		position: relative;
+		display: block;
+		/* padding: 0 0.7em; */
+		padding: 0.4em 0 0 0;
+		margin: 0;
+		height: 2.4em;
+		box-sizing: border-box;
+		line-height: 1.4;
+		font-weight: 300;
+	}
+
+	/* .file-tabs-item:hover {
+		border: none;
+	} */
+
+	.edit-mode {
+		padding-bottom: 8px;
+		padding-top: 8px;
+	}
+
+	.file-tabs-input {
+		padding: 10px 15px;
+	}
+
+	.editable, .uneditable {
+		display: inline-block;
+		margin-right: 4px;
+		padding: 0 0.7em 0 0.5em;
+		position: relative;
+	}
+
+	.uneditable {
+		padding-left: 1em;
+	}
+
+	.remove {
+		position: absolute;
+		display: none;
+		right: 0;
+		width: 20px;
+		text-align: right;
+		padding: 0.7em 0 0.5em 0.5em;
+		top: 0;
+	}
+
+	li.active .editable {
+		cursor: text;
+	}
+
+	li.active .remove {
+		display: inline-block;
+	}
+
+	.btn-action-container {
+		position: absolute;
+		right: 0;
+		top: 0;
+	}
+
+	button.add-new {
+		border: none;
+		width: 2.4em;
+		height: 2.4em;
+		color: #999;
+		background: none;
+	}
+
+	.add-new span {
+		position: absolute;
+		font-size: 2em;
+		font-weight: 300;
+		top: 0;
+		line-height: 1.3;
+		left: 0;
+		width: 100%;
+	}
+
+	.add-new:hover {
+		border: none;
+		color: #333;
+	}
+</style>
+
+<script>
+	function keyEvent(code) {
+		return function (node, callback) {
+			node.addEventListener('keydown', handleKeydown);
+
+			function handleKeydown(event) {
+				if (event.keyCode === code) {
+					callback.call(this, event);
+				}
+			}
+
+			return {
+				teardown() {
+					node.removeEventListener('keydown', handleKeydown);
+				}
+			};
+		}
+	}
+
+	export default {
+		methods: {
+			selectComponent(component, selectedComponent) {
+				if (selectedComponent != component) {
+					selectedComponent.edit = false;
+				}
+				this.set({ selectedComponent: component })
+			},
+			editTab(component, selectedComponent) {
+				if (selectedComponent == component) {
+					selectedComponent.edit = true;
+					this.set({ selectedComponent });
+					// this.refs.name.focus();
+				}
+			},
+			closeEdit(selectedComponent) {
+				const match = /(.+)\.(html|js)$/.exec(selectedComponent.name);
+				selectedComponent.name = match ? match[1] : selectedComponent.name;
+				if (match && match[2]) selectedComponent.type = match[2];
+				selectedComponent.edit = false;
+				this.set({ selectedComponent });
+			},
+			remove(component) {
+				let result = confirm(`Are you sure you want to delete ${component.name}.${component.type}?`);
+				if (result) {
+					this.fire('remove');
+					let components = this.get('components');
+					this.set({ selectedComponent: components[components.length - 1] });
+				}
+			},
+			selectInput(input) {
+				setTimeout(() => {
+					input.select();
+				});
+			},
+			focusLast() {
+
+			}
+		},
+
+		events: {
+			enter: keyEvent(13)
+		}
+	};
+</script>

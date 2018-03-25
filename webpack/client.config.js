@@ -6,7 +6,9 @@ const dev = mode === 'development';
 
 module.exports = {
 	entry: config.client.entry(),
-	output: config.client.output(),
+	output: Object.assign(config.client.output(), {
+		globalObject: 'this'
+	}),
 	resolve: {
 		extensions: ['.js', '.json', '.html']
 	},
@@ -21,7 +23,7 @@ module.exports = {
 						hydratable: true,
 						cascade: false,
 						store: true,
-						hotReload: false // TODO
+						hotReload: false
 					}
 				}
 			},
@@ -36,7 +38,7 @@ module.exports = {
 	},
 	mode,
 	plugins: [
-		dev && new webpack.HotModuleReplacementPlugin(),
+		// dev && new webpack.HotModuleReplacementPlugin(),
 		new webpack.DefinePlugin({
 			'process.browser': true,
 			'process.env.NODE_ENV': JSON.stringify(mode)

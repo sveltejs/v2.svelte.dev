@@ -210,7 +210,6 @@
 </style>
 
 <script>
-	import store from '../_store.js';
 	import GuideContents from '../_components/GuideContents.html';
 	import Layout from '../_components/Layout.html';
 
@@ -231,10 +230,6 @@
 	}
 
 	export default {
-		store() {
-			return store;
-		},
-
 		preload() {
 			return this.fetch(`api/guide`).then(r => r.json()).then(sections => {
 				return { sections };

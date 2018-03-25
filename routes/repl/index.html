@@ -3,140 +3,78 @@
 </:Head>
 
 <Layout page='repl'>
-	<div class='repl-container'>
-		<div class='left' style='width: {{verticalDividerPos}}%;'>
-			<section class='input'>
-				<div class='app-controls'>
-					<ExampleSelector :example_contents bind:selectedExample/>
+	<div class='repl-outer'>
+		<AppControls
+			:examples
+			:bundle
+			:components
+			:data
+			:json
+			:gist
+			bind:name
+			on:select='selectExample(event.slug)'
+			on:forked='set({ gist: event.gist })'
+		/>
 
-					<div style='position: absolute; right: 0.5em; z-index: 2;'>
-						<button style='width: 6em;' disabled='{{downloading}}' class='btn {{downloading ? "active" : ""}}' on:click='download()'>{{downloading ? 'zipping' : 'download'}}</button>
-						<button disabled='{{saving}}' class='btn {{saving ? "active" : ""}}' on:click='save()'>{{saving ? 'saving' : 'save'}}</button>
+		<div class='repl-inner'>
+			<SplitPane type=horizontal on:resize='resizePanes(["editor", "data"])'>
+				<section slot=a class='input'>
+					<ComponentSelector
+						ref:selector
+						:components
+						bind:selectedComponent
+						on:create='createComponent()'
+						on:remove='removeComponent(selectedComponent)'
+					/>
 
-						{{#if gist}}
-							<a class='gist-link' href="{{githubGist}}" title="Link to saved gist" target="_blank">gist</a>
-						{{/if}}
-					</div>
-				</div>
+					<ModuleEditor
+						ref:editor
+						bind:selectedComponent
+						error='{{sourceError}}'
+						errorLoc='{{sourceErrorLoc || runtimeErrorLoc}}'
+						:warningCount
+						on:navigate='navigate(event)'
+					/>
+				</section>
 
-				<div class='module-controls'>
-					{{#if selectedComponent}}
-						<ComponentSelector
-							ref:selector
-							:components
-							bind:selectedComponent
-							on:create='createComponent()'
-							on:remove='removeComponent(selectedComponent)'
-						/>
-					{{/if}}
-				</div>
+				<div slot=b style='height: 100%;'>
+					<SplitPane type=vertical on:resize='resizePanes(["data"])'>
+						<div class=pane slot=a >
+							<h2 class='show-if-mobile'>Rendered component</h2>
 
-				{{#if loadedCodemirror}}
-					<div ref:editorWrapper class='editor-wrapper {{flip}}'>
-						{{#if selectedComponent}}
-							{{#if showGenerated && selectedComponent.compiled}}
-								<CodeMirror ref:editor mode='javascript' code='{{selectedComponent.compiled.code}}' readonly/>
+							{{#if compilerReady}}
+								<Viewer :bundle :data :bundleError bind:error='runtimeError' on:change='updateData(event)' on:navigate='navigate(event)'/>
 							{{else}}
-								<CodeMirror
-									ref:editor
-									mode='{{selectedComponent.type === "js" ? "javascript" : "handlebars"}}'
-									bind:code='selectedComponent.source'
-									error='{{sourceError}}'
-									errorLoc='{{sourceErrorLoc || runtimeErrorLoc}}'
-									warningCount='{{warningCount}}'
-									on:navigate='navigate(event)'
-								/>
+								<p class='loading'>loading Svelte compiler...</p>
 							{{/if}}
-						{{/if}}
+						</div>
 
-						<button class='btn editor-toggle' on:click='flip()'>
-							<span class='flip-text'>{{showGenerated ? 'output' : 'input'}}</span>
-						</button>
-					</div>
-				{{else}}
-					<p class='loading'>loading editor...</p>
-				{{/if}}
-			</section>
+						<div class=pane slot=b >
+							<h2 class='show-if-mobile'>data.json</h2>
+
+							<CodeMirror ref:data mode='javascript' bind:code='json' error='{{dataError}}' errorLoc='{{dataErrorLoc}}'/>
+						</div>
+					</SplitPane>
+				</div>
+			</SplitPane>
 		</div>
-
-		<div ref:right class='right' style='width: {{100 - verticalDividerPos}}%;'>
-			<h2 class='show-if-mobile'>data.json</h2>
-			<div class='bottom' style='height: {{100 - horizontalDividerPos}}%;'>
-				{{#if loadedCodemirror}}
-					<CodeMirror ref:data mode='javascript' bind:code='json' error='{{dataError}}' errorLoc='{{dataErrorLoc}}'/>
-				{{else}}
-					<p class='loading'>loading editor...</p>
-				{{/if}}
-			</div>
-
-			<h2 class='show-if-mobile'>Rendered component</h2>
-			<div class='top' style='height: {{horizontalDividerPos}}%;'>
-				{{#if loadedSvelte}}
-					{{#if bundle}}
-						<Viewer :bundle :data :bundleError bind:error='runtimeError' on:change='updateData(event)' on:navigate='navigate(event)'/>
-					{{/if}}
-				{{else}}
-					<p class='loading'>loading Svelte compiler...</p>
-				{{/if}}
-
-				{{#if dragging}}
-					<div class='mousecatcher'></div>
-				{{/if}}
-			</div>
-
-			<div class='divider horizontal-divider' style='top: calc({{horizontalDividerPos}}% - 8px)' on:drag='setHorizontal(event)'></div>
-		</div>
-
-		<div class='divider vertical-divider' style='left: calc({{verticalDividerPos}}% - 8px)' on:drag='setVertical(event)'></div>
 	</div>
 </Layout>
 
 <style>
-	.repl-container {
+	.repl-outer {
 		min-height: calc(100vh - 3em);
+		padding: 3em 0 0 0;
 		background-color: #f4f4f4;
 	}
 
-	@keyframes pulse {
-		0%   { opacity: 1; transform: scale(1.5); }
-		50%  { opacity: 0; transform: scale(1); }
-		100% { opacity: 1; transform: scale(1.5); }
+	.repl-inner {
+		height: 100%;
 	}
 
-	@-webkit-keyframes pulse {
-		0%   { opacity: 1; transform: scale(1.5); }
-		50%  { opacity: 0; transform: scale(1); }
-		100% { opacity: 1; transform: scale(1.5); }
-	}
-
-	@keyframes fade-in {
-		0%   { opacity: 0; }
-		100% { opacity: 1; }
-	}
-
-	@-webkit-keyframes fade-in {
-		0%   { opacity: 0; }
-		100% { opacity: 1; }
-	}
-
-	.left, .right {
-		position: relative;
-	}
-
-	@media (max-width: 767px) {
-		.left, .right {
-			width: 100% !important; /* override divider-set width */
-		}
-
-		.top, .bottom {
-			height: auto !important;
-		}
-	}
-
-	.divider {
-		position: absolute;
-		z-index: 10;
-		display: none;
+	.pane {
+		width: 100%;
+		height: 100%;
 	}
 
 	h2 {
@@ -146,134 +84,21 @@
 		font-size: 1.2em;
 	}
 
-	.editor-wrapper {
-		z-index: 5;
-		transform-style: preserve-3d;
-		animation-fill-mode: forwards;
-	}
-
-	.repl-container .editor-toggle {
-		position: absolute;
-		bottom: 1em;
-		right: 1em;
-		z-index: 10;
-		background: white url(/icons/flip.svg) no-repeat calc(100% - 0.7em) 50%;
-		background-size: 1.4em 1em;
-		padding-right: 2.5em;
-	}
-
-	.flip-text {
-		/*display: none;*/
-	}
-
-	.editor-toggle:hover .flip-text {
-		/*display: inline-block;*/
-	}
-
-	.flip-out {
-		animation-name: flip-out;
-		animation-duration: 0.2s;
-		animation-timing-function: ease-in;
-	}
-
-	.flip-pause {
-		opacity: 0;
-	}
-
-	.flip-in {
-		animation-name: flip-in;
-		animation-duration: 0.2s;
-		animation-timing-function: ease-out;
-	}
-
-	@keyframes flip-out {
-		from { transform: rotateY(0deg); }
-		to { transform: rotateY(90deg); }
-	}
-
-	@keyframes flip-in {
-		from { transform: rotateY(-90deg); }
-		to { transform: rotateY(0deg); }
-	}
-
 	@media (min-width: 768px) {
 		.show-if-mobile {
 			display: none;
 		}
 
-		.repl-container {
+		.repl-outer {
 			min-height: auto;
 			height: calc(100vh - 4em);
 			background-color: white;
 			overflow: hidden;
 		}
 
-		.screen-too-small {
-			display: none;
-		}
-
-		.left, .right, .divider {
-			display: block;
-
-		}
-
-		.left, .right {
-			height: 100%;
-			float: left;
-		}
-
-		.top, .bottom {
-			position: absolute;
-			width: 100%;
-		}
-
-		.top { top: 0; }
-		.bottom { bottom: 0; }
-
-		.left .editor-wrapper {
-			/* make it easier to interact with scrollbar */
-			padding-right: 8px;
-			height: auto;
-			height: 100%;
-		}
-
 		section {
 			height: 100%;
 		}
-	}
-
-	.divider::after {
-		content: '';
-		position: absolute;
-		background-color: #eee;
-	}
-
-	.vertical-divider {
-		padding: 0 8px;
-		width: 0;
-		height: 100%;
-		cursor: ew-resize;
-	}
-
-	.vertical-divider::after {
-		left: 8px;
-		top: 0;
-		width: 1px;
-		height: 100%;
-	}
-
-	.horizontal-divider {
-		padding: 8px 0;
-		width: 100%;
-		height: 0;
-		cursor: ns-resize;
-	}
-
-	.horizontal-divider::after {
-		top: 8px;
-		left: 0;
-		width: 100%;
-		height: 1px;
 	}
 
 	.loading {
@@ -284,7 +109,7 @@
 	}
 
 	.input {
-		padding: 5.4em 0 0 0;
+		padding: 2.4em 0 0 0;
 		perspective: 1500px;
 		perspective-origin: 50% 0%;
 	}
@@ -295,37 +120,17 @@
 		}
 	}
 
-	.app-controls, .module-controls {
-		position: absolute;
-		left: 0;
-		width: 100%;
-	}
-
-	.app-controls {
-		top: 0;
-		border-bottom: 1px solid #eee;
-		background-color: #f4f4f4;
-		padding: 0.5em;
-		height: 3em;
-	}
-
-	.module-controls {
-		top: 3em;
-		border-bottom: 1px solid #eee;
-		height: 2.4em;
-	}
-
-	.repl-container :global(button) {
+	.repl-outer :global(button) {
 		font-family: Rajdhani, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 		font-size: inherit;
-		background-color: white;
-		cursor: pointer;
+		/* background-color: white;
+		cursor: pointer; */
 		outline: none;
 		line-height: 1;
 		border: none;
 	}
 
-	.repl-container :global(.btn) {
+	.repl-outer :global(.btn) {
 		display: block;
 		float: right;
 		padding: calc(0.5em - 1px) 1em;
@@ -337,40 +142,7 @@
 		box-sizing: border-box;
 	}
 
-	.repl-container :global(.btn):hover {
-		border: 1px solid rgb(170,30,30);
-	}
-
-	.repl-container :global(.btn).active {
-		background-color: rgb(170,30,30);
-		color: white;
-	}
-
-	.gist-link {
-		float: right;
-		line-height: 2;
-		font-family: Rajdhani;
-		font-weight: 400;
-		padding: 0 0.1em;
-		display: none;
-	}
-
-	@media (min-width: 768px) {
-		.gist-link {
-			display: block;
-		}
-	}
-
-	.mousecatcher {
-		position: absolute;
-		left: 0;
-		top: 0;
-		width: 100%;
-		height: 100%;
-		background: rgba(255,255,255,0.01);
-	}
-
-	.repl-container :global(.message) {
+	.repl-inner :global(.message) {
 		position: relative;
 		border-radius: 0.2em;
 		margin: 0;
@@ -378,7 +150,7 @@
 		color: white;
 	}
 
-	.repl-container :global(.message::before) {
+	.repl-inner :global(.message::before) {
 		content: '!';
 		position: absolute;
 		left: 0.7em;
@@ -395,19 +167,19 @@
 		border: 2px solid white;
 	}
 
-	.repl-container :global(.error.message) {
+	.repl-inner :global(.error.message) {
 		background-color: rgb(170,30,30);
 	}
 
-	.repl-container :global(.warning.message) {
+	.repl-inner :global(.warning.message) {
 		background-color: rgb(160,100,30);
 	}
 
-	.repl-container :global(.info.message) {
+	.repl-inner :global(.info.message) {
 		background-color: #666;
 	}
 
-	.repl-container :global(.error) :global(.filename) {
+	.repl-inner :global(.error) :global(.filename) {
 		cursor: pointer;
 	}
 </style>
@@ -415,30 +187,13 @@
 <script>
 	import { locate } from 'locate-character';
 	import Layout from '../_components/Layout.html';
-	import CodeMirror from './_CodeMirror.html';
-	import Viewer from './_Viewer.html';
-	import ComponentSelector from './_ComponentSelector.html';
-	import ExampleSelector from './_ExampleSelector.html';
-	import { getComponentFromGist, saveComponentAsGist } from './_utils/gist.js';
-	import debounce from './_utils/debounce.js';
-	import * as load from './_utils/load.js';
-	import { get } from './_utils/get.js';
-	import store from '../_store.js';
-
-	function loadCodemirror() {
-		return import(/* webpackChunkName: "codemirror" */ './_codemirror.js').then(({ default: CodeMirror }) => {
-			return (window.CodeMirror = CodeMirror);
-		});
-	}
-
-	const versionMatch = typeof window !== 'undefined' && /version=([^&]+)/.exec(window.location.search);
-	let dataQuery;
-
-	function loadSvelte() {
-		const version = versionMatch ? versionMatch[1] : 'latest';
-		if (version === 'local') return import(/* webpackChunkName: "svelte" */ 'svelte');
-		return load.script(`https://unpkg.com/svelte@${version}/compiler/svelte.js`).then(() => window.svelte);
-	}
+	import CodeMirror from './_components/CodeMirror.html';
+	import ModuleEditor from './_components/ModuleEditor.html';
+	import Viewer from './_components/Viewer.html';
+	import ComponentSelector from './_components/ComponentSelector.html';
+	import AppControls from './_components/AppControls.html';
+	import SplitPane from './_components/SplitPane.html';
+	import examples from './_examples.json';
 
 	function tryParseData(encoded) {
 		try {
@@ -451,90 +206,51 @@
 		}
 	}
 
-	function compile(component) {
-		const warnings = [];
-
-		if (component.type === 'js') return { code: component.source, map: null, warnings };
-
-		const { code, map } = svelte.compile(component.source || '', {
-			cascade: false,
-			name: component.name,
-			filename: component.name + '.html',
-			dev: true,
-			onwarn: warning => {
-				warnings.push(warning);
-			}
-		});
-
-		return { code, map, warnings };
-	}
-
 	export default {
-		store: () => store,
-
-		data() {
-			const search = typeof window !== 'undefined' ? window.location.search : '';
-			const gistMatch = /gist=([^&]+)$/.exec(search);
-			const dataMatch = /data=([^&]+)$/.exec(search);
+		async preload({ query }) {
+			if (!process.browser) return null;
 
 			let gist = null;
 			let components = [];
-			let selectedExample = null;
+			let selectedComponent;
 			let data = {};
+			let name = 'loading...';
 
-			if (dataMatch) {
-				dataQuery = dataMatch[1]; // so we don't lose it from the URL later
-				const parsed = tryParseData(dataMatch[1]);
+			if (query.data) {
+				const parsed = tryParseData(query.data);
 
-				if (parsed.source && !parsed.components) {
-					// legacy
-					components = [
-						{
-							name: 'App',
-							type: 'html',
-							entry: true,
-							source: parsed.source
-						}
-					];
-				} else {
-					components = parsed.components;
-					components.forEach(component => {
-						if (!component.type) component.type = 'html';
-					});
-				}
+				components = parsed.components;
+				components.forEach(component => {
+					if (!component.type) component.type = 'html';
+				});
 
 				data = parsed.data;
+				name = 'Example from guide';
 			}
-
-			let selectedComponent = null;
 
 			if (components && components.length > 0) {
 				selectedComponent = components[0];
-			} else if (gistMatch) {
-				gist = gistMatch[1];
 			}
 
 			return {
-				horizontalDividerPos: 50,
-				verticalDividerPos: 50,
-				showGenerated: false,
+				examples,
 
-				// TODO remove this post-https://github.com/sveltejs/svelte/issues/424
-				false: false,
-				true: true,
-				null: null,
+				version: query.version || 'latest',
 
-				selectedExample: null,
-				selectedComponent,
-
-				gist,
 				components,
+				selectedComponent,
 				data,
-				json: JSON.stringify(data, null, '  '),
+				name,
+				json: JSON.stringify(data, null, '  ')
+			};
+		},
 
-				loadedCodemirror: false,
-				editorRotation: 0,
-				flip: ''
+		data() {
+			return {
+				name: 'loading...',
+				examples,
+				components: [],
+				gist: null
 			};
 		},
 
@@ -545,8 +261,17 @@
 
 				return runtimeError.loc;
 			},
-			githubGist(gist) {
-				return 'https://gist.github.com/anonymous/' + gist;
+
+			url: (version, gist, query) => {
+				const params = [];
+				if (version !== 'latest') params.push(`version=${version}`);
+				if (gist) params.push(`gist=${gist.id}`);
+				else if (query.gist) params.push(`gist=${query.gist}`);
+				else if (query.data) params.push(`data=${query.data}`);
+
+				return params.length > 0
+					? `repl?${params.join('&')}`
+					: 'repl';
 			}
 		},
 
@@ -605,236 +330,16 @@
 				});
 			},
 
-			flip() {
-				if (window.innerWidth < 768) {
-					this.flipMobile();
-					return;
-				}
-
-				if (this.flipping) return;
-				this.flipping = true;
-
-				const wrapper = this.refs.editorWrapper;
-				const showGenerated = this.get('showGenerated');
-
-				const handleFlipOutEnd = () => {
-					wrapper.removeEventListener('animationend', handleFlipOutEnd);
-					wrapper.removeEventListener('webkitAnimationEnd', handleFlipOutEnd);
-
-					this.set({
-						showGenerated: !showGenerated,
-						flip: 'flip-pause'
-					});
-
-					const handleFlipInEnd = () => {
-						wrapper.removeEventListener('animationend', handleFlipInEnd);
-						wrapper.removeEventListener('webkitAnimationEnd', handleFlipInEnd);
-
-						this.flipping = false;
-
-						this.set({ flip: '' });
-					}
-
-					wrapper.addEventListener('animationend', handleFlipInEnd);
-					wrapper.addEventListener('webkitAnimationEnd', handleFlipInEnd);
-
-					setTimeout(() => {
-						this.set({ flip: 'flip-in' });
-					});
-				}
-
-				wrapper.addEventListener('animationend', handleFlipOutEnd);
-				wrapper.addEventListener('webkitAnimationEnd', handleFlipOutEnd);
-
-				this.set({ flip: 'flip-out' });
-			},
-
-			flipMobile() {
-				const bcr1 = this.refs.editorWrapper.getBoundingClientRect();
-				this.set({
-					showGenerated: !this.get('showGenerated')
+			resizePanes(panes) {
+				panes.forEach(pane => {
+					this.refs[pane].resize();
 				});
-
-				// if top is visible, keep it that way
-				if (bcr1.top > 0) return;
-
-				const bcr2 = this.refs.editorWrapper.getBoundingClientRect();
-				const d = bcr2.bottom - bcr1.bottom;
-				window.scrollTo(0, window.scrollY + d);
-			},
-
-			setHorizontal(event) {
-				const { top, bottom } = this.refs.right.getBoundingClientRect();
-
-				this.set({
-					horizontalDividerPos: 100 * (event.clientY - top) / (bottom - top)
-				});
-
-				this.refs.data.resize();
-			},
-
-			setVertical(event) {
-				this.set({
-					verticalDividerPos: 100 * event.clientX / window.innerWidth
-				});
-
-				this.refs.editor.resize();
-				this.refs.data.resize();
 			},
 
 			updateData({ key, value }) {
 				const data = JSON.parse(this.get('json'));
 				data[key] = value;
 				this.set({ json: JSON.stringify(data, null, '  ') });
-			},
-
-			save() {
-				this.set({ saving: true });
-
-				saveComponentAsGist(this.get('components'), this.get('json')).then(id => {
-					this.set({
-						saving: false,
-						gist: id,
-						selectedExample: null
-					});
-					this.updateUrl();
-				});
-			},
-
-			updateBundle() {
-				// TODO do this in a worker
-				const components = this.get('components');
-
-				if (!components || !components.length) return;
-				if (components.some(c => !c.compiled)) return;
-
-				console.clear();
-				console.log(`running Svelte compiler version %c${svelte.VERSION}`, 'font-weight: bold');
-
-				if (this.bundlePromise) this.bundlePromise.cancel();
-
-				const lookup = {};
-				let warningCount = 0;
-				for (let i = 0; i < components.length; i += 1) {
-					const component = components[i];
-					const w = component.compiled.warnings.length;
-					warningCount += w;
-
-					if (w > 0) {
-						console.group(`${component.name}.${component.type}: ${w} ${w === 1 ? 'warning' : 'warnings'}`);
-						component.compiled.warnings.forEach(warning => {
-							console.warn(warning.message);
-							console.log(warning.frame);
-						});
-						console.groupEnd();
-					}
-
-					const path = `./${component.name}.${component.type}`;
-
-					if (path in lookup) {
-						this.set({
-							bundleError: new Error(`Multiple ${component.name}.${component.type} components`)
-						});
-						return;
-					}
-
-					lookup[path] = {
-						code: component.compiled.code,
-						map: component.compiled.map
-					};
-				}
-
-				this.set({ warningCount });
-
-				let cancelled = false;
-
-				let uid = 1;
-				const importMap = new Map();
-				const input = './App.html';
-
-				this.bundlePromise = rollup.rollup({
-					input,
-					external: id => {
-						return id[0] !== '.';
-					},
-					plugins: [{
-						resolveId(importee, importer) {
-							if (importee[0] === '.') return importee;
-						},
-						load(id) {
-							if (id in lookup) return lookup[id];
-							if (id[0] === '.') {
-								throw new Error(`file does not exist`);
-							}
-
-							return null;
-						}
-					}],
-					onwarn(warning) {
-						if (warning.code === 'MISSING_GLOBAL_NAME') return;
-						console.warn(warning.message);
-					}
-				}).then(bundle => {
-					if (cancelled) return;
-
-					return bundle.generate({
-						format: 'iife',
-						name: 'SvelteComponent',
-						globals: id => {
-							const name = `import_${uid++}`;
-							importMap.set(id, name);
-							return name;
-						},
-						sourcemap: true
-					}).then(({ code, map }) => {
-						this.set({
-							bundle: {
-								code,
-								map,
-								imports: bundle.imports,
-								importMap
-							},
-							bundleError: null,
-							runtimeError: null
-						});
-					});
-				}).catch(err => {
-					console.error(err.stack);
-					this.set({
-						bundleError: err
-					});
-				});
-
-				this.bundlePromise.cancel = () => {
-					cancelled = true;
-				};
-			},
-
-			updateUrl() {
-				if (typeof history === 'undefined') return;
-
-				const gist = this.get('gist');
-				const selectedExample = this.get('selectedExample');
-
-				const params = {};
-				if (typeof svelte !== 'undefined') {
-					params.version = versionMatch && versionMatch[1] === 'local' ? 'local' : svelte.VERSION;
-				} else if (versionMatch) {
-					params.version = versionMatch[1];
-				}
-
-				if (gist) {
-					params.gist = gist;
-				} else if (selectedExample) {
-					params.example = selectedExample.id;
-				} else if (dataQuery) {
-					params.data = dataQuery;
-				}
-
-				const queryString = Object.keys(params).map(key => `${key}=${params[key]}`).join('&');
-				const url = queryString ? `/repl?${queryString}` : '/repl';
-
-				history.replaceState({}, 'x', url);
 			},
 
 			navigate(filename) {
@@ -848,232 +353,122 @@
 				});
 			},
 
-			download() {
-				this.set({
-					downloading: true
-				});
-
-				Promise.all([
-					import(/* webpackChunkName: "jszip" */ 'jszip'),
-					import(/* webpackChunkName: "file-saver" */'file-saver')
-				]).then(([{ default: JSZip }, { default: FileSaver }]) => {
-					const zip = new JSZip();
-
-					get('/svelte-app.zip', { responseType: 'arraybuffer' })
-						.then(JSZip.loadAsync)
-						.then(zip => {
-							const { bundle, components, data } = this.get();
-
-							// remove any dotfiles that snuck in
-							Object.keys(zip.files).forEach(key => {
-								const file = key.split('/').pop();
-								if (file[0] === '.') zip.remove(key);
-							});
-
-							// add component files
-							components.forEach(component => {
-								zip.file(`src/${component.name}.${component.type}`, component.source);
-							});
-
-							// add entry point
-							zip.file(`src/main.js`, `import App from './App.html';
-
-var app = new App({
-	target: document.body,
-	data: ${JSON.stringify(data, null, '\t').replace(/\n/g, '\n\t')}
-});
-
-export default app;` );
-
-							const go = () => {
-								zip.generateAsync({ type: 'blob' })
-									.then(blob => {
-										this.set({
-											downloading: false
-										});
-										FileSaver.saveAs(blob, 'svelte-app.zip');
-									});
-							};
-
-							if (bundle.imports.length > 0) {
-								zip.file('package.json')
-									.async('string')
-									.then(JSON.parse)
-									.then(pkg => {
-										const deps = {};
-										bundle.imports.forEach(mod => {
-											const match = /^[^@\/]+/.exec(mod);
-											deps[match[0]] = 'latest';
-										});
-										pkg.dependencies = deps;
-
-										zip.file('package.json', JSON.stringify(pkg, null, '  '));
-									})
-									.then(go);
-							} else {
-								go();
-							}
-						});
-				});
-			},
-
 			findExample(id) {
-				const { example_contents } = this.get();
+				const { examples } = this.get();
 
 				id = decodeURIComponent(id);
 
-				for (let i = 0; i < example_contents.length; i += 1) {
-					const group = example_contents[i];
+				for (let i = 0; i < examples.length; i += 1) {
+					const group = examples[i];
 					for (let j = 0; j < group.examples.length; j += 1) {
-						const example = group.examples[j];
-						if (example.id === id) return example;
+						const info = group.examples[j];
+						if (info.slug === id) return info;
 					}
 				}
-			}
-		},
+			},
 
-		preload() {
-			return this.fetch(`api/examples`).then(r => r.json()).then(example_contents => {
-				return { example_contents };
-			});
+			selectExample(slug) {
+				const example = this.findExample(slug);
+				fetch(`gist/${example.gist}`).then(r => r.json()).then(gist => {
+					this.set({ gist });
+				});
+			},
+
+			setGist(gist) {
+
+			}
 		},
 
 		oncreate() {
-			this.uid = 0;
-			this.flipping = false;
-			this.bundlePromise = null;
+			import('workerize-loader!./_worker.js').then(async ({ default: worker }) => {
+				const instance = worker();
+				let { version } = this.get();
 
-			loadCodemirror().then(() => {
-				this.set({ loadedCodemirror: true });
-			});
+				version = await instance.init(version);
+				this.set({ version });
 
-			let exampleComponents;
-			let lastSelectedExample;
+				const updateBundle = async () => {
+					const { components } = this.get();
 
-			const { gist, components } = this.get();
-			if (!gist && components.length === 0) {
-				const exampleMatch = /example=([^&]+)$/.exec(window.location.search);
-				const selectedExample = this.findExample(exampleMatch ? exampleMatch[1] : 'hello-world');
-				this.set({ selectedExample });
-			}
+					const { bundle, warningCount, error } = await instance.compile(components);
 
-			this.observe('selectedExample', example => {
-				if (!example) return;
-				const id = example.id;
-
-				lastSelectedExample = id;
-				fetch(`api/examples/${id}`).then(r => r.json()).then(example => {
-					exampleComponents = stringifyComponents(example.components);
-
-					if (window.svelte) {
-						example.components.forEach(component => {
-							component.compiled = compile(component);
+					if (error) {
+						// TODO differentiate between bundleError and sourceError
+						this.set({
+							bundle: null,
+							bundleError: error,
+							runtimeError: null,
+							warningCount,
+							compilerReady: true
+						});
+					} else {
+						this.set({
+							bundle,
+							bundleError: null,
+							runtimeError: null,
+							warningCount,
+							compilerReady: true
 						});
 					}
+				};
 
-					this.set({
-						components: example.components,
-						selectedComponent: example.components[0],
-						json: JSON.stringify(example.data, null, '  ')
-					});
-
-					this.updateBundle();
+				this.observe('components', updateBundle);
+				this.observe('selectedComponent', (n, o) => {
+					// slightly counterintuitively, we only want to recompile if
+					// this is the *same* component — not if we've just selected
+					// a different one
+					if (n === o) updateBundle();
 				});
-
-				this.set({ gist: null });
-				this.updateUrl();
 			});
 
-			if (!this.get('gist')) {
-				this.set({ json: JSON.stringify(this.get('data'), null, '  ') });
+			this.uid = 0;
+
+			const { query, components, version } = this.get();
+
+			if (query.gist) {
+				fetch(`gist/${query.gist}`).then(r => r.json()).then(gist => {
+					this.set({ gist });
+				});
+			} else if (components.length === 0) {
+				this.selectExample(query.example || 'hello-world');
 			}
 
 			this.observe('gist', gist => {
 				if (!gist) return;
 
-				if (this.promise) this.promise.cancel();
-				this.promise = getComponentFromGist(gist);
+				let json;
+				const components = Object.keys(gist.files)
+					.map(file => {
+						const dot = file.lastIndexOf('.');
+						if (!~dot) return;
 
-				this.promise
-					.then(({ components, json }) => {
-						if (window.svelte) {
-							components.forEach(component => {
-								try {
-									component.compiled = compile(component);
-								} catch (err) {
-									console.error(err.stack);
+						const source = gist.files[file].content;
 
-									this.set({
-										sourceError: err,
-										sourceErrorLoc: err.loc
-									});
-								}
-							});
-						}
+						// while we're here...
+						if (file === 'data.json') json = source;
 
-						this.set({ components, json, selectedComponent: components[0] });
+						return {
+							name: file.slice(0, dot),
+							type: file.slice(dot + 1),
+							source
+						};
 					})
-					.catch(err => {
-						alert('Error loading from gist.github.com – please try again later!');
-						console.error(err.stack);
+					.filter(x => x.type === 'html' || x.type === 'js')
+					.sort((a, b) => {
+						if (a.name === 'App' && a.type === 'html') return -1;
+						if (b.name === 'App' && b.type === 'html') return -1;
+
+						if (a.type !== b.type) return a.type === 'html' ? -1 : 1;
+
+						return a.name < b.name ? -1 : 1
 					});
 
-				this.set({ selectedExample: null });
-				this.updateUrl();
-			});
-
-			loadSvelte().then(svelte => {
-				window.svelte = svelte;
-
-				this.set({ loadedSvelte: true });
-
-				this.get('components').forEach(component => {
-					try {
-						component.compiled = compile(component);
-					} catch (err) {
-						console.error(err.stack);
-
-						this.set({
-							sourceError: err,
-							sourceErrorLoc: err.loc
-						});
-					}
+				this.set({
+					name: gist.description,
+					selectedComponent: components[0],
+					components,
+					json
 				});
-
-				this.observe('selectedComponent', (selectedComponent, previousComponent) => {
-					if (!selectedComponent) return;
-					if (previousComponent && selectedComponent !== previousComponent) return;
-
-					// if component has been edited, unset selectedExample
-					if (stringifyComponents(this.get('components')) !== exampleComponents) {
-						this.set({ selectedExample: null });
-					}
-
-					try {
-						selectedComponent.compiled = compile(selectedComponent);
-						this.set({ selectedComponent, sourceError: null, sourceErrorLoc: null });
-
-						if (this.get('loadedRollup')) {
-							this.updateBundle();
-						}
-					} catch (err) {
-						console.error(err.stack);
-
-						this.set({
-							sourceError: err,
-							sourceErrorLoc: err.loc
-						});
-					}
-				});
-
-				this.updateUrl();
-			});
-
-			import(/* webpackChunkName: "rollup" */ 'rollup/dist/rollup.browser.js').then(rollup => {
-				this.set({ loadedRollup: true });
-				window.rollup = rollup;
-
-				this.updateBundle();
 			});
 
 			this.observe('json', json => {
@@ -1100,44 +495,20 @@ export default app;` );
 					}
 				}
 			});
-		},
 
-		events: {
-			drag(node, callback) {
-				const mousedown = event => {
-					if (event.which !== 1) return;
-
-					event.preventDefault();
-
-					this.set({ dragging: true });
-
-					const onmouseup = () => {
-						this.set({ dragging: false });
-
-						window.removeEventListener('mousemove', callback, false);
-						window.removeEventListener('mouseup', onmouseup, false);
-					};
-
-					window.addEventListener('mousemove', callback, false);
-					window.addEventListener('mouseup', onmouseup, false);
-				}
-
-				node.addEventListener('mousedown', mousedown, false);
-
-				return {
-					teardown() {
-						node.removeEventListener('mousedown', onmousedown, false);
-					}
-				};
-			}
+			this.observe('url', url => {
+				history.replaceState({}, 'x', url);
+			});
 		},
 
 		components: {
 			Layout,
+			ModuleEditor,
 			CodeMirror,
 			Viewer,
 			ComponentSelector,
-			ExampleSelector
+			AppControls,
+			SplitPane
 		}
 	};
 

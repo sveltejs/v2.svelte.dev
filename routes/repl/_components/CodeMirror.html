@@ -1,0 +1,205 @@
+{{#await codemirrorPromise}}
+	<p class='loading'>loading editor...</p>
+{{then _}}
+	<div class='codemirror-container'>
+		<textarea tabindex='2' ref:editor></textarea>
+
+		{{#if error}}
+			<p class='error message'>
+				{{#if error.loc}}
+					<strong>
+						{{#if error.filename}}
+							<span class='filename' on:click='fire("navigate", error.filename)'>{{error.filename}}</span>
+						{{/if}}
+
+						({{error.loc.line}}:{{error.loc.column}})
+					</strong>
+				{{/if}}
+
+				{{error.message}}
+			</p>
+		{{elseif warningCount > 0}}
+			<p class='warning message'>
+				Compiled, but with {{warningCount}} {{warningCount === 1 ? 'warning' : 'warnings'}} — check the console for details
+			</p>
+		{{/if}}
+	</div>
+{{catch err}}
+	<p class='error'>error loading CodeMirror</p>
+{{/await}}
+
+<style>
+	.codemirror-container {
+		width: 100%;
+		border-top: 1px solid #ccc;
+		border-bottom: 1px solid #ccc;
+		margin: 0 0 1em 0;
+	}
+
+	.codemirror-container :global(.CodeMirror) {
+		border-radius: 3px;
+		font-family: Inconsolata, monospace;
+		font-size: 16px;
+		line-height: 1.2;
+		font-weight: 400;
+		color: #333;
+		height: auto;
+		min-height: 60px;
+	}
+
+	@media (min-width: 768px) {
+		.codemirror-container {
+			height: 100%;
+			border: none;
+		}
+
+		.codemirror-container :global(.CodeMirror) {
+			height: 100%;
+		}
+	}
+
+	.codemirror-container :global(.CodeMirror-gutters) {
+		border-right: 1px solid #eee;
+	}
+
+	textarea {
+		width: 100%;
+		border: none;
+	}
+
+	.codemirror-container .message {
+		bottom: 1em;
+		left: 1em;
+		position: absolute;
+		z-index: 20;
+	}
+
+	.codemirror-container :global(.error-loc) {
+		position: relative;
+		border-bottom: 2px solid rgb(200,0,0);
+	}
+
+	.codemirror-container :global(.error-line) {
+		background-color: rgba(200,0,0,0.05);
+	}
+
+	.loading, .error {
+		text-align: center;
+		color: #999;
+		font-weight: 300;
+		margin: 2em 0 0 0;
+	}
+</style>
+
+<script>
+	let codemirrorPromise;
+
+	function loadCodemirror() {
+		return import(/* webpackChunkName: "codemirror" */ './_codemirror.js')
+			.then(m => m.default);
+	}
+
+	export default {
+		data() {
+			return {
+				codemirrorPromise: process.browser
+					? codemirrorPromise || (codemirrorPromise = loadCodemirror())
+					: null
+			};
+		},
+
+		oncreate() {
+			codemirrorPromise.then(CodeMirror => {
+				this.updating = false;
+
+				this.observe('mode', () => {
+					this.createEditor(CodeMirror);
+				});
+
+				this.observe('code', code => {
+					if (!this.updating && code != null) {
+						this.updating = true;
+						this.editor.setValue(code);
+						this.updating = false;
+					}
+				});
+
+				let marker;
+				let line;
+				this.observe('errorLoc', loc => {
+					if (marker) marker.clear();
+
+					if (loc == null) {
+						this.set({ errorLine: null });
+					} else {
+						const line = loc.line - 1;
+						const ch = loc.column;
+
+						marker = this.editor.markText({ line, ch }, { line, ch: ch + 1 }, {
+							className: 'error-loc'
+						});
+
+						this.set({ errorLine: line });
+					}
+				});
+
+				this.observe('errorLine', (line, previousLine) => {
+					if (previousLine != null) this.editor.removeLineClass(previousLine, 'wrap', 'error-line');
+					if (line != null) this.editor.addLineClass(line, 'wrap', 'error-line');
+				});
+
+				this.on('destroy', () => {
+					this.editor.toTextArea();
+				});
+
+				this.editor.refresh();
+			});
+		},
+
+		methods: {
+			createEditor(CodeMirror) {
+				if (this.editor) {
+					this.editor.toTextArea();
+				}
+
+				const { mode, code, readonly } = this.get();
+
+				const modes = {
+					json: {
+						name: 'javascript',
+						json: true
+					},
+					handlebars: {
+						name: 'handlebars',
+						base: 'text/html'
+					}
+				};
+
+				this.editor = CodeMirror.fromTextArea(this.refs.editor, {
+					lineNumbers: true,
+					lineWrapping: true,
+					indentWithTabs: true,
+					indentUnit: 2,
+					tabSize: 2,
+					value: code,
+					mode: modes[mode] || {
+						name: mode
+					},
+					readOnly: readonly
+				});
+
+				this.editor.on('change', instance => {
+					if (!this.updating) {
+						this.updating = true;
+						this.set({ code: instance.getValue() });
+						this.updating = false;
+					}
+				});
+			},
+
+			resize() {
+				this.editor.refresh();
+			}
+		}
+	};
+</script>
