@@ -30,6 +30,7 @@
 					<ModuleEditor
 						ref:editor
 						bind:selectedComponent
+						:compiled
 						error='{{sourceError}}'
 						errorLoc='{{sourceErrorLoc || runtimeErrorLoc}}'
 						:warningCount
@@ -390,7 +391,7 @@
 				const updateBundle = async () => {
 					const { components } = this.get();
 
-					const { bundle, warningCount, error } = await instance.compile(components);
+					const { bundle, warningCount, error } = await instance.bundle(components);
 
 					if (error) {
 						// TODO differentiate between bundleError and sourceError
@@ -413,11 +414,19 @@
 				};
 
 				this.observe('components', updateBundle);
-				this.observe('selectedComponent', (n, o) => {
+				this.observe('selectedComponent', async (n, o) => {
 					// slightly counterintuitively, we only want to recompile if
 					// this is the *same* component — not if we've just selected
 					// a different one
 					if (n === o) updateBundle();
+
+					if (n) {
+						const compiled = n.type === 'html'
+							? await instance.compile(n)
+							: n.source;
+
+						this.set({ compiled });
+					}
 				});
 			});
 

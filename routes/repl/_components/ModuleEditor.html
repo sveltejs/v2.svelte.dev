@@ -1,7 +1,7 @@
 <div ref:editorWrapper class='editor-wrapper {{flip}}'>
 	{{#if selectedComponent}}
-		{{#if showGenerated && selectedComponent.compiled}}
-			<CodeMirror ref:cm mode='javascript' code='{{selectedComponent.compiled.code}}' readonly/>
+		{{#if showGenerated}}
+			<CodeMirror ref:cm mode='javascript' code='{{compiled}}' readonly/>
 		{{else}}
 			<CodeMirror
 				ref:cm
