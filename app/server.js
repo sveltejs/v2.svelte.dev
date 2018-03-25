@@ -67,13 +67,12 @@ express()
 	})
 
 	.get('/auth/callback', passport.authenticate('github', { failureRedirect: '/auth/error' }), (req, res) => {
-		const user = req.session.passport && req.session.passport.user;
-		if (user) delete user.token;
+		const { id, username, displayName, photo } = req.session.passport && req.session.passport.user;
 
 		res.end(`
 			<script>
 				window.parent.postMessage({
-					user: ${devalue(user)}
+					user: ${devalue({ id, username, displayName, photo })}
 				}, window.location.origin);
 			</script>
 		`);
