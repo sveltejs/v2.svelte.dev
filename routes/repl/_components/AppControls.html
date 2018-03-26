@@ -100,7 +100,7 @@
 					window.removeEventListener('message', handleLogin);
 				};
 
-				loginWindow.addEventListener('message', handleLogin);
+				window.addEventListener('message', handleLogin);
 			},
 
 			async fork() {

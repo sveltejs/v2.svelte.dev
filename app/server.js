@@ -72,7 +72,7 @@ express()
 
 		res.end(`
 			<script>
-				window.parent.postMessage({
+				window.opener.postMessage({
 					user: ${devalue({ id, username, displayName, photo })}
 				}, window.location.origin);
 			</script>
