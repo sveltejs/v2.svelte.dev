@@ -25,7 +25,7 @@ let cache;
 let currentToken;
 
 export async function bundle(components) {
-	// console.clear();
+	console.clear();
 	console.log(`running Svelte compiler version %c${svelte.VERSION}`, 'font-weight: bold');
 
 	const token = currentToken = {};
@@ -117,6 +117,7 @@ export async function bundle(components) {
 		};
 	} catch (err) {
 		const e = error || err;
+		delete e.toString;
 
 		if (erroredComponent && e.loc) {
 			const { line, column } = e.loc;
@@ -140,13 +141,20 @@ export async function bundle(components) {
 }
 
 export function compile(component) {
-	const { code } = svelte.compile(component.source, {
-		// TODO make options configurable
-		cascade: false,
-		name: component.name,
-		filename: component.name + '.html',
-		dev: true
-	});
+	try {
+		const { code } = svelte.compile(component.source, {
+			// TODO make options configurable
+			cascade: false,
+			name: component.name,
+			filename: component.name + '.html',
+			dev: true
+		});
 
-	return code;
+		return code;
+	} catch (err) {
+		let result = `/* Error compiling component\n\n${err.message}`;
+		if (err.frame) result += `\n${err.frame}`;
+		result += `\n\n*/`;
+		return result;
+	}
 }
