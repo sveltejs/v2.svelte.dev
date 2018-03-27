@@ -70,6 +70,7 @@ express()
 	.get('/auth/callback', passport.authenticate('github', { failureRedirect: '/auth/error' }), (req, res) => {
 		const { id, username, displayName, photo } = req.session.passport && req.session.passport.user;
 
+		res.set({ 'Content-Type': 'text/html; charset=utf-8' });
 		res.end(`
 			<script>
 				window.opener.postMessage({
