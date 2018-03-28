@@ -194,6 +194,25 @@ Also, if you wish, you can perform one level of array destructuring on the eleme
 }
 ```
 
+If you want to iterate over an object you can use `Object.entries(object)`  which returns the object's properties as 
+`[key, value]` pairs:
+
+```html
+<h1>Cats and Dogs</h1>
+
+{{#each Object.entries(animals) as [animal, names]}}
+    <br/> {{animal}}: {{names.join(" and ")}}
+{{/each}}
+```
+
+```hidden-data
+{
+  "animals": {
+	"Cats": [ "Buzz", "Stella" ],
+  	"Dogs": [ "Hector", "Victoria" ]
+	}
+}
+```
 
 ### Await blocks
 
