@@ -10,7 +10,7 @@
     "stage": "now",
     "deploy": "npm run stage && now alias",
     "predeploy": "git-branch-is master && git diff --exit-code && npm run sapper",
-    "deploy:ci": "git-branch-is master && now --token $NOW_TOKEN && now alias --token $NOW_TOKEN",
+    "deploy:ci": "now --token $NOW_TOKEN && now alias --token $NOW_TOKEN",
     "prestage": "npm run update_template && npm run sapper",
     "predeploy:ci": "npm run prestage",
     "lint": "eslint app routes"
