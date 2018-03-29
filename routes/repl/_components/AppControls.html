@@ -151,7 +151,7 @@
 					});
 
 					if (!gist.files['data.json'] || json !== gist.files['data.json'].content) {
-						files['data.json'] = json;
+						files['data.json'] = { content: json };
 					}
 
 					const r = await fetch(`gist/${gist.id}`, {
