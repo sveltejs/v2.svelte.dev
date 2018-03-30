@@ -752,7 +752,7 @@ Soon, we'll learn about [event handlers](guide#event-handlers) – if you want, 
 
 Most of the time you can make do with the standard DOM events (the sort you'd add via `element.addEventListener`, such as `click`) but sometimes you might need custom events to handle gestures, for example.
 
-Custom events are just functions that take a node and a callback as their argument, and return an object with a `teardown` method that gets called when the element is removed from the page:
+Custom events are just functions that take a node and a callback as their argument, and return an object with a `destroy` method that gets called when the element is removed from the page:
 
 ```html
 <button on:longpress='set({ done: true })'>click and hold</button>
@@ -779,7 +779,7 @@ Custom events are just functions that take a node and a callback as their argume
 				node.addEventListener('mousedown', onmousedown, false);
 
 				return {
-					teardown() {
+					destroy() {
 						node.removeEventListener('mousedown', onmousedown, false);
 					}
 				};
