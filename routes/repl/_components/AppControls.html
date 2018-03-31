@@ -150,9 +150,12 @@
 						}
 					});
 
-					if (!gist.files['data.json'] || json !== gist.files['data.json'].content) {
-						files['data.json'] = { content: json };
+					if (!gist.files['data.json5'] || json !== gist.files['data.json5'].content) {
+						files['data.json5'] = { content: json };
 					}
+
+					// data.json has been deprecated in favour of data.json5
+					if (gist.files['data.json']) gist.files['data.json'] = null;
 
 					const r = await fetch(`gist/${gist.id}`, {
 						method: 'PATCH',

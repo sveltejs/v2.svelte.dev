@@ -31,7 +31,7 @@ export async function post(req, res) {
 		});
 
 		if (json) {
-			files['data.json'] = { content: json };
+			files['data.json5'] = { content: json };
 		}
 
 		const r = await fetch(`https://api.github.com/gists`, {

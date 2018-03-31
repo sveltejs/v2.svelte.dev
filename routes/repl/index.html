@@ -51,7 +51,7 @@
 						</div>
 
 						<div class=pane slot=b >
-							<h2 class='show-if-mobile'>data.json</h2>
+							<h2 class='show-if-mobile'>data.json5</h2>
 
 							<CodeMirror ref:data mode='javascript' bind:code='json' error='{{dataError}}' errorLoc='{{dataErrorLoc}}'/>
 						</div>
@@ -187,6 +187,7 @@
 
 <script>
 	import { locate } from 'locate-character';
+	import * as fleece from 'golden-fleece';
 	import Layout from '../_components/Layout.html';
 	import CodeMirror from './_components/CodeMirror.html';
 	import ModuleEditor from './_components/ModuleEditor.html';
@@ -339,9 +340,12 @@
 			},
 
 			updateData({ key, value }) {
-				const data = JSON.parse(this.get('json'));
+				const str = this.get('json');
+				const data = fleece.evaluate(str);
 				data[key] = value;
-				this.set({ json: JSON.stringify(data, null, '  ') });
+
+				const patched = fleece.patch(str, data);
+				this.set({ json: patched });
 			},
 
 			navigate(filename) {
@@ -451,7 +455,7 @@
 						const source = gist.files[file].content;
 
 						// while we're here...
-						if (file === 'data.json') json = source;
+						if (file === 'data.json' || file === 'data.json5') json = source;
 
 						return {
 							name: file.slice(0, dot),
@@ -480,7 +484,7 @@
 			this.observe('json', json => {
 				try {
 					this.set({
-						data: JSON.parse(json),
+						data: fleece.evaluate(json),
 						dataError: null,
 						dataErrorLoc: null
 					});
