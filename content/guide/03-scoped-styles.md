@@ -81,3 +81,17 @@ If you're using the recommended `cascade: false` option, Svelte will identify an
 ### Special selectors
 
 If you have a [ref](guide#refs) on an element, you can use this as a CSS selector. An element with `ref:foo` can be styled with `ref:foo { color: whatever; }`. The `ref:*` selector has the same specificity as a class or attribute selector.
+
+
+```html
+<div ref:foo>
+	yeah!
+</div>
+
+<style>
+	ref:foo {
+		color: magenta;
+		font-size: 5em;
+	}
+</style>
+```
