@@ -179,6 +179,8 @@ Refs are a convenient way to store a reference to particular DOM nodes or compon
 
 > Since only one element or component can occupy a given `ref`, don't use them in `{{#each ...}}` blocks. It's fine to use them in `{{#if ...}}` blocks however.
 
+Note that you can use refs in your `<style>` blocks — see [Special selectors](#special-selectors).
+
 
 ### Transitions
 
