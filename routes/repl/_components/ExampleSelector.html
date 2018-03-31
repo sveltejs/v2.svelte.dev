@@ -13,7 +13,7 @@
 
 	<div class='visible'>
 		<span class='widther'>{{name}}</span>
-		<input bind:value=name on:focus='this.select()' >
+		<input bind:value=name on:focus='this.select()' on:enter='this.blur()' >
 	</div>
 </div>
 
@@ -77,3 +77,13 @@
 		background: none;
 	}
 </style>
+
+<script>
+	import { enter } from './events.js';
+
+	export default {
+		events: {
+			enter
+		}
+	};
+</script>
