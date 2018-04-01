@@ -724,6 +724,8 @@ In addition to the [built-in methods](guide#component-api), you can add methods 
 
 ```html
 <!-- { title: 'Custom methods' } -->
+<p>Try calling <code>app.say('hello!')</code> from the console</p>
+
 <script>
 	export default {
 		methods: {

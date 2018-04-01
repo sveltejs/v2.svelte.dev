@@ -26,7 +26,7 @@ Your component template can have a `<style>` tag, like so:
 
 ### How it works
 
-Open the example above in the REPL and inspect the element to see what has happened – Svelte has added a `svelte-[uniqueid]` attribute to the element, and transformed the CSS selector accordingly. Since no other element on the page can share that selector, anything else on the page with `class="foo"` will be unaffected by our styles.
+Open the example above in the REPL and inspect the element to see what has happened – Svelte has added a `svelte-[uniqueid]` class to the element, and transformed the CSS selector accordingly. Since no other element on the page can share that selector, anything else on the page with `class="foo"` will be unaffected by our styles.
 
 This is vastly simpler than achieving the same effect via [Shadow DOM](http://caniuse.com/#search=shadow%20dom) and works everywhere without polyfills.
 

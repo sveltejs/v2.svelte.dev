@@ -12,8 +12,7 @@ Svelte components can be used as custom elements by doing the following:
 2. Specifying `customElement: true` in the compiler configuration
 
 ```html
-<!-- { repl: false } -->
-<!-- HelloWorld.html -->
+<!-- { filename: 'HelloWorld.html', repl: false } -->
 <h1>Hello {{name}}!</h1>
 
 <script>

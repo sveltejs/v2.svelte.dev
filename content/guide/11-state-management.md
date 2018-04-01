@@ -61,7 +61,7 @@ Let's adapt our [very first example](guide#understanding-svelte-components):
 ```
 
 ```js
-// main.js
+/* { filename: 'main.js' } */
 import App from './App.html';
 import { Store } from 'svelte/store.js';
 

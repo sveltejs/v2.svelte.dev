@@ -5,6 +5,7 @@ title: Component API
 As we saw above, you create a component instance with the `new` keyword:
 
 ```js
+/* { filename: 'main.js' } */
 import MyComponent from './MyComponent.html';
 
 const component = new MyComponent({
