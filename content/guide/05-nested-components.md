@@ -4,7 +4,8 @@ title: Nested components
 
 As well as containing elements (and `if` blocks and `each` blocks), Svelte components can contain *other* Svelte components.
 
-```html-no-repl
+```html
+<!-- { title: 'Nested components' } -->
 <div class='widget-container'>
 	<Widget foo bar='static' baz='{{dynamic}}'/>
 </div>
@@ -26,6 +27,13 @@ As well as containing elements (and `if` blocks and `each` blocks), Svelte compo
 </script>
 ```
 
+```html
+<!-- { filename: 'Widget.html', hidden: true } -->
+<p>foo: {{foo}}</p>
+<p>bar: {{bar}}</p>
+<p>baz: {{baz}}</p>
+```
+
 The example above is equivalent to the following...
 
 ```js
@@ -45,13 +53,15 @@ const widget = new Widget({
 
 In the case where the value in the child component has the same name as that in the parent component, there a shorter way to write this. Instead of
 
-```html-no-repl
+```html
+<!-- { repl: false } -->
 <Widget foo='{{foo}}'/>
 ```
 
 you can use
 
-```html-no-repl
+```html
+<!-- { repl: false } -->
 <Widget :foo/>
 ```
 
@@ -63,6 +73,7 @@ you can use
 A component can contain a `<slot></slot>` element, which allows the parent component to inject content:
 
 ```html
+<!-- { title: 'Using <slot>' } -->
 <Box>
 	<h2>Hello!</h2>
 	<p>This is a box. It can contain anything.</p>
@@ -77,7 +88,8 @@ A component can contain a `<slot></slot>` element, which allows the parent compo
 </script>
 ```
 
-```html-nested-Box
+```html
+<!--{ filename: 'Box.html' }-->
 <div class='box'>
 	<slot><!-- content is injected here --></slot>
 </div>
@@ -90,13 +102,10 @@ A component can contain a `<slot></slot>` element, which allows the parent compo
 </style>
 ```
 
-```hidden-data
-{}
-```
-
 The `<slot>` element can contain 'fallback content', which will be used if no children are provided for the component:
 
 ```html
+<!-- { title: 'Default slot content' } -->
 <Box></Box>
 
 <script>
@@ -108,7 +117,8 @@ The `<slot>` element can contain 'fallback content', which will be used if no ch
 </script>
 ```
 
-```html-nested-Box
+```html
+<!--{ filename: 'Box.html' }-->
 <div class='box'>
 	<slot>
 		<p class='fallback'>the box is empty!</p>
@@ -127,13 +137,10 @@ The `<slot>` element can contain 'fallback content', which will be used if no ch
 </style>
 ```
 
-```hidden-data
-{}
-```
-
 You can also have *named* slots. Any elements with a corresponding `slot` attribute will fill these slots:
 
 ```html
+<!-- { title: 'Named slots' } -->
 <ContactCard>
 	<span slot='name'>P. Sherman</span>
 	<span slot='address'>42 Wallaby Way, Sydney</span>
@@ -148,7 +155,8 @@ You can also have *named* slots. Any elements with a corresponding `slot` attrib
 </script>
 ```
 
-```html-nested-ContactCard
+```html
+<!--{ filename: 'ContactCard.html' }-->
 <div class='contact-card'>
 	<h2><slot name='name'></slot></h2>
 	<slot name='address'>Unknown address</slot>
@@ -162,8 +170,4 @@ You can also have *named* slots. Any elements with a corresponding `slot` attrib
 		padding: 0.5em;
 	}
 </style>
-```
-
-```hidden-data
-{}
 ```

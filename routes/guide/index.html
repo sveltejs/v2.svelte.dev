@@ -33,6 +33,7 @@
 	.content {
 		width: 100%;
 		padding: 1em;
+		tab-size: 2;
 	}
 
 	h2 {
@@ -49,6 +50,29 @@
 		border-bottom: 1px solid rgba(0,0,0,0.1);
 		font-size: 1.2em;
 		color: rgba(0,0,0,0.5);
+	}
+
+	section :global(.code-block) {
+		position: relative;
+	}
+
+	section :global(.code-block).named {
+		/* padding: 20px 0 0 0; */
+	}
+
+	section :global(.filename) {
+		background: #f9f9f9;
+		font-size: 16px;
+		padding: 6px 12px 4px 12px;
+		display: inline-block;
+		/* position: absolute; */
+		top: 0;
+		border-left: 2px solid #eee;
+		border-radius: 2px 2px 0 0;
+		border-top: 1px solid #eee;
+		font-family: 'Inconsolata', monospace;
+		color: rgba(0,0,0,0.4);
+		line-height: 1;
 	}
 
 	section :global(h3) {
@@ -100,16 +124,16 @@
 		border: none;
 	}
 
-	section > :global(pre), section :global(.CodeMirror) {
+	section :global(.code-block) :global(pre), section :global(.CodeMirror) {
 		background-color: #f9f9f9;
 		border-left: 2px solid #eee;
 		padding: 8px;
 		margin: 0 0 1em 0;
 	}
 
-	section > :global(pre) {
+	section :global(.code-block) :global(pre) {
 		padding: 12px 8px 12px 12px;
-		border-radius: 3px;
+		/* border-radius: 3px; */
 	}
 
 	section :global(p), section :global(ul) {
@@ -125,32 +149,13 @@
 	}
 
 	section :global(.open-in-repl) {
-		position: absolute;
-		z-index: 2;
-		right: 0;
-	}
-
-	section :global(.open-in-repl::after) {
-		position: absolute;
-		content: 'open in repl';
-		text-transform: uppercase;
-		right: 0.5em;
-		top: 0.5em;
-		border: 1px solid rgba(0,0,0,0.1);
-		font-family: Rajdhani, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-		font-weight: 500;
-		text-align: center;
-		white-space: pre;
-		padding: 0.25em 0.5em 0.1em 0.5em;
-		line-height: 1;
-		border-radius: 0.1em;
+		position: relative;
+		top: 1px;
+		font-weight: 700;
 		color: rgba(170,30,30,0.8);
-		background-color: rgb(253,242,242);
-	}
-
-	section :global(.open-in-repl:hover::after) {
-		color: white;
-		background-color: rgba(170,30,30,1);
+		padding: 0;
+		border-radius: 2px;
+		font-size: 18px;
 	}
 
 	section :global(blockquote) {

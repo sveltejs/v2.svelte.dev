@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import * as fleece from 'golden-fleece';
 import process_markdown from '../_process_markdown.js';
 import marked from 'marked';
 import hljs from 'highlight.js';
@@ -30,6 +31,34 @@ function unescape(str) {
 	return String(str).replace(/&.+?;/g, match => unescaped[match] || match);
 }
 
+const blockTypes = 'blockquote html heading hr list listitem paragraph table tablerow tablecell'.split(' ');
+
+function extractMeta(line, lang) {
+	try {
+		if (lang === 'html' && line.startsWith('<!--') && line.endsWith('-->')) {
+			return fleece.evaluate(line.slice(4, -3).trim());
+		}
+
+		if (lang === 'js' || lang === 'json' && line.startsWith('/*') && line.endsWith('*/')) {
+			return fleece.evaluate(line.slice(2, -2).trim());
+		}
+	} catch (err) {
+		// TODO report these errors, don't just squelch them
+		return null;
+	}
+}
+
+// https://github.com/darkskyapp/string-hash/blob/master/index.js
+function getHash(str) {
+	let hash = 5381;
+	let i = str.length;
+
+	while (i--) hash = ((hash << 5) - hash) ^ str.charCodeAt(i);
+	return (hash >>> 0).toString(36);
+}
+
+export const demos = new Map();
+
 export default function() {
 	return fs
 		.readdirSync(`content/guide`)
@@ -39,74 +68,87 @@ export default function() {
 
 			const { content, metadata } = process_markdown(markdown);
 
-			// syntax highlighting
-			let uid = 0;
-			const replComponents = {};
-			const replData = {};
-			const highlighted = {};
+			const groups = [];
+			let group = null;
+			let uid = 1;
 
-			const tweaked_content = content.replace(
-				/```([\w-]+)?\n([\s\S]+?)```/g,
-				(match, lang, code) => {
-					if (lang === 'hidden-data') {
-						replData[uid] = JSON.parse(code);
-						return '\n\n';
+			const renderer = new marked.Renderer();
+
+			renderer.code = (source, lang) => {
+				source = source.replace(/^ +/gm, match => match.split('    ').join('\t'));
+
+				const lines = source.split('\n');
+
+				const meta = extractMeta(lines[0], lang);
+
+				let prefix = '';
+				let className = 'code-block';
+
+				if (lang === 'html' && !group) {
+					if (!meta || meta.repl !== false) {
+						prefix = `<a class='open-in-repl' href='repl?demo=@@${uid}'>REPL</a>`;
 					}
 
-					const syntax = lang.startsWith('html-nested-')
-						? 'html'
-						: langs[lang] || lang;
-					const { value } = hljs.highlight(syntax, code);
-					const name = lang.slice(12);
+					group = { id: uid++, blocks: [] };
+					groups.push(group);
+				}
 
-					if (lang.startsWith('html-nested-')) {
-						replComponents[uid].push({
-							name,
-							source: code
-						});
-
-						highlighted[uid] += `\n\n<h2>${name}.html</h2>${value}`;
-						return '';
-					} else {
-						highlighted[++uid] = value;
-
-						if (lang === 'html') {
-							replComponents[uid] = [
-								{
-									name: 'App',
-									source: code
-								}
-							];
-
-							return `%%${uid}`;
-						}
-
-						return `@@${uid}`;
+				if (meta) {
+					source = lines.slice(1).join('\n');
+					const filename = meta.filename || (lang === 'html' && 'App.html');
+					if (filename) {
+						prefix = `<span class='filename'>${prefix} ${filename}</span>`;
+						className += ' named';
 					}
 				}
-			);
 
-			const html = marked(tweaked_content)
-				.replace(/<p>(<a class='open-in-repl'[\s\S]+?)<\/p>/g, '$1')
-				.replace(/<p>@@(\d+)<\/p>/g, (match, id) => {
-					return `<pre><code>${highlighted[id]}</code></pre>`;
-				})
-				.replace(/<p>%%(\d+)<\/p>/g, (match, id) => {
-					const components = replComponents[id];
-					const header = components.length > 1 ? `<h2>App.html</h2>` : '';
-					const pre = `<pre><code>${header}${highlighted[id]}</code></pre>`;
-					const data = replData[id] || {};
+				if (group) group.blocks.push({ meta: meta || {}, lang, source });
 
-					const json = JSON.stringify({
-						gist: null,
-						components,
-						data
-					});
+				if (meta && meta.hidden) return '';
 
-					const href = `/repl?data=${encodeURIComponent(btoa(json))}`;
-					return `<a class='open-in-repl' href='${href}'></a>${pre}`;
-				})
-				.replace(/^\t+/gm, match => match.split('\t').join('  '));
+				const highlighted = hljs.highlight(lang, source).value;
+				return `<div class='${className}'>${prefix}<pre><code>${highlighted}</code></pre></div>`;
+			};
+
+			blockTypes.forEach(type => {
+				const fn = renderer[type];
+				renderer[type] = function() {
+					group = null;
+					return fn.apply(this, arguments);
+				};
+			});
+
+			const html = marked(content, { renderer });
+
+			const hashes = {};
+
+			groups.forEach(group => {
+				const main = group.blocks[0];
+				if (main.meta.repl === false) return;
+
+				const hash = getHash(group.blocks.map(block => block.source).join(''));
+				hashes[group.id] = hash;
+
+				const json5 = group.blocks.find(block => block.lang === 'json');
+
+				const title = main.meta.title;
+				if (!title) console.error(`Missing title for demo in ${file}`);
+
+				demos.set(hash, JSON.stringify({
+					title: title || 'Example from guide',
+					components: group.blocks
+						.filter(block => block.lang === 'html' || block.lang === 'js')
+						.map(block => {
+							const [name, type] = (block.meta.filename || '').split('.');
+							return {
+								name: name || 'App',
+								type: type || 'html',
+								source: block.source
+							};
+						}),
+					json5: json5 && json5.source
+				}));
+			});
 
 			const subsections = [];
 			const pattern = /<h3 id="(.+?)">(.+?)<\/h3>/g;
@@ -122,7 +164,7 @@ export default function() {
 			}
 
 			return {
-				html,
+				html: html.replace(/@@(\d+)/g, (m, id) => hashes[id] || m),
 				metadata,
 				subsections,
 				slug: file.replace(/^\d+-/, '').replace(/\.md$/, '')

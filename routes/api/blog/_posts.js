@@ -19,8 +19,6 @@ export default fs
 		const html = marked(
 			content.replace(/^\t+/gm, match => match.split('\t').join('  '))
 		)
-			// console.log(html);
-
 			.replace(
 				/<pre><code class="lang-(\w+)">([\s\S]+?)<\/code><\/pre>/g,
 				(match, lang, value) => {

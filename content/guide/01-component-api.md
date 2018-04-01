@@ -5,6 +5,7 @@ title: Component API
 As we saw above, you create a component instance with the `new` keyword:
 
 ```js
+/* { filename: 'main.js' } */
 import MyComponent from './MyComponent.html';
 
 const component = new MyComponent({
@@ -114,7 +115,8 @@ drawingApp.observe('height', redraw, { defer: true });
 
 To observe properties of a nested component, use refs:
 
-```html-no-repl
+```html
+<!-- { repl: false } -->
 <Widget ref:widget/>
 <script>
 	export default {
@@ -173,6 +175,7 @@ component.destroy();
 The options used to instantiate the component are available in `component.options`.
 
 ```html
+<!-- { title: 'component.options' } -->
 Check the console.
 
 <script>

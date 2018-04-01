@@ -7,7 +7,8 @@ title: Advanced
 
 Associating a *key* with a block allows Svelte to be smarter about how it adds and removes items to and from a list. To do so, add `@key` to the end of the opening tag for the each block, where `key` is some property that uniquely identifies each member of the list:
 
-```html-no-repl
+```html
+<!-- { repl: false } -->
 {{#each people as person @name}}
 	<div>{{person.name}}</div>
 {{/each}}
@@ -16,6 +17,7 @@ Associating a *key* with a block allows Svelte to be smarter about how it adds a
 It's easier to show the effect of this than to describe it. Open the following example in the REPL:
 
 ```html
+<!-- { title: 'Keyed each blocks' } -->
 <button on:click='update()'>update</button>
 
 <section>
@@ -38,7 +40,7 @@ It's easier to show the effect of this than to describe it. Open the following e
 	}
 
 	section {
-		width: 20em;
+		width: 10em;
 		float: left;
 	}
 </style>

@@ -215,10 +215,11 @@
 			let gist = null;
 			let components = [];
 			let selectedComponent;
-			let data = {};
+			let json5 = '{}';
 			let name = 'loading...';
 
 			if (query.data) {
+				// TODO this is legacy; remove it in future
 				const parsed = tryParseData(query.data);
 
 				components = parsed.components;
@@ -226,8 +227,19 @@
 					if (!component.type) component.type = 'html';
 				});
 
-				data = parsed.data;
+				json5 = JSON.stringify(parsed.data);
 				name = 'Example from guide';
+			}
+
+			else if (query.demo) {
+				const r = await fetch(`api/guide/demo/${query.demo}`);
+
+				if (r.status === 200) {
+					const demo = await r.json();
+					components = demo.components;
+					if (demo.json5) json5 = demo.json5;
+					name = demo.title;
+				}
 			}
 
 			if (components && components.length > 0) {
@@ -241,9 +253,9 @@
 
 				components,
 				selectedComponent,
-				data,
+				data: fleece.evaluate(json5),
 				name,
-				json5: fleece.stringify(data, { singleQuotes: true })
+				json5: json5
 			};
 		},
 
@@ -270,6 +282,7 @@
 				if (gist) params.push(`gist=${gist.id}`);
 				else if (query.gist) params.push(`gist=${query.gist}`);
 				else if (query.data) params.push(`data=${query.data}`);
+				else if (query.demo) params.push(`demo=${query.demo}`);
 
 				return params.length > 0
 					? `repl?${params.join('&')}`

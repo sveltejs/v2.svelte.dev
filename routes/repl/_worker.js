@@ -59,6 +59,7 @@ export async function bundle(components) {
 						try {
 							const { code, map } = svelte.compile(component.source, {
 								cascade: false,
+								store: true,
 								name: component.name,
 								filename: component.name + '.html',
 								dev: true,

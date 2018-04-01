@@ -10,6 +10,7 @@ Svelte includes a handful of built-in components with special behaviour.
 Sometimes, a component needs to embed itself recursively — for example if you have a tree-like data structure. In Svelte, that's accomplished with the `<:Self>` tag:
 
 ```html
+<!-- { title: '<:Self> tags' } -->
 {{#if countdown > 0}}
 	<p>{{countdown}}</p>
 	<:Self countdown='{{countdown - 1}}'/>
@@ -18,9 +19,10 @@ Sometimes, a component needs to embed itself recursively — for example if you 
 {{/if}}
 ```
 
-```hidden-data
+```json
+/* { hidden: true } */
 {
-	"countdown": 5
+	countdown: 5
 }
 ```
 
@@ -30,6 +32,7 @@ Sometimes, a component needs to embed itself recursively — for example if you 
 If you don't know what kind of component to render until the app runs — in other words, it's driven by state — you can use `<:Component>`:
 
 ```html
+<!-- { title: '<:Component> tags' } -->
 <input type=checkbox bind:checked=foo> foo
 <:Component {foo ? Red : Blue} name='thing'/>
 
@@ -45,11 +48,13 @@ If you don't know what kind of component to render until the app runs — in ot
 </script>
 ```
 
-```html-nested-Red
+```html
+<!--{ hidden: true, filename: 'Red.html' }-->
 <p style='color: red'>Red {{name}}</p>
 ```
 
-```html-nested-Blue
+```html
+<!--{ hidden: true, filename: 'Blue.html' }-->
 <p style='color: blue'>Blue {{name}}</p>
 ```
 
@@ -58,6 +63,7 @@ If you don't know what kind of component to render until the app runs — in ot
 The expression inside the `{...}` can be any valid JavaScript expression. For example, it could be a [computed property](guide#computed-properties):
 
 ```html
+<!-- { title: '<:Component> with computed' } -->
 <label><input type=radio bind:group=size value='small'> small</label>
 <label><input type=radio bind:group=size value='medium'> medium</label>
 <label><input type=radio bind:group=size value='large'> large</label>
@@ -81,21 +87,25 @@ The expression inside the `{...}` can be any valid JavaScript expression. For ex
 </script>
 ```
 
-```html-nested-Small
+```html
+<!--{ filename: 'Small.html' }-->
 <p style='font-size: 12px'>small</p>
 ```
 
-```html-nested-Medium
+```html
+<!--{ filename: 'Medium.html' }-->
 <p style='font-size: 18px'>medium</p>
 ```
 
-```html-nested-Large
+```html
+<!--{ filename: 'Large.html' }-->
 <p style='font-size: 32px'>LARGE</p>
 ```
 
-```hidden-data
+```json
+/* { hidden: true } */
 {
-	"size": "medium"
+	size: "medium"
 }
 ```
 
@@ -105,6 +115,7 @@ The expression inside the `{...}` can be any valid JavaScript expression. For ex
 The `<:Window>` tag gives you a convenient way to declaratively add event listeners to `window`. Event listeners are automatically removed when the component is destroyed.
 
 ```html
+<!-- { title: '<:Window> tags' } -->
 <:Window on:keydown='set({ key: event.key, keyCode: event.keyCode })'/>
 
 {{#if key}}
@@ -130,6 +141,7 @@ The `<:Window>` tag gives you a convenient way to declaratively add event listen
 You can also bind to certain values — so far `innerWidth`, `outerWidth`, `innerHeight`, `outerHeight`, `scrollX`, `scrollY` and `online`:
 
 ```html
+<!-- { title: '<:Window> bindings' } -->
 <:Window bind:scrollY='y'/>
 
 <div class='background'></div>
@@ -162,6 +174,7 @@ If you're building an application with Svelte — particularly if you're using [
 You can do that with the `<:Head>` tag:
 
 ```html
+<!-- { title: '<:Head> tags' } -->
 <:Head>
 	<title>{{post.title}} • My blog</title>
 </:Head>

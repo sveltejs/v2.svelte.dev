@@ -10,10 +10,12 @@ Rather than reinventing the wheel, Svelte templates are built on foundations tha
 Tags allow you to bind data to your template. Whenever your data changes (for example after `component.set(...)`), the DOM updates automatically. You can use any JavaScript expression in templates, and it will also automatically update:
 
 ```html
+<!-- { title: 'Template tags' } -->
 <p>{{a}} + {{b}} = {{a + b}}</p>
 ```
 
-```hidden-data
+```json
+/* { hidden: true } */
 {
 	"a": 1,
 	"b": 2
@@ -23,14 +25,16 @@ Tags allow you to bind data to your template. Whenever your data changes (for ex
 You can also use tags in attributes:
 
 ```html
+<!-- { title: 'Tags in attributes' } -->
 <h1 style='color: {{color}};'>{{color}}</h1>
 <p hidden='{{hideParagraph}}'>You can hide this paragraph.</p>
 ```
 
-```hidden-data
+```json
+/* { hidden: true } */
 {
-	"color": "steelblue",
-	"hideParagraph": false
+	color: "steelblue",
+	hideParagraph: false
 }
 ```
 [Boolean attributes](https://www.w3.org/TR/html5/infrastructure.html#sec-boolean-attributes) like `hidden` will be omitted if the tag expression evaluates to false.
@@ -43,13 +47,15 @@ You can also use tags in attributes:
 Ordinary tags render expressions as plain text. If you need your expression interpreted as HTML, wrap it in triple braces, `{{{` and `}}}`.
 
 ```html
+<!-- { title: 'Triple tags' } -->
 <p>This HTML: {{html}}</p>
 <p>Renders as: {{{html}}}</p>
 ```
 
-```hidden-data
+```json
+/* { hidden: true } */
 {
-	"html": "Some <b>bold</b> text."
+	html: "Some <b>bold</b> text."
 }
 ```
 
@@ -62,7 +68,8 @@ As with tags, you can use any JavaScript expression in triples, and it will auto
 
 Control whether or not part of your template is rendered by wrapping it in an if block.
 
-```html-no-repl
+```html
+<!-- { repl: false } -->
 {{#if user.loggedIn}}
 	<a href='/logout'>log out</a>
 {{/if}}
@@ -74,7 +81,8 @@ Control whether or not part of your template is rendered by wrapping it in an if
 
 You can combine the two blocks above with `{{else}}`:
 
-```html-no-repl
+```html
+<!-- { repl: false } -->
 {{#if user.loggedIn}}
 	<a href='/logout'>log out</a>
 {{else}}
@@ -85,6 +93,7 @@ You can combine the two blocks above with `{{else}}`:
 You can also use `{{elseif ...}}`:
 
 ```html
+<!--{ title: 'If, else and elseif' }-->
 {{#if x > 10}}
 	<p>{{x}} is greater than 10</p>
 {{elseif 5 > x}}
@@ -94,9 +103,10 @@ You can also use `{{elseif ...}}`:
 {{/if}}
 ```
 
-```hidden-data
+```json
+/* { hidden: true } */
 {
-	"x": 7
+	x: 7
 }
 ```
 
@@ -105,6 +115,7 @@ You can also use `{{elseif ...}}`:
 Iterate over lists of data:
 
 ```html
+<!--{ title: 'Each blocks' }-->
 <h1>Cats of YouTube</h1>
 
 <ul>
@@ -114,20 +125,21 @@ Iterate over lists of data:
 </ul>
 ```
 
-```hidden-data
+```json
+/* { hidden: true } */
 {
-	"cats": [
+	cats: [
 		{
-			"name": "Keyboard Cat",
-			"video": "https://www.youtube.com/watch?v=J---aiyznGQ"
+			name: "Keyboard Cat",
+			video: "https://www.youtube.com/watch?v=J---aiyznGQ"
 		},
 		{
-			"name": "Maru",
-			"video": "https://www.youtube.com/watch?v=z_AbfPXTKms"
+			name: "Maru",
+			video: "https://www.youtube.com/watch?v=z_AbfPXTKms"
 		},
 		{
-			"name": "Henri The Existential Cat",
-			"video": "https://www.youtube.com/watch?v=OUtn3pvWmpg"
+			name: "Henri The Existential Cat",
+			video: "https://www.youtube.com/watch?v=OUtn3pvWmpg"
 		}
 	]
 }
@@ -136,6 +148,7 @@ Iterate over lists of data:
 You can access the index of the current element with *expression* as *name*, *index*:
 
 ```html
+<!--{ title: 'Each block indexes' }-->
 <div class='grid'>
 	{{#each rows as row, y}}
 		<div class='row'>
@@ -150,14 +163,15 @@ You can access the index of the current element with *expression* as *name*, *in
 </div>
 ```
 
-```hidden-data
+```json
+/* { hidden: true } */
 {
-	"columns": [ "foo", "bar", "baz" ],
-	"rows": [
-		{ "foo": "a", "bar": "b", "baz": "c" },
-		{ "foo": "d", "bar": "e", "baz": "f" },
-		{ "foo": "g", "bar": "h", "baz": "i" }
-  ]
+	columns: ["foo", "bar", "baz"],
+	rows: [
+		{ foo: "a", bar: "b", baz: "c" },
+		{ foo: "d", bar: "e", baz: "f" },
+		{ foo: "g", bar: "h", baz: "i" }
+	]
 }
 ```
 
@@ -166,6 +180,7 @@ You can access the index of the current element with *expression* as *name*, *in
 Also, if you wish, you can perform one level of array destructuring on the elements of the array directly in the each block:
 
 ```html
+<!--{ title: 'Each block destructuring' }-->
 <h1>It's the cats of YouTube again</h1>
 
 <ul>
@@ -175,9 +190,10 @@ Also, if you wish, you can perform one level of array destructuring on the eleme
 </ul>
 ```
 
-```hidden-data
+```json
+/* { hidden: true } */
 {
-	"cats": [
+	cats: [
 		[
 			"Keyboard Cat",
 			"https://www.youtube.com/watch?v=J---aiyznGQ"
@@ -194,10 +210,11 @@ Also, if you wish, you can perform one level of array destructuring on the eleme
 }
 ```
 
-If you want to iterate over an object you can use `Object.entries(object)`  which returns the object's properties as 
+If you want to iterate over an object you can use `Object.entries(object)`  which returns the object's properties as
 `[key, value]` pairs:
 
 ```html
+<!--{ title: 'Iterating over objects' }-->
 <h1>Cats and Dogs</h1>
 
 {{#each Object.entries(animals) as [animal, names]}}
@@ -205,11 +222,12 @@ If you want to iterate over an object you can use `Object.entries(object)`  whic
 {{/each}}
 ```
 
-```hidden-data
+```json
+/* { hidden: true } */
 {
-  "animals": {
-	"Cats": [ "Buzz", "Stella" ],
-  	"Dogs": [ "Hector", "Victoria" ]
+	animals: {
+		Cats: ["Buzz", "Stella"],
+		Dogs: ["Hector", "Victoria"]
 	}
 }
 ```
@@ -219,6 +237,7 @@ If you want to iterate over an object you can use `Object.entries(object)`  whic
 You can represent the three states of a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) — pending, fulfilled and rejected — with an `await` block:
 
 ```html
+<!--{ title: 'Await blocks' }-->
 {{#await promise}}
 	<p>wait for it...</p>
 {{then answer}}
@@ -248,13 +267,15 @@ If the expression in `{{#await expression}}` *isn't* a promise, Svelte skips ahe
 The last place where Svelte template syntax differs from regular HTML: *directives* allow you to add special instructions for adding [event handlers](guide#event-handlers), [two-way bindings](guide#two-way-binding), [refs](guide#refs) and so on. We'll cover each of those in later stages of this guide – for now, all you need to know is that directives can be identified by the `:` character:
 
 ```html
+<!--{ title: 'Element directives' }-->
 <p>Count: {{count}}</p>
 <button on:click='set({ count: count + 1 })'>+1</button>
 ```
 
-```hidden-data
+```json
+/* { hidden: true } */
 {
-	"count": 0
+	count: 0
 }
 ```
 

@@ -8,6 +8,7 @@ title: Static properties
 In some situations, you might want to add static properties to your component constructor. For that, we use the `setup` property:
 
 ```html
+<!-- { title: 'Component setup' } -->
 <p>check the console!</p>
 
 <script>

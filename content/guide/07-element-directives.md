@@ -9,19 +9,22 @@ Directives are element or component-level instructions to Svelte. They look like
 In most applications, you'll need to respond to the user's actions. In Svelte, this is done with the `on:[event]` directive.
 
 ```html
+<!-- { title: 'Event handlers' } -->
 <p>Count: {{count}}</p>
 <button on:click='set({ count: count + 1 })'>+1</button>
 ```
 
-```hidden-data
+```json
+/* { hidden: true } */
 {
-	"count": 0
+	count: 0
 }
 ```
 
 When the user clicks the button, Svelte calls `component.set(...)` with the provided arguments. You can call any method belonging to the component (whether [built-in](guide#component-api) or [custom](guide#custom-methods)), and any data property (or computed property) that's in scope:
 
 ```html
+<!-- { title: 'Calling custom methods' } -->
 <p>Select a category:</p>
 
 {{#each categories as category}}
@@ -52,6 +55,7 @@ When the user clicks the button, Svelte calls `component.set(...)` with the prov
 You can also access the `event` object in the method call:
 
 ```html
+<!-- { title: 'Accessing `event`' } -->
 <div on:mousemove='set({ x: event.clientX, y: event.clientY })'>
 	coords: {{x}},{{y}}
 </div>
@@ -68,6 +72,7 @@ You can also access the `event` object in the method call:
 The target node can be referenced as `this`, meaning you can do this sort of thing:
 
 ```html
+<!-- { title: 'Calling node methods' } -->
 <input on:focus='this.select()' value='click to select'>
 ```
 
@@ -79,8 +84,8 @@ You can define your own custom events to handle complex user interactions like d
 
 Events are an excellent way for [nested components](guide#nested-components) to communicate with their parents. Let's revisit our earlier example, but turn it into a `<CategoryChooser>` component:
 
-```html-no-repl
-<!-- CategoryChooser.html -->
+```html
+<!-- { repl: false } -->
 <p>Select a category:</p>
 
 {{#each categories as category}}
@@ -104,7 +109,8 @@ Events are an excellent way for [nested components](guide#nested-components) to 
 
 When the user clicks a button, the component will fire a `select` event, where the `event` object has a `category` property. Any component that nests `<CategoryChooser>` can listen for events like so:
 
-```html-no-repl
+```html
+<!--{ title: 'Component events' }-->
 <CategoryChooser on:select='playTwentyQuestions(event.category)'/>
 
 <script>
@@ -117,7 +123,30 @@ When the user clicks a button, the component will fire a `select` event, where t
 
 		methods: {
 			playTwentyQuestions(category) {
-				// TODO implement
+				alert(`ok! you chose ${category}`);
+			}
+		}
+	};
+</script>
+```
+
+```html
+<!--{ filename: 'CategoryChooser.html', hidden: true }-->
+<p>Select a category:</p>
+
+{{#each categories as category}}
+	<button on:click='fire("select", { category })'>select {{category}}</button>
+{{/each}}
+
+<script>
+	export default {
+		data() {
+			return {
+				categories: [
+					'animal',
+					'vegetable',
+					'mineral'
+				]
 			}
 		}
 	};
@@ -134,47 +163,62 @@ There is also shorthand for listening for and re-firing an event unchanged. `<Wi
 Refs are a convenient way to store a reference to particular DOM nodes or components. Declare a ref with `ref:[name]`, and access it inside your component's methods with `this.refs.[name]`:
 
 ```html
+<!-- { title: 'Refs' } -->
 <canvas ref:canvas width='200' height='200'></canvas>
 
 <script>
+	import createRenderer from './createRenderer.js';
+
 	export default {
 		oncreate() {
 			const canvas = this.refs.canvas;
 			const ctx = canvas.getContext('2d');
 
-			let destroyed = false;
-			this.on('destroy', () => destroyed = true);
-
-			function loop() {
-				if (destroyed) return;
-				requestAnimationFrame(loop);
-
-				const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-
-				for (let p = 0; p < imageData.data.length; p += 4) {
-					const i = p / 4;
-					const x = i % canvas.width;
-					const y = i / canvas.height >>> 0;
-
-					const t = window.performance.now();
-
-					const r = 64 + (128 * x / canvas.width) + (64 * Math.sin(t / 1000));
-					const g = 64 + (128 * y / canvas.height) + (64 * Math.cos(t / 1000));
-					const b = 128;
-
-					imageData.data[p + 0] = r;
-					imageData.data[p + 1] = g;
-					imageData.data[p + 2] = b;
-					imageData.data[p + 3] = 255;
-				}
-
-				ctx.putImageData(imageData, 0, 0);
-			}
-
-			loop();
+			const renderer = createRenderer(canvas, ctx);
+			this.on('destroy', renderer.stop);
 		}
 	}
 </script>
+```
+
+```js
+/* { filename: 'createRenderer.js', hidden: true } */
+export default function createRenderer(canvas, ctx) {
+	let running = true;
+	loop();
+
+	return {
+		stop: () => {
+			running = false;
+		}
+	};
+
+	function loop() {
+		if (!running) return;
+		requestAnimationFrame(loop);
+
+		const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+		for (let p = 0; p < imageData.data.length; p += 4) {
+			const i = p / 4;
+			const x = i % canvas.width;
+			const y = i / canvas.height >>> 0;
+
+			const t = window.performance.now();
+
+			const r = 64 + (128 * x / canvas.width) + (64 * Math.sin(t / 1000));
+			const g = 64 + (128 * y / canvas.height) + (64 * Math.cos(t / 1000));
+			const b = 128;
+
+			imageData.data[p + 0] = r;
+			imageData.data[p + 1] = g;
+			imageData.data[p + 2] = b;
+			imageData.data[p + 3] = 255;
+		}
+
+		ctx.putImageData(imageData, 0, 0);
+	}
+}
 ```
 
 > Since only one element or component can occupy a given `ref`, don't use them in `{{#each ...}}` blocks. It's fine to use them in `{{#if ...}}` blocks however.
@@ -187,6 +231,7 @@ Note that you can use refs in your `<style>` blocks — see [Special selectors](
 Transitions allow elements to enter and leave the DOM gracefully, rather than suddenly appearing and disappearing.
 
 ```html
+<!-- { title: 'Transitions' } -->
 <input type='checkbox' bind:checked=visible> visible
 
 {{#if visible}}
@@ -205,6 +250,7 @@ Transitions allow elements to enter and leave the DOM gracefully, rather than su
 Transitions can have parameters — typically `delay` and `duration`, but often others, depending on the transition in question. For example, here's the `fly` transition from the [svelte-transitions](https://github.com/sveltejs/svelte-transitions) package:
 
 ```html
+<!-- { title: 'Transition with parameters' } -->
 <input type='checkbox' bind:checked=visible> visible
 
 {{#if visible}}
@@ -223,6 +269,7 @@ Transitions can have parameters — typically `delay` and `duration`, but often 
 An element can have separate `in` and `out` transitions:
 
 ```html
+<!-- { title: 'Transition in/out' } -->
 <input type='checkbox' bind:checked=visible> visible
 
 {{#if visible}}
@@ -249,6 +296,7 @@ Transitions are simple functions that take a `node` and any provided `parameters
 Of these, `duration` is required, as is *either* `css` or `tick`. The rest are optional. Here's how the `fade` transition is implemented, for example:
 
 ```html
+<!-- { title: 'Fade transition' } -->
 <input type='checkbox' bind:checked=visible> visible
 
 {{#if visible}}
@@ -282,6 +330,7 @@ It's currently fashionable to avoid two-way binding on the grounds that it creat
 Bindings are declared with the `bind:[attribute]` directive:
 
 ```html
+<!-- { title: 'Two-way binding' } -->
 <input bind:value='name' placeholder='enter your name'>
 <p>Hello {{name || 'stranger'}}!</p>
 ```
@@ -297,19 +346,22 @@ Here are the current bindable attributes and properties for each element:
 
 As well as DOM elements, you can bind to component data properties:
 
-```html-no-repl
+```html
+<!-- { repl: false } -->
 <CategoryChooser bind:category='category'/>
 ```
 
 If the attribute and the bound property share a name, you can use this shorthand:
 
-```html-no-repl
+```html
+<!-- { repl: false } -->
 <CategoryChooser bind:category/>
 ```
 
 Here is a complete example of using two way bindings with a form:
 
 ```html
+<!-- { title: 'Form bindings' } -->
 <form on:submit='handleSubmit( event )'>
 	<input bind:value='test' type='text'>
 	<button type='submit'>Store</button>
@@ -330,9 +382,10 @@ export default {
 </script>
 ```
 
-```hidden-data
+```json
+/* { hidden: true } */
 {
-	"test": ""
+	test: ""
 }
 ```
 

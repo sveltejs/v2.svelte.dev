@@ -9,6 +9,7 @@ One of Svelte's key tenets is that components should be self-contained and reusa
 Your component template can have a `<style>` tag, like so:
 
 ```html
+<!--{ title: 'Scoped styles' }-->
 <div class='foo'>
 	Big red Comic Sans
 </div>
@@ -25,7 +26,7 @@ Your component template can have a `<style>` tag, like so:
 
 ### How it works
 
-Open the example above in the REPL and inspect the element to see what has happened – Svelte has added a `svelte-[uniqueid]` attribute to the element, and transformed the CSS selector accordingly. Since no other element on the page can share that selector, anything else on the page with `class="foo"` will be unaffected by our styles.
+Open the example above in the REPL and inspect the element to see what has happened – Svelte has added a `svelte-[uniqueid]` class to the element, and transformed the CSS selector accordingly. Since no other element on the page can share that selector, anything else on the page with `class="foo"` will be unaffected by our styles.
 
 This is vastly simpler than achieving the same effect via [Shadow DOM](http://caniuse.com/#search=shadow%20dom) and works everywhere without polyfills.
 
@@ -40,7 +41,8 @@ If the `cascade: false` option is passed to the compiler, styles will *only* app
 
 <!-- TODO `cascade: false` in the REPL -->
 
-```html-no-repl
+```html
+<!-- { repl: false } -->
 <div>
 	<Widget/>
 </div>
@@ -84,6 +86,7 @@ If you have a [ref](guide#refs) on an element, you can use this as a CSS selecto
 
 
 ```html
+<!--{ title: 'Styling with refs' }-->
 <div ref:foo>
 	yeah!
 </div>
