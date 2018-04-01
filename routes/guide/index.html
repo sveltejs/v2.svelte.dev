@@ -6,7 +6,10 @@
 	<div ref:container class='content'>
 		{{#each sections as section}}
 			<section id='{{section.slug}}'>
-				<h2>{{section.metadata.title}}</h2>
+				<h2>
+					{{section.metadata.title}}
+					<small><a href='https://github.com/sveltejs/svelte.technology/edit/master/content/guide/{{section.file}}'>edit this section</a></small>
+				</h2>
 				{{{section.html}}}
 			</section>
 		{{/each}}
@@ -42,6 +45,14 @@
 		font-size: 2.4em;
 		font-weight: 400;
 		pointer-events: none;
+	}
+
+	small {
+		font-size: 14px;
+		opacity: 0.5;
+		float: right;
+		line-height: 3.4rem;
+		pointer-events: all;
 	}
 
 	section :global(pre) :global(h2) {
