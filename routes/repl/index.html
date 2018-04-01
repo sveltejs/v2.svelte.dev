@@ -9,7 +9,7 @@
 			:bundle
 			:components
 			:data
-			:json
+			:json5
 			:gist
 			bind:name
 			on:select='selectExample(event.slug)'
@@ -51,9 +51,9 @@
 						</div>
 
 						<div class=pane slot=b >
-							<h2 class='show-if-mobile'>data.json</h2>
+							<h2 class='show-if-mobile'>data.json5</h2>
 
-							<CodeMirror ref:data mode='javascript' bind:code='json' error='{{dataError}}' errorLoc='{{dataErrorLoc}}'/>
+							<CodeMirror ref:data mode='json' bind:code='json5' error='{{dataError}}' errorLoc='{{dataErrorLoc}}'/>
 						</div>
 					</SplitPane>
 				</div>
@@ -187,6 +187,7 @@
 
 <script>
 	import { locate } from 'locate-character';
+	import * as fleece from 'golden-fleece';
 	import Layout from '../_components/Layout.html';
 	import CodeMirror from './_components/CodeMirror.html';
 	import ModuleEditor from './_components/ModuleEditor.html';
@@ -242,7 +243,7 @@
 				selectedComponent,
 				data,
 				name,
-				json: JSON.stringify(data, null, '  ')
+				json5: fleece.stringify(data, { singleQuotes: true })
 			};
 		},
 
@@ -339,9 +340,12 @@
 			},
 
 			updateData({ key, value }) {
-				const data = JSON.parse(this.get('json'));
+				const str = this.get('json5');
+				const data = fleece.evaluate(str);
 				data[key] = value;
-				this.set({ json: JSON.stringify(data, null, '  ') });
+
+				const patched = fleece.patch(str, data);
+				this.set({ json5: patched });
 			},
 
 			navigate(filename) {
@@ -442,7 +446,7 @@
 			this.observe('gist', gist => {
 				if (!gist) return;
 
-				let json;
+				let json5 = '{}';
 				const components = Object.keys(gist.files)
 					.map(file => {
 						const dot = file.lastIndexOf('.');
@@ -451,7 +455,7 @@
 						const source = gist.files[file].content;
 
 						// while we're here...
-						if (file === 'data.json') json = source;
+						if (file === 'data.json' || file === 'data.json5') json5 = source;
 
 						return {
 							name: file.slice(0, dot),
@@ -473,32 +477,22 @@
 					name: gist.description,
 					selectedComponent: components[0],
 					components,
-					json
+					json5
 				});
 			});
 
-			this.observe('json', json => {
+			this.observe('json5', json5 => {
 				try {
 					this.set({
-						data: JSON.parse(json),
+						data: fleece.evaluate(json5),
 						dataError: null,
 						dataErrorLoc: null
 					});
 				} catch (err) {
-					console.error(err.stack);
-
-					const match = /in JSON at position (\d+)/.exec(err.message);
-
-					if (match) {
-						const loc = locate(json, +match[1], { offsetLine: 1 });
-						this.set({
-							dataError: {
-								message: err.message.slice(0, match.index).trim(),
-								loc
-							},
-							dataErrorLoc: loc
-						});
-					}
+					this.set({
+						dataError: err,
+						dataErrorLoc: err && err.loc
+					});
 				}
 			});
 
