@@ -31,10 +31,12 @@ Like Ractive and Vue, Svelte promotes the concept of *single-file components*: a
 }
 ```
 
+> Wherever you see <strong style="font-weight: 700; font-size: 16px; font-family: Inconsolata, monospace; color: rgba(170,30,30, 0.8)">REPL</strong> links, click through for an interactive example
+
 Svelte turns this into a JavaScript module that you can import into your app:
 
 ```js
-// main.js
+/* { filename: 'main.js' } */
 import App from './App.html';
 
 const app = new App({
@@ -84,7 +86,7 @@ cd my-svelte-project
 Inside `my-svelte-project`, create a `HelloWorld.html` file with the following contents:
 
 ```html
-<!-- { repl: false } -->
+<!-- { filename: 'HelloWorld.html', repl: false } -->
 <h1>Hello {{name}}</h1>
 ```
 
@@ -99,7 +101,7 @@ The `--format iife` bit means 'generate an immediately-invoked function expressi
 Create an `index.html` page and include the script we just generated:
 
 ```html
-<!-- { repl: false } -->
+<!-- { filename: 'index.html', repl: false } -->
 <!doctype html>
 <html>
 <head>

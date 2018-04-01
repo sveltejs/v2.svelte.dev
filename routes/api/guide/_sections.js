@@ -80,17 +80,26 @@ export default function() {
 				const lines = source.split('\n');
 
 				const meta = extractMeta(lines[0], lang);
-				if (meta) source = lines.slice(1).join('\n');
 
 				let prefix = '';
+				let className = 'code-block';
 
 				if (lang === 'html' && !group) {
 					if (!meta || meta.repl !== false) {
-						prefix = `<a class='open-in-repl' href='repl?demo=@@${uid}'></a>`;
+						prefix = `<a class='open-in-repl' href='repl?demo=@@${uid}'>REPL</a>`;
 					}
 
 					group = { id: uid++, blocks: [] };
 					groups.push(group);
+				}
+
+				if (meta) {
+					source = lines.slice(1).join('\n');
+					const filename = meta.filename || (lang === 'html' && 'App.html');
+					if (filename) {
+						prefix = `<span class='filename'>${prefix} ${filename}</span>`;
+						className += ' named';
+					}
 				}
 
 				if (group) group.blocks.push({ meta: meta || {}, lang, source });
@@ -98,7 +107,7 @@ export default function() {
 				if (meta && meta.hidden) return '';
 
 				const highlighted = hljs.highlight(lang, source).value;
-				return `${prefix}<pre><code>${highlighted}</code></pre>`;
+				return `<div class='${className}'>${prefix}<pre><code>${highlighted}</code></pre></div>`;
 			};
 
 			blockTypes.forEach(type => {
