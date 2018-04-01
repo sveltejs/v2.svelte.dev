@@ -227,23 +227,7 @@
 </style>
 
 <script>
-	function keyEvent(code) {
-		return function (node, callback) {
-			node.addEventListener('keydown', handleKeydown);
-
-			function handleKeydown(event) {
-				if (event.keyCode === code) {
-					callback.call(this, event);
-				}
-			}
-
-			return {
-				teardown() {
-					node.removeEventListener('keydown', handleKeydown);
-				}
-			};
-		}
-	}
+	import { enter } from './events.js';
 
 	export default {
 		methods: {
@@ -282,7 +266,7 @@
 		},
 
 		events: {
-			enter: keyEvent(13)
+			enter
 		}
 	};
 </script>

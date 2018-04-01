@@ -75,15 +75,17 @@ export default function() {
 			const renderer = new marked.Renderer();
 
 			renderer.code = (source, lang) => {
-				if (file.startsWith('00')) console.log('rendering code', lang);
-				const lines = source.split('\n');
+				const lines = source.replace(/^ +/gm, match => match.split('    ').join('\t')).split('\n');
 				const meta = extractMeta(lines[0], lang);
 				if (meta) source = lines.slice(1).join('\n');
 
 				let prefix = '';
 
 				if (lang === 'html' && !group) {
-					prefix = `<a class='open-in-repl' href='repl?demo=@@${uid}'></a>`;
+					if (meta && meta.repl !== false) {
+						prefix = `<a class='open-in-repl' href='repl?demo=@@${uid}'></a>`;
+					}
+
 					group = { id: uid++, blocks: [] };
 					groups.push(group);
 				}
@@ -98,7 +100,6 @@ export default function() {
 			};
 
 			blockTypes.forEach(type => {
-				if (file.startsWith('00')) console.log('rendering', type);
 				const fn = renderer[type];
 				renderer[type] = function() {
 					group = null;
@@ -110,14 +111,11 @@ export default function() {
 
 			const hashes = {};
 
-			if (file.startsWith('00')) console.log(JSON.stringify(groups, null, '  '));
-
 			groups.forEach(group => {
 				const hash = getHash(group.blocks.map(block => block.source).join(''));
 				hashes[group.id] = hash;
 
 				const json5 = group.blocks.find(block => block.lang === 'json');
-				if (file.startsWith('00')) console.log(hash, json5);
 
 				demos.set(hash, JSON.stringify({
 					title: group.blocks[0].meta.title || 'Example from guide',
