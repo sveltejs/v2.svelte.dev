@@ -3,7 +3,7 @@
 		<ul ref:files class="file-tabs" on:dblclick='fire("create")'>
 			{{#each components as component}}
 			<li id='{{component.name}}' class='{{ selectedComponent == component ? "active" : "" }}' data-name='{{component.name}}' on:dblclick='event.stopPropagation()'>
-				<button class='file-tabs-item {{ component.edit ? "edit-mode" : ""}}' on:click='selectComponent(component, selectedComponent)'>
+				<div class='file-tabs-item {{ component.edit ? "edit-mode" : ""}}' on:click='selectComponent(component, selectedComponent)'>
 					{{#if component.name == 'App'}}
 						<div class='uneditable'>
 							App.html
@@ -20,7 +20,7 @@
 						{{/if}}
 						<span class='remove' on:click='remove(component)'>&times;</span>
 					{{/if}}
-				</button>
+				</div>
 			</li>
 			{{/each}}
 		</ul>
@@ -52,10 +52,21 @@
 		padding: 0 40px 0.5em 0;
 	}
 
-	button {
+	.file-tabs-item {
 		display: block;
-		float: right;
 		padding: calc(0.5em - 1px);
+		background: white;
+		font-family: Rajdhani, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+		border-bottom: 1px solid #eee;
+		border-radius: 0;
+		color: #333;
+		position: relative;
+		padding: 0.2em 0 0 0;
+		margin: 0;
+		height: 2.4em;
+		box-sizing: border-box;
+		line-height: 1.4;
+		font-weight: 300;
 	}
 
 	.dropdown {
@@ -133,25 +144,9 @@
 		background-color: #fff;
 	}
 
-	.file-tabs li.active button {
+	.file-tabs li.active .file-tabs-item {
 		border-bottom: 1px solid #666;
 		/* font-weight: 500; */
-	}
-
-	button.file-tabs-item {
-		float: none;
-		border-bottom: 1px solid #eee;
-		border-radius: 0;
-		color: #333;
-		position: relative;
-		display: block;
-		/* padding: 0 0.7em; */
-		padding: 0.4em 0 0 0;
-		margin: 0;
-		height: 2.4em;
-		box-sizing: border-box;
-		line-height: 1.4;
-		font-weight: 300;
 	}
 
 	/* .file-tabs-item:hover {
@@ -170,7 +165,7 @@
 	.editable, .uneditable {
 		display: inline-block;
 		margin-right: 4px;
-		padding: 0 0.7em 0 0.5em;
+		padding: 0.4em 0.7em 0.4em 0.5em;
 		position: relative;
 	}
 
@@ -186,6 +181,7 @@
 		text-align: right;
 		padding: 0.7em 0 0.5em 0.5em;
 		top: 0;
+		cursor: pointer;
 	}
 
 	li.active .editable {
