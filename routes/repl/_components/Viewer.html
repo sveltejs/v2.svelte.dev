@@ -62,8 +62,8 @@
 	}
 
 	.greyed-out {
-		filter: grayscale(100%) blur(2px);
-		opacity: 0.15;
+		filter: grayscale(50%) blur(1px);
+		opacity: 0.25;
 	}
 
 	.overlay {
@@ -197,32 +197,24 @@
 				let toDestroy = null;
 
 				const init = () => {
-					const { bundle, bundleError } = this.get();
+					const { bundle, dom, ssr, bundleError } = this.get();
 					if (bundleError) return;
 
 					const imports = [];
-					const pattern = /\bimport\s+(?:(.+)\s+from\s+)?[\'"]([^"\']+)["\']/g; // https://gist.github.com/pilwon/ff55634a29bb4456e0dd
 
 					const missingImports = bundle.imports.filter(x => !importCache[x]);
 
-					const ready = () => {
-						// TODO this is very hacky — would be great if this information
-						// was exposed by the compiler somehow
-						if (/[^_]oncreate/.test(bundle.code)) {
-							this.set({ pending: true });
-						} else {
-							this.set({ pending: false });
-							this.createComponent();
-						}
+					const removeStyles = () => {
+						const styles = iframe.contentDocument.querySelectorAll('style');
+						let i = styles.length;
+						while (i--) styles[i].parentNode.removeChild(styles[i]);
 					};
 
-					this.createComponent = () => {
+					const ready = () => {
 						this.set({ error: null });
 
 						if (toDestroy) {
-							const styles = iframe.contentDocument.querySelectorAll('style');
-							let i = styles.length;
-							while (i--) styles[i].parentNode.removeChild(styles[i]);
+							removeStyles();
 
 							toDestroy.destroy();
 							toDestroy = null;
@@ -235,10 +227,48 @@
 							iframe.contentWindow[name] = module;
 						});
 
+						if (ssr) { // this only gets generated if component uses lifecycle hooks
+							this.set({ pending: true });
+							this.createHtml();
+						} else {
+							this.set({ pending: false });
+							this.createComponent();
+						}
+					};
+
+					this.createHtml = () => {
 						const data = this.get('data');
 
 						try {
-							evalInIframe(`${bundle.code}
+							evalInIframe(`${ssr.code}
+								var rendered = SvelteComponent.render(${JSON.stringify(data)});
+
+								if (rendered.css.code) {
+									var style = document.createElement('style');
+									style.textContent = rendered.css.code;
+									document.head.appendChild(style);
+								}
+
+								document.body.innerHTML = rendered.html;
+								`)
+						} catch (error) {
+							const loc = getLocationFromStack(error.stack, ssr.map);
+							if (loc) {
+								error.filename = loc.source;
+								error.loc = { line: loc.line, column: loc.column };
+							}
+							this.set({ error });
+						}
+					};
+
+					this.createComponent = () => {
+						// remove leftover styles from SSR renderer
+						if (ssr) removeStyles();
+
+						const data = this.get('data');
+
+						try {
+							evalInIframe(`${dom.code}
 								document.body.innerHTML = '';
 								window.location.hash = '';
 								window._svelteTransitionManager = null;
@@ -264,7 +294,7 @@
 							component = null;
 							observers = null;
 
-							const loc = getLocationFromStack(error.stack, bundle.map);
+							const loc = getLocationFromStack(error.stack, dom.map);
 							if (loc) {
 								error.filename = loc.source;
 								error.loc = { line: loc.line, column: loc.column };
@@ -355,6 +385,7 @@
 		methods: {
 			run() {
 				this.set({ pending: false });
+				// TODO do we need to clear out SSR HTML?
 				this.createComponent();
 			}
 		}
