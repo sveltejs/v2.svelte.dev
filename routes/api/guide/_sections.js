@@ -167,7 +167,8 @@ export default function() {
 				html: html.replace(/@@(\d+)/g, (m, id) => hashes[id] || m),
 				metadata,
 				subsections,
-				slug: file.replace(/^\d+-/, '').replace(/\.md$/, '')
+				slug: file.replace(/^\d+-/, '').replace(/\.md$/, ''),
+				file
 			};
 		});
 }
