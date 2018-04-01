@@ -20,13 +20,15 @@ In Svelte, an application is composed from one or more *components*. A component
 Like Ractive and Vue, Svelte promotes the concept of *single-file components*: a component is just an `.html` file. Here's a simple example:
 
 ```html
+<!--{ title: 'Hello world!' }-->
 <!-- App.html -->
 <h1>Hello {{name}}!</h1>
 ```
 
-```hidden-data
+```json
+/* { hidden: true } */
 {
-	"name": "world"
+	name: 'world'
 }
 ```
 
@@ -82,7 +84,8 @@ cd my-svelte-project
 
 Inside `my-svelte-project`, create a `HelloWorld.html` file with the following contents:
 
-```html-no-repl
+```html
+<!--{ repl: false }-->
 <h1>Hello {{name}}</h1>
 ```
 
@@ -96,7 +99,8 @@ The `--format iife` bit means 'generate an immediately-invoked function expressi
 
 Create an `index.html` page and include the script we just generated:
 
-```html-no-repl
+```html
+<!--{ repl: false }-->
 <!doctype html>
 <html>
 <head>

@@ -13,7 +13,7 @@ Tags allow you to bind data to your template. Whenever your data changes (for ex
 <p>{{a}} + {{b}} = {{a + b}}</p>
 ```
 
-```hidden-data
+```json
 {
 	"a": 1,
 	"b": 2
@@ -27,7 +27,7 @@ You can also use tags in attributes:
 <p hidden='{{hideParagraph}}'>You can hide this paragraph.</p>
 ```
 
-```hidden-data
+```json
 {
 	"color": "steelblue",
 	"hideParagraph": false
@@ -47,7 +47,7 @@ Ordinary tags render expressions as plain text. If you need your expression inte
 <p>Renders as: {{{html}}}</p>
 ```
 
-```hidden-data
+```json
 {
 	"html": "Some <b>bold</b> text."
 }
@@ -62,7 +62,8 @@ As with tags, you can use any JavaScript expression in triples, and it will auto
 
 Control whether or not part of your template is rendered by wrapping it in an if block.
 
-```html-no-repl
+```html
+<!--{ repl: false }-->
 {{#if user.loggedIn}}
 	<a href='/logout'>log out</a>
 {{/if}}
@@ -74,7 +75,8 @@ Control whether or not part of your template is rendered by wrapping it in an if
 
 You can combine the two blocks above with `{{else}}`:
 
-```html-no-repl
+```html
+<!--{ repl: false }-->
 {{#if user.loggedIn}}
 	<a href='/logout'>log out</a>
 {{else}}
@@ -94,7 +96,7 @@ You can also use `{{elseif ...}}`:
 {{/if}}
 ```
 
-```hidden-data
+```json
 {
 	"x": 7
 }
@@ -114,7 +116,7 @@ Iterate over lists of data:
 </ul>
 ```
 
-```hidden-data
+```json
 {
 	"cats": [
 		{
@@ -150,7 +152,7 @@ You can access the index of the current element with *expression* as *name*, *in
 </div>
 ```
 
-```hidden-data
+```json
 {
 	"columns": [ "foo", "bar", "baz" ],
 	"rows": [
@@ -175,7 +177,7 @@ Also, if you wish, you can perform one level of array destructuring on the eleme
 </ul>
 ```
 
-```hidden-data
+```json
 {
 	"cats": [
 		[
@@ -194,7 +196,7 @@ Also, if you wish, you can perform one level of array destructuring on the eleme
 }
 ```
 
-If you want to iterate over an object you can use `Object.entries(object)`  which returns the object's properties as 
+If you want to iterate over an object you can use `Object.entries(object)`  which returns the object's properties as
 `[key, value]` pairs:
 
 ```html
@@ -205,7 +207,7 @@ If you want to iterate over an object you can use `Object.entries(object)`  whic
 {{/each}}
 ```
 
-```hidden-data
+```json
 {
   "animals": {
 	"Cats": [ "Buzz", "Stella" ],
@@ -252,7 +254,7 @@ The last place where Svelte template syntax differs from regular HTML: *directiv
 <button on:click='set({ count: count + 1 })'>+1</button>
 ```
 
-```hidden-data
+```json
 {
 	"count": 0
 }

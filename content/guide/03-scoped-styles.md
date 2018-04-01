@@ -40,7 +40,8 @@ If the `cascade: false` option is passed to the compiler, styles will *only* app
 
 <!-- TODO `cascade: false` in the REPL -->
 
-```html-no-repl
+```html
+<!--{ repl: false }-->
 <div>
 	<Widget/>
 </div>

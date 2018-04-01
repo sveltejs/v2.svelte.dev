@@ -116,7 +116,7 @@ Computed properties can of course return functions. For example, we could dynami
 </script>
 ```
 
-```hidden-data
+```json
 {
 	"search": "",
 	"items": [
@@ -795,6 +795,7 @@ Custom events are just functions that take a node and a callback as their argume
 Components are assumed to be in the HTML namespace. If your component is designed to be used inside an `<svg>` element, you need to specify the namespace:
 
 ```html
+<!--{ filename: 'App.html' }-->
 <svg viewBox='0 0 1000 1000' style='width: 100%; height: 100%;'>
 	<SmileyFace x='70' y='280' size='100' fill='#f4d9c7'/>
 	<SmileyFace x='800' y='250' size='150' fill='#40250f'/>
@@ -812,7 +813,8 @@ Components are assumed to be in the HTML namespace. If your component is designe
 </script>
 ```
 
-```html-nested-SmileyFace
+```html
+<!--{ filename: 'SmileyFace.html' }-->
 <!-- CC-BY-SA — https://commons.wikimedia.org/wiki/File:718smiley.svg -->
 <g transform='translate({{x}},{{y}}) scale({{size / 366.5}})'>
 	<circle r="366.5"/>

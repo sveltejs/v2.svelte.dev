@@ -11,7 +11,8 @@ Svelte components can be used as custom elements by doing the following:
 1. Declaring a `tag` name. The value must contain a hyphen (`hello-world` in the example below)
 2. Specifying `customElement: true` in the compiler configuration
 
-```html-no-repl
+```html
+<!--{ repl: false }-->
 <!-- HelloWorld.html -->
 <h1>Hello {{name}}!</h1>
 

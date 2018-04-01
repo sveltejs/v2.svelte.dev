@@ -41,7 +41,8 @@ store.set({ name: 'everybody' }); // 'hello everybody'
 
 Let's adapt our [very first example](guide#understanding-svelte-components):
 
-```html-no-repl
+```html
+<!--{ repl: false }-->
 <!-- App.html -->
 <h1>Hello {{$name}}!</h1>
 <Greeting/>
@@ -54,7 +55,8 @@ Let's adapt our [very first example](guide#understanding-svelte-components):
 </script>
 ```
 
-```html-no-repl
+```html
+<!--{ repl: false }-->
 <!-- Greeting.html -->
 <p>It's nice to see you, {{$name}}</p>
 ```
@@ -151,7 +153,8 @@ A component that was connected to this store could reference `{{$volume}}` and `
 
 Each component gets a reference to `this.store`. This allows you to attach behaviours in `oncreate`...
 
-```html-no-repl
+```html
+<!--{ repl: false }-->
 <script>
 	export default {
 		oncreate() {
@@ -165,7 +168,8 @@ Each component gets a reference to `this.store`. This allows you to attach behav
 
 ...or call store methods in your event handlers:
 
-```html-no-repl
+```html
+<!--{ repl: false }-->
 <button on:click='store.set({ muted: true })'>
 	Mute audio
 </button>
@@ -235,7 +239,8 @@ store.fetchStockPrices('AMZN');
 You can call these methods in your components, just like the built-in methods:
 
 
-```html-no-repl
+```html
+<!--{ repl: false }-->
 <input
 	placeholder='Enter a stock ticker'
 	on:change='store.fetchStockPrices(this.value)'
@@ -246,7 +251,8 @@ You can call these methods in your components, just like the built-in methods:
 
 You can bind to store properties just like you bind to component properties — just add the `$` prefix:
 
-```html-no-repl
+```html
+<!--{ repl: false }-->
 <!-- global audio volume control -->
 <input bind:value=$volume type=range min=0 max=1 step=0.01>
 ```
@@ -256,7 +262,8 @@ You can bind to store properties just like you bind to component properties — 
 
 Just as in templates, you can access store properties in component computed properties by prefixing them with `$`:
 
-```html-no-repl
+```html
+<!--{ repl: false }-->
 <!-- Todo.html -->
 {{#if isVisible}}
 	<div class='todo {{todo.done ? "done": ""}}'>

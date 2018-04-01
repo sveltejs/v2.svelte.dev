@@ -18,7 +18,7 @@ Sometimes, a component needs to embed itself recursively — for example if you 
 {{/if}}
 ```
 
-```hidden-data
+```json
 {
 	"countdown": 5
 }
@@ -45,11 +45,13 @@ If you don't know what kind of component to render until the app runs — in ot
 </script>
 ```
 
-```html-nested-Red
+```html
+<!--{ filename: 'Red.html' }-->
 <p style='color: red'>Red {{name}}</p>
 ```
 
-```html-nested-Blue
+```html
+<!--{ filename: 'Blue.html' }-->
 <p style='color: blue'>Blue {{name}}</p>
 ```
 
@@ -81,19 +83,22 @@ The expression inside the `{...}` can be any valid JavaScript expression. For ex
 </script>
 ```
 
-```html-nested-Small
+```html
+<!--{ filename: 'Small.html' }-->
 <p style='font-size: 12px'>small</p>
 ```
 
-```html-nested-Medium
+```html
+<!--{ filename: 'Medium.html' }-->
 <p style='font-size: 18px'>medium</p>
 ```
 
-```html-nested-Large
+```html
+<!--{ filename: 'Large.html' }-->
 <p style='font-size: 32px'>LARGE</p>
 ```
 
-```hidden-data
+```json
 {
 	"size": "medium"
 }

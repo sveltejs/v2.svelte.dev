@@ -4,7 +4,8 @@ title: Nested components
 
 As well as containing elements (and `if` blocks and `each` blocks), Svelte components can contain *other* Svelte components.
 
-```html-no-repl
+```html
+<!--{ repl: false }-->
 <div class='widget-container'>
 	<Widget foo bar='static' baz='{{dynamic}}'/>
 </div>
@@ -45,13 +46,15 @@ const widget = new Widget({
 
 In the case where the value in the child component has the same name as that in the parent component, there a shorter way to write this. Instead of
 
-```html-no-repl
+```html
+<!--{ repl: false }-->
 <Widget foo='{{foo}}'/>
 ```
 
 you can use
 
-```html-no-repl
+```html
+<!--{ repl: false }-->
 <Widget :foo/>
 ```
 
@@ -77,7 +80,8 @@ A component can contain a `<slot></slot>` element, which allows the parent compo
 </script>
 ```
 
-```html-nested-Box
+```html
+<!--{ filename: 'Box.html' }-->
 <div class='box'>
 	<slot><!-- content is injected here --></slot>
 </div>
@@ -90,7 +94,7 @@ A component can contain a `<slot></slot>` element, which allows the parent compo
 </style>
 ```
 
-```hidden-data
+```json
 {}
 ```
 
@@ -108,7 +112,8 @@ The `<slot>` element can contain 'fallback content', which will be used if no ch
 </script>
 ```
 
-```html-nested-Box
+```html
+<!--{ filename: 'Box.html' }-->
 <div class='box'>
 	<slot>
 		<p class='fallback'>the box is empty!</p>
@@ -127,7 +132,7 @@ The `<slot>` element can contain 'fallback content', which will be used if no ch
 </style>
 ```
 
-```hidden-data
+```json
 {}
 ```
 
@@ -148,7 +153,8 @@ You can also have *named* slots. Any elements with a corresponding `slot` attrib
 </script>
 ```
 
-```html-nested-ContactCard
+```html
+<!--{ filename: 'ContactCard.html' }-->
 <div class='contact-card'>
 	<h2><slot name='name'></slot></h2>
 	<slot name='address'>Unknown address</slot>
@@ -164,6 +170,6 @@ You can also have *named* slots. Any elements with a corresponding `slot` attrib
 </style>
 ```
 
-```hidden-data
+```json
 {}
 ```

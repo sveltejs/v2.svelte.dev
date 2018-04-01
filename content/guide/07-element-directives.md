@@ -13,7 +13,7 @@ In most applications, you'll need to respond to the user's actions. In Svelte, t
 <button on:click='set({ count: count + 1 })'>+1</button>
 ```
 
-```hidden-data
+```json
 {
 	"count": 0
 }
@@ -79,7 +79,8 @@ You can define your own custom events to handle complex user interactions like d
 
 Events are an excellent way for [nested components](guide#nested-components) to communicate with their parents. Let's revisit our earlier example, but turn it into a `<CategoryChooser>` component:
 
-```html-no-repl
+```html
+<!--{ repl: false }-->
 <!-- CategoryChooser.html -->
 <p>Select a category:</p>
 
@@ -104,7 +105,8 @@ Events are an excellent way for [nested components](guide#nested-components) to 
 
 When the user clicks a button, the component will fire a `select` event, where the `event` object has a `category` property. Any component that nests `<CategoryChooser>` can listen for events like so:
 
-```html-no-repl
+```html
+<!--{ repl: false }-->
 <CategoryChooser on:select='playTwentyQuestions(event.category)'/>
 
 <script>
@@ -295,13 +297,15 @@ Here are the current bindable attributes and properties for each element:
 
 As well as DOM elements, you can bind to component data properties:
 
-```html-no-repl
+```html
+<!--{ repl: false }-->
 <CategoryChooser bind:category='category'/>
 ```
 
 If the attribute and the bound property share a name, you can use this shorthand:
 
-```html-no-repl
+```html
+<!--{ repl: false }-->
 <CategoryChooser bind:category/>
 ```
 
@@ -328,7 +332,7 @@ export default {
 </script>
 ```
 
-```hidden-data
+```json
 {
 	"test": ""
 }

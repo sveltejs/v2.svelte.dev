@@ -27,7 +27,7 @@ The [svelte-transitions](https://github.com/sveltejs/svelte-transitions) package
 </script>
 ```
 
-```hidden-data
+```json
 {
 	"visible": true
 }
@@ -84,7 +84,7 @@ The [svelte-extras](https://github.com/sveltejs/svelte-extras) package includes 
 </script>
 ```
 
-```hidden-data
+```json
 {
 	"todos": [
 		"wash the car",
