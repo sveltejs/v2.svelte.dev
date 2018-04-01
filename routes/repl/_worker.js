@@ -30,27 +30,23 @@ export async function init(version) {
 	return version === 'local' ? version : svelte.VERSION;
 }
 
-let cache;
+let cached = {
+	dom: null,
+	ssr: null
+};
+
 let currentToken;
 
-export async function bundle(components) {
-	console.clear();
-	console.log(`running Svelte compiler version %c${svelte.VERSION}`, 'font-weight: bold');
-
-	const token = currentToken = {};
-
-	const lookup = {};
-	components.forEach(component => {
-		const path = `./${component.name}.${component.type}`;
-		lookup[path] = component;
-	});
-
-	let warningCount = 0;
+async function getBundle(mode, cache, lookup) {
+	let bundle;
 	let error;
 	let erroredComponent;
+	let warningCount = 0;
+
+	const info = {};
 
 	try {
-		const bundle = await rollup.rollup({
+		bundle = await rollup.rollup({
 			input: './App.html',
 			external: id => {
 				return id[0] !== '.';
@@ -66,7 +62,9 @@ export async function bundle(components) {
 						if (component.type === 'js') return component.source;
 
 						try {
-							const { code, map } = svelte.compile(component.source, {
+							const { code, map, stats } = svelte.compile(component.source, {
+								generate: mode,
+								format: 'es',
 								cascade: false,
 								store: true,
 								name: component.name,
@@ -80,9 +78,14 @@ export async function bundle(components) {
 								}
 							});
 
+							if (stats) {
+								if (Object.keys(stats.hooks)) info.usesHooks = true;
+							} else if (/[^_]oncreate/.test(component.source)) {
+								info.usesHooks = true;
+							}
+
 							return { code, map };
 						} catch (err) {
-							error = err;
 							erroredComponent = component;
 							throw err;
 						}
@@ -96,15 +99,43 @@ export async function bundle(components) {
 			},
 			cache
 		});
+	} catch (error) {
+		return { error, erroredComponent, bundle: null, info: null, warningCount: null }
+	}
+
+	return { bundle, info, error: null, erroredComponent: null, warningCount };
+}
+
+export async function bundle(components) {
+	console.clear();
+	console.log(`running Svelte compiler version %c${svelte.VERSION}`, 'font-weight: bold');
+
+	const token = currentToken = {};
+
+	const lookup = {};
+	components.forEach(component => {
+		const path = `./${component.name}.${component.type}`;
+		lookup[path] = component;
+	});
+
+	let error;
+	let erroredComponent;
+
+	try {
+		const dom = await getBundle('dom', cached.dom, lookup);
+		if (dom.error) {
+			erroredComponent = dom.erroredComponent;
+			throw dom.error;
+		}
 
 		if (token !== currentToken) return;
 
-		cache = bundle;
+		cached.dom = dom.bundle;
 
 		let uid = 1;
 		const importMap = new Map();
 
-		const { code, map } = await bundle.generate({
+		const domResult = await dom.bundle.generate({
 			format: 'iife',
 			name: 'SvelteComponent',
 			globals: id => {
@@ -115,17 +146,44 @@ export async function bundle(components) {
 			sourcemap: true
 		});
 
+		if (token !== currentToken) return;
+
+		const ssr = dom.info.usesHooks
+			? await getBundle('ssr', cached.ssr, lookup)
+			: null;
+
+		if (ssr) {
+			cached.ssr = ssr.bundle;
+			if (ssr.error) {
+				erroredComponent = ssr.erroredComponent;
+				throw ssr.error;
+			}
+		}
+
+		if (token !== currentToken) return;
+
+		const ssrResult = ssr
+			? await ssr.bundle.generate({
+				format: 'iife',
+				name: 'SvelteComponent',
+				globals: id => importMap.get(id),
+				sourcemap: true
+			})
+			: null;
+
 		return {
 			bundle: {
-				code,
-				map,
-				imports: bundle.imports,
+				imports: dom.bundle.imports,
 				importMap
 			},
-			warningCount,
+			dom: domResult,
+			ssr: ssrResult,
+			warningCount: dom.warningCount,
 			error: null
 		};
 	} catch (err) {
+		console.error(err);
+
 		const e = error || err;
 		delete e.toString;
 
@@ -141,7 +199,9 @@ export async function bundle(components) {
 
 		return {
 			bundle: null,
-			warningCount,
+			dom: null,
+			ssr: null,
+			warningCount: dom.warningCount,
 			error: Object.assign({}, e, {
 				message: e.message,
 				stack: e.stack
