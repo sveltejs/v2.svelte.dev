@@ -75,14 +75,17 @@ export default function() {
 			const renderer = new marked.Renderer();
 
 			renderer.code = (source, lang) => {
-				const lines = source.replace(/^ +/gm, match => match.split('    ').join('\t')).split('\n');
+				source = source.replace(/^ +/gm, match => match.split('    ').join('\t'));
+
+				const lines = source.split('\n');
+
 				const meta = extractMeta(lines[0], lang);
 				if (meta) source = lines.slice(1).join('\n');
 
 				let prefix = '';
 
 				if (lang === 'html' && !group) {
-					if (meta && meta.repl !== false) {
+					if (!meta || meta.repl !== false) {
 						prefix = `<a class='open-in-repl' href='repl?demo=@@${uid}'></a>`;
 					}
 
@@ -94,8 +97,7 @@ export default function() {
 
 				if (meta && meta.hidden) return '';
 
-				const highlighted = hljs.highlight(lang, source).value
-					.replace(/^ +/gm, match => match.split('    ').join('\t'));
+				const highlighted = hljs.highlight(lang, source).value;
 				return `${prefix}<pre><code>${highlighted}</code></pre>`;
 			};
 
@@ -112,13 +114,19 @@ export default function() {
 			const hashes = {};
 
 			groups.forEach(group => {
+				const main = group.blocks[0];
+				if (main.meta.repl === false) return;
+
 				const hash = getHash(group.blocks.map(block => block.source).join(''));
 				hashes[group.id] = hash;
 
 				const json5 = group.blocks.find(block => block.lang === 'json');
 
+				const title = main.meta.title;
+				if (!title) console.error(`Missing title for demo in ${file}`);
+
 				demos.set(hash, JSON.stringify({
-					title: group.blocks[0].meta.title || 'Example from guide',
+					title: title || 'Example from guide',
 					components: group.blocks
 						.filter(block => block.lang === 'html' || block.lang === 'js')
 						.map(block => {

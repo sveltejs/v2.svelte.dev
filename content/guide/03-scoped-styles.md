@@ -9,6 +9,7 @@ One of Svelte's key tenets is that components should be self-contained and reusa
 Your component template can have a `<style>` tag, like so:
 
 ```html
+<!--{ title: 'Scoped styles' }-->
 <div class='foo'>
 	Big red Comic Sans
 </div>
@@ -41,7 +42,7 @@ If the `cascade: false` option is passed to the compiler, styles will *only* app
 <!-- TODO `cascade: false` in the REPL -->
 
 ```html
-<!--{ repl: false }-->
+<!-- { repl: false } -->
 <div>
 	<Widget/>
 </div>
@@ -85,6 +86,7 @@ If you have a [ref](guide#refs) on an element, you can use this as a CSS selecto
 
 
 ```html
+<!--{ title: 'Styling with refs' }-->
 <div ref:foo>
 	yeah!
 </div>

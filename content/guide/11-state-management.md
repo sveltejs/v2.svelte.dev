@@ -42,13 +42,13 @@ store.set({ name: 'everybody' }); // 'hello everybody'
 Let's adapt our [very first example](guide#understanding-svelte-components):
 
 ```html
-<!--{ repl: false }-->
-<!-- App.html -->
+<!-- { repl: false } -->
 <h1>Hello {{$name}}!</h1>
 <Greeting/>
 
 <script>
 	import Greeting from './Greeting.html';
+
 	export default {
 		components: { Greeting }
 	};
@@ -56,8 +56,7 @@ Let's adapt our [very first example](guide#understanding-svelte-components):
 ```
 
 ```html
-<!--{ repl: false }-->
-<!-- Greeting.html -->
+<!--{ filename: 'Greeting.html' }-->
 <p>It's nice to see you, {{$name}}</p>
 ```
 
@@ -94,7 +93,7 @@ Components that depend on store properties will re-render whenever they change.
 As an alternative to adding the `store` option when instantiating, the component itself can declare a dependency on a store:
 
 ```html
-<!-- App.html -->
+<!-- { title: 'Declarative stores' } -->
 <h1>Hello {{$name}}!</h1>
 <Greeting/>
 
@@ -107,6 +106,17 @@ As an alternative to adding the `store` option when instantiating, the component
 		components: { Greeting }
 	};
 </script>
+```
+
+```html
+<!--{ filename: 'Greeting.html' }-->
+<p>It's nice to see you, {{$name}}</p>
+```
+
+```js
+/* { filename: 'store.js' } */
+import { Store } from 'svelte/store.js';
+export default new Store({ name: 'world' });
 ```
 
 Note that the `store` option is a function that *returns* a store, rather than the store itself — this provides greater flexibility.
@@ -154,7 +164,7 @@ A component that was connected to this store could reference `{{$volume}}` and `
 Each component gets a reference to `this.store`. This allows you to attach behaviours in `oncreate`...
 
 ```html
-<!--{ repl: false }-->
+<!-- { repl: false } -->
 <script>
 	export default {
 		oncreate() {
@@ -169,7 +179,7 @@ Each component gets a reference to `this.store`. This allows you to attach behav
 ...or call store methods in your event handlers:
 
 ```html
-<!--{ repl: false }-->
+<!-- { repl: false } -->
 <button on:click='store.set({ muted: true })'>
 	Mute audio
 </button>
@@ -240,7 +250,7 @@ You can call these methods in your components, just like the built-in methods:
 
 
 ```html
-<!--{ repl: false }-->
+<!-- { repl: false } -->
 <input
 	placeholder='Enter a stock ticker'
 	on:change='store.fetchStockPrices(this.value)'
@@ -252,7 +262,7 @@ You can call these methods in your components, just like the built-in methods:
 You can bind to store properties just like you bind to component properties — just add the `$` prefix:
 
 ```html
-<!--{ repl: false }-->
+<!-- { repl: false } -->
 <!-- global audio volume control -->
 <input bind:value=$volume type=range min=0 max=1 step=0.01>
 ```
@@ -263,8 +273,7 @@ You can bind to store properties just like you bind to component properties — 
 Just as in templates, you can access store properties in component computed properties by prefixing them with `$`:
 
 ```html
-<!--{ repl: false }-->
-<!-- Todo.html -->
+<!-- { repl: false } -->
 {{#if isVisible}}
 	<div class='todo {{todo.done ? "done": ""}}'>
 		{{todo.description}}

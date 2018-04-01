@@ -115,7 +115,7 @@ drawingApp.observe('height', redraw, { defer: true });
 To observe properties of a nested component, use refs:
 
 ```html
-<!--{ repl: false }-->
+<!-- { repl: false } -->
 <Widget ref:widget/>
 <script>
 	export default {
@@ -174,6 +174,7 @@ component.destroy();
 The options used to instantiate the component are available in `component.options`.
 
 ```html
+<!-- { title: 'component.options' } -->
 Check the console.
 
 <script>

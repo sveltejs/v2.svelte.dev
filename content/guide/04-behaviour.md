@@ -5,6 +5,7 @@ title: Behaviours
 As well as scoped styles and a template, components can encapsulate *behaviours*. For that, we add a `<script>` element and export an object:
 
 ```html
+<!-- { title: 'Behaviours' } -->
 <div>
 	<!-- template goes here -->
 </div>
@@ -22,6 +23,7 @@ As well as scoped styles and a template, components can encapsulate *behaviours*
 Often, it makes sense for a component to have default data. This should be expressed as a function that returns a plain JavaScript object:
 
 ```html
+<!-- { title: 'Default data' } -->
 <p>Count: {{count}}</p>
 <button on:click='set({ count: count + 1 })'>+1</button>
 
@@ -58,6 +60,7 @@ Often, your program will use values that depend on other values – for example,
 Svelte allows you to express these dependencies in computed properties, which are recalculated whenever those dependencies change:
 
 ```html
+<!-- { title: 'Computed properties' } -->
 <p>
 	The time is
 	<strong>{{hours}}:{{minutes}}:{{seconds}}</strong>
@@ -96,6 +99,7 @@ export default {
 Computed properties can of course return functions. For example, we could dynamically generate a filter function for a list of items:
 
 ```html
+<!-- { title: 'Filtering' } -->
 <input bind:value=search>
 
 {{#each items.filter(predicate) as word}}
@@ -117,6 +121,7 @@ Computed properties can of course return functions. For example, we could dynami
 ```
 
 ```json
+/* { hidden: true } */
 {
 	"search": "",
 	"items": [
@@ -630,6 +635,7 @@ Computed properties can of course return functions. For example, we could dynami
 There are two 'hooks' provided by Svelte for adding control logic – `oncreate` and `ondestroy`:
 
 ```html
+<!-- { title: 'Lifecycle hooks' } -->
 <p>
 	The time is
 	<strong>{{hours}}:{{minutes}}:{{seconds}}</strong>
@@ -668,6 +674,7 @@ There are two 'hooks' provided by Svelte for adding control logic – `oncreate
 Helpers are simple functions that are used in your template. In the example above, we want to ensure that `minutes` and `seconds` are preceded with a `0` if they only have one digit, so we add a `leftPad` helper:
 
 ```html
+<!-- { title: 'Helpers' } -->
 <p>
 	The time is
 	<strong>{{hours}}:{{leftPad(minutes, 2, '0')}}:{{leftPad(seconds, 2, '0')}}</strong>
@@ -716,6 +723,7 @@ Of course, you could use `leftPad` inside the computed properties instead of in 
 In addition to the [built-in methods](guide#component-api), you can add methods of your own:
 
 ```html
+<!-- { title: 'Custom methods' } -->
 <script>
 	export default {
 		methods: {
@@ -742,6 +750,7 @@ component.say('👋');
 Methods (whether built-in or custom) can also be called inside [event handlers](guide#event-handlers):
 
 ```html
+<!-- { repl: false } -->
 <button on:click='say("hello")'>say hello!</button>
 ```
 
@@ -755,6 +764,7 @@ Most of the time you can make do with the standard DOM events (the sort you'd ad
 Custom events are just functions that take a node and a callback as their argument, and return an object with a `destroy` method that gets called when the element is removed from the page:
 
 ```html
+<!-- { title: 'Custom events' } -->
 <button on:longpress='set({ done: true })'>click and hold</button>
 
 {{#if done}}
@@ -795,7 +805,7 @@ Custom events are just functions that take a node and a callback as their argume
 Components are assumed to be in the HTML namespace. If your component is designed to be used inside an `<svg>` element, you need to specify the namespace:
 
 ```html
-<!--{ filename: 'App.html' }-->
+<!--{ title: 'SVG' }-->
 <svg viewBox='0 0 1000 1000' style='width: 100%; height: 100%;'>
 	<SmileyFace x='70' y='280' size='100' fill='#f4d9c7'/>
 	<SmileyFace x='800' y='250' size='150' fill='#40250f'/>

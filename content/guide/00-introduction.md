@@ -21,7 +21,6 @@ Like Ractive and Vue, Svelte promotes the concept of *single-file components*: a
 
 ```html
 <!--{ title: 'Hello world!' }-->
-<!-- App.html -->
 <h1>Hello {{name}}!</h1>
 ```
 
@@ -85,7 +84,7 @@ cd my-svelte-project
 Inside `my-svelte-project`, create a `HelloWorld.html` file with the following contents:
 
 ```html
-<!--{ repl: false }-->
+<!-- { repl: false } -->
 <h1>Hello {{name}}</h1>
 ```
 
@@ -100,7 +99,7 @@ The `--format iife` bit means 'generate an immediately-invoked function expressi
 Create an `index.html` page and include the script we just generated:
 
 ```html
-<!--{ repl: false }-->
+<!-- { repl: false } -->
 <!doctype html>
 <html>
 <head>

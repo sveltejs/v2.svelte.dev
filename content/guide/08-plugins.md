@@ -9,6 +9,7 @@ Svelte can be extended with plugins and extra methods.
 The [svelte-transitions](https://github.com/sveltejs/svelte-transitions) package includes a selection of officially supported transition plugins, such as [fade](https://github.com/sveltejs/svelte-transitions-fade), [fly](https://github.com/sveltejs/svelte-transitions-fly) and [slide](https://github.com/sveltejs/svelte-transitions-slide). You can include them in a component like so:
 
 ```html
+<!-- { title: 'svelte-transitions' } -->
 <label>
 	<input type='checkbox' bind:checked='visible'> visible
 </label>
@@ -28,6 +29,7 @@ The [svelte-transitions](https://github.com/sveltejs/svelte-transitions) package
 ```
 
 ```json
+/* { hidden: true } */
 {
 	"visible": true
 }
@@ -39,6 +41,7 @@ The [svelte-transitions](https://github.com/sveltejs/svelte-transitions) package
 The [svelte-extras](https://github.com/sveltejs/svelte-extras) package includes a handful of methods for tweening (animating), manipulating arrays and so on.
 
 ```html
+<!-- { title: 'svelte-extras' } -->
 <input bind:value='newTodo' placeholder='buy milk'>
 <button on:click='push("todos", newTodo)'>add todo</button>
 
@@ -85,6 +88,7 @@ The [svelte-extras](https://github.com/sveltejs/svelte-extras) package includes 
 ```
 
 ```json
+/* { hidden: true } */
 {
 	"todos": [
 		"wash the car",

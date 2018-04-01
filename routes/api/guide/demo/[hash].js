@@ -11,12 +11,12 @@ export function get(req, res) {
 		res.end(JSON.stringify({
 			error: 'not found'
 		}));
+	} else {
+		const json = demos.get(hash);
+		res.writeHead(200, {
+			'Content-Type': 'application/json'
+		});
+
+		res.end(json);
 	}
-
-	const json = demos.get(hash);
-	res.writeHead(200, {
-		'Content-Type': 'application/json'
-	});
-
-	res.end(json);
 }
