@@ -70,7 +70,7 @@ async function getBundle(mode, cache, lookup) {
 								name: component.name,
 								filename: component.name + '.html',
 								dev: true,
-								shared: true,
+								shared: false,
 								onwarn: warning => {
 									console.warn(warning.message);
 									console.log(warning.frame);
