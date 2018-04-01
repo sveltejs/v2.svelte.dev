@@ -17,7 +17,7 @@ In most applications, you'll need to respond to the user's actions. In Svelte, t
 ```json
 /* { hidden: true } */
 {
-	"count": 0
+	count: 0
 }
 ```
 
@@ -385,7 +385,7 @@ export default {
 ```json
 /* { hidden: true } */
 {
-	"test": ""
+	test: ""
 }
 ```
 

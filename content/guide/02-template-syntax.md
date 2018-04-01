@@ -33,8 +33,8 @@ You can also use tags in attributes:
 ```json
 /* { hidden: true } */
 {
-	"color": "steelblue",
-	"hideParagraph": false
+	color: "steelblue",
+	hideParagraph: false
 }
 ```
 [Boolean attributes](https://www.w3.org/TR/html5/infrastructure.html#sec-boolean-attributes) like `hidden` will be omitted if the tag expression evaluates to false.
@@ -55,7 +55,7 @@ Ordinary tags render expressions as plain text. If you need your expression inte
 ```json
 /* { hidden: true } */
 {
-	"html": "Some <b>bold</b> text."
+	html: "Some <b>bold</b> text."
 }
 ```
 
@@ -106,7 +106,7 @@ You can also use `{{elseif ...}}`:
 ```json
 /* { hidden: true } */
 {
-	"x": 7
+	x: 7
 }
 ```
 
@@ -275,7 +275,7 @@ The last place where Svelte template syntax differs from regular HTML: *directiv
 ```json
 /* { hidden: true } */
 {
-	"count": 0
+	count: 0
 }
 ```
 

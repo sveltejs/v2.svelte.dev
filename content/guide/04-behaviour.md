@@ -123,8 +123,8 @@ Computed properties can of course return functions. For example, we could dynami
 ```json
 /* { hidden: true } */
 {
-	"search": "",
-	"items": [
+	search: "",
+	items: [
 		"about",
 		"above",
 		"abuse",

@@ -31,7 +31,7 @@ The [svelte-transitions](https://github.com/sveltejs/svelte-transitions) package
 ```json
 /* { hidden: true } */
 {
-	"visible": true
+	visible: true
 }
 ```
 
@@ -90,7 +90,7 @@ The [svelte-extras](https://github.com/sveltejs/svelte-extras) package includes 
 ```json
 /* { hidden: true } */
 {
-	"todos": [
+	todos: [
 		"wash the car",
 		"take the dog for a walk",
 		"mow the lawn"

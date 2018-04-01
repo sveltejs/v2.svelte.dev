@@ -22,7 +22,7 @@ Sometimes, a component needs to embed itself recursively — for example if you 
 ```json
 /* { hidden: true } */
 {
-	"countdown": 5
+	countdown: 5
 }
 ```
 
@@ -105,7 +105,7 @@ The expression inside the `{...}` can be any valid JavaScript expression. For ex
 ```json
 /* { hidden: true } */
 {
-	"size": "medium"
+	size: "medium"
 }
 ```
 
