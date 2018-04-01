@@ -1,13 +1,22 @@
 global.window = self; // egregious hack to get magic-string to work in a worker
 
+const svelteCache = new Map();
+
 function loadSvelte(version) {
-	if (version === 'local') {
-		return import(/* webpackChunkName: "svelte" */ 'svelte').then(s => {
-			global.svelte = s;
-		});
+	if (!svelteCache.has(version)) {
+		if (version === 'local') {
+			svelteCache.set(version, import(/* webpackChunkName: "svelte" */ 'svelte'));
+		} else {
+			svelteCache.set(version, new Promise((fulfil => {
+				importScripts(`https://unpkg.com/svelte@${version}/compiler/svelte.js`);
+				fulfil(global.svelte);
+			})))
+		}
 	}
 
-	importScripts(`https://unpkg.com/svelte@${version}/compiler/svelte.js`);
+	return svelteCache.get(version).then(svelte => {
+		global.svelte = svelte;
+	});
 }
 
 export async function init(version) {

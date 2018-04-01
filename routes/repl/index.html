@@ -107,6 +107,15 @@
 		color: #999;
 		font-weight: 300;
 		margin: 2em 0 0 0;
+		opacity: 0;
+		animation: fade-in 0.4s;
+		animation-delay: 0.2s;
+		animation-fill-mode: both;
+	}
+
+	@keyframes fade-in {
+		0% { opacity: 0 };
+		100% { opacity: 1 };
 	}
 
 	.input {
@@ -178,6 +187,7 @@
 
 	.repl-inner :global(.info.message) {
 		background-color: #666;
+		animation: fade-in 0.4s 0.2s both;
 	}
 
 	.repl-inner :global(.error) :global(.filename) {
@@ -207,6 +217,8 @@
 			return {};
 		}
 	}
+
+	const workerPromise = process.browser && import('workerize-loader!./_worker.js').then(async ({ default: getWorker }) => getWorker());
 
 	export default {
 		async preload({ query }) {
@@ -394,18 +406,17 @@
 			}
 		},
 
-		oncreate() {
-			import('workerize-loader!./_worker.js').then(async ({ default: worker }) => {
-				const instance = worker();
+		async oncreate() {
+			workerPromise.then(async worker => {
 				let { version } = this.get();
 
-				version = await instance.init(version);
+				version = await worker.init(version);
 				this.set({ version });
 
 				const updateBundle = async () => {
 					const { components } = this.get();
 
-					const { bundle, warningCount, error } = await instance.bundle(components);
+					const { bundle, warningCount, error } = await worker.bundle(components);
 
 					if (error) {
 						// TODO differentiate between bundleError and sourceError
@@ -436,7 +447,7 @@
 
 					if (n) {
 						const compiled = n.type === 'html'
-							? await instance.compile(n)
+							? await worker.compile(n)
 							: n.source;
 
 						this.set({ compiled });
