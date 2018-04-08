@@ -63,7 +63,7 @@
     "passport": "^0.4.0",
     "passport-github": "^1.1.0",
     "rollup": "^0.57.1",
-    "sapper": "^0.10.4",
+    "sapper": "^0.10.5",
     "serve-static": "^1.13.1",
     "session-file-store": "^1.2.0",
     "sourcemap-codec": "^1.4.1"
