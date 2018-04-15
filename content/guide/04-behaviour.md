@@ -632,7 +632,7 @@ Computed properties can of course return functions. For example, we could dynami
 
 ### Lifecycle hooks
 
-There are two 'hooks' provided by Svelte for adding control logic – `oncreate` and `ondestroy`:
+There are four 'hooks' provided by Svelte for adding control logic:
 
 ```html
 <!-- { title: 'Lifecycle hooks' } -->
@@ -643,13 +643,35 @@ There are two 'hooks' provided by Svelte for adding control logic – `oncreate
 
 <script>
 	export default {
+		onstate({ changed, current, previous }) {
+			// this fires before oncreate, and on every state change.
+			// the first time it runs, `previous` is undefined
+			if (changed.time) {
+				console.log(`time changed: ${previous && previous.time} -> ${current.time}`);
+			}
+		},
+
 		oncreate() {
+			// this fires when the component has been
+			// rendered to the DOM
+			console.log('in oncreate');
+
 			this.interval = setInterval(() => {
 				this.set({ time: new Date() });
 			}, 1000);
 		},
 
+		onupdate({ changed, current, previous }) {
+			// this fires after oncreate, and after every state change
+			// once the DOM is synchronised with the data
+			console.log(`The DOM has been updated`);
+		},
+
 		ondestroy() {
+			// this fires when the component is
+			// removed from the DOM
+			console.log('in ondestroy');
+
 			clearInterval(this.interval);
 		},
 
@@ -667,6 +689,8 @@ There are two 'hooks' provided by Svelte for adding control logic – `oncreate
 	};
 </script>
 ```
+
+> You can add event listeners corresponding to `onstate`, `onupdate` and `ondestroy` programmatically — see [component.on](http://localhost:3000/guide#component-on-eventname-callback-)
 
 
 ### Helpers

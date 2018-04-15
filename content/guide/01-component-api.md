@@ -64,70 +64,6 @@ const { foo, bar, baz } = component.get();
 ```
 
 
-### component.observe(key, callback[, options])
-
-This method allows you to respond to changes in state, which is particularly useful when combined with [lifecycle hooks](guide#lifecycle-hooks) and [two-way bindings](guide#two-way-binding).
-
-```js
-const observer = component.observe('answer', answer => {
-	console.log( `the answer is ${answer}` );
-});
-// fires immediately with current answer:
-// -> 'the answer is ask your mother'
-
-component.set({ answer: 'google it' });
-// -> 'the answer is google it'
-
-observer.cancel(); // further changes will be ignored
-```
-
-The callback takes two arguments – the current value and the previous value. (The first time it is called, the second argument will be `undefined`):
-
-```js
-thermometer.observe('temperature', (newValue, oldValue) => {
-	if (oldValue === undefined) return;
-	console.log(`it's getting ${newValue > oldValue ? 'warmer' : 'colder'}`);
-});
-```
-
-If you don't want the callback to fire when you first attach the observer, use `init: false`:
-
-```js
-thermometer.observe('temperature', (newValue, oldValue) => {
-	console.log(`it's getting ${newValue > oldValue ? 'warmer' : 'colder'}`);
-}, { init: false });
-```
-
-> For *primitive* values like strings and numbers, observer callbacks are only called when the value changes. But because it's possible to mutate an object or array while preserving *referential equality*, Svelte will err on the side of caution. In other words, if you do `component.set({foo: component.get('foo')})`, and `foo` is an object or array, any `foo` observers will be triggered.
-
-By default, observers are called *before* the DOM updates, giving you a chance to perform any additional updates without touching the DOM more than is necessary. In some cases – for example, if you need to measure an element after the DOM has been updated – use `defer: true`:
-
-```js
-function redraw() {
-	canvas.width = drawingApp.get('width');
-	canvas.height = drawingApp.get('height');
-	updateCanvas();
-}
-
-drawingApp.observe('width', redraw, { defer: true });
-drawingApp.observe('height', redraw, { defer: true });
-```
-
-To observe properties of a nested component, use refs:
-
-```html
-<!-- { repl: false } -->
-<Widget ref:widget/>
-<script>
-	export default {
-		oncreate() {
-			this.refs.widget.observe('xxx', () => {...});
-		}
-	};
-</script>
-```
-
-
 ### component.on(eventName, callback)
 
 Allows you to respond to *events*:
@@ -139,6 +75,22 @@ const listener = component.on('thingHappened', event => {
 
 // some time later...
 listener.cancel();
+```
+
+Each component has three built-in events, corresponding to their lifecycle hooks:
+
+```js
+component.on('state', ({ changed, current, previous }) => {
+	console.log('state changed', current);
+});
+
+component.on('update', ({ changed, current, previous }) => {
+	console.log('DOM updated after state change', current);
+});
+
+component.on('destroy', () => {
+	console.log('this component is being destroyed');
+});
 ```
 
 
@@ -154,12 +106,10 @@ component.fire('thingHappened', {
 
 At first glance `component.on(...)` and `component.fire(...)` aren't particularly useful, but it'll become more so when we learn about [nested components](guide#nested-components).
 
-> `component.on(...)` and `component.observe(...)` look quite similar, but they have different purposes. Observers are useful for reacting to data flowing through your application and changing continuously over time, whereas events are good for modeling discrete moments such as 'the user made a selection, and this is what it is'.
-
 
 ### component.destroy()
 
-Removes the component from the DOM and removes any observers and event listeners that were created. This will also fire a `destroy` event:
+Removes the component from the DOM and removes any event listeners that were created. This will also fire a `destroy` event:
 
 ```js
 component.on('destroy', () => {
