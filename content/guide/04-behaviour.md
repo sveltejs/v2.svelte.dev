@@ -690,7 +690,7 @@ There are four 'hooks' provided by Svelte for adding control logic:
 </script>
 ```
 
-> You can add event listeners corresponding to `onstate`, `onupdate` and `ondestroy` programmatically — see [component.on](http://localhost:3000/guide#component-on-eventname-callback-)
+> You can add event listeners corresponding to `onstate`, `onupdate` and `ondestroy` programmatically — see [component.on](guide#component-on-eventname-callback-)
 
 
 ### Helpers
