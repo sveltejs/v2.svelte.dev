@@ -77,7 +77,7 @@ const listener = component.on('thingHappened', event => {
 listener.cancel();
 ```
 
-Each component has three built-in events, corresponding to their lifecycle hooks:
+Each component has three built-in events, corresponding to their [lifecycle hooks](guide#lifecycle-hooks):
 
 ```js
 component.on('state', ({ changed, current, previous }) => {
