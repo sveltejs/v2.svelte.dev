@@ -2,7 +2,7 @@
 title: State management
 ---
 
-Svelte components have built-in state management via the `get`, `set` and `observe` methods. But as your application grows beyond a certain size, you may find that passing data between components becomes laborious.
+Svelte components have built-in state management via the `get` and `set` methods. But as your application grows beyond a certain size, you may find that passing data between components becomes laborious.
 
 For example, you might have an `<Options>` component inside a `<Sidebar>` component that allows the user to control the behaviour of a `<MainView>` component. You could use bindings or events to 'send' information up from `<Options>` through `<Sidebar>` to a common ancestor — say `<App>` — which would then have the responsibility of sending it back down to `<MainView>`. But that's cumbersome, especially if you decide you want to break `<MainView>` up into a set of smaller components.
 
@@ -23,13 +23,13 @@ const store = new Store({
 });
 ```
 
-Each instance of `Store` has `get`, `set` and `observe` methods that behave identically to their counterparts on a Svelte component:
+Each instance of `Store` has `get`, `set`, `on` and `fire` methods that behave identically to their counterparts on a Svelte component:
 
 ```js
 store.get('name'); // 'world'
 
-store.observe('name', name => {
-	console.log(`hello ${name}`);
+store.on('state', ({ current }) => {
+	console.log(`hello ${current.name}`);
 }); // 'hello world'
 
 store.set({ name: 'everybody' }); // 'hello everybody'
@@ -168,7 +168,7 @@ Each component gets a reference to `this.store`. This allows you to attach behav
 <script>
 	export default {
 		oncreate() {
-			this.store.observe('foo', foo => {
+			this.store.on('state', ({ current }) => {
 				// ...
 			});
 		}
@@ -293,49 +293,6 @@ Just as in templates, you can access store properties in component computed prop
 		}
 	};
 </script>
-```
-
-
-### The onchange method
-
-In addition to `get`, `set`, `observe` and `compute`, each `Store` instance also has an `onchange` method. Every time the state changes, callbacks will receive a copy of the state, and an object indicating which properties have changed:
-
-```js
-store.set({ foo: 1, bar: 2, baz: 3, qux: 4 });
-store.onchange((state, changed) => {
-	console.log(`These properties changed: ${Object.keys(changed).join(', ')}`);
-});
-
-store.set({ bar: 3, baz: 3, qux: 3 });
-// -> 'These properties changed: bar, qux'
-```
-
-This is useful for attaching generic behaviours to stores — for example, you could create a function that persisted the contents of a store to `localStorage`:
-
-```js
-function useLocalStorage(store, key) {
-	const json = localStorage.getItem(key);
-	if (json) {
-		store.set(JSON.parse(json));
-	}
-
-	store.onchange(state => {
-		localStorage.setItem(key, JSON.stringify(state));
-	});
-}
-
-useLocalStorage(store, 'my-key');
-```
-
-Note that `Store` is conservative about objects and arrays, because there is no easy way to know if they have been mutated:
-
-```js
-const object = {};
-
-store.onchange(() => console.log('something changed'));
-
-store.set({ object }); // 'something changed'
-store.set({ object }); // 'something changed' (even though it's the same value)
 ```
 
 
