@@ -127,7 +127,7 @@ Check the console.
 		oncreate() {
 			console.log(this.options);
 		}
-	}
+	};
 </script>
 ```
 

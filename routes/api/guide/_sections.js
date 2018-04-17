@@ -160,7 +160,6 @@ export default function() {
 					match[2]
 						.replace(/<\/?code>/g, '')
 						.replace(/\.(\w+)(\((.+)?\))?/, (m, $1, $2, $3) => {
-							console.log({ m, $1, $2, $3 });
 							if ($3) return `.${$1}(...)`;
 							if ($2) return `.${$1}()`;
 							return `.${$1}`;
