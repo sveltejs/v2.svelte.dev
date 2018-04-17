@@ -27,7 +27,7 @@ You can also use tags in attributes:
 ```html
 <!-- { title: 'Tags in attributes' } -->
 <h1 style='color: {color};'>{color}</h1>
-<p hidden='{hideParagraph}'>You can hide this paragraph.</p>
+<p hidden={hideParagraph}>You can hide this paragraph.</p>
 ```
 
 ```json
@@ -38,8 +38,6 @@ You can also use tags in attributes:
 }
 ```
 [Boolean attributes](https://www.w3.org/TR/html5/infrastructure.html#sec-boolean-attributes) like `hidden` will be omitted if the tag expression evaluates to false.
-
-> While tags are delimited using `{` and `}`, Svelte does not use [Mustache](https://mustache.github.io/) syntax. Tags are just JavaScript expressions.
 
 
 ### Triples

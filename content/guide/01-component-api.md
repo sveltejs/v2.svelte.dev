@@ -44,24 +44,17 @@ component.set({
 });
 ```
 
-> If you've used Ractive in the past, this is very similar to `ractive.set(...)`, except that instead of doing `ractive.set('foo', 'bar')` you must always do `ractive.set({foo: 'bar'})`, and you cannot set nested keypaths directly. It's also very similar to React's `setState`, except that it causes synchronous updates, meaning the DOM is always in a predictable state.
 
+### component.get()
 
-### component.get(key)
-
-Returns the current value of `key`:
+Returns the component's current *state*:
 
 ```js
-console.log(component.get('answer')); // 'ask your mother'
+const { questions, answer } = component.get();
+console.log(answer); // 'ask your mother'
 ```
 
 This will also retrieve the value of [computed properties](guide#computed-properties).
-
-You can also call `component.get()` without any arguments to retrieve an object of all keys and values, including computed properties. This works particularly nicely with ES6 destructuring:
-
-```js
-const { foo, bar, baz } = component.get();
-```
 
 
 ### component.on(eventName, callback)
