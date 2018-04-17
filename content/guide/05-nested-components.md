@@ -7,7 +7,7 @@ As well as containing elements (and `if` blocks and `each` blocks), Svelte compo
 ```html
 <!-- { title: 'Nested components' } -->
 <div class='widget-container'>
-	<Widget foo bar='static' baz='{{dynamic}}'/>
+	<Widget foo bar='static' baz='{dynamic}'/>
 </div>
 
 <script>
@@ -29,9 +29,9 @@ As well as containing elements (and `if` blocks and `each` blocks), Svelte compo
 
 ```html
 <!-- { filename: 'Widget.html', hidden: true } -->
-<p>foo: {{foo}}</p>
-<p>bar: {{bar}}</p>
-<p>baz: {{baz}}</p>
+<p>foo: {foo}</p>
+<p>bar: {bar}</p>
+<p>baz: {baz}</p>
 ```
 
 The example above is equivalent to the following...
@@ -55,7 +55,7 @@ In the case where the value in the child component has the same name as that in 
 
 ```html
 <!-- { repl: false } -->
-<Widget foo='{{foo}}'/>
+<Widget foo='{foo}'/>
 ```
 
 you can use

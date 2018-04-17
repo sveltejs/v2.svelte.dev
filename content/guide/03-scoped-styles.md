@@ -72,7 +72,7 @@ If the `cascade: false` option is passed to the compiler, styles will *only* app
 
 The `cascade: false` behaviour is recommended, and will be switched on by default in future versions of Svelte.
 
-> Scoped styles are *not* dynamic – they are shared between all instances of a component. In other words you can't use `{{tags}}` inside your CSS.
+> Scoped styles are *not* dynamic – they are shared between all instances of a component. In other words you can't use `{tags}` inside your CSS.
 
 
 ### Unused style removal

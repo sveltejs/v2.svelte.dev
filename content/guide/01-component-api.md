@@ -142,4 +142,4 @@ This gives you access to standard options like `target` and `data`, but can also
 
 ### component.root
 
-In [nested components](guide#nested-components), each component has a `root` property pointing to the top-level root component – that is, the one instantiated with `new MyComponent({ ... })`.
+In [nested components](guide#nested-components), each component has a `root` property pointing to the top-level root component – that is, the one instantiated with `new MyComponent({...})`.

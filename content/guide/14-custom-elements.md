@@ -13,7 +13,7 @@ Svelte components can be used as custom elements by doing the following:
 
 ```html
 <!-- { filename: 'HelloWorld.html', repl: false } -->
-<h1>Hello {{name}}!</h1>
+<h1>Hello {name}!</h1>
 
 <script>
 	export default {

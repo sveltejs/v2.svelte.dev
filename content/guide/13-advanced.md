@@ -9,9 +9,9 @@ Associating a *key* with a block allows Svelte to be smarter about how it adds a
 
 ```html
 <!-- { repl: false } -->
-{{#each people as person @name}}
-	<div>{{person.name}}</div>
-{{/each}}
+{#each people as person @name}
+	<div>{person.name}</div>
+{/each}
 ```
 
 It's easier to show the effect of this than to describe it. Open the following example in the REPL:
@@ -22,16 +22,16 @@ It's easier to show the effect of this than to describe it. Open the following e
 
 <section>
 	<h2>Keyed</h2>
-	{{#each people as person @name}}
-		<div transition:slide>{{person.name}}</div>
-	{{/each}}
+	{#each people as person @name}
+		<div transition:slide>{person.name}</div>
+	{/each}
 </section>
 
 <section>
 	<h2>Non-keyed</h2>
-	{{#each people as person}}
-		<div transition:slide>{{person.name}}</div>
-	{{/each}}
+	{#each people as person}
+		<div transition:slide>{person.name}</div>
+	{/each}
 </section>
 
 <style>

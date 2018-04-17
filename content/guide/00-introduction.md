@@ -21,7 +21,7 @@ Like Ractive and Vue, Svelte promotes the concept of *single-file components*: a
 
 ```html
 <!--{ title: 'Hello world!' }-->
-<h1>Hello {{name}}!</h1>
+<h1>Hello {name}!</h1>
 ```
 
 ```json
@@ -87,7 +87,7 @@ Inside `my-svelte-project`, create a `HelloWorld.html` file with the following c
 
 ```html
 <!-- { filename: 'HelloWorld.html', repl: false } -->
-<h1>Hello {{name}}</h1>
+<h1>Hello {name}</h1>
 ```
 
 Compile it:

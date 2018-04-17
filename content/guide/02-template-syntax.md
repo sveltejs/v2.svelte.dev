@@ -11,7 +11,7 @@ Tags allow you to bind data to your template. Whenever your data changes (for ex
 
 ```html
 <!-- { title: 'Template tags' } -->
-<p>{{a}} + {{b}} = {{a + b}}</p>
+<p>{a} + {b} = {a + b}</p>
 ```
 
 ```json
@@ -26,8 +26,8 @@ You can also use tags in attributes:
 
 ```html
 <!-- { title: 'Tags in attributes' } -->
-<h1 style='color: {{color}};'>{{color}}</h1>
-<p hidden='{{hideParagraph}}'>You can hide this paragraph.</p>
+<h1 style='color: {color};'>{color}</h1>
+<p hidden='{hideParagraph}'>You can hide this paragraph.</p>
 ```
 
 ```json
@@ -39,23 +39,23 @@ You can also use tags in attributes:
 ```
 [Boolean attributes](https://www.w3.org/TR/html5/infrastructure.html#sec-boolean-attributes) like `hidden` will be omitted if the tag expression evaluates to false.
 
-> While tags are delimited using `{{` and `}}`, Svelte does not use [Mustache](https://mustache.github.io/) syntax. Tags are just JavaScript expressions.
+> While tags are delimited using `{` and `}`, Svelte does not use [Mustache](https://mustache.github.io/) syntax. Tags are just JavaScript expressions.
 
 
 ### Triples
 
-Ordinary tags render expressions as plain text. If you need your expression interpreted as HTML, wrap it in triple braces, `{{{` and `}}}`.
+Ordinary tags render expressions as plain text. If you need your expression interpreted as HTML, wrap it in a special `@html` tag:
 
 ```html
 <!-- { title: 'Triple tags' } -->
-<p>This HTML: {{html}}</p>
-<p>Renders as: {{{html}}}</p>
+<p>This HTML: {content}</p>
+<p>Renders as: {@html content}</p>
 ```
 
 ```json
 /* { hidden: true } */
 {
-	html: "Some <b>bold</b> text."
+	content: "Some <b>bold</b> text."
 }
 ```
 
@@ -70,37 +70,37 @@ Control whether or not part of your template is rendered by wrapping it in an if
 
 ```html
 <!-- { repl: false } -->
-{{#if user.loggedIn}}
+{#if user.loggedIn}
 	<a href='/logout'>log out</a>
-{{/if}}
+{/if}
 
-{{#if !user.loggedIn}}
+{#if !user.loggedIn}
 	<a href='/login'>log in</a>
-{{/if}}
+{/if}
 ```
 
-You can combine the two blocks above with `{{else}}`:
+You can combine the two blocks above with `{:else}`:
 
 ```html
 <!-- { repl: false } -->
-{{#if user.loggedIn}}
+{#if user.loggedIn}
 	<a href='/logout'>log out</a>
-{{else}}
+{:else}
 	<a href='/login'>log in</a>
-{{/if}}
+{/if}
 ```
 
-You can also use `{{elseif ...}}`:
+You can also use `{:elseif ...}`:
 
 ```html
 <!--{ title: 'If, else and elseif' }-->
-{{#if x > 10}}
-	<p>{{x}} is greater than 10</p>
-{{elseif 5 > x}}
-	<p>{{x}} is less than 5</p>
-{{else}}
-	<p>{{x}} is between 5 and 10</p>
-{{/if}}
+{#if x > 10}
+	<p>{x} is greater than 10</p>
+{:elseif 5 > x}
+	<p>{x} is less than 5</p>
+{:else}
+	<p>{x} is between 5 and 10</p>
+{/if}
 ```
 
 ```json
@@ -119,9 +119,9 @@ Iterate over lists of data:
 <h1>Cats of YouTube</h1>
 
 <ul>
-	{{#each cats as cat}}
-		<li><a target='_blank' href='{{cat.video}}'>{{cat.name}}</a></li>
-	{{/each}}
+	{#each cats as cat}
+		<li><a target='_blank' href='{cat.video}'>{cat.name}</a></li>
+	{/each}
 </ul>
 ```
 
@@ -150,16 +150,16 @@ You can access the index of the current element with *expression* as *name*, *in
 ```html
 <!--{ title: 'Each block indexes' }-->
 <div class='grid'>
-	{{#each rows as row, y}}
+	{#each rows as row, y}
 		<div class='row'>
-			{{#each columns as column, x}}
+			{#each columns as column, x}
 				<code class='cell'>
-					{{x + 1}},{{y + 1}}:
-					<strong>{{row[column]}}</strong>
+					{x + 1},{y + 1}:
+					<strong>{row[column]}</strong>
 				</code>
-			{{/each}}
+			{/each}
 		</div>
-	{{/each}}
+	{/each}
 </div>
 ```
 
@@ -184,9 +184,9 @@ Also, if you wish, you can perform one level of array destructuring on the eleme
 <h1>It's the cats of YouTube again</h1>
 
 <ul>
-	{{#each cats as [name, video]}}
-		<li><a target='_blank' href='{{video}}'>{{name}}</a></li>
-	{{/each}}
+	{#each cats as [name, video]}
+		<li><a target='_blank' href='{video}'>{name}</a></li>
+	{/each}
 </ul>
 ```
 
@@ -217,9 +217,9 @@ If you want to iterate over an object you can use `Object.entries(object)`  whic
 <!--{ title: 'Iterating over objects' }-->
 <h1>Cats and Dogs</h1>
 
-{{#each Object.entries(animals) as [animal, names]}}
-    <br/> {{animal}}: {{names.join(" and ")}}
-{{/each}}
+{#each Object.entries(animals) as [animal, names]}
+    <br/> {animal}: {names.join(" and ")}
+{/each}
 ```
 
 ```json
@@ -238,13 +238,13 @@ You can represent the three states of a [Promise](https://developer.mozilla.org/
 
 ```html
 <!--{ title: 'Await blocks' }-->
-{{#await promise}}
+{#await promise}
 	<p>wait for it...</p>
-{{then answer}}
-	<p>the answer is {{answer}}!</p>
-{{catch error}}
+{:then answer}
+	<p>the answer is {answer}!</p>
+{:catch error}
 	<p>well that's odd</p>
-{{/await}}
+{/await}
 
 <script>
 	export default {
@@ -259,7 +259,7 @@ You can represent the three states of a [Promise](https://developer.mozilla.org/
 </script>
 ```
 
-If the expression in `{{#await expression}}` *isn't* a promise, Svelte skips ahead to the `then` section.
+If the expression in `{#await expression}` *isn't* a promise, Svelte skips ahead to the `then` section.
 
 
 ### Directives
@@ -268,7 +268,7 @@ The last place where Svelte template syntax differs from regular HTML: *directiv
 
 ```html
 <!--{ title: 'Element directives' }-->
-<p>Count: {{count}}</p>
+<p>Count: {count}</p>
 <button on:click='set({ count: count + 1 })'>+1</button>
 ```
 

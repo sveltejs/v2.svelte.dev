@@ -43,7 +43,7 @@ Let's adapt our [very first example](guide#understanding-svelte-components):
 
 ```html
 <!-- { repl: false } -->
-<h1>Hello {{$name}}!</h1>
+<h1>Hello {$name}!</h1>
 <Greeting/>
 
 <script>
@@ -57,7 +57,7 @@ Let's adapt our [very first example](guide#understanding-svelte-components):
 
 ```html
 <!--{ filename: 'Greeting.html' }-->
-<p>It's nice to see you, {{$name}}</p>
+<p>It's nice to see you, {$name}</p>
 ```
 
 ```js
@@ -81,7 +81,7 @@ There are three important things to notice:
 
 * We're passing `store` to `new App(...)` instead of `data`
 * The template refers to `$name` instead of `name`. The `$` prefix tells Svelte that `name` is a *store property*
-* Because `<Greeting>` is a child of `<App>`, it also has access to the store. Without it, `<App>` would have to pass the `name` property down as a component property (`<Greeting name='{{name}}'/>`)
+* Because `<Greeting>` is a child of `<App>`, it also has access to the store. Without it, `<App>` would have to pass the `name` property down as a component property (`<Greeting name='{name}'/>`)
 
 Components that depend on store properties will re-render whenever they change.
 
@@ -94,7 +94,7 @@ As an alternative to adding the `store` option when instantiating, the component
 
 ```html
 <!-- { title: 'Declarative stores' } -->
-<h1>Hello {{$name}}!</h1>
+<h1>Hello {$name}!</h1>
 <Greeting/>
 
 <script>
@@ -110,7 +110,7 @@ As an alternative to adding the `store` option when instantiating, the component
 
 ```html
 <!--{ filename: 'Greeting.html' }-->
-<p>It's nice to see you, {{$name}}</p>
+<p>It's nice to see you, {$name}</p>
 ```
 
 ```js
@@ -156,7 +156,7 @@ store.get('mass'); // 6000
 
 The first argument is the name of the computed property. The second is an array of *dependencies* — these can be data properties or other computed properties. The third argument is a function that recomputes the value whenever the dependencies change.
 
-A component that was connected to this store could reference `{{$volume}}` and `{{$mass}}`, just like any other store property.
+A component that was connected to this store could reference `{$volume}` and `{$mass}`, just like any other store property.
 
 
 ### Accessing the store inside components
@@ -274,11 +274,11 @@ Just as in templates, you can access store properties in component computed prop
 
 ```html
 <!-- { repl: false } -->
-{{#if isVisible}}
-	<div class='todo {{todo.done ? "done": ""}}'>
-		{{todo.description}}
+{#if isVisible}
+	<div class='todo {todo.done ? "done": ""}'>
+		{todo.description}
 	</div>
-{{/if}}
+{/if}
 
 <script>
 	export default {

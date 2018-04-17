@@ -14,10 +14,10 @@ The [svelte-transitions](https://github.com/sveltejs/svelte-transitions) package
 	<input type='checkbox' bind:checked='visible'> visible
 </label>
 
-{{#if visible}}
+{#if visible}
 	<!-- use `in`, `out`, or `transition` (bidirectional) -->
 	<div transition:fly='{y:20}'>hello!</div>
-{{/if}}
+{/if}
 
 <script>
 	import { fly } from 'svelte-transitions';
@@ -46,12 +46,12 @@ The [svelte-extras](https://github.com/sveltejs/svelte-extras) package includes 
 <button on:click='push("todos", newTodo)'>add todo</button>
 
 <ul>
-	{{#each todos as todo, i}}
+	{#each todos as todo, i}
 		<li>
 			<button on:click='splice("todos", i, 1)'>x</button>
-			{{todo}}
+			{todo}
 		</li>
-	{{/each}}
+	{/each}
 </ul>
 
 <style>

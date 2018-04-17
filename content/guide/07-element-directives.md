@@ -10,7 +10,7 @@ In most applications, you'll need to respond to the user's actions. In Svelte, t
 
 ```html
 <!-- { title: 'Event handlers' } -->
-<p>Count: {{count}}</p>
+<p>Count: {count}</p>
 <button on:click='set({ count: count + 1 })'>+1</button>
 ```
 
@@ -27,9 +27,9 @@ When the user clicks the button, Svelte calls `component.set(...)` with the prov
 <!-- { title: 'Calling custom methods' } -->
 <p>Select a category:</p>
 
-{{#each categories as category}}
-	<button on:click='select(category)'>select {{category}}</button>
-{{/each}}
+{#each categories as category}
+	<button on:click='select(category)'>select {category}</button>
+{/each}
 
 <script>
 	export default {
@@ -57,7 +57,7 @@ You can also access the `event` object in the method call:
 ```html
 <!-- { title: 'Accessing `event`' } -->
 <div on:mousemove='set({ x: event.clientX, y: event.clientY })'>
-	coords: {{x}},{{y}}
+	coords: {x},{y}
 </div>
 
 <style>
@@ -88,9 +88,9 @@ Events are an excellent way for [nested components](guide#nested-components) to 
 <!-- { repl: false } -->
 <p>Select a category:</p>
 
-{{#each categories as category}}
-	<button on:click='fire("select", { category })'>select {{category}}</button>
-{{/each}}
+{#each categories as category}
+	<button on:click='fire("select", { category })'>select {category}</button>
+{/each}
 
 <script>
 	export default {
@@ -134,9 +134,9 @@ When the user clicks a button, the component will fire a `select` event, where t
 <!--{ filename: 'CategoryChooser.html', hidden: true }-->
 <p>Select a category:</p>
 
-{{#each categories as category}}
-	<button on:click='fire("select", { category })'>select {{category}}</button>
-{{/each}}
+{#each categories as category}
+	<button on:click='fire("select", { category })'>select {category}</button>
+{/each}
 
 <script>
 	export default {
@@ -221,7 +221,7 @@ export default function createRenderer(canvas, ctx) {
 }
 ```
 
-> Since only one element or component can occupy a given `ref`, don't use them in `{{#each ...}}` blocks. It's fine to use them in `{{#if ...}}` blocks however.
+> Since only one element or component can occupy a given `ref`, don't use them in `{#each ...}` blocks. It's fine to use them in `{#if ...}` blocks however.
 
 Note that you can use refs in your `<style>` blocks — see [Special selectors](#special-selectors).
 
@@ -234,9 +234,9 @@ Transitions allow elements to enter and leave the DOM gracefully, rather than su
 <!-- { title: 'Transitions' } -->
 <input type='checkbox' bind:checked=visible> visible
 
-{{#if visible}}
+{#if visible}
 	<p transition:fade>fades in and out</p>
-{{/if}}
+{/if}
 
 <script>
 	import { fade } from 'svelte-transitions';
@@ -253,9 +253,9 @@ Transitions can have parameters — typically `delay` and `duration`, but often 
 <!-- { title: 'Transition with parameters' } -->
 <input type='checkbox' bind:checked=visible> visible
 
-{{#if visible}}
+{#if visible}
 	<p transition:fly='{y: 200, duration: 1000}'>flies 200 pixels up, slowly</p>
-{{/if}}
+{/if}
 
 <script>
 	import { fly } from 'svelte-transitions';
@@ -272,9 +272,9 @@ An element can have separate `in` and `out` transitions:
 <!-- { title: 'Transition in/out' } -->
 <input type='checkbox' bind:checked=visible> visible
 
-{{#if visible}}
+{#if visible}
 	<p in:fly='{y: 50}' out:fade>flies up, fades out</p>
-{{/if}}
+{/if}
 
 <script>
 	import { fade, fly } from 'svelte-transitions';
@@ -299,9 +299,9 @@ Of these, `duration` is required, as is *either* `css` or `tick`. The rest are o
 <!-- { title: 'Fade transition' } -->
 <input type='checkbox' bind:checked=visible> visible
 
-{{#if visible}}
+{#if visible}
 	<p transition:fade>fades in and out</p>
-{{/if}}
+{/if}
 
 <script>
 	export default {
@@ -332,7 +332,7 @@ Bindings are declared with the `bind:[attribute]` directive:
 ```html
 <!-- { title: 'Two-way binding' } -->
 <input bind:value='name' placeholder='enter your name'>
-<p>Hello {{name || 'stranger'}}!</p>
+<p>Hello {name || 'stranger'}!</p>
 ```
 
 Here are the current bindable attributes and properties for each element:

@@ -11,12 +11,12 @@ Sometimes, a component needs to embed itself recursively — for example if you 
 
 ```html
 <!-- { title: '<:Self> tags' } -->
-{{#if countdown > 0}}
-	<p>{{countdown}}</p>
-	<:Self countdown='{{countdown - 1}}'/>
-{{else}}
+{#if countdown > 0}
+	<p>{countdown}</p>
+	<:Self countdown='{countdown - 1}'/>
+{:else}
 	<p>liftoff!</p>
-{{/if}}
+{/if}
 ```
 
 ```json
@@ -50,12 +50,12 @@ If you don't know what kind of component to render until the app runs — in ot
 
 ```html
 <!--{ hidden: true, filename: 'Red.html' }-->
-<p style='color: red'>Red {{name}}</p>
+<p style='color: red'>Red {name}</p>
 ```
 
 ```html
 <!--{ hidden: true, filename: 'Blue.html' }-->
-<p style='color: blue'>Blue {{name}}</p>
+<p style='color: blue'>Blue {name}</p>
 ```
 
 > Note that `Red` and `Blue` are items in `data`, *not* `components`, unlike if we were doing `<Red>` or `<Blue>`.
@@ -118,11 +118,11 @@ The `<:Window>` tag gives you a convenient way to declaratively add event listen
 <!-- { title: '<:Window> tags' } -->
 <:Window on:keydown='set({ key: event.key, keyCode: event.keyCode })'/>
 
-{{#if key}}
-	<p><kbd>{{key === ' ' ? 'Space' : key}}</kbd> (code {{keyCode}})</p>
-{{else}}
+{#if key}
+	<p><kbd>{key === ' ' ? 'Space' : key}</kbd> (code {keyCode})</p>
+{:else}
 	<p>click in this window and press any key</p>
-{{/if}}
+{/if}
 
 <style>
 	kbd {
@@ -145,7 +145,7 @@ You can also bind to certain values — so far `innerWidth`, `outerWidth`, `inne
 <:Window bind:scrollY='y'/>
 
 <div class='background'></div>
-<p class='fixed'>user has scrolled {{y}} pixels</p>
+<p class='fixed'>user has scrolled {y} pixels</p>
 
 <style>
 	.background {
@@ -176,7 +176,7 @@ You can do that with the `<:Head>` tag:
 ```html
 <!-- { title: '<:Head> tags' } -->
 <:Head>
-	<title>{{post.title}} • My blog</title>
+	<title>{post.title} • My blog</title>
 </:Head>
 ```
 
