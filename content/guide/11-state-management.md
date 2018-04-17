@@ -283,7 +283,7 @@ Just as in templates, you can access store properties in component computed prop
 		computed: {
 			// `todo` is a component property, `$filter` is
 			// a store property
-			isVisible: (todo, $filter) => {
+			isVisible: ({ todo, $filter }) => {
 				if ($filter === 'all') return true;
 				if ($filter === 'done') return todo.done;
 				if ($filter === 'pending') return !todo.done;
