@@ -1,22 +1,22 @@
-<div ref:editorWrapper class='editor-wrapper {{flip}}'>
-	{{#if selectedComponent}}
-		{{#if showGenerated}}
-			<CodeMirror ref:cm mode='javascript' code='{{compiled}}' readonly/>
-		{{else}}
+<div ref:editorWrapper class='editor-wrapper {flip}'>
+	{#if selectedComponent}
+		{#if showGenerated}
+			<CodeMirror ref:cm mode='javascript' code='{compiled}' readonly/>
+		{:else}
 			<CodeMirror
 				ref:cm
-				mode='{{selectedComponent.type === "js" ? "javascript" : "handlebars"}}'
+				mode='{selectedComponent.type === "js" ? "javascript" : "handlebars"}'
 				bind:code='selectedComponent.source'
-				:error
-				:errorLoc
-				:warningCount
+				{error}
+				{errorLoc}
+				{warningCount}
 				on:navigate
 			/>
-		{{/if}}
-	{{/if}}
+		{/if}
+	{/if}
 
 	<button class='btn toggle' on:click='flip()'>
-		<span class='flip-text'>{{showGenerated ? 'output' : 'input'}}</span>
+		<span class='flip-text'>{showGenerated ? 'output' : 'input'}</span>
 	</button>
 </div>
 

@@ -1,28 +1,28 @@
 <div class='component-selector'>
 	<div class="panel-header">
 		<ul ref:files class="file-tabs" on:dblclick='fire("create")'>
-			{{#each components as component}}
-			<li id='{{component.name}}' class='{{ selectedComponent == component ? "active" : "" }}' data-name='{{component.name}}' on:dblclick='event.stopPropagation()'>
-				<div class='file-tabs-item {{ component.edit ? "edit-mode" : ""}}' on:click='selectComponent(component, selectedComponent)'>
-					{{#if component.name == 'App'}}
+			{#each components as component}
+			<li id='{component.name}' class='{ selectedComponent == component ? "active" : "" }' data-name='{component.name}' on:dblclick='event.stopPropagation()'>
+				<div class='file-tabs-item { component.edit ? "edit-mode" : ""}' on:click='selectComponent(component, selectedComponent)'>
+					{#if component.name == 'App'}
 						<div class='uneditable'>
 							App.html
 						</div>
-					{{else}}
-						{{#if component.edit}}
+					{:else}
+						{#if component.edit}
 							<div class='input-wrapper'>
 								<input autofocus ref:name bind:value='component.name' on:focus='selectInput(this)' on:blur='closeEdit(selectedComponent)' on:enter='this.blur()' />
 							</div>
-						{{else}}
+						{:else}
 							<div class='editable' title='edit component name' on:click='editTab(component, selectedComponent)'>
-								{{component.name}}.{{component.type}}
+								{component.name}.{component.type}
 							</div>
-						{{/if}}
+						{/if}
 						<span class='remove' on:click='remove(component)'>&times;</span>
-					{{/if}}
+					{/if}
 				</div>
 			</li>
-			{{/each}}
+			{/each}
 		</ul>
 	</div>
 

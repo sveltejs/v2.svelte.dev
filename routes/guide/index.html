@@ -1,18 +1,18 @@
-<:Head>
+<svelte:head>
 	<title>Learn Svelte</title>
-</:Head>
+</svelte:head>
 
 <Layout page='guide'>
 	<div ref:container class='content'>
-		{{#each sections as section}}
-			<section id='{{section.slug}}'>
+		{#each sections as section}
+			<section id='{section.slug}'>
 				<h2>
-					{{section.metadata.title}}
-					<small><a href='https://github.com/sveltejs/svelte.technology/edit/master/content/guide/{{section.file}}'>edit this section</a></small>
+					{section.metadata.title}
+					<small><a href='https://github.com/sveltejs/svelte.technology/edit/master/content/guide/{section.file}'>edit this section</a></small>
 				</h2>
-				{{{section.html}}}
+				{@html section.html}
 			</section>
-		{{/each}}
+		{/each}
 	</div>
 
 	<div class='sidebar'>

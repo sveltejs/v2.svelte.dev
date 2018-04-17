@@ -1,16 +1,16 @@
-<:Head>
+<svelte:head>
 	<title>Svelte REPL</title>
-</:Head>
+</svelte:head>
 
 <Layout page='repl'>
 	<div class='repl-outer'>
 		<AppControls
-			:examples
-			:bundle
-			:components
-			:data
-			:json5
-			:gist
+			{examples}
+			{bundle}
+			{components}
+			{data}
+			{json5}
+			{gist}
 			bind:name
 			on:select='selectExample(event.slug)'
 			on:forked='set({ gist: event.gist })'
@@ -21,7 +21,7 @@
 				<section slot=a class='input'>
 					<ComponentSelector
 						ref:selector
-						:components
+						{components}
 						bind:selectedComponent
 						on:create='createComponent()'
 						on:remove='removeComponent()'
@@ -30,10 +30,10 @@
 					<ModuleEditor
 						ref:editor
 						bind:selectedComponent
-						:compiled
-						error='{{sourceError}}'
-						errorLoc='{{sourceErrorLoc || runtimeErrorLoc}}'
-						:warningCount
+						{compiled}
+						error='{sourceError}'
+						errorLoc='{sourceErrorLoc || runtimeErrorLoc}'
+						{warningCount}
 						on:navigate='navigate(event)'
 					/>
 				</section>
@@ -43,17 +43,17 @@
 						<div class=pane slot=a >
 							<h2 class='show-if-mobile'>Rendered component</h2>
 
-							{{#if compilerReady}}
-								<Viewer :bundle :dom :ssr :data :bundleError bind:error='runtimeError' on:change='updateData(event)' on:navigate='navigate(event)'/>
-							{{else}}
+							{#if compilerReady}
+								<Viewer {bundle} {dom} {ssr} {data} {bundleError} bind:error='runtimeError' on:change='updateData(event)' on:navigate='navigate(event)'/>
+							{:else}
 								<p class='loading'>loading Svelte compiler...</p>
-							{{/if}}
+							{/if}
 						</div>
 
 						<div class=pane slot=b >
 							<h2 class='show-if-mobile'>data.json5</h2>
 
-							<CodeMirror ref:data mode='json' bind:code='json5' error='{{dataError}}' errorLoc='{{dataErrorLoc}}'/>
+							<CodeMirror ref:data mode='json' bind:code='json5' error='{dataError}' errorLoc='{dataErrorLoc}'/>
 						</div>
 					</SplitPane>
 				</div>
@@ -196,6 +196,7 @@
 </style>
 
 <script>
+	import { observe } from 'svelte-extras';
 	import { locate } from 'locate-character';
 	import * as fleece from 'golden-fleece';
 	import Layout from '../_components/Layout.html';
@@ -281,14 +282,14 @@
 		},
 
 		computed: {
-			runtimeErrorLoc(runtimeError, selectedComponent) {
+			runtimeErrorLoc({ runtimeError, selectedComponent }) {
 				if (!runtimeError || !selectedComponent) return null;
 				if (runtimeError.filename !== `${selectedComponent.name}.${selectedComponent.type}`) return;
 
 				return runtimeError.loc;
 			},
 
-			url: (version, gist, query) => {
+			url: ({ version, gist, query }) => {
 				const params = [];
 				if (version !== 'latest') params.push(`version=${version}`);
 				if (gist) params.push(`gist=${gist.id}`);
@@ -403,7 +404,9 @@
 				fetch(`gist/${example.gist}`).then(r => r.json()).then(gist => {
 					this.set({ gist });
 				});
-			}
+			},
+
+			observe
 		},
 
 		async oncreate() {
