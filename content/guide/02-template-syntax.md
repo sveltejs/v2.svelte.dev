@@ -59,7 +59,7 @@ Ordinary tags render expressions as plain text. If you need your expression inte
 }
 ```
 
-As with tags, you can use any JavaScript expression in triples, and it will automatically update the document when your data changes.
+As with regular tags, you can use any JavaScript expression in HTML tags, and it will automatically update the document when your data changes.
 
 > HTML is **not** sanitized before it is rendered! If you are displaying user input, you are responsible for first sanitizing it. Not doing so potentially opens you up to XSS attacks.
 
