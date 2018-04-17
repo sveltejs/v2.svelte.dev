@@ -60,7 +60,7 @@ If you don't know what kind of component to render until the app runs — in ot
 
 > Note that `Red` and `Blue` are items in `data`, *not* `components`, unlike if we were doing `<Red>` or `<Blue>`.
 
-The expression inside the `{...}` can be any valid JavaScript expression. For example, it could be a [computed property](guide#computed-properties):
+The expression inside the `this="{...}"` can be any valid JavaScript expression. For example, it could be a [computed property](guide#computed-properties):
 
 ```html
 <!-- { title: '<svelte:component> with computed' } -->
