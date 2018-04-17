@@ -305,7 +305,7 @@
 
 		methods: {
 			createComponent() {
-				const components = this.get('components');
+				const { components } = this.get();
 
 				const newComponent = {
 					name: this.uid++ ? `Component${this.uid}` : 'Component1',
@@ -333,7 +333,7 @@
 			},
 
 			removeComponent() {
-				const component = this.get('selectedComponent'); // TODO doesn't seem to work as argument...
+				const component = this.get().selectedComponent; // TODO doesn't seem to work as argument...
 				const { components } = this.get();
 
 				let selectedComponent;
@@ -366,11 +366,11 @@
 			},
 
 			updateData({ key, value }) {
-				const str = this.get('json5');
-				const data = fleece.evaluate(str);
+				const { json5 } = this.get();
+				const data = fleece.evaluate(json5);
 				data[key] = value;
 
-				const patched = fleece.patch(str, data);
+				const patched = fleece.patch(json5, data);
 				this.set({ json5: patched });
 			},
 

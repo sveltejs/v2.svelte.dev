@@ -238,7 +238,7 @@
 					};
 
 					this.createHtml = () => {
-						const data = this.get('data');
+						const { data } = this.get();
 
 						try {
 							evalInIframe(`${ssr.code}
@@ -266,7 +266,7 @@
 						// remove leftover styles from SSR renderer
 						if (ssr) removeStyles();
 
-						const data = this.get('data');
+						const { data } = this.get();
 
 						try {
 							evalInIframe(`${dom.code}
@@ -343,7 +343,8 @@
 					toDestroy = component;
 					component = null;
 
-					if (this.get('data') !== undefined) init();
+					const { data } = this.get();
+					if (data !== undefined) init();
 				});
 
 				this.observe('data', data => {
@@ -371,7 +372,8 @@
 							init();
 						}
 					} catch (error) {
-						const loc = getLocationFromStack(error.stack, this.get('bundle').map);
+						const { bundle } = this.get();
+						const loc = getLocationFromStack(error.stack, bundle.map);
 						if (loc) {
 							error.filename = loc.source;
 							error.loc = { line: loc.line, column: loc.column };

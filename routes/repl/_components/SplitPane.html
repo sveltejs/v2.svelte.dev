@@ -121,8 +121,9 @@
 		methods: {
 			setPos(event) {
 				const { top, bottom, left, right } = this.refs.container.getBoundingClientRect();
+				const { type } = this.get();
 
-				const pos = 100 * (this.get('type') === 'vertical'
+				const pos = 100 * (type === 'vertical'
 					? (event.clientY - top) / (bottom - top)
 					: (event.clientX - left) / (right - left));
 

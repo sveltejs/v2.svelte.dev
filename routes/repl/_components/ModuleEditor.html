@@ -107,7 +107,7 @@
 				this.flipping = true;
 
 				const wrapper = this.refs.editorWrapper;
-				const showGenerated = this.get('showGenerated');
+				const { showGenerated } = this.get();
 
 				const handleFlipOutEnd = () => {
 					wrapper.removeEventListener('animationend', handleFlipOutEnd);
@@ -144,7 +144,7 @@
 			flipMobile() {
 				const bcr1 = this.refs.editorWrapper.getBoundingClientRect();
 				this.set({
-					showGenerated: !this.get('showGenerated')
+					showGenerated: !this.get().showGenerated
 				});
 
 				// if top is visible, keep it that way
