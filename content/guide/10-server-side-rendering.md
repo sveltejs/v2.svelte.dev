@@ -89,7 +89,7 @@ You could put the resulting `css` in a separate stylesheet, or include them in t
 
 #### Rendering `<head>` contents
 
-If your component, any of its children, use the `<:Head>` [component](guide#-head-tags), you can extract the contents:
+If your component, any of its children, use the `<svelte:head>` [component](guide#-head-tags), you can extract the contents:
 
 ```js
 const { head } = Thing.render(data);

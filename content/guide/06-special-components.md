@@ -5,15 +5,15 @@ title: Special components
 Svelte includes a handful of built-in components with special behaviour.
 
 
-### <:Self> tags
+### <svelte:self> tags
 
-Sometimes, a component needs to embed itself recursively — for example if you have a tree-like data structure. In Svelte, that's accomplished with the `<:Self>` tag:
+Sometimes, a component needs to embed itself recursively — for example if you have a tree-like data structure. In Svelte, that's accomplished with the `<svelte:self>` tag:
 
 ```html
-<!-- { title: '<:Self> tags' } -->
+<!-- { title: '<svelte:self> tags' } -->
 {#if countdown > 0}
 	<p>{countdown}</p>
-	<:Self countdown='{countdown - 1}'/>
+	<svelte:self countdown='{countdown - 1}'/>
 {:else}
 	<p>liftoff!</p>
 {/if}
@@ -27,14 +27,14 @@ Sometimes, a component needs to embed itself recursively — for example if you 
 ```
 
 
-### <:Component> tags
+### <svelte:component> tags
 
-If you don't know what kind of component to render until the app runs — in other words, it's driven by state — you can use `<:Component>`:
+If you don't know what kind of component to render until the app runs — in other words, it's driven by state — you can use `<svelte:component>`:
 
 ```html
-<!-- { title: '<:Component> tags' } -->
+<!-- { title: '<svelte:component> tags' } -->
 <input type=checkbox bind:checked=foo> foo
-<:Component {foo ? Red : Blue} name='thing'/>
+<svelte:component this='{foo ? Red : Blue}' name='thing'/>
 
 <script>
 	import Red from './Red.html';
@@ -63,12 +63,12 @@ If you don't know what kind of component to render until the app runs — in ot
 The expression inside the `{...}` can be any valid JavaScript expression. For example, it could be a [computed property](guide#computed-properties):
 
 ```html
-<!-- { title: '<:Component> with computed' } -->
+<!-- { title: '<svelte:component> with computed' } -->
 <label><input type=radio bind:group=size value='small'> small</label>
 <label><input type=radio bind:group=size value='medium'> medium</label>
 <label><input type=radio bind:group=size value='large'> large</label>
 
-<:Component {Size}/>
+<svelte:component this={Size}/>
 
 <script>
 	import Small from './Small.html';
@@ -110,13 +110,13 @@ The expression inside the `{...}` can be any valid JavaScript expression. For ex
 ```
 
 
-### <:Window> tags
+### <svelte:window> tags
 
-The `<:Window>` tag gives you a convenient way to declaratively add event listeners to `window`. Event listeners are automatically removed when the component is destroyed.
+The `<svelte:window>` tag gives you a convenient way to declaratively add event listeners to `window`. Event listeners are automatically removed when the component is destroyed.
 
 ```html
-<!-- { title: '<:Window> tags' } -->
-<:Window on:keydown='set({ key: event.key, keyCode: event.keyCode })'/>
+<!-- { title: '<svelte:window> tags' } -->
+<svelte:window on:keydown='set({ key: event.key, keyCode: event.keyCode })'/>
 
 {#if key}
 	<p><kbd>{key === ' ' ? 'Space' : key}</kbd> (code {keyCode})</p>
@@ -141,8 +141,8 @@ The `<:Window>` tag gives you a convenient way to declaratively add event listen
 You can also bind to certain values — so far `innerWidth`, `outerWidth`, `innerHeight`, `outerHeight`, `scrollX`, `scrollY` and `online`:
 
 ```html
-<!-- { title: '<:Window> bindings' } -->
-<:Window bind:scrollY='y'/>
+<!-- { title: '<svelte:window> bindings' } -->
+<svelte:window bind:scrollY='y'/>
 
 <div class='background'></div>
 <p class='fixed'>user has scrolled {y} pixels</p>
@@ -167,17 +167,17 @@ You can also bind to certain values — so far `innerWidth`, `outerWidth`, `inne
 ```
 
 
-### <:Head> tags
+### <svelte:head> tags
 
 If you're building an application with Svelte — particularly if you're using [Sapper](https://sapper.svelte.technology) — then it's likely you'll need to add some content to the `<head>` of your page, such as adding a `<title>` element.
 
-You can do that with the `<:Head>` tag:
+You can do that with the `<svelte:head>` tag:
 
 ```html
-<!-- { title: '<:Head> tags' } -->
-<:Head>
+<!-- { title: '<svelte:head> tags' } -->
+<svelte:head>
 	<title>{post.title} • My blog</title>
-</:Head>
+</svelte:head>
 ```
 
 When [server rendering](guide#server-side-rendering), the `<head>` contents can be extracted separately to the rest of the markup.
