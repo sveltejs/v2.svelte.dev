@@ -42,8 +42,8 @@ svelte.preprocess(input, {
 }).then(preprocessed => {
 	fs.writeFileSync('preprocessed/App.html', preprocessed.toString());
 
-	const { code } = svelte.compile(preprocessed);
-	fs.writeFileSync('compiled/App.js', code);
+	const { js } = svelte.compile(preprocessed);
+	fs.writeFileSync('compiled/App.js', js.code);
 });
 ```
 

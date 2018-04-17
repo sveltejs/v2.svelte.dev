@@ -10,7 +10,7 @@ So far, we've discussed creating Svelte components *on the client*, which is to 
 If you're using the Svelte compiler, whether directly or via an integration like [rollup-plugin-svelte](https://github.com/rollup/rollup-plugin-svelte) or [svelte-loader](https://github.com/sveltejs/svelte-loader), you can tell it to generate a server-side component by passing the `generate: 'ssr'` option:
 
 ```js
-const { code } = svelte.compile(source, {
+const { js } = svelte.compile(source, {
 	generate: 'ssr' // as opposed to 'dom', the default
 });
 ```
@@ -42,7 +42,7 @@ require('svelte/ssr/register')({
 
 ### Server-side API
 
-Components have a different API in Node.js – rather than creating instances with `set(...)` and `get(...)` methods, a component is an object with a `render(data, options)` method:
+Components have a different API in Node.js – rather than creating instances with `set(...)` and `get()` methods, a component is an object with a `render(data, options)` method:
 
 ```js
 require('svelte/ssr/register');

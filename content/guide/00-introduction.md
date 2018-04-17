@@ -109,7 +109,7 @@ Create an `index.html` page and include the script we just generated:
 </head>
 <body>
 	<main></main>
-	<script src='HelloWorld.js'></script>
+	<script src="HelloWorld.js"></script>
 	<script>
 		var app = new HelloWorld({
 			target: document.querySelector('main'),

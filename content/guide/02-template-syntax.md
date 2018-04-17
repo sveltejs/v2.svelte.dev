@@ -4,6 +4,8 @@ title: Template syntax
 
 Rather than reinventing the wheel, Svelte templates are built on foundations that have stood the test of time: HTML, CSS and JavaScript. There's very little extra stuff to learn.
 
+> Svelte version 1 had a slightly different template syntax. You can upgrade older components automatically using [svelte-upgrade](https://github.com/sveltejs/svelte-upgrade).
+
 
 ### Tags
 
@@ -26,7 +28,7 @@ You can also use tags in attributes:
 
 ```html
 <!-- { title: 'Tags in attributes' } -->
-<h1 style='color: {color};'>{color}</h1>
+<h1 style="color: {color};">{color}</h1>
 <p hidden={hideParagraph}>You can hide this paragraph.</p>
 ```
 
@@ -40,7 +42,7 @@ You can also use tags in attributes:
 [Boolean attributes](https://www.w3.org/TR/html5/infrastructure.html#sec-boolean-attributes) like `hidden` will be omitted if the tag expression evaluates to false.
 
 
-### Triples
+### HTML
 
 Ordinary tags render expressions as plain text. If you need your expression interpreted as HTML, wrap it in a special `@html` tag:
 
@@ -59,7 +61,7 @@ Ordinary tags render expressions as plain text. If you need your expression inte
 
 As with tags, you can use any JavaScript expression in triples, and it will automatically update the document when your data changes.
 
-> Triples will **not** sanitize the HTML before rendering it! If you are displaying user input, you are responsible for first sanitizing it. Not doing so opens you up to all sorts of different attacks.
+> HTML is **not** sanitized before it is rendered! If you are displaying user input, you are responsible for first sanitizing it. Not doing so potentially opens you up to XSS attacks.
 
 
 ### If blocks
@@ -69,11 +71,11 @@ Control whether or not part of your template is rendered by wrapping it in an if
 ```html
 <!-- { repl: false } -->
 {#if user.loggedIn}
-	<a href='/logout'>log out</a>
+	<a href="/logout">log out</a>
 {/if}
 
 {#if !user.loggedIn}
-	<a href='/login'>log in</a>
+	<a href="/login">log in</a>
 {/if}
 ```
 
@@ -82,9 +84,9 @@ You can combine the two blocks above with `{:else}`:
 ```html
 <!-- { repl: false } -->
 {#if user.loggedIn}
-	<a href='/logout'>log out</a>
+	<a href="/logout">log out</a>
 {:else}
-	<a href='/login'>log in</a>
+	<a href="/login">log in</a>
 {/if}
 ```
 
@@ -118,7 +120,7 @@ Iterate over lists of data:
 
 <ul>
 	{#each cats as cat}
-		<li><a target='_blank' href='{cat.video}'>{cat.name}</a></li>
+		<li><a target="_blank" href={cat.video}>{cat.name}</a></li>
 	{/each}
 </ul>
 ```
@@ -147,11 +149,11 @@ You can access the index of the current element with *expression* as *name*, *in
 
 ```html
 <!--{ title: 'Each block indexes' }-->
-<div class='grid'>
+<div class="grid">
 	{#each rows as row, y}
-		<div class='row'>
+		<div class="row">
 			{#each columns as column, x}
-				<code class='cell'>
+				<code class="cell">
 					{x + 1},{y + 1}:
 					<strong>{row[column]}</strong>
 				</code>
@@ -183,7 +185,7 @@ Also, if you wish, you can perform one level of array destructuring on the eleme
 
 <ul>
 	{#each cats as [name, video]}
-		<li><a target='_blank' href='{video}'>{name}</a></li>
+		<li><a target="_blank" href={video}>{name}</a></li>
 	{/each}
 </ul>
 ```
@@ -208,15 +210,14 @@ Also, if you wish, you can perform one level of array destructuring on the eleme
 }
 ```
 
-If you want to iterate over an object you can use `Object.entries(object)`  which returns the object's properties as
-`[key, value]` pairs:
+If you want to iterate over an object you can use `Object.entries(object)` which returns the object's properties as `[key, value]` pairs:
 
 ```html
 <!--{ title: 'Iterating over objects' }-->
 <h1>Cats and Dogs</h1>
 
 {#each Object.entries(animals) as [animal, names]}
-    <br/> {animal}: {names.join(" and ")}
+	<p>{animal}: {names.join(" and ")}</p>
 {/each}
 ```
 
@@ -267,7 +268,7 @@ The last place where Svelte template syntax differs from regular HTML: *directiv
 ```html
 <!--{ title: 'Element directives' }-->
 <p>Count: {count}</p>
-<button on:click='set({ count: count + 1 })'>+1</button>
+<button on:click="set({ count: count + 1 })">+1</button>
 ```
 
 ```json

@@ -11,7 +11,7 @@ In most applications, you'll need to respond to the user's actions. In Svelte, t
 ```html
 <!-- { title: 'Event handlers' } -->
 <p>Count: {count}</p>
-<button on:click='set({ count: count + 1 })'>+1</button>
+<button on:click="set({ count: count + 1 })">+1</button>
 ```
 
 ```json
@@ -28,7 +28,7 @@ When the user clicks the button, Svelte calls `component.set(...)` with the prov
 <p>Select a category:</p>
 
 {#each categories as category}
-	<button on:click='select(category)'>select {category}</button>
+	<button on:click="select(category)">select {category}</button>
 {/each}
 
 <script>
@@ -56,7 +56,7 @@ You can also access the `event` object in the method call:
 
 ```html
 <!-- { title: 'Accessing `event`' } -->
-<div on:mousemove='set({ x: event.clientX, y: event.clientY })'>
+<div on:mousemove="set({ x: event.clientX, y: event.clientY })">
 	coords: {x},{y}
 </div>
 
@@ -73,7 +73,7 @@ The target node can be referenced as `this`, meaning you can do this sort of thi
 
 ```html
 <!-- { title: 'Calling node methods' } -->
-<input on:focus='this.select()' value='click to select'>
+<input on:focus="this.select()" value="click to select">
 ```
 
 ### Custom events
@@ -89,7 +89,7 @@ Events are an excellent way for [nested components](guide#nested-components) to 
 <p>Select a category:</p>
 
 {#each categories as category}
-	<button on:click='fire("select", { category })'>select {category}</button>
+	<button on:click="fire('select', { category })">select {category}</button>
 {/each}
 
 <script>
@@ -111,7 +111,7 @@ When the user clicks a button, the component will fire a `select` event, where t
 
 ```html
 <!--{ title: 'Component events' }-->
-<CategoryChooser on:select='playTwentyQuestions(event.category)'/>
+<CategoryChooser on:select="playTwentyQuestions(event.category)"/>
 
 <script>
 	import CategoryChooser from './CategoryChooser.html';
@@ -135,7 +135,7 @@ When the user clicks a button, the component will fire a `select` event, where t
 <p>Select a category:</p>
 
 {#each categories as category}
-	<button on:click='fire("select", { category })'>select {category}</button>
+	<button on:click="fire('select', { category })">select {category}</button>
 {/each}
 
 <script>
@@ -164,7 +164,7 @@ Refs are a convenient way to store a reference to particular DOM nodes or compon
 
 ```html
 <!-- { title: 'Refs' } -->
-<canvas ref:canvas width='200' height='200'></canvas>
+<canvas ref:canvas width=200 height=200></canvas>
 
 <script>
 	import createRenderer from './createRenderer.js';
@@ -232,7 +232,7 @@ Transitions allow elements to enter and leave the DOM gracefully, rather than su
 
 ```html
 <!-- { title: 'Transitions' } -->
-<input type='checkbox' bind:checked=visible> visible
+<input type=checkbox bind:checked=visible> visible
 
 {#if visible}
 	<p transition:fade>fades in and out</p>
@@ -251,10 +251,10 @@ Transitions can have parameters — typically `delay` and `duration`, but often 
 
 ```html
 <!-- { title: 'Transition with parameters' } -->
-<input type='checkbox' bind:checked=visible> visible
+<input type=checkbox bind:checked=visible> visible
 
 {#if visible}
-	<p transition:fly='{y: 200, duration: 1000}'>flies 200 pixels up, slowly</p>
+	<p transition:fly="{y: 200, duration: 1000}">flies 200 pixels up, slowly</p>
 {/if}
 
 <script>
@@ -270,10 +270,10 @@ An element can have separate `in` and `out` transitions:
 
 ```html
 <!-- { title: 'Transition in/out' } -->
-<input type='checkbox' bind:checked=visible> visible
+<input type=checkbox bind:checked=visible> visible
 
 {#if visible}
-	<p in:fly='{y: 50}' out:fade>flies up, fades out</p>
+	<p in:fly="{y: 50}" out:fade>flies up, fades out</p>
 {/if}
 
 <script>
@@ -297,7 +297,7 @@ Of these, `duration` is required, as is *either* `css` or `tick`. The rest are o
 
 ```html
 <!-- { title: 'Fade transition' } -->
-<input type='checkbox' bind:checked=visible> visible
+<input type=checkbox bind:checked=visible> visible
 
 {#if visible}
 	<p transition:fade>fades in and out</p>
@@ -331,7 +331,7 @@ Bindings are declared with the `bind:[attribute]` directive:
 
 ```html
 <!-- { title: 'Two-way binding' } -->
-<input bind:value='name' placeholder='enter your name'>
+<input bind:value=name placeholder="enter your name">
 <p>Hello {name || 'stranger'}!</p>
 ```
 
@@ -348,7 +348,7 @@ As well as DOM elements, you can bind to component data properties:
 
 ```html
 <!-- { repl: false } -->
-<CategoryChooser bind:category='category'/>
+<CategoryChooser bind:category=category/>
 ```
 
 If the attribute and the bound property share a name, you can use this shorthand:
@@ -362,9 +362,9 @@ Here is a complete example of using two way bindings with a form:
 
 ```html
 <!-- { title: 'Form bindings' } -->
-<form on:submit='handleSubmit( event )'>
-	<input bind:value='test' type='text'>
-	<button type='submit'>Store</button>
+<form on:submit="handleSubmit(event)">
+	<input bind:value=test type=text>
+	<button type=submit>Store</button>
 </form>
 
 <script>
@@ -374,7 +374,7 @@ export default {
 			// prevent the page from reloading
 			event.preventDefault();
 
-			var value = this.get('test');
+			const { value } = this.get();
 			console.log('value', value);
 		}
 	}
@@ -388,5 +388,3 @@ export default {
 	test: ""
 }
 ```
-
-> Do not confuse the `<Widget bind:foo/>` syntax (two-way binding) with the `<Widget :foo/>` syntax (one-way binding)

@@ -10,7 +10,7 @@ Your component template can have a `<style>` tag, like so:
 
 ```html
 <!--{ title: 'Scoped styles' }-->
-<div class='foo'>
+<div class="foo">
 	Big red Comic Sans
 </div>
 
@@ -35,9 +35,7 @@ This is vastly simpler than achieving the same effect via [Shadow DOM](http://ca
 
 ### Cascading rules
 
-By default, the usual cascading mechanism still applies – any global `.foo` styles would still be applied, and if our template had [nested components](guide#nested-components) with `class="foo"` elements, they would inherit our styles.
-
-If the `cascade: false` option is passed to the compiler, styles will *only* apply to the current component, unless you opt in to cascading with the `:global(...)` modifier:
+Styles will *only* apply to the current component, unless you opt in to cascading with the `:global(...)` modifier:
 
 <!-- TODO `cascade: false` in the REPL -->
 
@@ -70,19 +68,17 @@ If the `cascade: false` option is passed to the compiler, styles will *only* app
 </script>
 ```
 
-The `cascade: false` behaviour is recommended, and will be switched on by default in future versions of Svelte.
-
 > Scoped styles are *not* dynamic – they are shared between all instances of a component. In other words you can't use `{tags}` inside your CSS.
 
 
 ### Unused style removal
 
-If you're using the recommended `cascade: false` option, Svelte will identify and remove any styles that it can guarantee are not being used in your app. It will also emit a warning so that you can remove them from the source.
+Svelte will identify and remove any styles that it can guarantee are not being used in your app. It will also emit a warning so that you can remove them from the source.
 
 
 ### Special selectors
 
-If you have a [ref](guide#refs) on an element, you can use this as a CSS selector. An element with `ref:foo` can be styled with `ref:foo { color: whatever; }`. The `ref:*` selector has the same specificity as a class or attribute selector.
+If you have a [ref](guide#refs) on an element, you can use it as a CSS selector. The `ref:*` selector has the same specificity as a class or attribute selector.
 
 
 ```html

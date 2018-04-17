@@ -5,11 +5,11 @@ title: Advanced
 
 ### Keyed each blocks
 
-Associating a *key* with a block allows Svelte to be smarter about how it adds and removes items to and from a list. To do so, add `@key` to the end of the opening tag for the each block, where `key` is some property that uniquely identifies each member of the list:
+Associating a *key* with a block allows Svelte to be smarter about how it adds and removes items to and from a list. To do so, add an `(expression)` that uniquely identifies each member of the list:
 
 ```html
 <!-- { repl: false } -->
-{#each people as person @name}
+{#each people as person (person.name)}
 	<div>{person.name}</div>
 {/each}
 ```
@@ -18,11 +18,11 @@ It's easier to show the effect of this than to describe it. Open the following e
 
 ```html
 <!-- { title: 'Keyed each blocks' } -->
-<button on:click='update()'>update</button>
+<button on:click="update()">update</button>
 
 <section>
 	<h2>Keyed</h2>
-	{#each people as person @name}
+	{#each people as person (person.name)}
 		<div transition:slide>{person.name}</div>
 	{/each}
 </section>
@@ -92,7 +92,7 @@ new App({
 Ideally, we want to reuse the existing DOM instead. This process is called *hydration*. First, we need to tell the compiler to include the code necessary for hydration to work by passing the `hydratable: true` option:
 
 ```js
-const { code } = svelte.compile(source, {
+const { js } = svelte.compile(source, {
 	hydratable: true
 });
 ```

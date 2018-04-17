@@ -29,9 +29,9 @@ const component = new MyComponent({
 Every Svelte component instance has a small number of methods you can use to control it, in addition to any [custom methods](guide#custom-methods) you add.
 
 
-### component.set(data)
+### component.set(state)
 
-This updates the component's state with the new values provided and causes the DOM to update. `data` must be a plain old JavaScript object (POJO). Any properties *not* included in `data` will remain as they were.
+This updates the component's state with the new values provided and causes the DOM to update. `state` must be a plain old JavaScript object (POJO). Any properties *not* included in `state` will remain as they were.
 
 ```js
 component.set({
@@ -47,7 +47,7 @@ component.set({
 
 ### component.get()
 
-Returns the component's current *state*:
+Returns the component's current state:
 
 ```js
 const { questions, answer } = component.get();
@@ -56,6 +56,7 @@ console.log(answer); // 'ask your mother'
 
 This will also retrieve the value of [computed properties](guide#computed-properties).
 
+> Previous versions of Svelte allowed you to specify a key to retrieve a specific value — this was removed in version 2.
 
 ### component.on(eventName, callback)
 
@@ -136,3 +137,5 @@ This gives you access to standard options like `target` and `data`, but can also
 ### component.root
 
 In [nested components](guide#nested-components), each component has a `root` property pointing to the top-level root component – that is, the one instantiated with `new MyComponent({...})`.
+
+> Earlier versions of Svelte had a `component.observe(...)` method. This was removed in version 2, in favour of the `onstate` [lifecycle hook](guide#lifecycle-hooks), but is still available via [svelte-extras](https://github.com/sveltejs/svelte-extras).
