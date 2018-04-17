@@ -30,12 +30,11 @@ Now you can `require` your components:
 const Thing = require('./components/Thing.html');
 ```
 
-If you prefer to use a different file extension, or need to use [stores](guide#state-management), you can pass options like so:
+If you prefer to use a different file extension, you can pass options like so:
 
 ```js
 require('svelte/ssr/register')({
-	extensions: ['.svelte'],
-	store: true
+	extensions: ['.svelte']
 });
 ```
 

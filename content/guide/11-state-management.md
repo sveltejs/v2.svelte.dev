@@ -85,8 +85,6 @@ There are three important things to notice:
 
 Components that depend on store properties will re-render whenever they change.
 
-> To tell Svelte that you're going to be using `Store`, you must pass the `store: true` compiler option. This will change in version 2, when the compiler will automatically generate store-aware components.
-
 
 ### Declarative stores
 
