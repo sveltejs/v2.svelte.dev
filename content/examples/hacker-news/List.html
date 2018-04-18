@@ -31,8 +31,9 @@
 	const PAGE_SIZE = 20;
 
 	export default {
-		oncreate () {
-			this.observe('page', async page => {
+		async onstate({ changed, current }) {
+			if (changed.page) {
+				const { page } = current;
 				const items =  await fetch(`https://node-hnapi.herokuapp.com/news?page=${page}`).then(r => r.json());
 
 				this.set({
@@ -41,7 +42,7 @@
 				});
 
 				window.scrollTo(0,0);
-			});
+			}
 		},
 
 		components: {
