@@ -16,5 +16,5 @@ export function get(req, res) {
 		'Content-Type': 'application/json',
 		'Cache-Control': `max-age=${5 * 60 * 1e3}` // 5 minutes
 	});
-	res.end(summary);
+	res.end(json);
 }
