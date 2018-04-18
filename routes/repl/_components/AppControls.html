@@ -74,14 +74,6 @@
 <script>
 	import ExampleSelector from './ExampleSelector.html';
 	import UserMenu from './UserMenu.html';
-	import examples from '../_examples.json';
-
-	const gistIds = new Set();
-	examples.forEach(group => {
-		group.examples.forEach(example => {
-			gistIds.add(example.gist);
-		});
-	});
 
 	export default {
 		components: {
@@ -93,7 +85,7 @@
 			canSave: ({ $user, gist }) => {
 				if (!$user) return false;
 				if (!gist) return false;
-				return $user.id == gist.owner.id && !gistIds.has(gist.id); // comparing number and string
+				return $user.id == gist.owner.id; // comparing number and string
 			}
 		},
 
