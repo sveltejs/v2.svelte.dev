@@ -74,11 +74,11 @@ radius of the selected circle.
 
 		methods: {
 			handleClick(event) {
-				if (this.get('adjusting')) {
+				if (this.get().adjusting) {
 					this.set({ adjusting: false });
 
 					// if nothing changed, rewind
-					if (this.get('adjusted')) this.push();
+					if (this.get().adjusted) this.push();
 					return;
 				}
 
@@ -88,7 +88,7 @@ radius of the selected circle.
 					r: 50
 				};
 
-				const circles = this.get('circles');
+				const circles = this.get().circles;
 				circles.push(circle);
 				this.set({ circles, selected: circle });
 
@@ -97,12 +97,12 @@ radius of the selected circle.
 
 			adjust(event) {
 				event.preventDefault();
-				if (!this.get('selected')) return;
+				if (!this.get().selected) return;
 				this.set({ adjusting: true, adjusted: false });
 			},
 
 			select(circle, event) {
-				if (!this.get('adjusting')) {
+				if (!this.get().adjusting) {
 					event.stopPropagation();
 					this.set({ selected: circle });
 				}
