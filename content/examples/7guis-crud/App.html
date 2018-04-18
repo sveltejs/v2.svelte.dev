@@ -66,10 +66,10 @@
 			}
 		},
 
-		oncreate() {
-			this.observe('selected', selected => {
-				if (selected) this.set(selected);
-			});
+		onstate({ changed, current }) {
+			if (changed.selected && current.selected) {
+				this.set(current.selected);
+			}
 		},
 
 		methods: {
