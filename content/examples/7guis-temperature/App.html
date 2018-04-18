@@ -10,18 +10,17 @@
 
 <script>
 	export default {
-		oncreate: function () {
-			this.observe('celsius', c => {
+		onstate: function ({ changed, current }) {
+			if (changed.celsius) {
 				this.set({
-					fahrenheit: +(32 + (9 / 5 * c)).toFixed(1)
+					fahrenheit: +(32 + (9 / 5 * current.celsius)).toFixed(1)
 				});
-			});
-
-			this.observe('fahrenheit', f => {
+			}
+			if (changed.fahrenheit) {
 				this.set({
-					celsius: +(5 / 9 * (f - 32)).toFixed(1)
+					celsius: +(5 / 9 * (current.fahrenheit - 32)).toFixed(1)
 				});
-			});
+			}
 		}
 	}
 </script>
