@@ -1,11 +1,15 @@
-import posts from './_posts.js';
+import get_posts from './_posts.js';
 
-const lookup = new Map();
-posts.forEach(post => {
-	lookup.set(post.slug, JSON.stringify(post));
-});
+let lookup;
 
 export function get(req, res) {
+	if (!lookup || process.env.NODE_ENV !== 'production') {
+		lookup = new Map();
+		get_posts().forEach(post => {
+			lookup.set(post.slug, JSON.stringify(post));
+		});
+	}
+
 	if (lookup.has(req.params.slug)) {
 		res.set({
 			'Content-Type': 'application/json',
