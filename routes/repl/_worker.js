@@ -62,7 +62,7 @@ async function getBundle(mode, cache, lookup) {
 						if (component.type === 'js') return component.source;
 
 						try {
-							const { code, map, stats } = svelte.compile(component.source, {
+							const { js, css, stats } = svelte.compile(component.source, {
 								generate: mode,
 								format: 'es',
 								cascade: false,
@@ -79,12 +79,12 @@ async function getBundle(mode, cache, lookup) {
 							});
 
 							if (stats) {
-								if (Object.keys(stats.hooks)) info.usesHooks = true;
+								if (Object.keys(stats.hooks).length > 0) info.usesHooks = true;
 							} else if (/[^_]oncreate/.test(component.source)) {
 								info.usesHooks = true;
 							}
 
-							return { code, map };
+							return js;
 						} catch (err) {
 							erroredComponent = component;
 							throw err;
@@ -212,7 +212,7 @@ export async function bundle(components) {
 
 export function compile(component) {
 	try {
-		const { code } = svelte.compile(component.source, {
+		const { js } = svelte.compile(component.source, {
 			// TODO make options configurable
 			cascade: false,
 			name: component.name,
@@ -220,7 +220,7 @@ export function compile(component) {
 			dev: true
 		});
 
-		return code;
+		return js.code;
 	} catch (err) {
 		let result = `/* Error compiling component\n\n${err.message}`;
 		if (err.frame) result += `\n${err.frame}`;

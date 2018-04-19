@@ -1,18 +1,18 @@
-<:Head>
+<svelte:head>
 	<title>Svelte REPL</title>
-</:Head>
+</svelte:head>
 
 <Layout page='repl'>
 	<div class='repl-outer'>
 		<AppControls
-			:examples
-			:bundle
-			:components
-			:data
-			:json5
-			:gist
+			{examples}
+			{bundle}
+			{components}
+			{data}
+			{json5}
+			{gist}
 			bind:name
-			on:select='selectExample(event.slug)'
+			on:select='set({ demo: event.slug })'
 			on:forked='set({ gist: event.gist })'
 		/>
 
@@ -21,7 +21,7 @@
 				<section slot=a class='input'>
 					<ComponentSelector
 						ref:selector
-						:components
+						{components}
 						bind:selectedComponent
 						on:create='createComponent()'
 						on:remove='removeComponent()'
@@ -30,10 +30,10 @@
 					<ModuleEditor
 						ref:editor
 						bind:selectedComponent
-						:compiled
-						error='{{sourceError}}'
-						errorLoc='{{sourceErrorLoc || runtimeErrorLoc}}'
-						:warningCount
+						{compiled}
+						error='{sourceError}'
+						errorLoc='{sourceErrorLoc || runtimeErrorLoc}'
+						{warningCount}
 						on:navigate='navigate(event)'
 					/>
 				</section>
@@ -43,17 +43,17 @@
 						<div class=pane slot=a >
 							<h2 class='show-if-mobile'>Rendered component</h2>
 
-							{{#if compilerReady}}
-								<Viewer :bundle :dom :ssr :data :bundleError bind:error='runtimeError' on:change='updateData(event)' on:navigate='navigate(event)'/>
-							{{else}}
+							{#if compilerReady}
+								<Viewer {bundle} {dom} {ssr} {data} {bundleError} bind:error='runtimeError' on:change='updateData(event)' on:navigate='navigate(event)'/>
+							{:else}
 								<p class='loading'>loading Svelte compiler...</p>
-							{{/if}}
+							{/if}
 						</div>
 
 						<div class=pane slot=b >
 							<h2 class='show-if-mobile'>data.json5</h2>
 
-							<CodeMirror ref:data mode='json' bind:code='json5' error='{{dataError}}' errorLoc='{{dataErrorLoc}}'/>
+							<CodeMirror ref:data mode='json' bind:code='json5' error='{dataError}' errorLoc='{dataErrorLoc}'/>
 						</div>
 					</SplitPane>
 				</div>
@@ -196,6 +196,7 @@
 </style>
 
 <script>
+	import { observe } from 'svelte-extras';
 	import { locate } from 'locate-character';
 	import * as fleece from 'golden-fleece';
 	import Layout from '../_components/Layout.html';
@@ -205,7 +206,14 @@
 	import ComponentSelector from './_components/ComponentSelector.html';
 	import AppControls from './_components/AppControls.html';
 	import SplitPane from './_components/SplitPane.html';
-	import examples from './_examples.json';
+	import examples from '../../content/examples/manifest.json';
+
+	const slugs = new Set();
+	examples.forEach(group => {
+		group.examples.forEach(example => {
+			slugs.add(example.slug);
+		});
+	});
 
 	function tryParseData(encoded) {
 		try {
@@ -222,76 +230,32 @@
 
 	export default {
 		async preload({ query }) {
-			if (!process.browser) return null;
-
-			let gist = null;
-			let components = [];
-			let selectedComponent;
-			let json5 = '{}';
-			let name = 'loading...';
-
-			if (query.data) {
-				// TODO this is legacy; remove it in future
-				const parsed = tryParseData(query.data);
-
-				components = parsed.components;
-				components.forEach(component => {
-					if (!component.type) component.type = 'html';
-				});
-
-				json5 = JSON.stringify(parsed.data);
-				name = 'Example from guide';
-			}
-
-			else if (query.demo) {
-				const r = await fetch(`api/guide/demo/${query.demo}`);
-
-				if (r.status === 200) {
-					const demo = await r.json();
-					components = demo.components;
-					if (demo.json5) json5 = demo.json5;
-					name = demo.title;
-				}
-			}
-
-			if (components && components.length > 0) {
-				selectedComponent = components[0];
-			}
-
 			return {
 				examples,
 
 				version: query.version || 'latest',
 
-				components,
-				selectedComponent,
-				data: fleece.evaluate(json5),
-				name,
-				json5: json5
-			};
-		},
-
-		data() {
-			return {
-				name: 'loading...',
-				examples,
 				components: [],
+				data: {},
+				name: 'loading...',
+				json5: '{}',
 				gist: null
 			};
 		},
 
 		computed: {
-			runtimeErrorLoc(runtimeError, selectedComponent) {
+			runtimeErrorLoc({ runtimeError, selectedComponent }) {
 				if (!runtimeError || !selectedComponent) return null;
 				if (runtimeError.filename !== `${selectedComponent.name}.${selectedComponent.type}`) return;
 
 				return runtimeError.loc;
 			},
 
-			url: (version, gist, query) => {
+			url: ({ version, gist, query, demo }) => {
 				const params = [];
 				if (version !== 'latest') params.push(`version=${version}`);
 				if (gist) params.push(`gist=${gist.id}`);
+				else if (demo) params.push(`demo=${demo}`);
 				else if (query.gist) params.push(`gist=${query.gist}`);
 				else if (query.data) params.push(`data=${query.data}`);
 				else if (query.demo) params.push(`demo=${query.demo}`);
@@ -304,7 +268,7 @@
 
 		methods: {
 			createComponent() {
-				const components = this.get('components');
+				const { components } = this.get();
 
 				const newComponent = {
 					name: this.uid++ ? `Component${this.uid}` : 'Component1',
@@ -332,7 +296,7 @@
 			},
 
 			removeComponent() {
-				const component = this.get('selectedComponent'); // TODO doesn't seem to work as argument...
+				const component = this.get().selectedComponent; // TODO doesn't seem to work as argument...
 				const { components } = this.get();
 
 				let selectedComponent;
@@ -365,11 +329,11 @@
 			},
 
 			updateData({ key, value }) {
-				const str = this.get('json5');
-				const data = fleece.evaluate(str);
+				const { json5 } = this.get();
+				const data = fleece.evaluate(json5);
 				data[key] = value;
 
-				const patched = fleece.patch(str, data);
+				const patched = fleece.patch(json5, data);
 				this.set({ json5: patched });
 			},
 
@@ -384,26 +348,7 @@
 				});
 			},
 
-			findExample(id) {
-				const { examples } = this.get();
-
-				id = decodeURIComponent(id);
-
-				for (let i = 0; i < examples.length; i += 1) {
-					const group = examples[i];
-					for (let j = 0; j < group.examples.length; j += 1) {
-						const info = group.examples[j];
-						if (info.slug === id) return info;
-					}
-				}
-			},
-
-			selectExample(slug) {
-				const example = this.findExample(slug);
-				fetch(`gist/${example.gist}`).then(r => r.json()).then(gist => {
-					this.set({ gist });
-				});
-			}
+			observe
 		},
 
 		async oncreate() {
@@ -415,6 +360,8 @@
 
 				const updateBundle = async () => {
 					const { components } = this.get();
+
+					if (components.length === 0) return;
 
 					const { bundle, dom, ssr, warningCount, error } = await worker.bundle(components);
 
@@ -467,9 +414,28 @@
 				fetch(`gist/${query.gist}`).then(r => r.json()).then(gist => {
 					this.set({ gist });
 				});
-			} else if (components.length === 0) {
-				this.selectExample(query.example || 'hello-world');
+			} else {
+				this.set({ demo: query.demo || 'hello-world' }); // ?example is for legacy reasons
 			}
+
+			this.observe('demo', async demo => {
+				if (!demo) return;
+
+				const r = slugs.has(demo)
+					? await fetch(`api/examples/${demo}`)
+					: await fetch(`api/guide/demo/${demo}`);
+
+				if (r.status === 200) {
+					const { title, components, json5 } = await r.json();
+
+					this.set({
+						name: title,
+						json5: json5 || '{}',
+						components,
+						selectedComponent: components[0]
+					});
+				}
+			});
 
 			this.observe('gist', gist => {
 				if (!gist) return;
@@ -494,11 +460,11 @@
 					.filter(x => x.type === 'html' || x.type === 'js')
 					.sort((a, b) => {
 						if (a.name === 'App' && a.type === 'html') return -1;
-						if (b.name === 'App' && b.type === 'html') return -1;
+						if (b.name === 'App' && b.type === 'html') return 1;
 
 						if (a.type !== b.type) return a.type === 'html' ? -1 : 1;
 
-						return a.name < b.name ? -1 : 1
+						return a.name < b.name ? -1 : 1;
 					});
 
 				this.set({

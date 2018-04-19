@@ -26,7 +26,7 @@ const store = new Store({
 Each instance of `Store` has `get`, `set`, `on` and `fire` methods that behave identically to their counterparts on a Svelte component:
 
 ```js
-store.get('name'); // 'world'
+const { name } = store.get(); // 'world'
 
 store.on('state', ({ current }) => {
 	console.log(`hello ${current.name}`);
@@ -43,7 +43,7 @@ Let's adapt our [very first example](guide#understanding-svelte-components):
 
 ```html
 <!-- { repl: false } -->
-<h1>Hello {{$name}}!</h1>
+<h1>Hello {$name}!</h1>
 <Greeting/>
 
 <script>
@@ -57,7 +57,7 @@ Let's adapt our [very first example](guide#understanding-svelte-components):
 
 ```html
 <!--{ filename: 'Greeting.html' }-->
-<p>It's nice to see you, {{$name}}</p>
+<p>It's nice to see you, {$name}</p>
 ```
 
 ```js
@@ -81,11 +81,9 @@ There are three important things to notice:
 
 * We're passing `store` to `new App(...)` instead of `data`
 * The template refers to `$name` instead of `name`. The `$` prefix tells Svelte that `name` is a *store property*
-* Because `<Greeting>` is a child of `<App>`, it also has access to the store. Without it, `<App>` would have to pass the `name` property down as a component property (`<Greeting name='{{name}}'/>`)
+* Because `<Greeting>` is a child of `<App>`, it also has access to the store. Without it, `<App>` would have to pass the `name` property down as a component property (`<Greeting name={name}/>`)
 
 Components that depend on store properties will re-render whenever they change.
-
-> To tell Svelte that you're going to be using `Store`, you must pass the `store: true` compiler option. This will change in version 2, when the compiler will automatically generate store-aware components.
 
 
 ### Declarative stores
@@ -94,7 +92,7 @@ As an alternative to adding the `store` option when instantiating, the component
 
 ```html
 <!-- { title: 'Declarative stores' } -->
-<h1>Hello {{$name}}!</h1>
+<h1>Hello {$name}!</h1>
 <Greeting/>
 
 <script>
@@ -110,7 +108,7 @@ As an alternative to adding the `store` option when instantiating, the component
 
 ```html
 <!--{ filename: 'Greeting.html' }-->
-<p>It's nice to see you, {{$name}}</p>
+<p>It's nice to see you, {$name}</p>
 ```
 
 ```js
@@ -140,10 +138,10 @@ store.compute(
 	(width, height, depth) => width * height * depth
 );
 
-store.get('volume'); // 1000
+store.get().volume; // 1000
 
 store.set({ width: 20 });
-store.get('volume'); // 2000
+store.get().volume; // 2000
 
 store.compute(
 	'mass',
@@ -151,12 +149,12 @@ store.compute(
 	(volume, density) => volume * density
 );
 
-store.get('mass'); // 6000
+store.get().mass; // 6000
 ```
 
 The first argument is the name of the computed property. The second is an array of *dependencies* — these can be data properties or other computed properties. The third argument is a function that recomputes the value whenever the dependencies change.
 
-A component that was connected to this store could reference `{{$volume}}` and `{{$mass}}`, just like any other store property.
+A component that was connected to this store could reference `{$volume}` and `{$mass}`, just like any other store property.
 
 
 ### Accessing the store inside components
@@ -180,7 +178,7 @@ Each component gets a reference to `this.store`. This allows you to attach behav
 
 ```html
 <!-- { repl: false } -->
-<button on:click='store.set({ muted: true })'>
+<button on:click="store.set({ muted: true })">
 	Mute audio
 </button>
 ```
@@ -201,12 +199,12 @@ class TodoStore extends Store {
 			description
 		};
 
-		const todos = this.get('todos').concat(todo);
+		const todos = this.get().todos.concat(todo);
 		this.set({ todos });
 	}
 
 	toggleTodo(id) {
-		const todos = this.get('todos').map(todo => {
+		const todos = this.get().todos.map(todo => {
 			if (todo.id === id) {
 				return {
 					id,
@@ -252,8 +250,8 @@ You can call these methods in your components, just like the built-in methods:
 ```html
 <!-- { repl: false } -->
 <input
-	placeholder='Enter a stock ticker'
-	on:change='store.fetchStockPrices(this.value)'
+	placeholder="Enter a stock ticker"
+	on:change="store.fetchStockPrices(this.value)"
 >
 ```
 
@@ -274,18 +272,18 @@ Just as in templates, you can access store properties in component computed prop
 
 ```html
 <!-- { repl: false } -->
-{{#if isVisible}}
-	<div class='todo {{todo.done ? "done": ""}}'>
-		{{todo.description}}
+{#if isVisible}
+	<div class="todo {todo.done ? 'done': ''}">
+		{todo.description}
 	</div>
-{{/if}}
+{/if}
 
 <script>
 	export default {
 		computed: {
 			// `todo` is a component property, `$filter` is
 			// a store property
-			isVisible: (todo, $filter) => {
+			isVisible: ({ todo, $filter }) => {
 				if ($filter === 'all') return true;
 				if ($filter === 'done') return todo.done;
 				if ($filter === 'pending') return !todo.done;

@@ -1,15 +1,15 @@
-<div class='{{open ? "open": "closed"}} mousecatcher' on:click='set({ open: false })'></div>
+<div class='{open ? "open": "closed"} mousecatcher' on:click='set({ open: false })'></div>
 
 <div class='container'>
-	<span class="menu-link" on:click='toggleOpen()'>{{open ? 'Close' : 'Menu'}}</span>
+	<span class="menu-link" on:click='toggleOpen()'>{open ? 'Close' : 'Menu'}</span>
 	<a href='.' class='logo'>Svelte</a>
 </div>
 
-<nav ref:nav class='{{open ? "open": "closed"}}' on:click='set({ open: false })'>
+<nav ref:nav class='{open ? "open": "closed"}' on:click='set({ open: false })'>
 	<ul class='primary'>
-		<li><a rel='prefetch' class='{{page === "guide" ? "active": ""}}' href='guide'>Guide</a></li>
-		<li><a rel='prefetch' class='{{page === "repl" ? "active": ""}}' href='repl'>REPL</a></li>
-		<li><a rel='prefetch' class='{{page === "blog" ? "active": ""}}' href='blog'>Blog</a></li>
+		<li><a rel='prefetch' class='{page === "guide" ? "active": ""}' href='guide'>Guide</a></li>
+		<li><a rel='prefetch' class='{page === "repl" ? "active": ""}' href='repl'>REPL</a></li>
+		<li><a rel='prefetch' class='{page === "blog" ? "active": ""}' href='blog'>Blog</a></li>
 		<li><a href='https://sapper.svelte.technology'>Sapper</a></li>
 		<li><a href='https://gitter.im/sveltejs/svelte'>Chat</a></li>
 		<li><a href='https://github.com/sveltejs/svelte'>GitHub</a></li>

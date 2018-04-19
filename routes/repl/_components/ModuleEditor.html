@@ -1,22 +1,22 @@
-<div ref:editorWrapper class='editor-wrapper {{flip}}'>
-	{{#if selectedComponent}}
-		{{#if showGenerated}}
-			<CodeMirror ref:cm mode='javascript' code='{{compiled}}' readonly/>
-		{{else}}
+<div ref:editorWrapper class='editor-wrapper {flip}'>
+	{#if selectedComponent}
+		{#if showGenerated}
+			<CodeMirror ref:cm mode='javascript' code='{compiled}' readonly/>
+		{:else}
 			<CodeMirror
 				ref:cm
-				mode='{{selectedComponent.type === "js" ? "javascript" : "handlebars"}}'
+				mode='{selectedComponent.type === "js" ? "javascript" : "handlebars"}'
 				bind:code='selectedComponent.source'
-				:error
-				:errorLoc
-				:warningCount
+				{error}
+				{errorLoc}
+				{warningCount}
 				on:navigate
 			/>
-		{{/if}}
-	{{/if}}
+		{/if}
+	{/if}
 
 	<button class='btn toggle' on:click='flip()'>
-		<span class='flip-text'>{{showGenerated ? 'output' : 'input'}}</span>
+		<span class='flip-text'>{showGenerated ? 'output' : 'input'}</span>
 	</button>
 </div>
 
@@ -107,7 +107,7 @@
 				this.flipping = true;
 
 				const wrapper = this.refs.editorWrapper;
-				const showGenerated = this.get('showGenerated');
+				const { showGenerated } = this.get();
 
 				const handleFlipOutEnd = () => {
 					wrapper.removeEventListener('animationend', handleFlipOutEnd);
@@ -144,7 +144,7 @@
 			flipMobile() {
 				const bcr1 = this.refs.editorWrapper.getBoundingClientRect();
 				this.set({
-					showGenerated: !this.get('showGenerated')
+					showGenerated: !this.get().showGenerated
 				});
 
 				// if top is visible, keep it that way

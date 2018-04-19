@@ -21,7 +21,7 @@ Like Ractive and Vue, Svelte promotes the concept of *single-file components*: a
 
 ```html
 <!--{ title: 'Hello world!' }-->
-<h1>Hello {{name}}!</h1>
+<h1>Hello {name}!</h1>
 ```
 
 ```json
@@ -62,64 +62,30 @@ The best way to use Svelte is to integrate it into your build system – there 
 
 > You will need to have [Node.js](https://nodejs.org/en/) installed, and have some familiarity with the command line
 
-#### Getting started using a project template
+#### Getting started using the REPL
 
 Going to the [REPL](/repl) and pressing the *download* button on any of the examples will give you a .zip file containing everything you need to run that example locally. Just unzip it, `cd` to the directory, and run `npm install` and `npm run dev`. See [this blog post](/blog/the-easiest-way-to-get-started) for more information.
 
-#### Getting started using svelte-cli
+#### Getting started using degit
 
-Another option is to use [svelte-cli](https://github.com/sveltejs/svelte-cli), the command line interface.
-
-First, install the CLI:
+[degit](https://github.com/Rich-Harris/degit) is a tool for creating projects from templates store in git repos. Install it globally...
 
 ```bash
-npm install -g svelte-cli
+npm install -g degit
 ```
 
-Then, create a directory for the project:
+...then you can use it to spin up a new project:
 
 ```bash
-mkdir my-svelte-project
-cd my-svelte-project
+degit sveltejs/template my-new-project
+cd my-new-project
+npm install
+npm run dev
 ```
 
-Inside `my-svelte-project`, create a `HelloWorld.html` file with the following contents:
+You can use any git repo you like — these are the 'official' templates:
 
-```html
-<!-- { filename: 'HelloWorld.html', repl: false } -->
-<h1>Hello {{name}}</h1>
-```
+* [sveltejs/template](https://github.com/sveltejs/template) — this is what you get by downloading from the REPL
+* [sveltejs/template-webpack](https://github.com/sveltejs/template-webpack) — similar, but uses [webpack](https://webpack.js.org/) instead of [Rollup](https://rollupjs.org/guide/en)
 
-Compile it:
-
-```bash
-svelte compile --format iife HelloWorld.html > HelloWorld.js
-```
-
-The `--format iife` bit means 'generate an immediately-invoked function expression' – this allows us to use the component as a simple `<script>` tag. (By default, Svelte will create a JavaScript module instead, which is recommended for more serious applications but requires additional steps.)
-
-Create an `index.html` page and include the script we just generated:
-
-```html
-<!-- { filename: 'index.html', repl: false } -->
-<!doctype html>
-<html>
-<head>
-	<title>My first Svelte app</title>
-</head>
-<body>
-	<main></main>
-	<script src='HelloWorld.js'></script>
-	<script>
-		var app = new HelloWorld({
-			target: document.querySelector('main'),
-			data: {
-				name: 'world'
-			}
-		});
-	</script>
-</body>
-</html>
-```
-
-Finally, open the page in your browser – `open index.html` – and interact with `app` via the console using the API.
+> There is also a Command Line Interface, [svelte-cli](https://github.com/sveltejs/svelte-cli), but it's not recommended for production use.

@@ -1,18 +1,18 @@
 <div class='select-wrapper'>
 	<select on:change='fire("select", { slug: this.value })'>
-		<option value='{{null}}' disabled>Select an example</option>
+		<option value='{null}' disabled>Select an example</option>
 
-		{{#each examples as group}}
-			<optgroup label='{{group.name}}'>
-				{{#each group.examples as example}}
-					<option value='{{example.slug}}'>{{example.title}}</option>
-				{{/each}}
+		{#each examples as group}
+			<optgroup label='{group.name}'>
+				{#each group.examples as example}
+					<option value='{example.slug}'>{example.title}</option>
+				{/each}
 			</optgroup>
-		{{/each}}
+		{/each}
 	</select>
 
 	<div class='visible'>
-		<span class='widther'>{{name}}</span>
+		<span class='widther'>{name}</span>
 		<input bind:value=name on:focus='this.select()' on:enter='this.blur()' >
 	</div>
 </div>

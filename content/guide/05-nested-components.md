@@ -7,7 +7,7 @@ As well as containing elements (and `if` blocks and `each` blocks), Svelte compo
 ```html
 <!-- { title: 'Nested components' } -->
 <div class='widget-container'>
-	<Widget foo bar='static' baz='{{dynamic}}'/>
+	<Widget foo bar="static" baz={dynamic}/>
 </div>
 
 <script>
@@ -29,9 +29,9 @@ As well as containing elements (and `if` blocks and `each` blocks), Svelte compo
 
 ```html
 <!-- { filename: 'Widget.html', hidden: true } -->
-<p>foo: {{foo}}</p>
-<p>bar: {{bar}}</p>
-<p>baz: {{baz}}</p>
+<p>foo: {foo}</p>
+<p>bar: {bar}</p>
+<p>baz: {baz}</p>
 ```
 
 The example above is equivalent to the following...
@@ -55,17 +55,17 @@ In the case where the value in the child component has the same name as that in 
 
 ```html
 <!-- { repl: false } -->
-<Widget foo='{{foo}}'/>
+<Widget foo={foo}/>
 ```
 
 you can use
 
 ```html
 <!-- { repl: false } -->
-<Widget :foo/>
+<Widget {foo}/>
 ```
 
-> Component names should be capitalised, following the widely-used JavaScript convention of capitalising constructor names. It's also an easy way to distinguish components from elements in your template.
+> Component names must be capitalised, following the widely-used JavaScript convention of capitalising constructor names. It's also an easy way to distinguish components from elements in your template.
 
 
 ### Composing with `<slot>`
@@ -90,7 +90,7 @@ A component can contain a `<slot></slot>` element, which allows the parent compo
 
 ```html
 <!--{ filename: 'Box.html' }-->
-<div class='box'>
+<div class="box">
 	<slot><!-- content is injected here --></slot>
 </div>
 
@@ -119,9 +119,9 @@ The `<slot>` element can contain 'fallback content', which will be used if no ch
 
 ```html
 <!--{ filename: 'Box.html' }-->
-<div class='box'>
+<div class="box">
 	<slot>
-		<p class='fallback'>the box is empty!</p>
+		<p class="fallback">the box is empty!</p>
 	</slot>
 </div>
 
@@ -142,8 +142,8 @@ You can also have *named* slots. Any elements with a corresponding `slot` attrib
 ```html
 <!-- { title: 'Named slots' } -->
 <ContactCard>
-	<span slot='name'>P. Sherman</span>
-	<span slot='address'>42 Wallaby Way, Sydney</span>
+	<span slot="name">P. Sherman</span>
+	<span slot="address">42 Wallaby Way, Sydney</span>
 </ContactCard>
 
 <script>
@@ -157,11 +157,11 @@ You can also have *named* slots. Any elements with a corresponding `slot` attrib
 
 ```html
 <!--{ filename: 'ContactCard.html' }-->
-<div class='contact-card'>
-	<h2><slot name='name'></slot></h2>
-	<slot name='address'>Unknown address</slot>
+<div class="contact-card">
+	<h2><slot name="name"></slot></h2>
+	<slot name="address">Unknown address</slot>
 	<br>
-	<slot name='email'>Unknown email</slot>
+	<slot name="email">Unknown email</slot>
 </div>
 
 <style>

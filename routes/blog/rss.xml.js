@@ -1,4 +1,4 @@
-import posts from '../api/blog/_posts.js';
+import get_posts from '../api/blog/_posts.js';
 
 const months = ',Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec'.split( ',' );
 
@@ -20,7 +20,7 @@ const rss = `
 		<title>Svelte</title>
 		<link>https://svelte.technology/blog</link>
 	</image>
-	${posts.map( post => `
+	${get_posts().map( post => `
 		<item>
 			<title>${post.metadata.title}</title>
 			<link>https://svelte.technology/blog/${post.slug}</link>

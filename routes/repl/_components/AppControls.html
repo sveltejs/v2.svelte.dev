@@ -1,23 +1,23 @@
 <div class='app-controls'>
-	<ExampleSelector :examples bind:name on:select/>
+	<ExampleSelector {examples} bind:name on:select/>
 
 	<div style='text-align: right;'>
-		{{#if $user}}
+		{#if $user}
 			<UserMenu/>
-		{{else}}
+		{:else}
 			<a class='login' on:click='login(event)' href='auth/login'>Login to save</a>
-		{{/if}}
+		{/if}
 
-		<button disabled={{downloading}} on:click='download()' title='download zip file' class=icon style='background-image: url(icons/download.svg)'>download</button>
+		<button disabled={downloading} on:click='download()' title='download zip file' class=icon style='background-image: url(icons/download.svg)'>download</button>
 
-		{{#if $user}}
-			<button disabled={{forking || !$user}} on:click='fork()' title='fork' class=icon style='background-image: url(icons/fork.svg)'>fork</button>
-			<button disabled={{saving || !canSave}} on:click='save()' title='save' class=icon style='background-image: url(icons/save.svg)'>save</button>
-		{{/if}}
+		{#if $user}
+			<button disabled={forking || !$user} on:click='fork()' title='fork' class=icon style='background-image: url(icons/fork.svg)'>fork</button>
+			<button disabled={saving || !canSave} on:click='save()' title='save' class=icon style='background-image: url(icons/save.svg)'>save</button>
+		{/if}
 
-		{{#if gist}}
-			<a href='{{gist.html_url}}' title='link to gist' class=icon style='background-image: url(icons/link.svg)'>link to gist</a>
-		{{/if}}
+		{#if gist}
+			<a href='{gist.html_url}' title='link to gist' class=icon style='background-image: url(icons/link.svg)'>link to gist</a>
+		{/if}
 	</div>
 </div>
 
@@ -74,14 +74,6 @@
 <script>
 	import ExampleSelector from './ExampleSelector.html';
 	import UserMenu from './UserMenu.html';
-	import examples from '../_examples.json';
-
-	const gistIds = new Set();
-	examples.forEach(group => {
-		group.examples.forEach(example => {
-			gistIds.add(example.gist);
-		});
-	});
 
 	export default {
 		components: {
@@ -90,10 +82,10 @@
 		},
 
 		computed: {
-			canSave: ($user, gist) => {
+			canSave: ({ $user, gist }) => {
 				if (!$user) return false;
 				if (!gist) return false;
-				return $user.id == gist.owner.id && !gistIds.has(gist.id); // comparing number and string
+				return $user.id == gist.owner.id; // comparing number and string
 			}
 		},
 

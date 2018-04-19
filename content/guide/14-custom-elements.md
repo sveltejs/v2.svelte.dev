@@ -13,7 +13,7 @@ Svelte components can be used as custom elements by doing the following:
 
 ```html
 <!-- { filename: 'HelloWorld.html', repl: false } -->
-<h1>Hello {{name}}!</h1>
+<h1>Hello {name}!</h1>
 
 <script>
 	export default {
@@ -37,7 +37,7 @@ See [svelte-custom-elements.surge.sh](http://svelte-custom-elements.surge.sh/) (
 The compiled custom elements are still full-fledged Svelte components and can be used as such:
 
 ```js
-el.get('name') === el.name; // true
+el.get().name === el.name; // true
 el.set({ name: 'folks' }); // equivalent to el.name = 'folks'
 ```
 
@@ -92,7 +92,7 @@ Earlier, we saw the use of `customElement: true` to instruct the Svelte compiler
 Alternatively, you can pass `tag` and `props` direct to the compiler:
 
 ```js
-const { code } = svelte.compile(source, {
+const { js } = svelte.compile(source, {
 	customElement: {
 		tag: 'overridden-tag-name',
 		props: ['yar', 'boo']

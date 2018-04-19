@@ -29,9 +29,9 @@ const component = new MyComponent({
 Every Svelte component instance has a small number of methods you can use to control it, in addition to any [custom methods](guide#custom-methods) you add.
 
 
-### component.set(data)
+### component.set(state)
 
-This updates the component's state with the new values provided and causes the DOM to update. `data` must be a plain old JavaScript object (POJO). Any properties *not* included in `data` will remain as they were.
+This updates the component's state with the new values provided and causes the DOM to update. `state` must be a plain old JavaScript object (POJO). Any properties *not* included in `state` will remain as they were.
 
 ```js
 component.set({
@@ -44,25 +44,19 @@ component.set({
 });
 ```
 
-> If you've used Ractive in the past, this is very similar to `ractive.set(...)`, except that instead of doing `ractive.set('foo', 'bar')` you must always do `ractive.set({foo: 'bar'})`, and you cannot set nested keypaths directly. It's also very similar to React's `setState`, except that it causes synchronous updates, meaning the DOM is always in a predictable state.
 
+### component.get()
 
-### component.get(key)
-
-Returns the current value of `key`:
+Returns the component's current state:
 
 ```js
-console.log(component.get('answer')); // 'ask your mother'
+const { questions, answer } = component.get();
+console.log(answer); // 'ask your mother'
 ```
 
 This will also retrieve the value of [computed properties](guide#computed-properties).
 
-You can also call `component.get()` without any arguments to retrieve an object of all keys and values, including computed properties. This works particularly nicely with ES6 destructuring:
-
-```js
-const { foo, bar, baz } = component.get();
-```
-
+> Previous versions of Svelte allowed you to specify a key to retrieve a specific value — this was removed in version 2.
 
 ### component.on(eventName, callback)
 
@@ -133,7 +127,7 @@ Check the console.
 		oncreate() {
 			console.log(this.options);
 		}
-	}
+	};
 </script>
 ```
 
@@ -142,4 +136,6 @@ This gives you access to standard options like `target` and `data`, but can also
 
 ### component.root
 
-In [nested components](guide#nested-components), each component has a `root` property pointing to the top-level root component – that is, the one instantiated with `new MyComponent({ ... })`.
+In [nested components](guide#nested-components), each component has a `root` property pointing to the top-level root component – that is, the one instantiated with `new MyComponent({...})`.
+
+> Earlier versions of Svelte had a `component.observe(...)` method. This was removed in version 2, in favour of the `onstate` [lifecycle hook](guide#lifecycle-hooks), but is still available via [svelte-extras](https://github.com/sveltejs/svelte-extras).
