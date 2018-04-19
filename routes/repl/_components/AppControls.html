@@ -74,7 +74,7 @@
 <script>
 	import ExampleSelector from './ExampleSelector.html';
 	import UserMenu from './UserMenu.html';
-	import storeZip from '../_utils/storeZip.js';
+	import doNotZip from 'do-not-zip';
 	import downloadBlob from '../_utils/downloadBlob.js';
 
 	export default {
@@ -206,7 +206,7 @@ var app = new App({
 
 export default app;` });
 
-				downloadBlob(new Blob([storeZip(files)], { type: 'application/zip' }), 'svelte-app.zip');
+				downloadBlob(doNotZip(files), 'svelte-app.zip');
 
 				this.set({ downloading: false });
 			}

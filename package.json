@@ -50,6 +50,7 @@
     "codemirror": "^5.36.0",
     "compression": "^1.6.2",
     "devalue": "^1.0.1",
+    "do-not-zip": "^0.1.1",
     "dotenv": "^5.0.1",
     "express": "^4.16.3",
     "express-session": "^1.15.6",
