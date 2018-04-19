@@ -113,3 +113,35 @@ new App({
 ```
 
 > It doesn't matter if the client-side app doesn't perfectly match the server-rendered HTML — Svelte will repair the DOM as it goes.
+
+
+### Immutable
+
+By default, Svelte must assume your objects are mutable when doing value comparisons to be safe so everything updates when it should. However, you may realize performance gains in expensive computed properties if your data is [immutable](https://en.wikipedia.org/wiki/Immutable_object) and Svelte is instructed to use strict comparisons.
+
+If all your data is immutable, you can use the compiler option `{ immutable: true }` to use strict object comparison (using `===`) everywhere in your app. If you have one component that uses immutable data you can set it to use the strict comparison for just that component.
+
+In this example, if the array `allItems` is guaranteed to be a new array if any data within it changes, you can gain some performance in your fuzzy search by recalculating only when data has definitely changed.
+
+```html
+{#each searchResults as item}
+	<div>{item.name}</div>
+{/each}
+
+<script>
+	import FuzzySearch from 'fuzzy-search';
+
+	export default {
+		immutable: true,
+
+		computed: {
+			searchResults: ({ searchString, allItems }) => {
+				if (!searchString || !allItems) return allItems || [];
+
+				const searcher = new FuzzySearch(allItems, [ 'name', 'location' ]);
+				return searcher.search(searchString);
+			}
+		}
+	}
+</script>
+```
