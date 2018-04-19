@@ -41,7 +41,7 @@
     "html-entities": "^1.2.1",
     "now": "^10.2.1",
     "style-loader": "^0.20.3",
-    "svelte": "^1.64.0",
+    "svelte": "^2.0.0",
     "svelte-loader": "^2.5.1",
     "webpack": "^4.2.0",
     "workerize-loader": "^1.0.2"

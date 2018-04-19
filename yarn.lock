@@ -4218,9 +4218,9 @@ svelte-loader@^2.5.1:
     svelte-dev-helper "^1.1.4"
     tmp "0.0.31"
 
-svelte@^1.64.0:
-  version "1.64.0"
-  resolved "https://registry.yarnpkg.com/svelte/-/svelte-1.64.0.tgz#924ae3d84d6fbfaa66e36f61ffa3ed387dc4cbe7"
+svelte@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/svelte/-/svelte-2.0.0.tgz#d10eafbdae89a66b02ac05ef913e8288c031b71c"
 
 svgo@^0.7.0:
   version "0.7.2"
