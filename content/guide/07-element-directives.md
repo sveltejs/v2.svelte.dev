@@ -391,147 +391,67 @@ export default {
 
 ### Actions
 
-Components can get you far, but there are occasions when you need functionality for an element and wrapping it in a
-component prevents other functionality being added. How do you add a tooltip to the `<Link>` component from your
-favorite routing library?
+Actions let you decorate elements with additional functionality. Actions are functions which may return an object with lifecycle methods, `update` and `destroy`. The action will be called when its element is added to the DOM.
 
-Actions let you decorate elements with additional functionality.
+Use actions for things like:
+* tooltips
+* lazy loading images as the page is scrolled, e.g. `<img use:lazyload data-src='giant-photo.jpg'/>`
+* capturing link clicks for your client router
+* adding drag and drop
 
 ```html
 <!-- { title: 'Actions' } -->
-Copy link: <input type=text value={url} use:autoselect>
-
-<script>
-	export default {
-		actions: {
-      autoselect(node) {
-        const onFocus = () => node.select();
-        node.addEventListener('focus', onFocus);
-
-        return {
-          destroy() {
-            node.removeEventListener('focus', onFocus);
-          }
-        }
-      }
-    }
-	};
-</script>
-```
-
-```json
-/* { hidden: true } */
-{
-	"code": "https://svelte.technology/"
-}
-```
-
-Actions may also have data passed to them.
-
-```html
-<!-- { title: 'Action with Data' } -->
-<a href="https://svelte.technology/guide" use:tooltip="'Go to Svelte Guide'">Guide</a>
-
-<script>
-	export default {
-		actions: {
-      tooltip(node, text) {
-        let tooltip;
-        function onMouseEnter() {
-          tooltip = document.createElement('div');
-          tooltip.style.position = 'absolute';
-          tooltip.style.background = 'black';
-          tooltip.style.color = 'white';
-          tooltip.style.padding = '2px 6px';
-          tooltip.style.fontSize = '10px';
-          tooltip.style.pointerEvents = 'none';
-          tooltip.style.top = `${node.offsetTop + node.offsetHeight}px`;
-          tooltip.style.left = `${node.offsetLeft + node.offsetWidth}px`;
-					tooltip.textContent = text;
-					document.body.appendChild(tooltip);
-        }
-
-        function onMouseLeave() {
-          if (tooltip) tooltip.remove();
-          tooltip = null;
-        }
-
-        node.addEventListener('mouseenter', onMouseEnter);
-        node.addEventListener('mouseleave', onMouseLeave);
-
-        return {
-          destroy() {
-            if (tooltip) tooltip.remove();
-            node.removeEventListener('mouseenter', onMouseEnter);
-            node.removeEventListener('mouseleave', onMouseLeave);
-          }
-        }
-      }
-    }
-	};
-</script>
-```
-
-Actions are functions which may return an object with lifecycle methods, `update` and `destroy`. The action's function
-will be called when an element with the action is added to the DOM. If the element is inside an `{#if}` or `{#each}`
-block the action will be called once the element is added and once for each element added.
-
-The lifecycle method `destroy` should be called to clean up before the element is removed from the DOM. The lifecycle
-method  `update` may be used to update an action when its data has changed.
-
-```html
-<!-- { title: 'Action with Update' } -->
 <button on:click="toggleLanguage()" use:tooltip="translations[language].tooltip">{language}</button>
 
 <script>
 	export default {
 		actions: {
-      tooltip(node, text) {
-        let tooltip;
-        function onMouseEnter() {
-          tooltip = document.createElement('div');
-          tooltip.style.position = 'absolute';
-          tooltip.style.background = 'black';
-          tooltip.style.color = 'white';
-          tooltip.style.padding = '2px 6px';
-          tooltip.style.fontSize = '10px';
-          tooltip.style.pointerEvents = 'none';
-          tooltip.style.top = `${node.offsetTop + node.offsetHeight}px`;
-          tooltip.style.left = `${node.offsetLeft + node.offsetWidth}px`;
+			tooltip(node, text) {
+				let tooltip;
+				function onMouseEnter() {
+					tooltip = document.createElement('div');
+					tooltip.style.position = 'absolute';
+					tooltip.style.background = 'black';
+					tooltip.style.color = 'white';
+					tooltip.style.padding = '2px 6px';
+					tooltip.style.fontSize = '10px';
+					tooltip.style.pointerEvents = 'none';
+					tooltip.style.top = `${node.offsetTop + node.offsetHeight}px`;
+					tooltip.style.left = `${node.offsetLeft + node.offsetWidth}px`;
 					tooltip.textContent = text;
 					document.body.appendChild(tooltip);
-        }
+				}
 
-        function onMouseLeave() {
-          if (tooltip) tooltip.remove();
-          tooltip = null;
-        }
+				function onMouseLeave() {
+					if (tooltip) tooltip.remove();
+					tooltip = null;
+				}
 
-        node.addEventListener('mouseenter', onMouseEnter);
-        node.addEventListener('mouseleave', onMouseLeave);
+				node.addEventListener('mouseenter', onMouseEnter);
+				node.addEventListener('mouseleave', onMouseLeave);
 
-        return {
-          update(value) {
-            text = value;
-            if (tooltip) tooltip.textContent = text;
-          },
+				return {
+					update(value) {
+						text = value;
+						if (tooltip) tooltip.textContent = text;
+					},
 
-          destroy() {
-            if (tooltip) tooltip.remove();
-            node.removeEventListener('mouseenter', onMouseEnter);
-            node.removeEventListener('mouseleave', onMouseLeave);
-          }
-        }
-      }
-    },
+					destroy() {
+						if (tooltip) tooltip.remove();
+						node.removeEventListener('mouseenter', onMouseEnter);
+						node.removeEventListener('mouseleave', onMouseLeave);
+					}
+				}
+			}
+		},
 
-    methods: {
-      toggleLanguage() {
-        let { language } = this.get();
-        language = language === 'english' ? 'latin' : 'english';
-        this.set({ language });
-      }
-    }
+		methods: {
+			toggleLanguage() {
+				let { language } = this.get();
+				language = language === 'english' ? 'latin' : 'english';
+				this.set({ language });
+			}
+		}
 	};
 </script>
 ```
@@ -539,21 +459,14 @@ method  `update` may be used to update an action when its data has changed.
 ```json
 /* { hidden: true } */
 {
-  "language": "english",
-  "translations": {
-    "english": {
-      "tooltip": "Switch Languages",
-    },
-    "latin": {
-      "tooltip": "Itchsway Anguageslay",
-    },
-  }
+	"language": "english",
+	"translations": {
+		"english": {
+			"tooltip": "Switch Languages",
+		},
+		"latin": {
+			"tooltip": "Itchsway Anguageslay",
+		},
+	}
 }
 ```
-
-Actions are most valuable for sharing between components and with other projects. Possible use-cases for actions:
-* tooltips
-* lazy loading images as the page is scrolled, e.g. `<img use:lazyload data-src='giant-photo.jpg'/>`
-* history pushstate capturing for links
-* adding drag and drop
-* form element rules/additions
