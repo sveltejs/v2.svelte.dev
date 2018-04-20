@@ -94,7 +94,6 @@ async function getBundle(mode, cache, lookup) {
 			}],
 			onwarn(warning) {
 				console.warn(warning);
-				warnings.push(warning);
 				warningCount += 1;
 			},
 			cache
