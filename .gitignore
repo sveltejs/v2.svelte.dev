@@ -1,7 +1,8 @@
 .DS_Store
 node_modules
 .sapper
-assets/svelte-app.zip
+assets/svelte-app.json
+scripts/svelte-app
 credentials.json
 app/manifest
 build
