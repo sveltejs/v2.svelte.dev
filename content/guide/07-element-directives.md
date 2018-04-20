@@ -401,45 +401,59 @@ Use actions for things like:
 
 ```html
 <!-- { title: 'Actions' } -->
-<button on:click="toggleLanguage()" use:tooltip="translations[language].tooltip">{language}</button>
+<button on:click="toggleLanguage()" use:tooltip="translations[language].tooltip">
+	{language}
+</button>
 
 <script>
 	export default {
 		actions: {
 			tooltip(node, text) {
-				let tooltip;
-				function onMouseEnter() {
-					tooltip = document.createElement('div');
-					tooltip.style.position = 'absolute';
-					tooltip.style.background = 'black';
-					tooltip.style.color = 'white';
-					tooltip.style.padding = '2px 6px';
-					tooltip.style.fontSize = '10px';
-					tooltip.style.pointerEvents = 'none';
-					tooltip.style.top = `${node.offsetTop + node.offsetHeight}px`;
-					tooltip.style.left = `${node.offsetLeft + node.offsetWidth}px`;
-					tooltip.textContent = text;
+				const tooltip = document.createElement('div');
+				tooltip.textContent = text;
+
+				Object.assign(tooltip.style, {
+					position: 'absolute',
+					background: 'black',
+					color: 'white',
+					padding: '0.5em 1em',
+					fontSize: '12px',
+					pointerEvents: 'none',
+					transform: 'translate(5px, -50%)',
+					borderRadius: '2px',
+					transition: 'opacity 0.4s'
+				});
+
+				function position() {
+					const { top, right, bottom } = node.getBoundingClientRect();
+					tooltip.style.top = `${(top + bottom) / 2}px`;
+					tooltip.style.left = `${right}px`;
+				}
+
+				function append() {
 					document.body.appendChild(tooltip);
+					tooltip.style.opacity = 0;
+					setTimeout(() => tooltip.style.opacity = 1);
+					position();
 				}
 
-				function onMouseLeave() {
-					if (tooltip) tooltip.remove();
-					tooltip = null;
+				function remove() {
+					tooltip.remove();
 				}
 
-				node.addEventListener('mouseenter', onMouseEnter);
-				node.addEventListener('mouseleave', onMouseLeave);
+				node.addEventListener('mouseenter', append);
+				node.addEventListener('mouseleave', remove);
 
 				return {
-					update(value) {
-						text = value;
-						if (tooltip) tooltip.textContent = text;
+					update(text) {
+						tooltip.textContent = text;
+						position();
 					},
 
 					destroy() {
-						if (tooltip) tooltip.remove();
-						node.removeEventListener('mouseenter', onMouseEnter);
-						node.removeEventListener('mouseleave', onMouseLeave);
+						tooltip.remove();
+						node.removeEventListener('mouseenter', append);
+						node.removeEventListener('mouseleave', remove);
 					}
 				}
 			}
@@ -447,9 +461,11 @@ Use actions for things like:
 
 		methods: {
 			toggleLanguage() {
-				let { language } = this.get();
-				language = language === 'english' ? 'latin' : 'english';
-				this.set({ language });
+				const { language } = this.get();
+
+				this.set({
+					language: language === 'english' ? 'latin' : 'english'
+				});
 			}
 		}
 	};
@@ -459,13 +475,13 @@ Use actions for things like:
 ```json
 /* { hidden: true } */
 {
-	"language": "english",
-	"translations": {
-		"english": {
-			"tooltip": "Switch Languages",
+	language: "english",
+	translations: {
+		english: {
+			tooltip: "Switch Languages",
 		},
-		"latin": {
-			"tooltip": "Itchsway Anguageslay",
+		latin: {
+			tooltip: "Itchsway Anguageslay",
 		},
 	}
 }
