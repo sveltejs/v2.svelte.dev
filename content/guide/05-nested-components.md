@@ -67,6 +67,31 @@ you can use
 
 > Component names must be capitalised, following the widely-used JavaScript convention of capitalising constructor names. It's also an easy way to distinguish components from elements in your template.
 
+There's also a shorter way to specify that a component uses another component. Instead of importing and referencing it like this
+
+```html
+<!-- { repl: false } -->
+<script>
+	import Widget from './Widget.html';
+	export default {
+		components: { Widget }
+	};
+</script>
+```
+
+you can write
+
+```html
+<!-- { repl: false } -->
+<script>
+	export default {
+		components: { Widget: './Widget.html' }
+	};
+</script>
+```
+
+and Svelte will write the `import` for you.
+
 
 ### Composing with `<slot>`
 
