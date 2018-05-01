@@ -177,14 +177,14 @@ You can access the index of the current element with *expression* as *name*, *in
 
 > By default, if the list `a, b, c` becomes `a, c`, Svelte will *remove* the third block and *change* the second from `b` to `c`, rather than removing `b`. If that's not what you want, use a [keyed each block](guide#keyed-each-blocks).
 
-Also, if you wish, you can perform one level of array destructuring on the elements of the array directly in the each block:
+You can use destructuring patterns on the elements of the array:
 
 ```html
 <!--{ title: 'Each block destructuring' }-->
 <h1>It's the cats of YouTube again</h1>
 
 <ul>
-	{#each cats as [name, video]}
+	{#each cats as {name, video} }
 		<li><a target="_blank" href={video}>{name}</a></li>
 	{/each}
 </ul>
@@ -194,18 +194,18 @@ Also, if you wish, you can perform one level of array destructuring on the eleme
 /* { hidden: true } */
 {
 	cats: [
-		[
-			"Keyboard Cat",
-			"https://www.youtube.com/watch?v=J---aiyznGQ"
-		],
-		[
-			"Maru",
-			"https://www.youtube.com/watch?v=z_AbfPXTKms"
-		],
-		[
-			"Henri The Existential Cat",
-			"https://www.youtube.com/watch?v=OUtn3pvWmpg"
-		]
+		{
+			name: "Keyboard Cat",
+			video: "https://www.youtube.com/watch?v=J---aiyznGQ"
+		},
+		{
+			name: "Maru",
+			video: "https://www.youtube.com/watch?v=z_AbfPXTKms"
+		},
+		{
+			name: "Henri The Existential Cat",
+			video: "https://www.youtube.com/watch?v=OUtn3pvWmpg"
+		}
 	]
 }
 ```
