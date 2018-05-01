@@ -79,7 +79,7 @@ async function getBundle(mode, cache, lookup) {
 							});
 
 							if (stats) {
-								if (Object.keys(stats.hooks).length > 0) info.usesHooks = true;
+								if (Object.keys(stats.hooks).filter(hook => stats.hooks[hook]).length > 0) info.usesHooks = true;
 							} else if (/[^_]oncreate/.test(component.source)) {
 								info.usesHooks = true;
 							}
