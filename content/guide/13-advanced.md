@@ -72,8 +72,6 @@ It's easier to show the effect of this than to describe it. Open the following e
 </script>
 ```
 
-> At present, the only valid key expressions are of the form `object.property`. This restriction will be removed in a future version
-
 
 ### Hydration
 
