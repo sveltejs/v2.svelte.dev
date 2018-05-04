@@ -374,8 +374,8 @@ export default {
 			// prevent the page from reloading
 			event.preventDefault();
 
-			const { value } = this.get();
-			console.log('value', value);
+			const { test } = this.get();
+			console.log('value', test);
 		}
 	}
 };
