@@ -174,11 +174,11 @@ Each component gets a reference to `this.store`. This allows you to attach behav
 </script>
 ```
 
-...or call store methods in your event handlers:
+...or call store methods in your event handlers, using the same `$` prefix as data properties:
 
 ```html
 <!-- { repl: false } -->
-<button on:click="store.set({ muted: true })">
+<button on:click="$set({ muted: true })">
 	Mute audio
 </button>
 ```
@@ -251,7 +251,7 @@ You can call these methods in your components, just like the built-in methods:
 <!-- { repl: false } -->
 <input
 	placeholder="Enter a stock ticker"
-	on:change="store.fetchStockPrices(this.value)"
+	on:change="$fetchStockPrices(this.value)"
 >
 ```
 
