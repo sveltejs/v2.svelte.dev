@@ -43,7 +43,7 @@
     "style-loader": "^0.20.3",
     "svelte": "^2.4.0",
     "svelte-loader": "^2.5.1",
-    "webpack": "^4.2.0",
+    "webpack": "^4.6.0",
     "workerize-loader": "^1.0.2"
   },
   "dependencies": {
