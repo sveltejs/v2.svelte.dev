@@ -174,7 +174,7 @@ Each component gets a reference to `this.store`. This allows you to attach behav
 </script>
 ```
 
-...or call store methods in your event handlers:
+...or call store methods in your event handlers, using the same `$` prefix as data properties:
 
 ```html
 <!-- { repl: false } -->
