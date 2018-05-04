@@ -4,7 +4,7 @@
   "description": "Docs and examples for Svelte",
   "scripts": {
     "dev": "sapper dev",
-    "start": "sapper start",
+    "start": "node build",
     "sapper": "sapper build",
     "update_template": "sh ./scripts/update_template.sh",
     "stage": "now",
