@@ -217,7 +217,7 @@
 
 		methods: {
 			toggleOpen () {
-				const open = this.get( 'open' );
+				const { open } = this.get();
 
 				// if the menu is closing, scroll back to the top *after* it
 				// shuts. otherwise, scroll back to the top immediately
@@ -226,7 +226,7 @@
 				// that the scrollbar visibly flashes
 				if ( open ) {
 					setTimeout( () => {
-						if ( !this.get( 'open' ) ) {
+						if ( !this.get().open ) {
 							this.refs.nav.scrollTop = 0;
 						}
 					}, 350 );
@@ -234,7 +234,7 @@
 					this.refs.nav.scrollTop = 0;
 				}
 
-				this.set({ open: !open.open });
+				this.set({ open: !open });
 			}
 		},
 
