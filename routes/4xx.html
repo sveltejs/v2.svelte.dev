@@ -2,9 +2,7 @@
 	<title>{error.message} • The magical disappearing UI framework</title>
 </svelte:head>
 
-<Layout>
-	<h1>{error.message}</h1>
-</Layout>
+<h1>{error.message}</h1>
 
 <style>
 	h1 {
@@ -19,13 +17,3 @@
 		padding: 0.5em 0 0 0;
 	}
 </style>
-
-<script>
-	import Layout from './_components/Layout.html';
-
-	export default {
-		components: {
-			Layout
-		}
-	};
-</script>

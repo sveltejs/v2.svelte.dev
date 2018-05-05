@@ -2,65 +2,63 @@
 	<title>Svelte REPL</title>
 </svelte:head>
 
-<Layout page='repl'>
-	<div class='repl-outer'>
-		<AppControls
-			{examples}
-			{bundle}
-			{components}
-			{data}
-			{json5}
-			{gist}
-			bind:name
-			on:select='set({ demo: event.slug })'
-			on:forked='set({ gist: event.gist })'
-		/>
+<div class='repl-outer'>
+	<AppControls
+		{examples}
+		{bundle}
+		{components}
+		{data}
+		{json5}
+		{gist}
+		bind:name
+		on:select='set({ demo: event.slug })'
+		on:forked='set({ gist: event.gist })'
+	/>
 
-		<div class='repl-inner'>
-			<SplitPane type=horizontal on:resize='resizePanes(["editor", "data"])'>
-				<section slot=a class='input'>
-					<ComponentSelector
-						ref:selector
-						{components}
-						bind:selectedComponent
-						on:create='createComponent()'
-						on:remove='removeComponent()'
-					/>
+	<div class='repl-inner'>
+		<SplitPane type=horizontal on:resize='resizePanes(["editor", "data"])'>
+			<section slot=a class='input'>
+				<ComponentSelector
+					ref:selector
+					{components}
+					bind:selectedComponent
+					on:create='createComponent()'
+					on:remove='removeComponent()'
+				/>
 
-					<ModuleEditor
-						ref:editor
-						bind:selectedComponent
-						{compiled}
-						error='{sourceError}'
-						errorLoc='{sourceErrorLoc || runtimeErrorLoc}'
-						{warningCount}
-						on:navigate='navigate(event)'
-					/>
-				</section>
+				<ModuleEditor
+					ref:editor
+					bind:selectedComponent
+					{compiled}
+					error='{sourceError}'
+					errorLoc='{sourceErrorLoc || runtimeErrorLoc}'
+					{warningCount}
+					on:navigate='navigate(event)'
+				/>
+			</section>
 
-				<div slot=b style='height: 100%;'>
-					<SplitPane type=vertical on:resize='resizePanes(["data"])'>
-						<div class=pane slot=a >
-							<h2 class='show-if-mobile'>Rendered component</h2>
+			<div slot=b style='height: 100%;'>
+				<SplitPane type=vertical on:resize='resizePanes(["data"])'>
+					<div class=pane slot=a >
+						<h2 class='show-if-mobile'>Rendered component</h2>
 
-							{#if compilerReady}
-								<Viewer {bundle} {dom} {ssr} {data} {bundleError} bind:error='runtimeError' on:change='updateData(event)' on:navigate='navigate(event)'/>
-							{:else}
-								<p class='loading'>loading Svelte compiler...</p>
-							{/if}
-						</div>
+						{#if compilerReady}
+							<Viewer {bundle} {dom} {ssr} {data} {bundleError} bind:error='runtimeError' on:change='updateData(event)' on:navigate='navigate(event)'/>
+						{:else}
+							<p class='loading'>loading Svelte compiler...</p>
+						{/if}
+					</div>
 
-						<div class=pane slot=b >
-							<h2 class='show-if-mobile'>data.json5</h2>
+					<div class=pane slot=b >
+						<h2 class='show-if-mobile'>data.json5</h2>
 
-							<CodeMirror ref:data mode='json' bind:code='json5' error='{dataError}' errorLoc='{dataErrorLoc}'/>
-						</div>
-					</SplitPane>
-				</div>
-			</SplitPane>
-		</div>
+						<CodeMirror ref:data mode='json' bind:code='json5' error='{dataError}' errorLoc='{dataErrorLoc}'/>
+					</div>
+				</SplitPane>
+			</div>
+		</SplitPane>
 	</div>
-</Layout>
+</div>
 
 <style>
 	.repl-outer {
@@ -199,7 +197,6 @@
 	import { observe } from 'svelte-extras';
 	import { locate } from 'locate-character';
 	import * as fleece from 'golden-fleece';
-	import Layout from '../_components/Layout.html';
 	import CodeMirror from './_components/CodeMirror.html';
 	import ModuleEditor from './_components/ModuleEditor.html';
 	import Viewer from './_components/Viewer.html';
@@ -496,7 +493,6 @@
 		},
 
 		components: {
-			Layout,
 			ModuleEditor,
 			CodeMirror,
 			Viewer,
