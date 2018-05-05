@@ -3,16 +3,14 @@
 	<title>{post.metadata.title}</title>
 </svelte:head>
 
-<Layout page='blog'>
-	<article class='post'>
-		<h1>{post.metadata.title}</h1>
-		<p class='standfirst'>{post.metadata.description}</p>
+<article class='post'>
+	<h1>{post.metadata.title}</h1>
+	<p class='standfirst'>{post.metadata.description}</p>
 
-		<p class='byline'><a href='{post.metadata.authorURL}'>{post.metadata.author}</a> <time datetime='{post.metadata.pubdate}'>{post.metadata.dateString}</time></p>
+	<p class='byline'><a href='{post.metadata.authorURL}'>{post.metadata.author}</a> <time datetime='{post.metadata.pubdate}'>{post.metadata.dateString}</time></p>
 
-		{@html post.html}
-	</article>
-</Layout>
+	{@html post.html}
+</article>
 
 <style>
 	.post {
@@ -170,13 +168,7 @@
 </style>
 
 <script>
-	import Layout from '../_components/Layout.html';
-
 	export default {
-		components: {
-			Layout
-		},
-
 		preload({ params }) {
 			return this.fetch(`api/blog/${params.slug}`).then(r => r.json()).then(post => {
 				return { post };
