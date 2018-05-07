@@ -189,7 +189,7 @@
 					const pkg = JSON.parse(files[idx].data);
 					const deps = {};
 					bundle.imports.forEach(mod => {
-						const match = /^[^@\/]+/.exec(mod);
+						const match = /^(@[^\/]+\/)?[^@\/]+/.exec(mod);
 						deps[match[0]] = 'latest';
 					});
 					pkg.dependencies = deps;
