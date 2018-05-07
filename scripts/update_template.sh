@@ -12,4 +12,4 @@ rm -rf scripts/svelte-app/src
 rm -rf scripts/svelte-app/node_modules
 
 # build svelte-app.json
-node scripts/build-svelte-app-json.js `find scripts/svelte-app/ -type f`
+node scripts/build-svelte-app-json.js `find scripts/svelte-app -type f`
