@@ -77,7 +77,7 @@ The expression inside the `this="{...}"` can be any valid JavaScript expression.
 
 	export default {
 		computed: {
-			Size: size => {
+			Size: ({size}) => {
 				if (size === 'small') return Small;
 				if (size === 'medium') return Medium;
 				return Large;
