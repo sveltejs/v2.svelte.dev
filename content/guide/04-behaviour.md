@@ -693,7 +693,7 @@ There are four 'hooks' provided by Svelte for adding control logic — `oncreate
 
 ### Helpers
 
-Helpers are simple functions that are used in your template. In the example above, we want to ensure that `minutes` and `seconds` are preceded with a `0` if they only have one digit, so we add a `leftPad` helper:
+Helpers are simple functions that are used in your template. In the example below, we want to ensure that `minutes` and `seconds` are preceded with a `0` if they only have one digit, so we add a `leftPad` helper:
 
 ```html
 <!-- { title: 'Helpers' } -->
