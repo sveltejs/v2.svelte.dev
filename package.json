@@ -42,9 +42,9 @@
     "now": "^11.1.7",
     "sapper": "^0.12.0",
     "style-loader": "^0.21.0",
-    "svelte": "^2.4.0",
+    "svelte": "^2.6.0",
     "svelte-loader": "^2.5.1",
-    "webpack": "^4.7.0",
+    "webpack": "^4.8.3",
     "workerize-loader": "^1.0.2"
   },
   "dependencies": {
