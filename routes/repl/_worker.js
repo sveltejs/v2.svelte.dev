@@ -67,6 +67,8 @@ async function getBundle(mode, cache, lookup) {
 								format: 'es',
 								cascade: false,
 								store: true,
+								skipIntroByDefault: true,
+								nestedTransitions: true,
 								name: component.name,
 								filename: component.name + '.html',
 								dev: true,
