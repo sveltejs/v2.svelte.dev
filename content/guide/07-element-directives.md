@@ -307,7 +307,7 @@ Of these, `duration` is required, as is *either* `css` or `tick`. The rest are o
 	export default {
 		transitions: {
 			fade(node, { delay = 0, duration = 400 }) {
-				const o = +getComputedStyle(node).opacity;
+				const o = getComputedStyle(node).opacity;
 
 				return {
 					delay,
