@@ -1694,7 +1694,7 @@ globby@^5.0.0:
     pify "^2.0.0"
     pinkie-promise "^2.0.0"
 
-golden-fleece@^1.0.8:
+golden-fleece@^1.0.9:
   version "1.0.9"
   resolved "https://registry.yarnpkg.com/golden-fleece/-/golden-fleece-1.0.9.tgz#0c4cbba8b493c8ab4cd4023404317a97785306f3"
 
