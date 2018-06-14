@@ -376,7 +376,7 @@ If the attribute and the bound property share a name, you can use this shorthand
 <CategoryChooser bind:category/>
 ```
 
-Second, there specific bindings that correlate to actual named DOM attributes and properties. Here are the current bindable attributes and properties for each element:
+Second, there are specific bindings that correlate to actual named DOM attributes and properties. Here are the current bindable attributes and properties for each element:
 
 - `<input>`, `<textarea>`, `<select>`, `<option>`
 	- `value`
