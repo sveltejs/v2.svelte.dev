@@ -323,9 +323,36 @@ Of these, `duration` is required, as is *either* `css` or `tick`. The rest are o
 > If the `css` option is used, Svelte will create a CSS animation that runs efficiently off the main thread. Therefore if you can achieve an effect using `css` rather than `tick`, you should.
 
 
-### Two-way binding
+### Passing data
 
-It's currently fashionable to avoid two-way binding on the grounds that it creates all sorts of hard-to-debug problems and slows your application down, and that a one-way top-down data flow is 'easier to reason about'. This is in fact high grade nonsense. It's true that two-way binding done *badly* has all sorts of issues, and that very large apps benefit from the discipline of a not permitting deeply nested components to muck about with state that might affect distant parts of the app. But when used correctly, two-way binding simplifies things greatly.
+Svelte distinguishes between "props" and "bindings." In this regard, bindings can change the scope of both parent and child components, but props only modify the child's scope.
+
+The simplest method is to only pass data from parent to child components:
+
+```html
+<!-- { repl: false } -->
+<Widget childValue={parentValue}/>
+```
+
+Here, `{parentValue}` is passed to the child component `<Widget>`, which can access the data as property `childValue`. Svelte will ensure that the value of `childValue` is kept in sync with the value of `parentValue` in the parent component, and takes care of destroying the child component data when the parent is destroyed. But the reverse is not true. The parent component's data `parentValue` is not bound to any changes the child component may make to its `childValue` data.
+
+In the case where the property names match, a shorthand is available. Instead of
+
+```html
+<!-- { repl: false } -->
+<Widget foo={foo}/>
+```
+
+you can simply write
+
+```html
+<!-- { repl: false } -->
+<Widget {foo}/>
+```
+
+### Binding data
+
+There may be times when you want to actually bind data between parent and child components, or between different parts of the DOM.
 
 Bindings are declared with the `bind:[attribute]` directive:
 
@@ -335,16 +362,7 @@ Bindings are declared with the `bind:[attribute]` directive:
 <p>Hello {name || 'stranger'}!</p>
 ```
 
-Here are the current bindable attributes and properties for each element:
-
-- `<input>`, `<textarea>`, `<select>`, `<option>`
-	- `value`
-- `<input type="checkbox">`, `<input type="radio">`
-	- `checked`, `group`
-- `<audio>`, `<video>`
-	- `buffered`, `currentTime`, `duration`, `paused`, `played`, `seekable`, `volume`
-
-As well as DOM elements, you can bind to component data properties:
+There are two variants of bindings. First, you can bind to component data properties:
 
 ```html
 <!-- { repl: false } -->
@@ -356,6 +374,21 @@ If the attribute and the bound property share a name, you can use this shorthand
 ```html
 <!-- { repl: false } -->
 <CategoryChooser bind:category/>
+```
+
+Second, there specific bindings that correlate to actual named DOM attributes and properties. Here are the current bindable attributes and properties for each element:
+
+- `<input>`, `<textarea>`, `<select>`, `<option>`
+	- `value`
+- `<input type="checkbox">`, `<input type="radio">`
+	- `checked`, `group`
+- `<audio>`, `<video>`
+	- `buffered`, `currentTime`, `duration`, `paused`, `played`, `seekable`, `volume`
+
+An additional set of read-only bindings are available under the  [`<svelte:window>`](guide#svelte-window) component, as well as two read-only properties available on any given element:
+
+```html
+<div bind:offsetWidth=w bind:offsetHeight=h></div>
 ```
 
 Here is a complete example of using two way bindings with a form:

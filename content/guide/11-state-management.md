@@ -255,7 +255,7 @@ You can call these methods in your components, just like the built-in methods:
 >
 ```
 
-### Two-way store bindings
+### Data bindings
 
 You can bind to store properties just like you bind to component properties — just add the `$` prefix:
 

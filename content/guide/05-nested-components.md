@@ -49,25 +49,11 @@ const widget = new Widget({
 });
 ```
 
-...except that Svelte will ensure that the value of `baz` is kept in sync with the value of `dynamic` in the parent component, and takes care of destroying the child component when the parent is destroyed.
-
-In the case where the value in the child component has the same name as that in the parent component, there a shorter way to write this. Instead of
-
-```html
-<!-- { repl: false } -->
-<Widget foo={foo}/>
-```
-
-you can use
-
-```html
-<!-- { repl: false } -->
-<Widget {foo}/>
-```
+For a detailed description of the relationship of data between components, see the section on [passing data](guide#passing-data) and [binding data](guide#binding-data).
 
 > Component names must be capitalised, following the widely-used JavaScript convention of capitalising constructor names. It's also an easy way to distinguish components from elements in your template.
 
-There's also a shorter way to specify that a component uses another component. Instead of importing and referencing it like this
+There's a shorthand way to specify that a component uses another component. Instead of importing and referencing it like this
 
 ```html
 <!-- { repl: false } -->
