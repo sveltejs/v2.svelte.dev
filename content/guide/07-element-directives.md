@@ -1,5 +1,5 @@
 ---
-title: Element directives
+title: Directives
 ---
 
 Directives are element or component-level instructions to Svelte. They look like attributes, except with a `:` character.
@@ -323,69 +323,92 @@ Of these, `duration` is required, as is *either* `css` or `tick`. The rest are o
 > If the `css` option is used, Svelte will create a CSS animation that runs efficiently off the main thread. Therefore if you can achieve an effect using `css` rather than `tick`, you should.
 
 
-### Two-way binding
+### Bindings
 
-It's currently fashionable to avoid two-way binding on the grounds that it creates all sorts of hard-to-debug problems and slows your application down, and that a one-way top-down data flow is 'easier to reason about'. This is in fact high grade nonsense. It's true that two-way binding done *badly* has all sorts of issues, and that very large apps benefit from the discipline of a not permitting deeply nested components to muck about with state that might affect distant parts of the app. But when used correctly, two-way binding simplifies things greatly.
+As we've seen, data can be passed down to elements and components with attributes and [props](guide#props). Occasionally, you need to get data back up; for that we use bindings.
 
-Bindings are declared with the `bind:[attribute]` directive:
 
-```html
-<!-- { title: 'Two-way binding' } -->
-<input bind:value=name placeholder="enter your name">
-<p>Hello {name || 'stranger'}!</p>
-```
+#### Component bindings
 
-Here are the current bindable attributes and properties for each element:
-
-- `<input>`, `<textarea>`, `<select>`, `<option>`
-	- `value`
-- `<input type="checkbox">`, `<input type="radio">`
-	- `checked`, `group`
-- `<audio>`, `<video>`
-	- `buffered`, `currentTime`, `duration`, `paused`, `played`, `seekable`, `volume`
-
-As well as DOM elements, you can bind to component data properties:
+Component bindings keep values in sync between a parent and a child:
 
 ```html
 <!-- { repl: false } -->
-<CategoryChooser bind:category=category/>
+<Widget bind:childValue=parentValue/>
 ```
 
-If the attribute and the bound property share a name, you can use this shorthand:
+Whenever `childValue` changes in the child component, `parentValue` will be updated in the parent component and vice versa.
+
+If the names are the same, you can shorten the declaration:
 
 ```html
 <!-- { repl: false } -->
-<CategoryChooser bind:category/>
+<Widget bind:value/>
 ```
+
+> Use component bindings judiciously. They can save you a lot of boilerplate, but will make it harder to reason about data flow within your application if you overuse them.
+
+
+#### Element bindings
+
+Element bindings make it easy to respond to user interactions:
+
+```html
+<!-- { title: 'Element bindings' } -->
+<h1>Hello {name}!</h1>
+<input bind:value=name>
+```
+
+```json
+/* { hidden: true } */
+{
+	name: 'world'
+}
+```
+
+Some bindings are *one-way*, meaning that the values are read-only. Most are *two-way* — changing the data programmatically will update the DOM. The following bindings are available:
+
+| Name                                                            | Applies to                                   | Kind                 |
+|-----------------------------------------------------------------|----------------------------------------------|----------------------|
+| `value`                                                         | `<input>` `<textarea>` `<select>`            | <span>Two-way</span> |
+| `checked`                                                       | `<input type=checkbox>`                      | <span>Two-way</span> |
+| `group` (see note)                                              | `<input type=checkbox>` `<input type=radio>` | <span>Two-way</span> |
+| `currentTime` `paused` `played` `volume`                        | `<audio>` `<video>`                          | <span>Two-way</span> |
+| `buffered` `duration` `seekable`                                | `<audio>` `<video>`                          | <span>One-way</span> |
+| `offsetWidth` `offsetHeight` `clientWidth` `clientHeight`       | All block-level elements                     | <span>One-way</span> |
+| `scrollX` `scrollY`                                             | `<svelte:window>`                            | <span>Two-way</span> |
+| `online` `innerWidth` `innerHeight` `outerWidth` `outerHeight`  | `<svelte:window>`                            | <span>One-way</span> |
+
+> 'group' bindings allow you to capture the current value of a [set of radio inputs](repl?demo=binding-input-radio), or all the selected values of a [set of checkbox inputs](repl?demo=binding-input-checkbox-group).
 
 Here is a complete example of using two way bindings with a form:
 
 ```html
 <!-- { title: 'Form bindings' } -->
 <form on:submit="handleSubmit(event)">
-	<input bind:value=test type=text>
-	<button type=submit>Store</button>
+	<input bind:value=name type=text>
+	<button type=submit>Say hello</button>
 </form>
 
 <script>
-export default {
-	methods: {
-		handleSubmit(event) {
-			// prevent the page from reloading
-			event.preventDefault();
+	export default {
+		methods: {
+			handleSubmit(event) {
+				// prevent the page from reloading
+				event.preventDefault();
 
-			const { test } = this.get();
-			console.log('value', test);
+				const { name } = this.get();
+				alert(`Hello ${name}!`);
+			}
 		}
-	}
-};
+	};
 </script>
 ```
 
 ```json
 /* { hidden: true } */
 {
-	test: ""
+	name: "world"
 }
 ```
 
