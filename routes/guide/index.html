@@ -202,6 +202,22 @@
 		border: 2px solid rgba(170,30,30,0.7);
 	}
 
+	section :global(table) {
+		margin: 0 0 2em 0;
+		width: 100%;
+	}
+
+	section :global(td), section :global(th) {
+		text-align: left;
+		border-bottom: 1px solid #eee;
+		padding: 0.2em 0.5em 0.2em 0;
+		line-height: 1.8;
+	}
+
+	section :global(table) :global(code), section :global(table) :global(span) {
+		white-space: pre;
+	}
+
 	@media (min-width: 768px) {
 		.sidebar {
 			display: block;
