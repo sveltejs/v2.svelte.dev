@@ -40,6 +40,10 @@
 				"title": "Checkbox input"
 			},
 			{
+				"slug": "binding-input-checkbox-group",
+				"title": "Checkbox input (grouped)"
+			},
+			{
 				"slug": "binding-input-radio",
 				"title": "Radio input"
 			},

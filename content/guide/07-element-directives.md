@@ -371,13 +371,15 @@ Some bindings are *one-way*, meaning that the values are read-only. Most are *tw
 | Name                                                            | Applies to                                   | Kind                 |
 |-----------------------------------------------------------------|----------------------------------------------|----------------------|
 | `value`                                                         | `<input>` `<textarea>` `<select>`            | <span>Two-way</span> |
-| `checked` `group`                                               | `<input type=checkbox>` `<input type=radio>` | <span>Two-way</span> |
+| `checked`                                                       | `<input type=checkbox>`                      | <span>Two-way</span> |
+| `group` (see note)                                              | `<input type=checkbox>` `<input type=radio>` | <span>Two-way</span> |
 | `currentTime` `paused` `played` `volume`                        | `<audio>` `<video>`                          | <span>Two-way</span> |
 | `buffered` `duration` `seekable`                                | `<audio>` `<video>`                          | <span>One-way</span> |
 | `offsetWidth` `offsetHeight` `clientWidth` `clientHeight`       | All block-level elements                     | <span>One-way</span> |
 | `scrollX` `scrollY`                                             | `<svelte:window>`                            | <span>Two-way</span> |
 | `online` `innerWidth` `innerHeight` `outerWidth` `outerHeight`  | `<svelte:window>`                            | <span>One-way</span> |
 
+> 'group' bindings allow you to capture the current value of a [set of radio inputs](repl?demo=binding-input-radio), or all the selected values of a [set of checkbox inputs](repl?demo=binding-input-checkbox-group).
 
 Here is a complete example of using two way bindings with a form:
 
@@ -389,17 +391,17 @@ Here is a complete example of using two way bindings with a form:
 </form>
 
 <script>
-export default {
-	methods: {
-		handleSubmit(event) {
-			// prevent the page from reloading
-			event.preventDefault();
+	export default {
+		methods: {
+			handleSubmit(event) {
+				// prevent the page from reloading
+				event.preventDefault();
 
-			const { name } = this.get();
-			alert(`Hello ${name}!`);
+				const { name } = this.get();
+				alert(`Hello ${name}!`);
+			}
 		}
-	}
-};
+	};
 </script>
 ```
 
