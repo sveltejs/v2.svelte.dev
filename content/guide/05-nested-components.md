@@ -7,19 +7,13 @@ As well as containing elements (and `if` blocks and `each` blocks), Svelte compo
 ```html
 <!-- { title: 'Nested components' } -->
 <div class='widget-container'>
-	<Widget foo bar="static" baz={dynamic}/>
+	<Widget/>
 </div>
 
 <script>
 	import Widget from './Widget.html';
 
 	export default {
-		data() {
-			return {
-				dynamic: 'this can change'
-			}
-		},
-
 		components: {
 			Widget
 		}
@@ -28,55 +22,72 @@ As well as containing elements (and `if` blocks and `each` blocks), Svelte compo
 ```
 
 ```html
-<!-- { filename: 'Widget.html', hidden: true } -->
-<p>foo: {foo}</p>
-<p>bar: {bar}</p>
-<p>baz: {baz}</p>
+<!--{ filename: 'Widget.html' }-->
+<p>I am a nested component</p>
 ```
 
-The example above is equivalent to the following...
+That's similar to doing this...
 
 ```js
 import Widget from './Widget.html';
 
 const widget = new Widget({
-	target: document.querySelector('.widget-container'),
-	data: {
-		foo: true,
-		bar: 'static',
-		baz: 'this can change'
-	}
+	target: document.querySelector('.widget-container')
 });
 ```
 
-For a detailed description of the relationship of data between components, see the section on [passing data](guide#passing-data) and [binding data](guide#binding-data).
+...except that Svelte will take care of destroying the child component when the parent is destroyed, and keeps the two components in sync with *props*.
 
 > Component names must be capitalised, following the widely-used JavaScript convention of capitalising constructor names. It's also an easy way to distinguish components from elements in your template.
 
-There's a shorthand way to specify that a component uses another component. Instead of importing and referencing it like this
+
+### Props
+
+Props, short for 'properties', are the means by which you pass data down from a parent to a child component — in other words, they're just like attributes on an element:
 
 ```html
-<!-- { repl: false } -->
+<!--{ title: 'Props' }-->
+<div class='widget-container'>
+	<Widget foo bar="static" baz={dynamic}/>
+</div>
+
 <script>
 	import Widget from './Widget.html';
+
 	export default {
-		components: { Widget }
+		components: {
+			Widget
+		}
 	};
 </script>
 ```
 
-you can write
+```html
+<!--{ filename: 'Widget.html' }-->
+<p>foo: {foo}</p>
+<p>bar: {bar}</p>
+<p>baz: {baz}</p>
+```
+
+```json
+/* { hidden: true } */
+{
+	dynamic: 'try changing this text'
+}
+```
+
+As with element attributes, prop values can contain any valid JavaScript expression.
+
+Often, the name of the property will be the same as the value, in which case we can use a shorthand:
 
 ```html
 <!-- { repl: false } -->
-<script>
-	export default {
-		components: { Widget: './Widget.html' }
-	};
-</script>
+<!-- these are equivalent -->
+<Widget foo={foo}/>
+<Widget {foo}/>
 ```
 
-and Svelte will write the `import` for you.
+> Note that props are *one-way* — to get data from a child component into a parent component, use [bindings](guide#bindings).
 
 
 ### Composing with `<slot>`
@@ -181,4 +192,33 @@ You can also have *named* slots. Any elements with a corresponding `slot` attrib
 		padding: 0.5em;
 	}
 </style>
+```
+
+
+### Shorthand imports
+
+As an alternative to using an `import` declaration...
+
+```html
+<!-- { repl: false } -->
+<script>
+	import Widget from './Widget.html';
+
+	export default {
+		components: { Widget }
+	};
+</script>
+```
+
+...you can write this:
+
+```html
+<!-- { repl: false } -->
+<script>
+	export default {
+		components: {
+			Widget: './Widget.html'
+		}
+	};
+</script>
 ```
