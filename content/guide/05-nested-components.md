@@ -36,7 +36,7 @@ const widget = new Widget({
 });
 ```
 
-...except that Svelte will take care of destroying the child component when the parent is destroyed, and keeps the two components in sync with *props*.
+...except that Svelte takes care of destroying the child component when the parent is destroyed, and keeps the two components in sync with *props*.
 
 > Component names must be capitalised, following the widely-used JavaScript convention of capitalising constructor names. It's also an easy way to distinguish components from elements in your template.
 
