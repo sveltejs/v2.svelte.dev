@@ -30,7 +30,7 @@ const { name } = store.get(); // 'world'
 
 store.on('state', ({ current }) => {
 	console.log(`hello ${current.name}`);
-}); // 'hello world'
+});
 
 store.set({ name: 'everybody' }); // 'hello everybody'
 ```
