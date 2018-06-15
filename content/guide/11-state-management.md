@@ -255,9 +255,9 @@ You can call these methods in your components, just like the built-in methods:
 >
 ```
 
-### Data bindings
+### Store bindings
 
-You can bind to store properties just like you bind to component properties — just add the `$` prefix:
+You can bind to store values just like you bind to component values — just add the `$` prefix:
 
 ```html
 <!-- { repl: false } -->
