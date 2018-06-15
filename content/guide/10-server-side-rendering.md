@@ -82,7 +82,7 @@ You can also extract any [scoped styles](guide#scoped-styles) that are used by t
 const { css } = Thing.render(data);
 ```
 
-You could put the resulting `css` in a separate stylesheet, or include them in the page inside a `<style>` tag. If you do this, you will probably want to prevent the client-side compiler from including the CSS again. For `svelte-cli`, use the `--no-css` flag. In build tool integrations like `rollup-plugin-svelte`, pass the `css: false` option.
+You could put the resulting `css` in a separate stylesheet, or include them in the page inside a `<style>` tag. If you do this, you will probably want to prevent the client-side compiler from including the CSS again. For the CLI, use the `--no-css` flag. In build tool integrations like `rollup-plugin-svelte`, pass the `css: false` option.
 
 
 

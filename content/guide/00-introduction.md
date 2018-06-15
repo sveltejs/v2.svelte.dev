@@ -88,4 +88,25 @@ You can use any git repo you like — these are the 'official' templates:
 * [sveltejs/template](https://github.com/sveltejs/template) — this is what you get by downloading from the REPL
 * [sveltejs/template-webpack](https://github.com/sveltejs/template-webpack) — similar, but uses [webpack](https://webpack.js.org/) instead of [Rollup](https://rollupjs.org/guide/en)
 
-> There is also a Command Line Interface, [svelte-cli](https://github.com/sveltejs/svelte-cli), but it's not recommended for production use.
+#### Getting started using the CLI
+
+Svelte also provides a Command Line Interface, but it's not recommended for production use. The CLI will compile your components to standalone JavaScript files, but won't automatically recompile them when they change, and won't deduplicate code shared between your components. Use one of the above methods instead.
+
+If you've installed `svelte` globally, you can use `svelte --help` for a complete list of options. Some examples of the more common operations are:
+
+```bash
+# Generate a JavaScript module from MyComponent.html
+svelte compile MyComponent.html > MyComponent.js
+svelte compile -i MyComponent.html -o MyComponent.js
+
+# Generate a UMD module from MyComponent.html, inferring its name from the filename ('MyComponent')
+svelte compile -f umd MyComponent.html > MyComponent.js
+
+# Generate a UMD module, specifying the name
+svelte compile -f umd -n CustomName MyComponent.html > MyComponent.js
+
+# Compile all .html files in a directory
+svelte compile -i src/components -o build/components
+```
+
+> You can also use [npx](https://medium.com/@maybekatz/introducing-npx-an-npm-package-runner-55f7d4bd282b) to use the CLI without installing Svelte globally — just prefix your command with `npx`: `npx svelte compile ...`
