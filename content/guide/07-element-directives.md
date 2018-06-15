@@ -1,5 +1,5 @@
 ---
-title: Element directives
+title: Directives
 ---
 
 Directives are element or component-level instructions to Svelte. They look like attributes, except with a `:` character.
