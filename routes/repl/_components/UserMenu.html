@@ -1,12 +1,12 @@
 <div class='user' on:mouseenter='set({ showMenu: true })' on:mouseleave='set({ showMenu: false })'>
-	<span>{{name}}</span>
-	<img alt='{{name}} avatar' src='{{$user.photo}}'>
+	<span>{name}</span>
+	<img alt='{name} avatar' src='{$user.photo}'>
 
-	{{#if showMenu}}
+	{#if showMenu}
 		<div class='menu'>
-			<button on:click='store.logout()'>log out</button>
+			<button on:click='$logout()'>log out</button>
 		</div>
-	{{/if}}
+	{/if}
 </div>
 
 <style>
@@ -60,7 +60,7 @@
 <script>
 	export default {
 		computed: {
-			name: $user => $user.displayName || $user.username
+			name: ({ $user }) => $user.displayName || $user.username
 		}
 	};
 </script>

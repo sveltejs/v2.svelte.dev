@@ -157,7 +157,13 @@ export default function() {
 			while ((match = pattern.exec(html))) {
 				const slug = match[1];
 				const title = unescape(
-					match[2].replace(/<\/?code>/g, '').replace(/\.(\w+)\W.*/, '.$1')
+					match[2]
+						.replace(/<\/?code>/g, '')
+						.replace(/\.(\w+)(\((.+)?\))?/, (m, $1, $2, $3) => {
+							if ($3) return `.${$1}(...)`;
+							if ($2) return `.${$1}()`;
+							return `.${$1}`;
+						})
 				);
 
 				subsections.push({ slug, title });

@@ -10,6 +10,7 @@ import serve from 'serve-static';
 import devalue from 'devalue';
 import { Store } from 'svelte/store.js';
 import { routes } from './manifest/server.js';
+import App from './App.html';
 
 dotenv.config();
 
@@ -100,6 +101,7 @@ app.use(
 	compression({ threshold: 0 }),
 	serve('assets'),
 	sapper({
+		App,
 		routes,
 		store: req => {
 			const user = req.session && req.session.passport && req.session.passport.user;

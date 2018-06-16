@@ -1,32 +1,32 @@
-{{#await codemirrorPromise}}
+{#await codemirrorPromise}
 	<p class='loading'>loading editor...</p>
-{{then _}}
+{:then _}
 	<div class='codemirror-container'>
 		<textarea tabindex='2' ref:editor></textarea>
 
-		{{#if error}}
+		{#if error}
 			<p class='error message'>
-				{{#if error.loc}}
+				{#if error.loc}
 					<strong>
-						{{#if error.filename}}
-							<span class='filename' on:click='fire("navigate", error.filename)'>{{error.filename}}</span>
-						{{/if}}
+						{#if error.filename}
+							<span class='filename' on:click='fire("navigate", error.filename)'>{error.filename}</span>
+						{/if}
 
-						({{error.loc.line}}:{{error.loc.column}})
+						({error.loc.line}:{error.loc.column})
 					</strong>
-				{{/if}}
+				{/if}
 
-				{{error.message}}
+				{error.message}
 			</p>
-		{{elseif warningCount > 0}}
+		{:elseif warningCount > 0}
 			<p class='warning message'>
-				Compiled, but with {{warningCount}} {{warningCount === 1 ? 'warning' : 'warnings'}} — check the console for details
+				Compiled, but with {warningCount} {warningCount === 1 ? 'warning' : 'warnings'} — check the console for details
 			</p>
-		{{/if}}
+		{/if}
 	</div>
-{{catch err}}
+{:catch err}
 	<p class='error'>error loading CodeMirror</p>
-{{/await}}
+{/await}
 
 <style>
 	.codemirror-container {
@@ -92,6 +92,8 @@
 </style>
 
 <script>
+	import { observe } from 'svelte-extras';
+
 	let codemirrorPromise;
 
 	function loadCodemirror() {
@@ -199,7 +201,9 @@
 
 			resize() {
 				this.editor.refresh();
-			}
+			},
+
+			observe
 		}
 	};
 </script>

@@ -1,5 +1,5 @@
 ---
-title: Element directives
+title: Directives
 ---
 
 Directives are element or component-level instructions to Svelte. They look like attributes, except with a `:` character.
@@ -10,8 +10,8 @@ In most applications, you'll need to respond to the user's actions. In Svelte, t
 
 ```html
 <!-- { title: 'Event handlers' } -->
-<p>Count: {{count}}</p>
-<button on:click='set({ count: count + 1 })'>+1</button>
+<p>Count: {count}</p>
+<button on:click="set({ count: count + 1 })">+1</button>
 ```
 
 ```json
@@ -27,9 +27,9 @@ When the user clicks the button, Svelte calls `component.set(...)` with the prov
 <!-- { title: 'Calling custom methods' } -->
 <p>Select a category:</p>
 
-{{#each categories as category}}
-	<button on:click='select(category)'>select {{category}}</button>
-{{/each}}
+{#each categories as category}
+	<button on:click="select(category)">select {category}</button>
+{/each}
 
 <script>
 	export default {
@@ -56,8 +56,8 @@ You can also access the `event` object in the method call:
 
 ```html
 <!-- { title: 'Accessing `event`' } -->
-<div on:mousemove='set({ x: event.clientX, y: event.clientY })'>
-	coords: {{x}},{{y}}
+<div on:mousemove="set({ x: event.clientX, y: event.clientY })">
+	coords: {x},{y}
 </div>
 
 <style>
@@ -73,7 +73,7 @@ The target node can be referenced as `this`, meaning you can do this sort of thi
 
 ```html
 <!-- { title: 'Calling node methods' } -->
-<input on:focus='this.select()' value='click to select'>
+<input on:focus="this.select()" value="click to select">
 ```
 
 ### Custom events
@@ -88,9 +88,9 @@ Events are an excellent way for [nested components](guide#nested-components) to 
 <!-- { repl: false } -->
 <p>Select a category:</p>
 
-{{#each categories as category}}
-	<button on:click='fire("select", { category })'>select {{category}}</button>
-{{/each}}
+{#each categories as category}
+	<button on:click="fire('select', { category })">select {category}</button>
+{/each}
 
 <script>
 	export default {
@@ -111,7 +111,7 @@ When the user clicks a button, the component will fire a `select` event, where t
 
 ```html
 <!--{ title: 'Component events' }-->
-<CategoryChooser on:select='playTwentyQuestions(event.category)'/>
+<CategoryChooser on:select="playTwentyQuestions(event.category)"/>
 
 <script>
 	import CategoryChooser from './CategoryChooser.html';
@@ -134,9 +134,9 @@ When the user clicks a button, the component will fire a `select` event, where t
 <!--{ filename: 'CategoryChooser.html', hidden: true }-->
 <p>Select a category:</p>
 
-{{#each categories as category}}
-	<button on:click='fire("select", { category })'>select {{category}}</button>
-{{/each}}
+{#each categories as category}
+	<button on:click="fire('select', { category })">select {category}</button>
+{/each}
 
 <script>
 	export default {
@@ -164,7 +164,7 @@ Refs are a convenient way to store a reference to particular DOM nodes or compon
 
 ```html
 <!-- { title: 'Refs' } -->
-<canvas ref:canvas width='200' height='200'></canvas>
+<canvas ref:canvas width=200 height=200></canvas>
 
 <script>
 	import createRenderer from './createRenderer.js';
@@ -221,9 +221,9 @@ export default function createRenderer(canvas, ctx) {
 }
 ```
 
-> Since only one element or component can occupy a given `ref`, don't use them in `{{#each ...}}` blocks. It's fine to use them in `{{#if ...}}` blocks however.
+> Since only one element or component can occupy a given `ref`, don't use them in `{#each ...}` blocks. It's fine to use them in `{#if ...}` blocks however.
 
-Note that you can use refs in your `<style>` blocks — see [Special selectors](#special-selectors).
+Note that you can use refs in your `<style>` blocks — see [Special selectors](guide#special-selectors).
 
 
 ### Transitions
@@ -232,11 +232,11 @@ Transitions allow elements to enter and leave the DOM gracefully, rather than su
 
 ```html
 <!-- { title: 'Transitions' } -->
-<input type='checkbox' bind:checked=visible> visible
+<input type=checkbox bind:checked=visible> visible
 
-{{#if visible}}
+{#if visible}
 	<p transition:fade>fades in and out</p>
-{{/if}}
+{/if}
 
 <script>
 	import { fade } from 'svelte-transitions';
@@ -251,11 +251,11 @@ Transitions can have parameters — typically `delay` and `duration`, but often 
 
 ```html
 <!-- { title: 'Transition with parameters' } -->
-<input type='checkbox' bind:checked=visible> visible
+<input type=checkbox bind:checked=visible> visible
 
-{{#if visible}}
-	<p transition:fly='{y: 200, duration: 1000}'>flies 200 pixels up, slowly</p>
-{{/if}}
+{#if visible}
+	<p transition:fly="{y: 200, duration: 1000}">flies 200 pixels up, slowly</p>
+{/if}
 
 <script>
 	import { fly } from 'svelte-transitions';
@@ -270,11 +270,11 @@ An element can have separate `in` and `out` transitions:
 
 ```html
 <!-- { title: 'Transition in/out' } -->
-<input type='checkbox' bind:checked=visible> visible
+<input type=checkbox bind:checked=visible> visible
 
-{{#if visible}}
-	<p in:fly='{y: 50}' out:fade>flies up, fades out</p>
-{{/if}}
+{#if visible}
+	<p in:fly="{y: 50}" out:fade>flies up, fades out</p>
+{/if}
 
 <script>
 	import { fade, fly } from 'svelte-transitions';
@@ -297,11 +297,11 @@ Of these, `duration` is required, as is *either* `css` or `tick`. The rest are o
 
 ```html
 <!-- { title: 'Fade transition' } -->
-<input type='checkbox' bind:checked=visible> visible
+<input type=checkbox bind:checked=visible> visible
 
-{{#if visible}}
+{#if visible}
 	<p transition:fade>fades in and out</p>
-{{/if}}
+{/if}
 
 <script>
 	export default {
@@ -323,70 +323,189 @@ Of these, `duration` is required, as is *either* `css` or `tick`. The rest are o
 > If the `css` option is used, Svelte will create a CSS animation that runs efficiently off the main thread. Therefore if you can achieve an effect using `css` rather than `tick`, you should.
 
 
-### Two-way binding
+### Bindings
 
-It's currently fashionable to avoid two-way binding on the grounds that it creates all sorts of hard-to-debug problems and slows your application down, and that a one-way top-down data flow is 'easier to reason about'. This is in fact high grade nonsense. It's true that two-way binding done *badly* has all sorts of issues, and that very large apps benefit from the discipline of a not permitting deeply nested components to muck about with state that might affect distant parts of the app. But when used correctly, two-way binding simplifies things greatly.
+As we've seen, data can be passed down to elements and components with attributes and [props](guide#props). Occasionally, you need to get data back up; for that we use bindings.
 
-Bindings are declared with the `bind:[attribute]` directive:
 
-```html
-<!-- { title: 'Two-way binding' } -->
-<input bind:value='name' placeholder='enter your name'>
-<p>Hello {{name || 'stranger'}}!</p>
-```
+#### Component bindings
 
-Here are the current bindable attributes and properties for each element:
-
-- `<input>`, `<textarea>`, `<select>`, `<option>`
-	- `value`
-- `<input type="checkbox">`, `<input type="radio">`
-	- `checked`, `group`
-- `<audio>`, `<video>`
-	- `buffered`, `currentTime`, `duration`, `paused`, `played`, `seekable`, `volume`
-
-As well as DOM elements, you can bind to component data properties:
+Component bindings keep values in sync between a parent and a child:
 
 ```html
 <!-- { repl: false } -->
-<CategoryChooser bind:category='category'/>
+<Widget bind:childValue=parentValue/>
 ```
 
-If the attribute and the bound property share a name, you can use this shorthand:
+Whenever `childValue` changes in the child component, `parentValue` will be updated in the parent component and vice versa.
+
+If the names are the same, you can shorten the declaration:
 
 ```html
 <!-- { repl: false } -->
-<CategoryChooser bind:category/>
+<Widget bind:value/>
 ```
+
+> Use component bindings judiciously. They can save you a lot of boilerplate, but will make it harder to reason about data flow within your application if you overuse them.
+
+
+#### Element bindings
+
+Element bindings make it easy to respond to user interactions:
+
+```html
+<!-- { title: 'Element bindings' } -->
+<h1>Hello {name}!</h1>
+<input bind:value=name>
+```
+
+```json
+/* { hidden: true } */
+{
+	name: 'world'
+}
+```
+
+Some bindings are *one-way*, meaning that the values are read-only. Most are *two-way* — changing the data programmatically will update the DOM. The following bindings are available:
+
+| Name                                                            | Applies to                                   | Kind                 |
+|-----------------------------------------------------------------|----------------------------------------------|----------------------|
+| `value`                                                         | `<input>` `<textarea>` `<select>`            | <span>Two-way</span> |
+| `checked`                                                       | `<input type=checkbox>`                      | <span>Two-way</span> |
+| `group` (see note)                                              | `<input type=checkbox>` `<input type=radio>` | <span>Two-way</span> |
+| `currentTime` `paused` `played` `volume`                        | `<audio>` `<video>`                          | <span>Two-way</span> |
+| `buffered` `duration` `seekable`                                | `<audio>` `<video>`                          | <span>One-way</span> |
+| `offsetWidth` `offsetHeight` `clientWidth` `clientHeight`       | All block-level elements                     | <span>One-way</span> |
+| `scrollX` `scrollY`                                             | `<svelte:window>`                            | <span>Two-way</span> |
+| `online` `innerWidth` `innerHeight` `outerWidth` `outerHeight`  | `<svelte:window>`                            | <span>One-way</span> |
+
+> 'group' bindings allow you to capture the current value of a [set of radio inputs](repl?demo=binding-input-radio), or all the selected values of a [set of checkbox inputs](repl?demo=binding-input-checkbox-group).
 
 Here is a complete example of using two way bindings with a form:
 
 ```html
 <!-- { title: 'Form bindings' } -->
-<form on:submit='handleSubmit( event )'>
-	<input bind:value='test' type='text'>
-	<button type='submit'>Store</button>
+<form on:submit="handleSubmit(event)">
+	<input bind:value=name type=text>
+	<button type=submit>Say hello</button>
 </form>
 
 <script>
-export default {
-	methods: {
-		handleSubmit(event) {
-			// prevent the page from reloading
-			event.preventDefault();
+	export default {
+		methods: {
+			handleSubmit(event) {
+				// prevent the page from reloading
+				event.preventDefault();
 
-			var value = this.get('test');
-			console.log('value', value);
+				const { name } = this.get();
+				alert(`Hello ${name}!`);
+			}
 		}
-	}
-};
+	};
 </script>
 ```
 
 ```json
 /* { hidden: true } */
 {
-	test: ""
+	name: "world"
 }
 ```
 
-> Do not confuse the `<Widget bind:foo/>` syntax (two-way binding) with the `<Widget :foo/>` syntax (one-way binding)
+### Actions
+
+Actions let you decorate elements with additional functionality. Actions are functions which may return an object with lifecycle methods, `update` and `destroy`. The action will be called when its element is added to the DOM.
+
+Use actions for things like:
+* tooltips
+* lazy loading images as the page is scrolled, e.g. `<img use:lazyload data-src='giant-photo.jpg'/>`
+* capturing link clicks for your client router
+* adding drag and drop
+
+```html
+<!-- { title: 'Actions' } -->
+<button on:click="toggleLanguage()" use:tooltip="translations[language].tooltip">
+	{language}
+</button>
+
+<script>
+	export default {
+		actions: {
+			tooltip(node, text) {
+				const tooltip = document.createElement('div');
+				tooltip.textContent = text;
+
+				Object.assign(tooltip.style, {
+					position: 'absolute',
+					background: 'black',
+					color: 'white',
+					padding: '0.5em 1em',
+					fontSize: '12px',
+					pointerEvents: 'none',
+					transform: 'translate(5px, -50%)',
+					borderRadius: '2px',
+					transition: 'opacity 0.4s'
+				});
+
+				function position() {
+					const { top, right, bottom } = node.getBoundingClientRect();
+					tooltip.style.top = `${(top + bottom) / 2}px`;
+					tooltip.style.left = `${right}px`;
+				}
+
+				function append() {
+					document.body.appendChild(tooltip);
+					tooltip.style.opacity = 0;
+					setTimeout(() => tooltip.style.opacity = 1);
+					position();
+				}
+
+				function remove() {
+					tooltip.remove();
+				}
+
+				node.addEventListener('mouseenter', append);
+				node.addEventListener('mouseleave', remove);
+
+				return {
+					update(text) {
+						tooltip.textContent = text;
+						position();
+					},
+
+					destroy() {
+						tooltip.remove();
+						node.removeEventListener('mouseenter', append);
+						node.removeEventListener('mouseleave', remove);
+					}
+				}
+			}
+		},
+
+		methods: {
+			toggleLanguage() {
+				const { language } = this.get();
+
+				this.set({
+					language: language === 'english' ? 'latin' : 'english'
+				});
+			}
+		}
+	};
+</script>
+```
+
+```json
+/* { hidden: true } */
+{
+	language: "english",
+	translations: {
+		english: {
+			tooltip: "Switch Languages",
+		},
+		latin: {
+			tooltip: "Itchsway Anguageslay",
+		},
+	}
+}
+```

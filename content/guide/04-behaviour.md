@@ -24,8 +24,8 @@ Often, it makes sense for a component to have default data. This should be expre
 
 ```html
 <!-- { title: 'Default data' } -->
-<p>Count: {{count}}</p>
-<button on:click='set({ count: count + 1 })'>+1</button>
+<p>Count: {count}</p>
+<button on:click="set({ count: count + 1 })">+1</button>
 
 <script>
 	export default {
@@ -48,9 +48,7 @@ const counter = new Counter({
 });
 ```
 
-...then `{{count}}`, or `counter.get('count')`, would initially be 99 rather than 0.
-
-> The example above, like many of the examples below, uses ES2015 syntax – i.e. `data () {...}` rather than `data: function {...}`. While Svelte will generate ES5 code that runs everywhere, it *won't* convert your ES2015 code into ES5 – so if you use ES2015 and need to support older browsers, you will need an additional transpilation step in your build process, added __after__ the `svelte()` step, using [Babel](https://babeljs.io) or [Bublé](https://buble.surge.sh).
+...then `{count}`, or `counter.get().count`, would initially be 99 rather than 0.
 
 
 ### Computed properties
@@ -63,7 +61,7 @@ Svelte allows you to express these dependencies in computed properties, which ar
 <!-- { title: 'Computed properties' } -->
 <p>
 	The time is
-	<strong>{{hours}}:{{minutes}}:{{seconds}}</strong>
+	<strong>{hours}:{minutes}:{seconds}</strong>
 </p>
 
 <script>
@@ -75,24 +73,24 @@ Svelte allows you to express these dependencies in computed properties, which ar
 		},
 
 		computed: {
-			hours: time => time.getHours(),
-			minutes: time => time.getMinutes(),
-			seconds: time => time.getSeconds()
+			hours:   ({ time }) => time.getHours(),
+			minutes: ({ time }) => time.getMinutes(),
+			seconds: ({ time }) => time.getSeconds()
 		}
 	};
 </script>
 ```
 
-Notice that all we need to do to tell Svelte that `hours`, `minutes` and `seconds` depend on `time` is include it as a parameter to the function. There's no costly dependency tracking involved – the dependency graph is resolved at compile time.
+Each function is passed the component's current state object. Because we're using destructuring syntax, the compiler knows that `hours`, `minutes` and `seconds` only need to re-run when `time` changes, and not when any other values change. There's no costly dependency tracking involved – the dependency graph is resolved at compile time.
 
 > `computed` must be an object literal, and the properties must be function expressions or arrow function expressions. Any external functions used in computed must be wrapped _here_:
 
 ```js
 import externalFunc from '_external_file';
 export default {
-  computed: {
-    externalFunc: (dep1, dep2) => externalFunc(dep1, dep2);
-  }
+	computed: {
+		externalFunc: ({ dep1, dep2 }) => externalFunc(dep1, dep2);
+	}
 }
 ```
 
@@ -102,16 +100,16 @@ Computed properties can of course return functions. For example, we could dynami
 <!-- { title: 'Filtering' } -->
 <input bind:value=search>
 
-{{#each items.filter(predicate) as word}}
-	<p><strong>{{word.slice(0, search.length)}}</strong>{{word.slice(search.length)}}</p>
-{{else}}
+{#each items.filter(predicate) as word}
+	<p><strong>{word.slice(0, search.length)}</strong>{word.slice(search.length)}</p>
+{:else}
 	<p>no matches!</p>
-{{/each}}
+{/each}
 
 <script>
 	export default {
 		computed: {
-			predicate: search => {
+			predicate: ({ search }) => {
 				search = search.toLowerCase();
 				return word => word.startsWith(search);
 			}
@@ -632,24 +630,46 @@ Computed properties can of course return functions. For example, we could dynami
 
 ### Lifecycle hooks
 
-There are two 'hooks' provided by Svelte for adding control logic – `oncreate` and `ondestroy`:
+There are four 'hooks' provided by Svelte for adding control logic — `oncreate`, `ondestroy`, `onstate` and `onupdate`:
 
 ```html
 <!-- { title: 'Lifecycle hooks' } -->
 <p>
 	The time is
-	<strong>{{hours}}:{{minutes}}:{{seconds}}</strong>
+	<strong>{hours}:{minutes}:{seconds}</strong>
 </p>
 
 <script>
 	export default {
+		onstate({ changed, current, previous }) {
+			// this fires before oncreate, and on every state change.
+			// the first time it runs, `previous` is undefined
+			if (changed.time) {
+				console.log(`time changed: ${previous && previous.time} -> ${current.time}`);
+			}
+		},
+
 		oncreate() {
+			// this fires when the component has been
+			// rendered to the DOM
+			console.log('in oncreate');
+
 			this.interval = setInterval(() => {
 				this.set({ time: new Date() });
 			}, 1000);
 		},
 
+		onupdate({ changed, current, previous }) {
+			// this fires after oncreate, and after every state change
+			// once the DOM is synchronised with the data
+			console.log(`The DOM has been updated`);
+		},
+
 		ondestroy() {
+			// this fires when the component is
+			// removed from the DOM
+			console.log('in ondestroy');
+
 			clearInterval(this.interval);
 		},
 
@@ -660,13 +680,15 @@ There are two 'hooks' provided by Svelte for adding control logic – `oncreate
 		},
 
 		computed: {
-			hours: time => time.getHours(),
-			minutes: time => time.getMinutes(),
-			seconds: time => time.getSeconds()
+			hours:   ({ time }) => time.getHours(),
+			minutes: ({ time }) => time.getMinutes(),
+			seconds: ({ time }) => time.getSeconds()
 		}
 	};
 </script>
 ```
+
+> You can add event listeners corresponding to `onstate`, `onupdate` and `ondestroy` programmatically — see [component.on](guide#component-on-eventname-callback-)
 
 
 ### Helpers
@@ -677,7 +699,7 @@ Helpers are simple functions that are used in your template. In the example abov
 <!-- { title: 'Helpers' } -->
 <p>
 	The time is
-	<strong>{{hours}}:{{leftPad(minutes, 2, '0')}}:{{leftPad(seconds, 2, '0')}}</strong>
+	<strong>{hours}:{leftPad(minutes, 2, '0')}:{leftPad(seconds, 2, '0')}</strong>
 </p>
 
 <script>
@@ -705,9 +727,9 @@ Helpers are simple functions that are used in your template. In the example abov
 		},
 
 		computed: {
-			hours: time => time.getHours(),
-			minutes: time => time.getMinutes(),
-			seconds: time => time.getSeconds()
+			hours:   ({ time }) => time.getHours(),
+			minutes: ({ time }) => time.getMinutes(),
+			seconds: ({ time }) => time.getSeconds()
 		}
 	};
 </script>
@@ -753,7 +775,7 @@ Methods (whether built-in or custom) can also be called inside [event handlers](
 
 ```html
 <!-- { repl: false } -->
-<button on:click='say("hello")'>say hello!</button>
+<button on:click="say('hello')">say hello!</button>
 ```
 
 
@@ -767,18 +789,18 @@ Custom events are just functions that take a node and a callback as their argume
 
 ```html
 <!-- { title: 'Custom events' } -->
-<button on:longpress='set({ done: true })'>click and hold</button>
+<button on:longpress="set({ done: true })">click and hold</button>
 
-{{#if done}}
+{#if done}
 	<p>clicked and held</p>
-{{/if}}
+{/if}
 
 <script>
 	export default {
 		events: {
 			longpress(node, callback) {
 				function onmousedown(event) {
-					const timeout = setTimeout(() => callback( event ), 1000);
+					const timeout = setTimeout(() => callback(event), 1000);
 
 					function cancel() {
 						clearTimeout(timeout);
@@ -808,12 +830,12 @@ Components are assumed to be in the HTML namespace. If your component is designe
 
 ```html
 <!--{ title: 'SVG' }-->
-<svg viewBox='0 0 1000 1000' style='width: 100%; height: 100%;'>
-	<SmileyFace x='70' y='280' size='100' fill='#f4d9c7'/>
-	<SmileyFace x='800' y='250' size='150' fill='#40250f'/>
-	<SmileyFace x='150' y='700' size='110' fill='#d2aa7a'/>
-	<SmileyFace x='875' y='730' size='130' fill='#824e2e'/>
-	<SmileyFace x='450' y='500' size='240' fill='#d2b198'/>
+<svg viewBox="0 0 1000 1000" style="width: 100%; height: 100%;">
+	<SmileyFace x=70 y=280 size=100 fill="#f4d9c7"/>
+	<SmileyFace x=800 y=250 size=150 fill="#40250f"/>
+	<SmileyFace x=150 y=700 size=110 fill="#d2aa7a"/>
+	<SmileyFace x=875 y=730 size=130 fill="#824e2e"/>
+	<SmileyFace x=450 y=500 size=240 fill="#d2b198"/>
 </svg>
 
 <script>
@@ -828,9 +850,9 @@ Components are assumed to be in the HTML namespace. If your component is designe
 ```html
 <!--{ filename: 'SmileyFace.html' }-->
 <!-- CC-BY-SA — https://commons.wikimedia.org/wiki/File:718smiley.svg -->
-<g transform='translate({{x}},{{y}}) scale({{size / 366.5}})'>
-	<circle r="366.5"/>
-	<circle r="336.5" fill="{{fill}}"/>
+<g transform="translate({x},{y}) scale({size / 366.5})">
+	<circle r=366.5/>
+	<circle r=336.5 fill={fill}/>
 	<path d="m-41.5 298.5c-121-21-194-115-212-233v-8l-25-1-1-18h481c6 13 10 27 13 41 13 94-38 146-114 193-45 23-93 29-142 26z"/>
 	<path d="m5.5 280.5c52-6 98-28 138-62 28-25 46-56 51-87 4-20 1-57-5-70l-423-1c-2 56 39 118 74 157 31 34 72 54 116 63 11 2 38 2 49 0z" fill="#871945"/>
 	<path d="m-290.5 -24.5c-13-26-13-57-9-85 6-27 18-52 35-68 21-20 50-23 77-18 15 4 28 12 39 23 18 17 30 40 36 67 4 20 4 41 0 60l-6 21z"/>

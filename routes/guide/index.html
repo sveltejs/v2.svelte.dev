@@ -1,24 +1,22 @@
-<:Head>
+<svelte:head>
 	<title>Learn Svelte</title>
-</:Head>
+</svelte:head>
 
-<Layout page='guide'>
-	<div ref:container class='content'>
-		{{#each sections as section}}
-			<section id='{{section.slug}}'>
-				<h2>
-					{{section.metadata.title}}
-					<small><a href='https://github.com/sveltejs/svelte.technology/edit/master/content/guide/{{section.file}}'>edit this section</a></small>
-				</h2>
-				{{{section.html}}}
-			</section>
-		{{/each}}
-	</div>
+<div ref:container class='content'>
+	{#each sections as section}
+		<section id='{section.slug}'>
+			<h2>
+				{section.metadata.title}
+				<small><a href='https://github.com/sveltejs/svelte.technology/edit/master/content/guide/{section.file}'>edit this section</a></small>
+			</h2>
+			{@html section.html}
+		</section>
+	{/each}
+</div>
 
-	<div class='sidebar'>
-		<GuideContents ref:contents/>
-	</div>
-</Layout>
+<div class='sidebar'>
+	<GuideContents ref:contents/>
+</div>
 
 <style>
 	.sidebar {
@@ -204,6 +202,22 @@
 		border: 2px solid rgba(170,30,30,0.7);
 	}
 
+	section :global(table) {
+		margin: 0 0 2em 0;
+		width: 100%;
+	}
+
+	section :global(td), section :global(th) {
+		text-align: left;
+		border-bottom: 1px solid #eee;
+		padding: 0.2em 0.5em 0.2em 0;
+		line-height: 1.8;
+	}
+
+	section :global(table) :global(code), section :global(table) :global(span) {
+		white-space: pre;
+	}
+
 	@media (min-width: 768px) {
 		.sidebar {
 			display: block;
@@ -226,26 +240,11 @@
 </style>
 
 <script>
-	import GuideContents from '../_components/GuideContents.html';
-	import Layout from '../_components/Layout.html';
-
-	function throttle(fn, ms) {
-		let blocked = false;
-
-		function unblock() {
-			blocked = false;
-		};
-
-		return function () {
-			if (blocked) return;
-			blocked = true;
-
-			fn();
-			setTimeout(unblock, ms);
-		};
-	}
-
 	export default {
+		components: {
+			GuideContents: '../../app/components/GuideContents.html'
+		},
+
 		preload() {
 			return this.fetch(`api/guide`).then(r => r.json()).then(sections => {
 				return { sections };
@@ -304,11 +303,6 @@
 
 			onresize();
 			onscroll();
-		},
-
-		components: {
-			GuideContents,
-			Layout
 		}
 	};
 </script>

@@ -10,7 +10,7 @@ So far, we've discussed creating Svelte components *on the client*, which is to 
 If you're using the Svelte compiler, whether directly or via an integration like [rollup-plugin-svelte](https://github.com/rollup/rollup-plugin-svelte) or [svelte-loader](https://github.com/sveltejs/svelte-loader), you can tell it to generate a server-side component by passing the `generate: 'ssr'` option:
 
 ```js
-const { code } = svelte.compile(source, {
+const { js } = svelte.compile(source, {
 	generate: 'ssr' // as opposed to 'dom', the default
 });
 ```
@@ -30,19 +30,18 @@ Now you can `require` your components:
 const Thing = require('./components/Thing.html');
 ```
 
-If you prefer to use a different file extension, or need to use [stores](guide#state-management), you can pass options like so:
+If you prefer to use a different file extension, you can pass options like so:
 
 ```js
 require('svelte/ssr/register')({
-	extensions: ['.svelte'],
-	store: true
+	extensions: ['.svelte']
 });
 ```
 
 
 ### Server-side API
 
-Components have a different API in Node.js – rather than creating instances with `set(...)` and `get(...)` methods, a component is an object with a `render(data, options)` method:
+Components have a different API in Node.js – rather than creating instances with `set(...)` and `get()` methods, a component is an object with a `render(data, options)` method:
 
 ```js
 require('svelte/ssr/register');
@@ -83,13 +82,13 @@ You can also extract any [scoped styles](guide#scoped-styles) that are used by t
 const { css } = Thing.render(data);
 ```
 
-You could put the resulting `css` in a separate stylesheet, or include them in the page inside a `<style>` tag. If you do this, you will probably want to prevent the client-side compiler from including the CSS again. For `svelte-cli`, use the `--no-css` flag. In build tool integrations like `rollup-plugin-svelte`, pass the `css: false` option.
+You could put the resulting `css` in a separate stylesheet, or include them in the page inside a `<style>` tag. If you do this, you will probably want to prevent the client-side compiler from including the CSS again. For the CLI, use the `--no-css` flag. In build tool integrations like `rollup-plugin-svelte`, pass the `css: false` option.
 
 
 
 #### Rendering `<head>` contents
 
-If your component, any of its children, use the `<:Head>` [component](guide#-head-tags), you can extract the contents:
+If your component, any of its children, use the `<svelte:head>` [component](guide#-head-tags), you can extract the contents:
 
 ```js
 const { head } = Thing.render(data);

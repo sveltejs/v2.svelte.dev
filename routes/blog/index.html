@@ -1,27 +1,25 @@
 
-<:Head>
+<svelte:head>
 	<title>Svelte • The magical disappearing UI framework</title>
-</:Head>
+</svelte:head>
 
-<Layout page='blog'>
-	<div class='posts'>
-		{{#each posts as post}}
-			<article class='post'>
-				<a rel='prefetch' href='blog/{{post.slug}}'>
-					<h2>{{post.metadata.title}}</h2>
-					<p class='standfirst'>{{post.metadata.description}}</p>
-				</a>
+<div class='posts'>
+	{#each posts as post}
+		<article class='post'>
+			<a rel='prefetch' href='blog/{post.slug}'>
+				<h2>{post.metadata.title}</h2>
+				<p class='standfirst'>{post.metadata.description}</p>
+			</a>
 
-				<p class='byline'>
-					<a href='{{post.metadata.authorURL}}'>{{post.metadata.author}}</a>
-					<time datetime='{{post.metadata.pubdate}}'>{{post.metadata.dateString}}</time>
+			<p class='byline'>
+				<a href='{post.metadata.authorURL}'>{post.metadata.author}</a>
+				<time datetime='{post.metadata.pubdate}'>{post.metadata.dateString}</time>
 
-					<a rel='prefetch' class='continue-reading' href='blog/{{post.slug}}'>continue reading &raquo;</a>
-				</p>
-			</article>
-		{{/each}}
-	</div>
-</Layout>
+				<a rel='prefetch' class='continue-reading' href='blog/{post.slug}'>continue reading &raquo;</a>
+			</p>
+		</article>
+	{/each}
+</div>
 
 <style>
 	.posts {
@@ -79,13 +77,7 @@
 </style>
 
 <script>
-	import Layout from '../_components/Layout.html';
-
 	export default {
-		components: {
-			Layout
-		},
-
 		preload() {
 			return this.fetch(`api/blog`).then(r => r.json()).then(posts => {
 				return { posts };

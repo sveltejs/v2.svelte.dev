@@ -1,0 +1,27 @@
+<Nav path={props.path}/>
+
+<div>
+	<svelte:component this={Page} {...props}/>
+</div>
+
+<style>
+	div {
+		position: relative;
+		padding: 3em 0 0 0;
+		overflow-x: hidden;
+	}
+
+	@media (min-width: 768px) {
+		div {
+			padding: 4em 0 0 0;
+		}
+	}
+</style>
+
+<script>
+	export default {
+		components: {
+			Nav: './components/Nav.html'
+		}
+	};
+</script>

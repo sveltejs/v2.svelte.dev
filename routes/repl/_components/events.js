@@ -9,7 +9,7 @@ export function keyEvent(code) {
 		}
 
 		return {
-			teardown() {
+			destroy() {
 				node.removeEventListener('keydown', handleKeydown);
 			}
 		};

@@ -1,3 +1,5 @@
+cd `dirname $0`/..
+
 # fetch svelte-app
 rm -rf scripts/svelte-app
 node_modules/.bin/degit sveltejs/template scripts/svelte-app
@@ -9,9 +11,5 @@ cp scripts/svelte-app/public/global.css assets/repl-viewer.css
 rm -rf scripts/svelte-app/src
 rm -rf scripts/svelte-app/node_modules
 
-# delete and recreate assets/svelte-app.zip
-rm -rf assets/svelte-app.zip
-
-( cd scripts/svelte-app
-	zip -r -X ../../assets/svelte-app.zip .
-)
+# build svelte-app.json
+node scripts/build-svelte-app-json.js `find scripts/svelte-app -type f`

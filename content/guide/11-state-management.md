@@ -2,7 +2,7 @@
 title: State management
 ---
 
-Svelte components have built-in state management via the `get`, `set` and `observe` methods. But as your application grows beyond a certain size, you may find that passing data between components becomes laborious.
+Svelte components have built-in state management via the `get` and `set` methods. But as your application grows beyond a certain size, you may find that passing data between components becomes laborious.
 
 For example, you might have an `<Options>` component inside a `<Sidebar>` component that allows the user to control the behaviour of a `<MainView>` component. You could use bindings or events to 'send' information up from `<Options>` through `<Sidebar>` to a common ancestor — say `<App>` — which would then have the responsibility of sending it back down to `<MainView>`. But that's cumbersome, especially if you decide you want to break `<MainView>` up into a set of smaller components.
 
@@ -23,14 +23,14 @@ const store = new Store({
 });
 ```
 
-Each instance of `Store` has `get`, `set` and `observe` methods that behave identically to their counterparts on a Svelte component:
+Each instance of `Store` has `get`, `set`, `on` and `fire` methods that behave identically to their counterparts on a Svelte component:
 
 ```js
-store.get('name'); // 'world'
+const { name } = store.get(); // 'world'
 
-store.observe('name', name => {
-	console.log(`hello ${name}`);
-}); // 'hello world'
+store.on('state', ({ current }) => {
+	console.log(`hello ${current.name}`);
+});
 
 store.set({ name: 'everybody' }); // 'hello everybody'
 ```
@@ -43,7 +43,7 @@ Let's adapt our [very first example](guide#understanding-svelte-components):
 
 ```html
 <!-- { repl: false } -->
-<h1>Hello {{$name}}!</h1>
+<h1>Hello {$name}!</h1>
 <Greeting/>
 
 <script>
@@ -57,7 +57,7 @@ Let's adapt our [very first example](guide#understanding-svelte-components):
 
 ```html
 <!--{ filename: 'Greeting.html' }-->
-<p>It's nice to see you, {{$name}}</p>
+<p>It's nice to see you, {$name}</p>
 ```
 
 ```js
@@ -81,11 +81,9 @@ There are three important things to notice:
 
 * We're passing `store` to `new App(...)` instead of `data`
 * The template refers to `$name` instead of `name`. The `$` prefix tells Svelte that `name` is a *store property*
-* Because `<Greeting>` is a child of `<App>`, it also has access to the store. Without it, `<App>` would have to pass the `name` property down as a component property (`<Greeting name='{{name}}'/>`)
+* Because `<Greeting>` is a child of `<App>`, it also has access to the store. Without it, `<App>` would have to pass the `name` property down as a component property (`<Greeting name={name}/>`)
 
 Components that depend on store properties will re-render whenever they change.
-
-> To tell Svelte that you're going to be using `Store`, you must pass the `store: true` compiler option. This will change in version 2, when the compiler will automatically generate store-aware components.
 
 
 ### Declarative stores
@@ -94,7 +92,7 @@ As an alternative to adding the `store` option when instantiating, the component
 
 ```html
 <!-- { title: 'Declarative stores' } -->
-<h1>Hello {{$name}}!</h1>
+<h1>Hello {$name}!</h1>
 <Greeting/>
 
 <script>
@@ -110,7 +108,7 @@ As an alternative to adding the `store` option when instantiating, the component
 
 ```html
 <!--{ filename: 'Greeting.html' }-->
-<p>It's nice to see you, {{$name}}</p>
+<p>It's nice to see you, {$name}</p>
 ```
 
 ```js
@@ -140,10 +138,10 @@ store.compute(
 	(width, height, depth) => width * height * depth
 );
 
-store.get('volume'); // 1000
+store.get().volume; // 1000
 
 store.set({ width: 20 });
-store.get('volume'); // 2000
+store.get().volume; // 2000
 
 store.compute(
 	'mass',
@@ -151,12 +149,12 @@ store.compute(
 	(volume, density) => volume * density
 );
 
-store.get('mass'); // 6000
+store.get().mass; // 6000
 ```
 
 The first argument is the name of the computed property. The second is an array of *dependencies* — these can be data properties or other computed properties. The third argument is a function that recomputes the value whenever the dependencies change.
 
-A component that was connected to this store could reference `{{$volume}}` and `{{$mass}}`, just like any other store property.
+A component that was connected to this store could reference `{$volume}` and `{$mass}`, just like any other store property.
 
 
 ### Accessing the store inside components
@@ -168,7 +166,7 @@ Each component gets a reference to `this.store`. This allows you to attach behav
 <script>
 	export default {
 		oncreate() {
-			this.store.observe('foo', foo => {
+			this.store.on('state', ({ current }) => {
 				// ...
 			});
 		}
@@ -176,11 +174,11 @@ Each component gets a reference to `this.store`. This allows you to attach behav
 </script>
 ```
 
-...or call store methods in your event handlers:
+...or call store methods in your event handlers, using the same `$` prefix as data properties:
 
 ```html
 <!-- { repl: false } -->
-<button on:click='store.set({ muted: true })'>
+<button on:click="$set({ muted: true })">
 	Mute audio
 </button>
 ```
@@ -201,12 +199,12 @@ class TodoStore extends Store {
 			description
 		};
 
-		const todos = this.get('todos').concat(todo);
+		const todos = this.get().todos.concat(todo);
 		this.set({ todos });
 	}
 
 	toggleTodo(id) {
-		const todos = this.get('todos').map(todo => {
+		const todos = this.get().todos.map(todo => {
 			if (todo.id === id) {
 				return {
 					id,
@@ -252,14 +250,14 @@ You can call these methods in your components, just like the built-in methods:
 ```html
 <!-- { repl: false } -->
 <input
-	placeholder='Enter a stock ticker'
-	on:change='store.fetchStockPrices(this.value)'
+	placeholder="Enter a stock ticker"
+	on:change="$fetchStockPrices(this.value)"
 >
 ```
 
-### Two-way store bindings
+### Store bindings
 
-You can bind to store properties just like you bind to component properties — just add the `$` prefix:
+You can bind to store values just like you bind to component values — just add the `$` prefix:
 
 ```html
 <!-- { repl: false } -->
@@ -274,18 +272,18 @@ Just as in templates, you can access store properties in component computed prop
 
 ```html
 <!-- { repl: false } -->
-{{#if isVisible}}
-	<div class='todo {{todo.done ? "done": ""}}'>
-		{{todo.description}}
+{#if isVisible}
+	<div class="todo {todo.done ? 'done': ''}">
+		{todo.description}
 	</div>
-{{/if}}
+{/if}
 
 <script>
 	export default {
 		computed: {
 			// `todo` is a component property, `$filter` is
 			// a store property
-			isVisible: (todo, $filter) => {
+			isVisible: ({ todo, $filter }) => {
 				if ($filter === 'all') return true;
 				if ($filter === 'done') return todo.done;
 				if ($filter === 'pending') return !todo.done;
@@ -293,49 +291,6 @@ Just as in templates, you can access store properties in component computed prop
 		}
 	};
 </script>
-```
-
-
-### The onchange method
-
-In addition to `get`, `set`, `observe` and `compute`, each `Store` instance also has an `onchange` method. Every time the state changes, callbacks will receive a copy of the state, and an object indicating which properties have changed:
-
-```js
-store.set({ foo: 1, bar: 2, baz: 3, qux: 4 });
-store.onchange((state, changed) => {
-	console.log(`These properties changed: ${Object.keys(changed).join(', ')}`);
-});
-
-store.set({ bar: 3, baz: 3, qux: 3 });
-// -> 'These properties changed: bar, qux'
-```
-
-This is useful for attaching generic behaviours to stores — for example, you could create a function that persisted the contents of a store to `localStorage`:
-
-```js
-function useLocalStorage(store, key) {
-	const json = localStorage.getItem(key);
-	if (json) {
-		store.set(JSON.parse(json));
-	}
-
-	store.onchange(state => {
-		localStorage.setItem(key, JSON.stringify(state));
-	});
-}
-
-useLocalStorage(store, 'my-key');
-```
-
-Note that `Store` is conservative about objects and arrays, because there is no easy way to know if they have been mutated:
-
-```js
-const object = {};
-
-store.onchange(() => console.log('something changed'));
-
-store.set({ object }); // 'something changed'
-store.set({ object }); // 'something changed' (even though it's the same value)
 ```
 
 

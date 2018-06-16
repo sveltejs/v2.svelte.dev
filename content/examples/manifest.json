@@ -2,84 +2,170 @@
 	{
 		"name": "Basics",
 		"examples": [
-			"hello-world",
-			"if-blocks",
-			"each-blocks",
-			"scoped-styles"
+			{
+				"slug": "hello-world",
+				"title": "Hello World!"
+			},
+			{
+				"slug": "if-blocks",
+				"title": "If blocks"
+			},
+			{
+				"slug": "each-blocks",
+				"title": "Each blocks"
+			},
+			{
+				"slug": "scoped-styles",
+				"title": "Scoped styles"
+			}
 		]
 	},
-
 	{
 		"name": "Two-way bindings",
 		"examples": [
-			"binding-input-text",
-			"binding-input-numeric",
-			"binding-textarea",
-			"binding-input-checkbox",
-			"binding-input-radio",
-			"binding-media-elements"
+			{
+				"slug": "binding-input-text",
+				"title": "Text input"
+			},
+			{
+				"slug": "binding-input-numeric",
+				"title": "Numeric input"
+			},
+			{
+				"slug": "binding-textarea",
+				"title": "Textarea"
+			},
+			{
+				"slug": "binding-input-checkbox",
+				"title": "Checkbox input"
+			},
+			{
+				"slug": "binding-input-checkbox-group",
+				"title": "Checkbox input (grouped)"
+			},
+			{
+				"slug": "binding-input-radio",
+				"title": "Radio input"
+			},
+			{
+				"slug": "binding-media-elements",
+				"title": "Media elements"
+			}
 		]
 	},
-
 	{
 		"name": "Nested components",
 		"examples": [
-			"nested-components",
-			"modal-with-slot",
-			"self-references"
+			{
+				"slug": "nested-components",
+				"title": "Nested components"
+			},
+			{
+				"slug": "modal-with-slot",
+				"title": "Modal with <slot>"
+			},
+			{
+				"slug": "self-references",
+				"title": "Self-references"
+			}
 		]
 	},
-
 	{
 		"name": "SVG and dataviz",
 		"examples": [
-			"svg-clock",
-			"line-chart",
-			"bar-chart",
-			"scatterplot"
+			{
+				"slug": "svg-clock",
+				"title": "SVG Clock"
+			},
+			{
+				"slug": "line-chart",
+				"title": "Line/area chart"
+			},
+			{
+				"slug": "bar-chart",
+				"title": "Bar chart"
+			},
+			{
+				"slug": "scatterplot",
+				"title": "Scatterplot"
+			}
 		]
 	},
-
 	{
 		"name": "Transitions",
 		"examples": [
-			"transitions-fade",
-			"transitions-fly",
-			"transitions-in-out",
-			"transitions-custom"
+			{
+				"slug": "transitions-fade",
+				"title": "Simple fade"
+			},
+			{
+				"slug": "transitions-fly",
+				"title": "Parameterised"
+			},
+			{
+				"slug": "transitions-in-out",
+				"title": "In and out"
+			},
+			{
+				"slug": "transitions-custom",
+				"title": "Custom CSS"
+			}
 		]
 	},
-
 	{
 		"name": "Async data",
 		"examples": [
-			"await-block"
+			{
+				"slug": "await-block",
+				"title": "Await block"
+			}
 		]
 	},
-
 	{
 		"name": "7guis",
 		"examples": [
-			"7guis-counter",
-			"7guis-temperature",
-			"7guis-flight-booker",
-			"7guis-timer",
-			"7guis-crud",
-			"7guis-circles"
+			{
+				"slug": "7guis-counter",
+				"title": "Counter"
+			},
+			{
+				"slug": "7guis-temperature",
+				"title": "Temperature converter"
+			},
+			{
+				"slug": "7guis-flight-booker",
+				"title": "Flight booker"
+			},
+			{
+				"slug": "7guis-timer",
+				"title": "Timer"
+			},
+			{
+				"slug": "7guis-crud",
+				"title": "CRUD"
+			},
+			{
+				"slug": "7guis-circles",
+				"title": "Circles"
+			}
 		]
 	},
-
 	{
 		"name": "<:Window>",
 		"examples": [
-			"parallax"
+			{
+				"slug": "parallax",
+				"title": "Parallax"
+			}
 		]
 	},
-
 	{
 		"name": "Miscellaneous",
 		"examples": [
-			"hacker-news"
+			{
+				"slug": "hacker-news",
+				"title": "Hacker News"
+			}
 		]
 	}
 ]

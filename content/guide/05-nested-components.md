@@ -7,19 +7,13 @@ As well as containing elements (and `if` blocks and `each` blocks), Svelte compo
 ```html
 <!-- { title: 'Nested components' } -->
 <div class='widget-container'>
-	<Widget foo bar='static' baz='{{dynamic}}'/>
+	<Widget/>
 </div>
 
 <script>
 	import Widget from './Widget.html';
 
 	export default {
-		data() {
-			return {
-				dynamic: 'this can change'
-			}
-		},
-
 		components: {
 			Widget
 		}
@@ -28,44 +22,72 @@ As well as containing elements (and `if` blocks and `each` blocks), Svelte compo
 ```
 
 ```html
-<!-- { filename: 'Widget.html', hidden: true } -->
-<p>foo: {{foo}}</p>
-<p>bar: {{bar}}</p>
-<p>baz: {{baz}}</p>
+<!--{ filename: 'Widget.html' }-->
+<p>I am a nested component</p>
 ```
 
-The example above is equivalent to the following...
+That's similar to doing this...
 
 ```js
 import Widget from './Widget.html';
 
 const widget = new Widget({
-	target: document.querySelector('.widget-container'),
-	data: {
-		foo: true,
-		bar: 'static',
-		baz: 'this can change'
-	}
+	target: document.querySelector('.widget-container')
 });
 ```
 
-...except that Svelte will ensure that the value of `baz` is kept in sync with the value of `dynamic` in the parent component, and takes care of destroying the child component when the parent is destroyed.
+...except that Svelte takes care of destroying the child component when the parent is destroyed, and keeps the two components in sync with *props*.
 
-In the case where the value in the child component has the same name as that in the parent component, there a shorter way to write this. Instead of
+> Component names must be capitalised, following the widely-used JavaScript convention of capitalising constructor names. It's also an easy way to distinguish components from elements in your template.
+
+
+### Props
+
+Props, short for 'properties', are the means by which you pass data down from a parent to a child component — in other words, they're just like attributes on an element:
+
+```html
+<!--{ title: 'Props' }-->
+<div class='widget-container'>
+	<Widget foo bar="static" baz={dynamic}/>
+</div>
+
+<script>
+	import Widget from './Widget.html';
+
+	export default {
+		components: {
+			Widget
+		}
+	};
+</script>
+```
+
+```html
+<!--{ filename: 'Widget.html' }-->
+<p>foo: {foo}</p>
+<p>bar: {bar}</p>
+<p>baz: {baz}</p>
+```
+
+```json
+/* { hidden: true } */
+{
+	dynamic: 'try changing this text'
+}
+```
+
+As with element attributes, prop values can contain any valid JavaScript expression.
+
+Often, the name of the property will be the same as the value, in which case we can use a shorthand:
 
 ```html
 <!-- { repl: false } -->
-<Widget foo='{{foo}}'/>
+<!-- these are equivalent -->
+<Widget foo={foo}/>
+<Widget {foo}/>
 ```
 
-you can use
-
-```html
-<!-- { repl: false } -->
-<Widget :foo/>
-```
-
-> Component names should be capitalised, following the widely-used JavaScript convention of capitalising constructor names. It's also an easy way to distinguish components from elements in your template.
+> Note that props are *one-way* — to get data from a child component into a parent component, use [bindings](guide#bindings).
 
 
 ### Composing with `<slot>`
@@ -90,7 +112,7 @@ A component can contain a `<slot></slot>` element, which allows the parent compo
 
 ```html
 <!--{ filename: 'Box.html' }-->
-<div class='box'>
+<div class="box">
 	<slot><!-- content is injected here --></slot>
 </div>
 
@@ -119,9 +141,9 @@ The `<slot>` element can contain 'fallback content', which will be used if no ch
 
 ```html
 <!--{ filename: 'Box.html' }-->
-<div class='box'>
+<div class="box">
 	<slot>
-		<p class='fallback'>the box is empty!</p>
+		<p class="fallback">the box is empty!</p>
 	</slot>
 </div>
 
@@ -142,8 +164,8 @@ You can also have *named* slots. Any elements with a corresponding `slot` attrib
 ```html
 <!-- { title: 'Named slots' } -->
 <ContactCard>
-	<span slot='name'>P. Sherman</span>
-	<span slot='address'>42 Wallaby Way, Sydney</span>
+	<span slot="name">P. Sherman</span>
+	<span slot="address">42 Wallaby Way, Sydney</span>
 </ContactCard>
 
 <script>
@@ -157,11 +179,11 @@ You can also have *named* slots. Any elements with a corresponding `slot` attrib
 
 ```html
 <!--{ filename: 'ContactCard.html' }-->
-<div class='contact-card'>
-	<h2><slot name='name'></slot></h2>
-	<slot name='address'>Unknown address</slot>
+<div class="contact-card">
+	<h2><slot name="name"></slot></h2>
+	<slot name="address">Unknown address</slot>
 	<br>
-	<slot name='email'>Unknown email</slot>
+	<slot name="email">Unknown email</slot>
 </div>
 
 <style>
@@ -170,4 +192,33 @@ You can also have *named* slots. Any elements with a corresponding `slot` attrib
 		padding: 0.5em;
 	}
 </style>
+```
+
+
+### Shorthand imports
+
+As an alternative to using an `import` declaration...
+
+```html
+<!-- { repl: false } -->
+<script>
+	import Widget from './Widget.html';
+
+	export default {
+		components: { Widget }
+	};
+</script>
+```
+
+...you can write this:
+
+```html
+<!-- { repl: false } -->
+<script>
+	export default {
+		components: {
+			Widget: './Widget.html'
+		}
+	};
+</script>
 ```

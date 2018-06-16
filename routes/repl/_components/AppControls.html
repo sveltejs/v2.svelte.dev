@@ -1,23 +1,23 @@
 <div class='app-controls'>
-	<ExampleSelector :examples bind:name on:select/>
+	<ExampleSelector {examples} bind:name on:select/>
 
 	<div style='text-align: right;'>
-		{{#if $user}}
+		{#if $user}
 			<UserMenu/>
-		{{else}}
+		{:else}
 			<a class='login' on:click='login(event)' href='auth/login'>Login to save</a>
-		{{/if}}
+		{/if}
 
-		<button disabled={{downloading}} on:click='download()' title='download zip file' class=icon style='background-image: url(icons/download.svg)'>download</button>
+		<button disabled={downloading} on:click='download()' title='download zip file' class=icon style='background-image: url(icons/download.svg)'>download</button>
 
-		{{#if $user}}
-			<button disabled={{forking || !$user}} on:click='fork()' title='fork' class=icon style='background-image: url(icons/fork.svg)'>fork</button>
-			<button disabled={{saving || !canSave}} on:click='save()' title='save' class=icon style='background-image: url(icons/save.svg)'>save</button>
-		{{/if}}
+		{#if $user}
+			<button disabled={forking || !$user} on:click='fork()' title='fork' class=icon style='background-image: url(icons/fork.svg)'>fork</button>
+			<button disabled={saving || !canSave} on:click='save()' title='save' class=icon style='background-image: url(icons/save.svg)'>save</button>
+		{/if}
 
-		{{#if gist}}
-			<a href='{{gist.html_url}}' title='link to gist' class=icon style='background-image: url(icons/link.svg)'>link to gist</a>
-		{{/if}}
+		{#if gist}
+			<a href='{gist.html_url}' title='link to gist' class=icon style='background-image: url(icons/link.svg)'>link to gist</a>
+		{/if}
 	</div>
 </div>
 
@@ -74,14 +74,8 @@
 <script>
 	import ExampleSelector from './ExampleSelector.html';
 	import UserMenu from './UserMenu.html';
-	import examples from '../_examples.json';
-
-	const gistIds = new Set();
-	examples.forEach(group => {
-		group.examples.forEach(example => {
-			gistIds.add(example.gist);
-		});
-	});
+	import doNotZip from 'do-not-zip';
+	import downloadBlob from '../_utils/downloadBlob.js';
 
 	export default {
 		components: {
@@ -90,10 +84,10 @@
 		},
 
 		computed: {
-			canSave: ($user, gist) => {
+			canSave: ({ $user, gist }) => {
 				if (!$user) return false;
 				if (!gist) return false;
-				return $user.id == gist.owner.id && !gistIds.has(gist.id); // comparing number and string
+				return $user.id == gist.owner.id; // comparing number and string
 			}
 		},
 
@@ -184,74 +178,37 @@
 				this.set({ saving: false });
 			},
 
-			download() {
-				this.set({
-					downloading: true
-				});
+			async download() {
+				this.set({ downloading: true });
 
-				Promise.all([
-					import(/* webpackChunkName: "jszip" */ 'jszip'),
-					import(/* webpackChunkName: "file-saver" */'file-saver')
-				]).then(([{ default: JSZip }, { default: FileSaver }]) => {
-					const zip = new JSZip();
+				const { bundle, components, data } = this.get();
+				const files = await (await fetch('/svelte-app.json')).json();
 
-					fetch('svelte-app.zip')
-						.then(r => r.arrayBuffer())
-						.then(JSZip.loadAsync)
-						.then(zip => {
-							const { bundle, components, data } = this.get();
+				if (bundle.imports.length > 0) {
+					const idx = files.findIndex(({ path }) => path === 'package.json');
+					const pkg = JSON.parse(files[idx].data);
+					const deps = {};
+					bundle.imports.forEach(mod => {
+						const match = /^(@[^\/]+\/)?[^@\/]+/.exec(mod);
+						deps[match[0]] = 'latest';
+					});
+					pkg.dependencies = deps;
+					files[idx].data = JSON.stringify(pkg, null, '  ');
+				}
 
-							// remove any dotfiles that snuck in
-							Object.keys(zip.files).forEach(key => {
-								const file = key.split('/').pop();
-								if (file[0] === '.') zip.remove(key);
-							});
-
-							// add component files
-							components.forEach(component => {
-								zip.file(`src/${component.name}.${component.type}`, component.source);
-							});
-
-							// add entry point
-							zip.file(`src/main.js`, `import App from './App.html';
+				files.push(...components.map(component => ({ path: `src/${component.name}.${component.type}`, data: component.source })));
+				files.push({ path: `src/main.js`, data: `import App from './App.html';
 
 var app = new App({
 	target: document.body,
 	data: ${JSON.stringify(data, null, '\t').replace(/\n/g, '\n\t')}
 });
 
-export default app;` );
+export default app;` });
 
-							const go = () => {
-								zip.generateAsync({ type: 'blob' })
-									.then(blob => {
-										this.set({
-											downloading: false
-										});
-										FileSaver.saveAs(blob, 'svelte-app.zip');
-									});
-							};
+				downloadBlob(doNotZip(files), 'svelte-app.zip');
 
-							if (bundle.imports.length > 0) {
-								zip.file('package.json')
-									.async('string')
-									.then(JSON.parse)
-									.then(pkg => {
-										const deps = {};
-										bundle.imports.forEach(mod => {
-											const match = /^[^@\/]+/.exec(mod);
-											deps[match[0]] = 'latest';
-										});
-										pkg.dependencies = deps;
-
-										zip.file('package.json', JSON.stringify(pkg, null, '  '));
-									})
-									.then(go);
-							} else {
-								go();
-							}
-						});
-				});
+				this.set({ downloading: false });
 			}
 		}
 	};
