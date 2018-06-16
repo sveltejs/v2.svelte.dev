@@ -206,6 +206,10 @@ alphanum-sort@^1.0.1, alphanum-sort@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/alphanum-sort/-/alphanum-sort-1.0.2.tgz#97a1119649b211ad33691d9f9f486a8ec9fbe0a3"
 
+ansi-colors@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/ansi-colors/-/ansi-colors-2.0.1.tgz#592299d94d1c403642098ec4fd7b7f2d8895a957"
+
 ansi-escapes@^3.0.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/ansi-escapes/-/ansi-escapes-3.1.0.tgz#f73207bb81207d75fd6c83f125af26eea378ca30"
@@ -673,10 +677,6 @@ cli-width@^2.0.0:
 clone@^1.0.2:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/clone/-/clone-1.0.4.tgz#da309cc263df15994c688ca902179ca3c7cd7c7e"
-
-clorox@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/clorox/-/clorox-1.0.3.tgz#6fa63653f280c33d69f548fb14d239ddcfa1590d"
 
 co@^4.6.0:
   version "4.6.0"
@@ -1799,7 +1799,7 @@ html-entities@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/html-entities/-/html-entities-1.2.1.tgz#0df29351f0721163515dfb9e5543e5f6eed5162f"
 
-html-minifier@^3.5.11:
+html-minifier@^3.5.16:
   version "3.5.16"
   resolved "https://registry.yarnpkg.com/html-minifier/-/html-minifier-3.5.16.tgz#39f5aabaf78bdfc057fe67334226efd7f3851175"
   dependencies:
@@ -3139,9 +3139,9 @@ prepend-http@^1.0.0:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/prepend-http/-/prepend-http-1.0.4.tgz#d4f4562b0ce3696e41ac52d0e002e57a635dc6dc"
 
-pretty-bytes@^4.0.2:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/pretty-bytes/-/pretty-bytes-4.0.2.tgz#b2bf82e7350d65c6c33aa95aaa5a4f6327f61cd9"
+pretty-bytes@^5.0.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/pretty-bytes/-/pretty-bytes-5.1.0.tgz#6237ecfbdc6525beaef4de722cc60a58ae0e6c6d"
 
 pretty-ms@^3.1.0:
   version "3.2.0"
@@ -3468,7 +3468,7 @@ rx-lite@*, rx-lite@^4.0.8:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/rx-lite/-/rx-lite-4.0.8.tgz#0b1e11af8bc44836f04a6407e92da42467b79444"
 
-sade@^1.4.0:
+sade@^1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/sade/-/sade-1.4.1.tgz#80c6dfd3c03db1fbcd6bc10c0eb52f71e7cadc01"
   dependencies:
@@ -3501,30 +3501,30 @@ sander@^0.6.0:
     mkdirp "^0.5.1"
     rimraf "^2.5.2"
 
-sapper@^0.12.0:
-  version "0.12.0"
-  resolved "https://registry.yarnpkg.com/sapper/-/sapper-0.12.0.tgz#7989e4d84b756105aa6dfd2b893d119182649956"
+sapper@^0.13.3:
+  version "0.13.3"
+  resolved "https://registry.yarnpkg.com/sapper/-/sapper-0.13.3.tgz#bcd1349657993f6feaa7792e80e914b5059f6878"
   dependencies:
+    ansi-colors "^2.0.1"
     cheerio "^1.0.0-rc.2"
     chokidar "^2.0.3"
-    clorox "^1.0.3"
     cookie "^0.3.1"
     devalue "^1.0.1"
     glob "^7.1.2"
-    html-minifier "^3.5.11"
+    html-minifier "^3.5.16"
     mkdirp "^0.5.1"
     node-fetch "^2.1.1"
     port-authority "^1.0.2"
-    pretty-bytes "^4.0.2"
+    pretty-bytes "^5.0.0"
     pretty-ms "^3.1.0"
     require-relative "^0.8.7"
     rimraf "^2.6.2"
-    sade "^1.4.0"
+    sade "^1.4.1"
     sander "^0.6.0"
-    source-map-support "^0.5.5"
-    tslib "^1.9.0"
+    source-map-support "^0.5.6"
+    tslib "^1.9.1"
     url-parse "^1.2.0"
-    webpack-format-messages "^1.0.2"
+    webpack-format-messages "^2.0.1"
 
 sax@^1.2.4, sax@~1.2.1:
   version "1.2.4"
@@ -3698,7 +3698,7 @@ source-map-resolve@^0.5.0:
     source-map-url "^0.4.0"
     urix "^0.1.0"
 
-source-map-support@^0.5.5:
+source-map-support@^0.5.6:
   version "0.5.6"
   resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.5.6.tgz#4435cee46b1aab62b8e8610ce60f788091c51c13"
   dependencies:
@@ -3981,7 +3981,7 @@ to-regex@^3.0.1, to-regex@^3.0.2:
     regex-not "^1.0.2"
     safe-regex "^1.1.0"
 
-tslib@^1.9.0:
+tslib@^1.9.1:
   version "1.9.2"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.9.2.tgz#8be0cc9a1f6dc7727c38deb16c2ebd1a2892988e"
 
@@ -4174,11 +4174,11 @@ watchpack@^1.5.0:
     graceful-fs "^4.1.2"
     neo-async "^2.5.0"
 
-webpack-format-messages@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/webpack-format-messages/-/webpack-format-messages-1.0.2.tgz#875dba643e4a59af7183413ed79dea3949b51655"
+webpack-format-messages@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/webpack-format-messages/-/webpack-format-messages-2.0.1.tgz#81650be9836241f485e2a59a3c13b60e59bc3493"
   dependencies:
-    clorox "^1.0.3"
+    ansi-colors "^2.0.1"
 
 webpack-sources@^1.0.1, webpack-sources@^1.1.0:
   version "1.1.0"
