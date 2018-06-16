@@ -117,11 +117,11 @@ new App({
 
 ### Immutable
 
-By default, Svelte must assume your objects are mutable when doing value comparisons to be safe so everything updates when it should. However, you may realize performance gains in expensive computed properties if your data is [immutable](https://en.wikipedia.org/wiki/Immutable_object) and Svelte is instructed to use strict comparisons.
+Because arrays and objects are *mutable*, Svelte must err on the side of caution when deciding whether or not to update things that refer to them.
 
-If all your data is immutable, you can use the compiler option `{ immutable: true }` to use strict object comparison (using `===`) everywhere in your app. If you have one component that uses immutable data you can set it to use the strict comparison for just that component.
+But if all your data is [immutable](https://en.wikipedia.org/wiki/Immutable_object), you can use the `{ immutable: true }` compiler option to use strict object comparison (using `===`) everywhere in your app. If you have one component that uses immutable data you can set it to use the strict comparison for just that component.
 
-In this example, if the array `allItems` is guaranteed to be a new array if any data within it changes, you can gain some performance in your fuzzy search by recalculating only when data has definitely changed.
+In the example below, `searchResults` would normally be recalculated whenever `items` *might* have changed, but with `immutable: true` it will only update when `items` has *definitely* changed. This can improve the performance of your app.
 
 ```html
 {#each searchResults as item}
@@ -135,13 +135,15 @@ In this example, if the array `allItems` is guaranteed to be a new array if any 
 		immutable: true,
 
 		computed: {
-			searchResults: ({ searchString, allItems }) => {
-				if (!searchString || !allItems) return allItems || [];
+			searchResults: ({ searchString, items }) => {
+				if (!searchString) return items;
 
-				const searcher = new FuzzySearch(allItems, [ 'name', 'location' ]);
+				const searcher = new FuzzySearch(items, ['name', 'location']);
 				return searcher.search(searchString);
 			}
 		}
 	}
 </script>
 ```
+
+[Here's a live example](repl?gist=fba9c59a0c741c635dc67f7f55b68f58) showing the effect of `immutable: true`.
