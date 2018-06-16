@@ -192,8 +192,7 @@
 				});
 
 				let promise = null;
-				let observers = null;
-				let updating = null;
+				let updating = false;
 
 				let toDestroy = null;
 
@@ -281,22 +280,15 @@
 
 							component = window.app = window.component = iframe.contentWindow.component;
 
-							// TODO use on('state', ...) instead
-							component.observe = observe;
-
-							observers = Object.keys(data).map(key => {
-								return component.observe(key, value => {
-									if (updating) return;
-
-									updating = true;
-									this.fire('change', { key, value });
-									updating = false;
-								}, { init: false });
+							component.on('state', ({ current }) => {
+								if (updating) return;
+								updating = true;
+								this.fire('data', { current });
+								updating = false;
 							});
 						} catch (error) {
 							// TODO show in UI
 							component = null;
-							observers = null;
 
 							const loc = getLocationFromStack(error.stack, dom.map);
 							if (loc) {
@@ -348,26 +340,14 @@
 				});
 
 				this.observe('data', data => {
-					try {
-						if (observers) {
-							observers.forEach(observer => observer.cancel());
-						}
+					if (updating) return;
 
+					try {
 						if (component) {
 							this.set({ error: null });
 							updating = true;
 							component.set(data);
 							updating = false;
-
-							observers = Object.keys(data).map(key => {
-								return component.observe(key, value => {
-									if (updating) return;
-
-									updating = true;
-									this.fire('change', { key, value });
-									updating = false;
-								}, { init: false });
-							});
 						} else {
 							init();
 						}
