@@ -40,7 +40,6 @@ let currentToken;
 async function getBundle(mode, cache, lookup) {
 	let bundle;
 	let error;
-	let erroredComponent;
 	let warningCount = 0;
 
 	const info = {};
@@ -56,42 +55,38 @@ async function getBundle(mode, cache, lookup) {
 					if (importee in lookup) return importee;
 				},
 				load(id) {
-					if (id in lookup) {
-						const component = lookup[id];
+					if (id in lookup) return lookup[id].source;
+				},
+				transform(code, id) {
+					if (!/\.html$/.test(id)) return null;
 
-						if (component.type === 'js') return component.source;
+					const name = id.replace(/^\.\//, '').replace(/\.html$/, '');
 
-						try {
-							const { js, css, stats } = svelte.compile(component.source, {
-								generate: mode,
-								format: 'es',
-								cascade: false,
-								store: true,
-								skipIntroByDefault: true,
-								nestedTransitions: true,
-								name: component.name,
-								filename: component.name + '.html',
-								dev: true,
-								shared: false,
-								onwarn: warning => {
-									console.warn(warning.message);
-									console.log(warning.frame);
-									warningCount += 1;
-								}
-							});
-
-							if (stats) {
-								if (Object.keys(stats.hooks).filter(hook => stats.hooks[hook]).length > 0) info.usesHooks = true;
-							} else if (/[^_]oncreate/.test(component.source)) {
-								info.usesHooks = true;
-							}
-
-							return js;
-						} catch (err) {
-							erroredComponent = component;
-							throw err;
+					const { js, css, stats } = svelte.compile(code, {
+						generate: mode,
+						format: 'es',
+						cascade: false,
+						store: true,
+						skipIntroByDefault: true,
+						nestedTransitions: true,
+						name: name,
+						filename: name + '.html',
+						dev: true,
+						shared: false,
+						onwarn: warning => {
+							console.warn(warning.message);
+							console.log(warning.frame);
+							warningCount += 1;
 						}
+					});
+
+					if (stats) {
+						if (Object.keys(stats.hooks).filter(hook => stats.hooks[hook]).length > 0) info.usesHooks = true;
+					} else if (/[^_]oncreate/.test(code)) {
+						info.usesHooks = true;
 					}
+
+					return js;
 				}
 			}],
 			onwarn(warning) {
@@ -101,10 +96,10 @@ async function getBundle(mode, cache, lookup) {
 			cache
 		});
 	} catch (error) {
-		return { error, erroredComponent, bundle: null, info: null, warningCount: null }
+		return { error, bundle: null, info: null, warningCount: null }
 	}
 
-	return { bundle, info, error: null, erroredComponent: null, warningCount };
+	return { bundle, info, error: null, warningCount };
 }
 
 export async function bundle(components) {
@@ -119,13 +114,12 @@ export async function bundle(components) {
 		lookup[path] = component;
 	});
 
+	let dom;
 	let error;
-	let erroredComponent;
 
 	try {
-		const dom = await getBundle('dom', cached.dom, lookup);
+		dom = await getBundle('dom', cached.dom, lookup);
 		if (dom.error) {
-			erroredComponent = dom.erroredComponent;
 			throw dom.error;
 		}
 
@@ -156,7 +150,6 @@ export async function bundle(components) {
 		if (ssr) {
 			cached.ssr = ssr.bundle;
 			if (ssr.error) {
-				erroredComponent = ssr.erroredComponent;
 				throw ssr.error;
 			}
 		}
@@ -183,20 +176,8 @@ export async function bundle(components) {
 			error: null
 		};
 	} catch (err) {
-		console.error(err);
-
 		const e = error || err;
 		delete e.toString;
-
-		if (erroredComponent && e.loc) {
-			const { line, column } = e.loc;
-			// for some reason error.loc gets borked up, maybe by Rollup?
-			// TODO investigation. In the meantime, fix it here
-			const { locate } = await import(/* webpackChunkName: "locate-character" */ 'locate-character');
-			e.loc = locate(erroredComponent.source, e.pos, { offsetLine: 1 });
-			e.loc.file = erroredComponent.name;
-			e.message = e.message.replace(` (${line}:${column})`, '');
-		}
 
 		return {
 			bundle: null,
