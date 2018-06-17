@@ -5,7 +5,7 @@
 		{:else}
 			<CodeMirror
 				ref:cm
-				mode='{selectedComponent.type === "js" ? "javascript" : "handlebars"}'
+				mode='{selectedComponent.type === "js" ? "javascript" : "svelte"}'
 				bind:code='selectedComponent.source'
 				{error}
 				{errorLoc}
