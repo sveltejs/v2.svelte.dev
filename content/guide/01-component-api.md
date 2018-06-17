@@ -98,7 +98,7 @@ component.fire('thingHappened', {
 });
 ```
 
-At first glance `component.on(...)` and `component.fire(...)` aren't particularly useful, but it'll become more so when we learn about [nested components](guide#nested-components) and [component events](guide#component-events). (This last link shows an example.)
+At first glance `component.on(...)` and `component.fire(...)` aren't particularly useful, but it'll become more so when we learn about [nested components](guide#nested-components) and [component events](guide#component-events).
 
 
 ### component.destroy()
