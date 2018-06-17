@@ -250,11 +250,20 @@
 		},
 
 		computed: {
+			sourceErrorLoc({ sourceError, selectedComponent }) {
+				if (!sourceError || !selectedComponent) return null;
+
+				if (sourceError.filename !== `${selectedComponent.name}.${selectedComponent.type}`) return;
+
+				return sourceError.start;
+			},
+
 			runtimeErrorLoc({ runtimeError, selectedComponent }) {
 				if (!runtimeError || !selectedComponent) return null;
+
 				if (runtimeError.filename !== `${selectedComponent.name}.${selectedComponent.type}`) return;
 
-				return runtimeError.loc;
+				return runtimeError.start;
 			},
 
 			url: ({ version, gist, query, demo }) => {
@@ -375,12 +384,11 @@
 					const { bundle, dom, ssr, warningCount, error } = await worker.bundle(components);
 
 					if (error) {
-						// TODO differentiate between bundleError and sourceError
 						this.set({
 							bundle: null,
 							dom: null,
 							ssr: null,
-							bundleError: error,
+							sourceError: error,
 							runtimeError: null,
 							warningCount,
 							compilerReady: true
@@ -390,7 +398,7 @@
 							bundle,
 							dom,
 							ssr,
-							bundleError: null,
+							sourceError: null,
 							runtimeError: null,
 							warningCount,
 							compilerReady: true
