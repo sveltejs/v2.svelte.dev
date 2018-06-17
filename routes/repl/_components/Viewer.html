@@ -197,8 +197,8 @@
 				let toDestroy = null;
 
 				const init = () => {
-					const { bundle, dom, ssr, bundleError } = this.get();
-					if (bundleError) return;
+					const { bundle, dom, ssr, sourceError } = this.get();
+					if (sourceError) return;
 
 					const imports = [];
 
@@ -360,10 +360,6 @@
 						}
 						this.set({ error });
 					}
-				});
-
-				this.observe('bundleError', error => {
-					if (error) this.set({ error });
 				});
 			});
 		},
