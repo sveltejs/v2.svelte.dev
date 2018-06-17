@@ -1,3 +1,5 @@
+<svelte:window on:keydown="handleKeydown(event)"/>
+
 <div class='app-controls'>
 	<ExampleSelector {examples} bind:name on:select/>
 
@@ -77,6 +79,8 @@
 	import doNotZip from 'do-not-zip';
 	import downloadBlob from '../_utils/downloadBlob.js';
 
+	const isMac = typeof navigator !== 'undefined' && navigator.platform === 'MacIntel';
+
 	export default {
 		components: {
 			ExampleSelector,
@@ -92,6 +96,13 @@
 		},
 
 		methods: {
+			handleKeydown(event) {
+				if (event.which === 83 && isMac ? event.metaKey : event.ctrlKey) {
+					event.preventDefault();
+					this.save();
+				}
+			},
+
 			login(event) {
 				event.preventDefault();
 				const loginWindow = window.open(`${window.location.origin}/auth/login`, 'login', 'width=600,height=400');
