@@ -11,7 +11,7 @@
 		{json5}
 		{gist}
 		bind:name
-		on:select='set({ demo: event.slug })'
+		on:select='set({ demo: event.slug, gist: null })'
 		on:forked='set({ gist: event.gist })'
 	/>
 
