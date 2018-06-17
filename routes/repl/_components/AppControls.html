@@ -14,7 +14,7 @@
 
 		{#if $user}
 			<button
-				disabled={forking || !$user}
+				disabled={saving || !$user}
 				on:click='fork()'
 				title='fork'
 				class="icon {justForked ? 'check' : ''}"
@@ -22,7 +22,7 @@
 			>fork</button>
 
 			<button
-				disabled={saving || !canSave}
+				disabled={saving || !$user}
 				on:click='save()'
 				title='save'
 				class="icon {justSaved ? 'check' : ''}"
@@ -152,10 +152,13 @@
 				window.addEventListener('message', handleLogin);
 			},
 
-			async fork() {
+			async fork(intentWasSave) {
+				const { user } = this.store.get();
+				if (!user) return;
+
 				const { name, components, json5 } = this.get();
 
-				this.set({ forking: true });
+				this.set({ saving: true });
 
 				try {
 					const r = await fetch(`gist/create`, {
@@ -168,7 +171,7 @@
 						})
 					});
 
-					if (r.status !== 200) {
+					if (r.status < 200 || r.status >= 300) {
 						const { error } = await r.json();
 						throw new Error(`Received an HTTP ${r.status} response: ${error}`);
 					}
@@ -176,9 +179,9 @@
 					const gist = await r.json();
 					this.fire('forked', { gist });
 
-					this.set({ justForked: true });
+					this.set({ [intentWasSave ? 'justSaved' : 'justForked']: true });
 					await wait(600);
-					this.set({ justForked: false });
+					this.set({ [intentWasSave ? 'justSaved' : 'justForked']: false });
 				} catch (err) {
 					if (navigator.onLine) {
 						alert(err.message);
@@ -187,13 +190,18 @@
 					}
 				}
 
-				this.set({ forking: false });
+				this.set({ saving: false });
 			},
 
 			async save() {
 				const { name, components, json5, gist, saving, canSave } = this.get();
 
-				if (saving || !canSave) return;
+				if (saving) return;
+
+				if (!canSave) {
+					this.fork(true);
+					return;
+				}
 
 				this.set({ saving: true });
 
@@ -232,7 +240,7 @@
 						})
 					});
 
-					if (r.status !== 200) {
+					if (r.status < 200 || r.status >= 300) {
 						const { error } = await r.json();
 						throw new Error(`Received an HTTP ${r.status} response: ${error}`);
 					}
