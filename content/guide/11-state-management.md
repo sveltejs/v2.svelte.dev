@@ -166,9 +166,13 @@ Each component gets a reference to `this.store`. This allows you to attach behav
 <script>
 	export default {
 		oncreate() {
-			this.store.on('state', ({ current }) => {
+			const listener = this.store.on('state', ({ current }) => {
 				// ...
 			});
+	
+			// listeners are not automatically removed — cancel
+			// them to prevent memory leaks
+			this.on('destroy', listener.cancel);
 		}
 	};
 </script>
