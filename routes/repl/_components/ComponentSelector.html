@@ -2,26 +2,39 @@
 	<div class="panel-header">
 		<ul ref:files class="file-tabs" on:dblclick='fire("create")'>
 			{#each components as component}
-			<li id='{component.name}' class='{ selectedComponent == component ? "active" : "" }' data-name='{component.name}' on:dblclick='event.stopPropagation()'>
-				<div class='file-tabs-item { component.edit ? "edit-mode" : ""}' on:click='selectComponent(component, selectedComponent)'>
-					{#if component.name == 'App'}
-						<div class='uneditable'>
-							App.html
-						</div>
-					{:else}
-						{#if component.edit}
-							<div class='input-wrapper'>
-								<input autofocus ref:name bind:value='component.name' on:focus='selectInput(this)' on:blur='closeEdit(selectedComponent)' on:enter='this.blur()' />
+				<li
+					id='{component.name}'
+					class='{ selectedComponent == component ? "active" : "" }'
+					data-name='{component.name}'
+					on:dblclick='event.stopPropagation()'
+				>
+					<div
+						class='file-tabs-item {component.edit ? "edit-mode" : ""}'
+						on:click='selectComponent(component, selectedComponent)'
+					>
+						{#if component.name == 'App'}
+							<div class='uneditable'>
+								App.html
 							</div>
 						{:else}
-							<div class='editable' title='edit component name' on:click='editTab(component, selectedComponent)'>
-								{component.name}.{component.type}
-							</div>
+							{#if component.edit}
+								<input
+									autofocus
+									ref:name
+									bind:value='component.name'
+									on:focus='selectInput(this)'
+									on:blur='closeEdit(selectedComponent)'
+									on:enter='this.blur()'
+								/>
+							{:else}
+								<div class='editable' title='edit component name' on:click='editTab(component, selectedComponent)'>
+									{component.name}.{component.type}
+								</div>
+							{/if}
+							<span class='remove' on:click='remove(component)'>&times;</span>
 						{/if}
-						<span class='remove' on:click='remove(component)'>&times;</span>
-					{/if}
-				</div>
-			</li>
+					</div>
+				</li>
 			{/each}
 		</ul>
 	</div>
@@ -94,14 +107,14 @@
 		/* margin: 0 0.3em 0 0; */
 	}
 
-	.input-wrapper input {
+	input {
 		width: 100%;
 		/* background-color: #e7e7e7; */
 		font-size: 16px;
 		font-family: Rajdhani, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 		border: none;
 		color: #aa1e1e;
-		padding: 4px 10px;
+		padding: 0.4em 0.7em 0.4em 0.5em;
 		outline: none;
 	}
 
@@ -146,17 +159,11 @@
 
 	.file-tabs li.active .file-tabs-item {
 		border-bottom: 1px solid #666;
-		/* font-weight: 500; */
 	}
 
 	/* .file-tabs-item:hover {
 		border: none;
 	} */
-
-	.edit-mode {
-		padding-bottom: 8px;
-		padding-top: 8px;
-	}
 
 	.file-tabs-input {
 		padding: 10px 15px;
@@ -228,34 +235,42 @@
 	export default {
 		methods: {
 			selectComponent(component, selectedComponent) {
+				const { components } = this.get();
+
 				if (selectedComponent != component) {
 					selectedComponent.edit = false;
 				}
 				this.set({ selectedComponent: component })
 			},
+
 			editTab(component, selectedComponent) {
 				if (selectedComponent == component) {
 					selectedComponent.edit = true;
 					this.set({ selectedComponent });
-					// this.refs.name.focus();
 				}
 			},
+
 			closeEdit(selectedComponent) {
+				const { components } = this.get();
+
 				const match = /(.+)\.(html|js)$/.exec(selectedComponent.name);
 				selectedComponent.name = match ? match[1] : selectedComponent.name;
 				if (match && match[2]) selectedComponent.type = match[2];
 				selectedComponent.edit = false;
-				this.set({ selectedComponent });
+				this.set({ selectedComponent, components });
 			},
+
 			remove(component) {
 				let result = confirm(`Are you sure you want to delete ${component.name}.${component.type}?`);
 				if (result) this.fire('remove');
 			},
+
 			selectInput(input) {
 				setTimeout(() => {
 					input.select();
 				});
 			},
+
 			focusLast() {
 
 			}
