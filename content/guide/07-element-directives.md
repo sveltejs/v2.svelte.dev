@@ -164,7 +164,7 @@ There is also a shorthand for listening for and re-firing an event unchanged.
 <Widget on:foo/>
 ```
 
-Since component events do not propagate as DOM events do, this can be used to pass events through intermediate components. This shorthand technique also applies to element events (`on:click` is `fire('click')`).
+Since component events do not propagate as DOM events do, this can be used to pass events through intermediate components. This shorthand technique also applies to element events (`on:click` is equivalent to `on:click="fire('click', event)"`).
 
 ### Refs
 
