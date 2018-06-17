@@ -13,8 +13,21 @@
 		<button disabled={downloading} on:click='download()' title='download zip file' class=icon style='background-image: url(icons/download.svg)'>download</button>
 
 		{#if $user}
-			<button disabled={forking || !$user} on:click='fork()' title='fork' class=icon style='background-image: url(icons/fork.svg)'>fork</button>
-			<button disabled={saving || !canSave} on:click='save()' title='save' class=icon style='background-image: url(icons/save.svg)'>save</button>
+			<button
+				disabled={forking || !$user}
+				on:click='fork()'
+				title='fork'
+				class="icon {justForked ? 'check' : ''}"
+				style='background-image: url(icons/fork.svg)'
+			>fork</button>
+
+			<button
+				disabled={saving || !canSave}
+				on:click='save()'
+				title='save'
+				class="icon {justSaved ? 'check' : ''}"
+				style='background-image: url(icons/save.svg)'
+			>save</button>
 		{/if}
 
 		{#if gist}
@@ -41,7 +54,7 @@
 		width: 2em;
 		height: 2em;
 		text-indent: -9999px;
-		background: transparent no-repeat 0 50%;
+		background: transparent no-repeat 50% 50%;
 		background-size: 1.6em 1.6em;
 		opacity: 0.6;
 	}
@@ -58,6 +71,25 @@
 	.icon:disabled {
 		filter: grayscale(1);
 		opacity: 0.4;
+	}
+
+	.check {
+		background-image: url(icons/check.svg) !important;
+		animation: zoom-in 0.3s ease-out forwards;
+	}
+
+	.icon:not(.check) {
+		animation: fade-in 0.4s;
+	}
+
+	@keyframes zoom-in {
+		0% { transform: scale(0); opacity: 0 }
+		100% { transform: scale(1); opacity: 1; }
+	}
+
+	@keyframes fade-in {
+		0% { opacity: 0 }
+		100% { opacity: 0.6 }
 	}
 
 	.login {
@@ -80,6 +112,10 @@
 	import downloadBlob from '../_utils/downloadBlob.js';
 
 	const isMac = typeof navigator !== 'undefined' && navigator.platform === 'MacIntel';
+
+	function wait(ms) {
+		return new Promise(f => setTimeout(f, ms));
+	}
 
 	export default {
 		components: {
@@ -121,26 +157,43 @@
 
 				this.set({ forking: true });
 
-				// TODO handle errors
+				try {
+					const r = await fetch(`gist/create`, {
+						method: 'POST',
+						credentials: 'include',
+						body: JSON.stringify({
+							name,
+							components,
+							json5
+						})
+					});
 
-				const r = await fetch(`gist/create`, {
-					method: 'POST',
-					credentials: 'include',
-					body: JSON.stringify({
-						name,
-						components,
-						json5
-					})
-				});
+					if (r.status !== 200) {
+						const { error } = await r.json();
+						throw new Error(`Received an HTTP ${r.status} response: ${error}`);
+					}
 
-				const gist = await r.json();
-				this.fire('forked', { gist });
+					const gist = await r.json();
+					this.fire('forked', { gist });
+
+					this.set({ justForked: true });
+					await wait(600);
+					this.set({ justForked: false });
+				} catch (err) {
+					if (navigator.onLine) {
+						alert(err.message);
+					} else {
+						alert(`It looks like you're offline! Find the internet and try again`);
+					}
+				}
 
 				this.set({ forking: false });
 			},
 
 			async save() {
-				const { name, components, json5, gist } = this.get();
+				const { name, components, json5, gist, saving, canSave } = this.get();
+
+				if (saving || !canSave) return;
 
 				this.set({ saving: true });
 
@@ -179,11 +232,22 @@
 						})
 					});
 
+					if (r.status !== 200) {
+						const { error } = await r.json();
+						throw new Error(`Received an HTTP ${r.status} response: ${error}`);
+					}
+
 					const result = await r.json();
-					console.log(r.status, result);
+
+					this.set({ justSaved: true });
+					await wait(600);
+					this.set({ justSaved: false });
 				} catch (err) {
-					console.error(err);
-					// TODO show in UI
+					if (navigator.onLine) {
+						alert(err.message);
+					} else {
+						alert(`It looks like you're offline! Find the internet and try again`);
+					}
 				}
 
 				this.set({ saving: false });
