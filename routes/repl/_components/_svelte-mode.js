@@ -74,6 +74,18 @@ CodeMirror.defineMode('svelte', (config, parserConfig) => {
 			}
 		}
 
+		if (state.blockSpecial) {
+			state.blockSpecial = false;
+
+			if (stream.match(/@html/, true)) {
+				state.inJS = true;
+				state.braceDepth = 0;
+				state.jsState = CodeMirror.startState(jsMode);
+
+				return 'keyword';
+			}
+		}
+
 		if (stream.eat('{')) {
 			const char = stream.peek();
 			if (char === '#') {
@@ -82,6 +94,8 @@ CodeMirror.defineMode('svelte', (config, parserConfig) => {
 				state.blockClause = true;
 			} else if (char === '/') {
 				state.blockClose = true;
+			} else if (char === '@') {
+				state.blockSpecial = true;
 			} else {
 				state.inJS = true;
 				state.braceDepth = 0;
@@ -109,6 +123,7 @@ CodeMirror.defineMode('svelte', (config, parserConfig) => {
 				blockOpen: false,
 				blockClause: false,
 				blockClose: false,
+				blockSpecial: false,
 				indented: 0,
 				inJS: false,
 				braceDepth: 0,
@@ -123,6 +138,7 @@ CodeMirror.defineMode('svelte', (config, parserConfig) => {
 				blockOpen: state.blockOpen,
 				blockClause: state.blockClause,
 				blockClose: state.blockClose,
+				blockSpecial: state.blockSpecial,
 				indented: state.indented,
 				inJS: state.inJS,
 				braceDepth: 0,
