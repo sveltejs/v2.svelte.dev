@@ -124,6 +124,7 @@ But if all your data is [immutable](https://en.wikipedia.org/wiki/Immutable_obje
 In the example below, `searchResults` would normally be recalculated whenever `items` *might* have changed, but with `immutable: true` it will only update when `items` has *definitely* changed. This can improve the performance of your app.
 
 ```html
+<!-- { repl: false } -->
 {#each searchResults as item}
 	<div>{item.name}</div>
 {/each}
