@@ -5,6 +5,8 @@ CodeMirror.defineMode('svelte', (config, parserConfig) => {
 	const jsMode = CodeMirror.getMode(config, 'javascript');
 
 	function token(stream, state) {
+		if (stream.eatSpace()) return null;
+
 		if (state.tagClose) {
 			state.tagClose = false;
 			stream.eatSpace();
@@ -23,6 +25,10 @@ CodeMirror.defineMode('svelte', (config, parserConfig) => {
 
 				if (current === '}') {
 					if (state.braceDepth === 0) {
+						if (state.inAttributeValue && state.attributeDelimiter === '{') {
+							state.inAttributeValue = false;
+						}
+
 						state.inJS = false;
 						return 'tag';
 					} else {
@@ -32,6 +38,31 @@ CodeMirror.defineMode('svelte', (config, parserConfig) => {
 			}
 
 			return token;
+		}
+
+		if (state.inAttribute) {
+			state.inAttribute = false;
+
+			if (stream.eat('=')) {
+				stream.eatSpace();
+
+				state.inAttributeValue = true;
+				state.attributeDelimiter = stream.eat(/['"{]/);
+
+				if (/['"]/.test(state.attributeDelimiter)) {
+					return 'string';
+				}
+
+				if (state.attributeDelimiter === '{') {
+					state.inJS = true;
+					state.braceDepth = 0;
+					state.jsState = CodeMirror.startState(jsMode);
+
+					return 'tag';
+				}
+			}
+
+			return null;
 		}
 
 		if (state.blockOpen) {
@@ -86,6 +117,24 @@ CodeMirror.defineMode('svelte', (config, parserConfig) => {
 			}
 		}
 
+		if (state.inAttributeValue) {
+			if (state.attributeDelimiter) {
+				if (stream.eat(state.attributeDelimiter)) {
+					state.inAttributeValue = false;
+				} else {
+					stream.eatWhile(char => char !== '{' && char !== state.attributeDelimiter);
+				}
+			} else {
+				if (/[\t\n\f \/>"'=]/.test(stream.peek())) {
+					state.inAttributeValue = false;
+				} else {
+					stream.eatWhile(char => !/[\t\n\f \/>"'={]/.test(char));
+				}
+			}
+
+			if (stream.current()) return 'string';
+		}
+
 		if (stream.eat('{')) {
 			const char = stream.peek();
 			if (char === '#') {
@@ -106,6 +155,12 @@ CodeMirror.defineMode('svelte', (config, parserConfig) => {
 		}
 
 		const token = htmlMode.token(stream, state.innerState);
+
+		if (token === 'attribute') {
+			state.inAttribute = true;
+			return token;
+		}
+
 		if (token) return token;
 
 		const current = stream.current();
