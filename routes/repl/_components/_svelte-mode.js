@@ -5,6 +5,12 @@ CodeMirror.defineMode('svelte', (config, parserConfig) => {
 	const jsMode = CodeMirror.getMode(config, 'javascript');
 
 	function token(stream, state) {
+		const { localMode } = state.innerState;
+
+		if (localMode && (localMode.name === 'css' || localMode.name === 'javascript')) {
+			return htmlMode.token(stream, state.innerState);
+		}
+
 		if (stream.eatSpace()) return null;
 
 		if (state.tagClose) {
