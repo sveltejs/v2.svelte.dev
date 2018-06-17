@@ -140,7 +140,9 @@
 			},
 
 			async save() {
-				const { name, components, json5, gist } = this.get();
+				const { name, components, json5, gist, saving, canSave } = this.get();
+
+				if (saving || !canSave) return;
 
 				this.set({ saving: true });
 
