@@ -155,8 +155,16 @@ When the user clicks a button, the component will fire a `select` event, where t
 
 Just as `this` in an element's event handler refers to the element itself, in a component event handler `this` refers to the component firing the event.
 
-There is also shorthand for listening for and re-firing an event unchanged. `<Widget on:foo/>` is equivalent to `<Widget on:foo="fire('foo', event)"/>`. Since component events do not propagate as DOM events do, this can be used to pass events through intermediate components.
+There is also a shorthand for listening for and re-firing an event unchanged.
 
+```html
+<!-- { repl: false } -->
+<!-- these are equivalent -->
+<Widget on:foo="fire('foo', event)"/>
+<Widget on:foo/>
+```
+
+Since component events do not propagate as DOM events do, this can be used to pass events through intermediate components. This shorthand technique also applies to element events (`on:click` is equivalent to `on:click="fire('click', event)"`).
 
 ### Refs
 
