@@ -40,7 +40,7 @@
     "glob": "^7.1.2",
     "html-entities": "^1.2.1",
     "now": "^11.1.7",
-    "sapper": "^0.13.3",
+    "sapper": "^0.13.4",
     "style-loader": "^0.21.0",
     "svelte": "^2.6.0",
     "svelte-loader": "^2.5.1",
