@@ -165,6 +165,10 @@
 			{
 				"slug": "hacker-news",
 				"title": "Hacker News"
+			},
+			{
+				"slug": "immutable",
+				"title": "Immutable"
 			}
 		]
 	}

@@ -147,4 +147,4 @@ In the example below, `searchResults` would normally be recalculated whenever `i
 </script>
 ```
 
-[Here's a live example](repl?gist=fba9c59a0c741c635dc67f7f55b68f58) showing the effect of `immutable: true`.
+[Here's a live example](repl?demo=immutable) showing the effect of `immutable: true`.
