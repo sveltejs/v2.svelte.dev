@@ -21,7 +21,8 @@ module.exports = {
 					loader: 'svelte-loader',
 					options: {
 						hydratable: true,
-						hotReload: true
+						hotReload: true,
+						dev
 					}
 				}
 			},
