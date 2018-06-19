@@ -21,7 +21,7 @@ module.exports = {
 					loader: 'svelte-loader',
 					options: {
 						hydratable: true,
-						hotReload: false
+						hotReload: true
 					}
 				}
 			},
@@ -36,7 +36,7 @@ module.exports = {
 	},
 	mode,
 	plugins: [
-		// dev && new webpack.HotModuleReplacementPlugin(),
+		dev && new webpack.HotModuleReplacementPlugin(),
 		new webpack.DefinePlugin({
 			'process.browser': true,
 			'process.env.NODE_ENV': JSON.stringify(mode)
