@@ -133,7 +133,7 @@
 
 		methods: {
 			handleKeydown(event) {
-				if (event.which === 83 && isMac ? event.metaKey : event.ctrlKey) {
+				if (event.which === 83 && (isMac ? event.metaKey : event.ctrlKey)) {
 					event.preventDefault();
 					this.save();
 				}
