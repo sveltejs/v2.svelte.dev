@@ -75,13 +75,20 @@ Svelte allows you to express these dependencies in computed properties, which ar
 		computed: {
 			hours:   ({ time }) => time.getHours(),
 			minutes: ({ time }) => time.getMinutes(),
-			seconds: ({ time }) => time.getSeconds()
+			seconds: ({ time }) => time.getSeconds(),
+			
+			// computed from computed properties
+			daySeconds: ({ hours, minutes, seconds }) =>
+				3600 * hours + 60 * minutes + seconds
 		}
 	};
 </script>
 ```
 
-Each function is passed the component's current state object. Because we're using destructuring syntax, the compiler knows that `hours`, `minutes` and `seconds` only need to re-run when `time` changes, and not when any other values change. There's no costly dependency tracking involved – the dependency graph is resolved at compile time.
+Each function is passed the component's current state object. Because we're using destructuring syntax, the compiler knows that `hours`, `minutes` and `seconds` only need to re-run when `time` changes, and not when any other values change.
+Note that `daySeconds` depends on other computed properties!
+
+There's no costly dependency tracking involved – the dependency graph is resolved at compile time.
 
 > `computed` must be an object literal, and the properties must be function expressions or arrow function expressions. Any external functions used in computed must be wrapped _here_:
 
