@@ -68,7 +68,7 @@ Going to the [REPL](/repl) and pressing the *download* button on any of the exam
 
 #### Getting started using degit
 
-[degit](https://github.com/Rich-Harris/degit) is a tool for creating projects from templates store in git repos. Install it globally...
+[degit](https://github.com/Rich-Harris/degit) is a tool for creating projects from templates stored in git repos. Install it globally...
 
 ```bash
 npm install -g degit
