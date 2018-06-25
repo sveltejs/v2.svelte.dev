@@ -1,0 +1,14 @@
+{
+  "env": {
+    "NODE_ENV": "production",
+    "BASEURL": "https://svelte.technology",
+    "GITHUB_CLIENT_ID": "@svelte-gist-client-id",
+    "GITHUB_CLIENT_SECRET": "@svelte-gist-client-secret"
+  },
+  "alias": "svelte.technology",
+  "files": [
+    "build",
+    "assets",
+    "content"
+  ]
+}
