@@ -85,7 +85,7 @@ You can define your own custom events to handle complex user interactions like d
 Events are an excellent way for [nested components](guide#nested-components) to communicate with their parents. Let's revisit our earlier example, but turn it into a `<CategoryChooser>` component:
 
 ```html
-<!-- { repl: false } -->
+<!--{ filename: 'CategoryChooser.html' }-->
 <p>Select a category:</p>
 
 {#each categories as category}
@@ -124,29 +124,6 @@ When the user clicks a button, the component will fire a `select` event, where t
 		methods: {
 			playTwentyQuestions(category) {
 				alert(`ok! you chose ${category}`);
-			}
-		}
-	};
-</script>
-```
-
-```html
-<!--{ filename: 'CategoryChooser.html', hidden: true }-->
-<p>Select a category:</p>
-
-{#each categories as category}
-	<button on:click="fire('select', { category })">select {category}</button>
-{/each}
-
-<script>
-	export default {
-		data() {
-			return {
-				categories: [
-					'animal',
-					'vegetable',
-					'mineral'
-				]
 			}
 		}
 	};
