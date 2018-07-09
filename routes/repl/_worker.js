@@ -72,6 +72,7 @@ async function getBundle(mode, cache, lookup) {
 
 					const { js, css, stats } = svelte.compile(code, Object.assign({
 						generate: mode,
+						format: 'es',
 						name: name,
 						filename: name + '.html',
 						onwarn: warning => {
