@@ -4,11 +4,14 @@ title: Introduction
 
 ### What is Svelte?
 
-If you've ever built a JavaScript application, the chances are you've encountered – or at least heard of – frameworks like React, Angular, Vue and Ractive. Like Svelte, these tools all share a goal of making it easy to build slick interactive user interfaces.
+Svelte is a fast JavaScript application builder.
 
-But Svelte has a crucial difference: rather than interpreting your application code at *run time*, your app is converted into ideal JavaScript at *build time*. That means you don't pay the performance cost of the framework's abstractions, or incur a penalty when your app first loads.
+Svelte is similar to JavaScript frameworks such as React, Angular, Vue, and Ractive, because these tools all share a goal of making it easy to build slick interactive user interfaces.
 
-And because there's no overhead, you can easily adopt Svelte in an existing app incrementally, or ship widgets as standalone packages that work anywhere.
+Svelte has a crucial difference: Svelte converts your app into ideal JavaScript at *build time*, rather than interpreting your application code at *run time*. This means you don't pay the performance cost of the framework's abstractions, and you don't incur a penalty when your app first loads.
+
+You can easily adopt Svelte in an existing app incrementally, or ship widgets as standalone packages that work anywhere, because Svelte has no overhead.
+
 
 [Read the introductory blog post](/blog/frameworks-without-the-framework) to learn more about Svelte's goals and philosophy.
 
