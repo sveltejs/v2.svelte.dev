@@ -1,5 +1,13 @@
 global.window = self; // egregious hack to get magic-string to work in a worker
 
+const commonCompilerOptions = {
+	cascade: false,
+	store: true,
+	skipIntroByDefault: true,
+	nestedTransitions: true,
+	dev: true,
+};
+
 const svelteCache = new Map();
 
 function loadSvelte(version) {
@@ -62,23 +70,17 @@ async function getBundle(mode, cache, lookup) {
 
 					const name = id.replace(/^\.\//, '').replace(/\.html$/, '');
 
-					const { js, css, stats } = svelte.compile(code, {
+					const { js, css, stats } = svelte.compile(code, Object.assign({
 						generate: mode,
 						format: 'es',
-						cascade: false,
-						store: true,
-						skipIntroByDefault: true,
-						nestedTransitions: true,
 						name: name,
 						filename: name + '.html',
-						dev: true,
-						shared: false,
 						onwarn: warning => {
 							console.warn(warning.message);
 							console.log(warning.frame);
 							warningCount += 1;
-						}
-					});
+						},
+					}, commonCompilerOptions));
 
 					if (stats) {
 						if (Object.keys(stats.hooks).filter(hook => stats.hooks[hook]).length > 0) info.usesHooks = true;
@@ -194,13 +196,11 @@ export async function bundle(components) {
 
 export function compile(component) {
 	try {
-		const { js } = svelte.compile(component.source, {
+		const { js } = svelte.compile(component.source, Object.assign({
 			// TODO make options configurable
-			cascade: false,
 			name: component.name,
 			filename: component.name + '.html',
-			dev: true
-		});
+		}, commonCompilerOptions));
 
 		return js.code;
 	} catch (err) {
