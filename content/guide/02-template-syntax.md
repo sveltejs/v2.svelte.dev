@@ -263,7 +263,7 @@ If the expression in `{#await expression}` *isn't* a promise, Svelte skips ahead
 
 ### Directives
 
-The last place where Svelte template syntax differs from regular HTML: *directives* allow you to add special instructions for adding [event handlers](guide#event-handlers), [bindings](guide#binding-data), [referencing elements](guide#refs) and so on. We'll cover each of those in later stages of this guide – for now, all you need to know is that directives can be identified by the `:` character:
+The last place where Svelte template syntax differs from regular HTML: *directives* allow you to add special instructions for adding [event handlers](guide#event-handlers), [bindings](guide#bindings), [referencing elements](guide#refs) and so on. We'll cover each of those in later stages of this guide – for now, all you need to know is that directives can be identified by the `:` character:
 
 ```html
 <!--{ title: 'Element directives' }-->
