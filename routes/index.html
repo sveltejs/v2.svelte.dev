@@ -1,172 +1,27 @@
-<svelte:head>
-	<title>Svelte • The magical disappearing UI framework</title>
-</svelte:head>
+<Nav segment={child.segment}/>
 
-<div class='hero'>
-	<div class='left'>
-		<h1>Svelte</h1>
-	</div>
-
-	<div class='right'>
-		<h2>The magical disappearing UI framework</h2>
-
-		<ul>
-			<li><strong>The web's JavaScript bloat crisis, solved.</strong> Svelte turns your templates into tiny, framework-less vanilla JavaScript.</li>
-			<li><strong>Simple and familiar.</strong> Build apps out of composable, easy-to-write blocks using languages you already know.</li>
-			<li><strong>Super fast, rock solid.</strong> Compile-time static analysis ensures the browser does no more work than it needs to.</li>
-		</ul>
-
-		<a rel='prefetch' class='learn-svelte' href='guide'>Learn Svelte</a>
-	</div>
+<div>
+	<svelte:component this={child.component} {...child.props}/>
 </div>
 
 <style>
-	.hero {
+	div {
 		position: relative;
-		padding: 2em 1em;
-		/*background-color: #333;
-		color: #f4f4f4;*/
-		background-color: white;
-		color: #333;
-		clear: fix;
-		min-height: calc(100vh - 7em);
-		box-sizing: border-box;
+		padding: 3em 0 0 0;
+		overflow-x: hidden;
 	}
 
-	ul {
-		max-width: 32em;
-		padding: 0;
-		margin: 0 0 3em 0;
-	}
-
-	li {
-		position: relative;
-		list-style: none;
-		margin: 0 0 1em 0;
-		font-family: Rajdhani, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-		color: #666;
-	}
-
-	li::before {
-		position: absolute;
-		content: '◆';
-		top: 0em;
-		left: -1.4em;
-		font-size: 0.8em;
-		/*color: rgba(255,255,255,0.4);*/
-		color: #ddd;
-	}
-
-	strong {
-		font-family: Rajdhani, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-		margin: 0 auto;
-		color: #333;
-	}
-
-	.left {
-		padding: 0 0 0 1em;
-	}
-
-	h1 {
-		display: block;
-		font-family: Rajdhani, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-		color: rgb(170,30,30);
-		font-size: 30vw;
-		font-weight: 300;
-		line-height: 1;
-		margin: 0;
-		text-transform: lowercase;
-		padding: 0.5em 0 0 0;
-	}
-
-	.right {
-		padding: 0 0 0 1em;
-		margin: 0 0 2em 0;
-	}
-
-	h2 {
-		font-size: 7.2vw;
-		font-family: Rajdhani, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-		font-weight: 300;
-		display: block;
-		margin: 0 0 4rem 0;
-		max-width: 11em;
-	}
-
-	.learn-svelte {
-		background-color: rgb(170,30,30);
-		color: white;
-		padding: 0.5em 2em;
-		border-radius: 0.2em;
-		line-height: 1;
-		font-family: Rajdhani, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-		font-size: 1.2em;
-		font-weight: 800;
-		text-transform: uppercase;
-		width: calc(100% - 1em);
-		max-width: 16em;
-		display: block;
-		text-align: center;
-	}
-
-	.learn-svelte:hover {
-		background-color: rgba(170,30,30,0.9);
-	}
-
-	@media (min-width: 480px) {
-		.left, .right {
-			max-width: 32em;
-			margin: 0 auto;
-		}
-
-		h1 {
-			font-size: 8em;
-		}
-
-		h2 {
-			font-size: 2em;
-			max-width: none;
-		}
-
-		li {
-			font-size: 1.2em;
-		}
-	}
-
-	@media (min-width: 960px) {
-		.hero {
-			padding: 6em 1em 2em 1em;
-			max-width: 64em;
-			margin: 0 auto;
-		}
-
-		.left {
-			position: relative;
-			float: left;
-			width: 40%;
-			box-sizing: border-box;
-		}
-
-		.right {
-			position: relative;
-			float: left;
-			width: 60%;
-			box-sizing: border-box;
-		}
-
-		h1 {
-			position: relative;
-			right: 3rem;
-			top: 1.4rem;
-			font-size: 8em;
-			text-align: right;
-		}
-
-		h2 {
-			font-size: 2.8em;
-			line-height: 1.2;
-			margin: 0 0 2rem 0;
-			max-width: 11em;
+	@media (min-width: 768px) {
+		div {
+			padding: 4em 0 0 0;
 		}
 	}
 </style>
+
+<script>
+	export default {
+		components: {
+			Nav: '../components/Nav.html'
+		}
+	};
+</script>
