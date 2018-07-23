@@ -1,7 +1,7 @@
 <Nav segment={child.segment}/>
 
 <div>
-	<svelte:component this={child.component} {answer} {...child.props}/>
+	<svelte:component this={child.component} {...child.props}/>
 </div>
 
 <style>
@@ -22,12 +22,6 @@
 	export default {
 		components: {
 			Nav: '../components/Nav.html'
-		},
-
-		preload() {
-			return {
-				answer: 42
-			}
 		}
 	};
 </script>
