@@ -1,12 +1,10 @@
 import { init } from 'sapper/runtime.js';
 import store from '../client/store.js';
-import { routes } from './manifest/client.js';
-import App from './App.html';
+import { manifest } from './manifest/client.js';
 
 init({
 	target: document.querySelector('#sapper'),
-	App,
-	routes,
+	manifest,
 	store: data => {
 		store.set(data);
 
