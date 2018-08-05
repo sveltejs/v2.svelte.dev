@@ -1,6 +1,6 @@
-<div class='toast' on:click='reload()'>
+<button class='toast' on:click='reload()'>
 	Site has been updated — tap to reload
-</div>
+</button>
 
 <style>
 	.toast {
@@ -9,9 +9,12 @@
 		bottom: 0;
 		width: 100%;
 		background-color: rgb(170,30,30);
+		cursor: pointer;
 		color: white;
 		padding: 1em;
-		font-weight: 500;
+		font-weight: 300;
+	    	text-align: left;
+	    	font-size: 16px;
 		z-index: 99;
 		animation: slide-up 0.4s ease-out;
 	}
