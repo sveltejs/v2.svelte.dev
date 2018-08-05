@@ -73,7 +73,7 @@ First let's take a look at the `errors.json` file and then work through the vari
 
 `start` and `end` are hard to determine strictly by looking at your `input.html` code, so sometimes you have to use feedback from `npm run test` to refine those values.
 
-`message` and `code` are user specified in the code where the error should be thrown.
+`message` and `code` are specified in your fix, so when you throw this new error you can choose the message and code. It's recommended to check out other errors with their messages and codes to get an idea of how to structure yours.
 
 #### Running the failing test
 
