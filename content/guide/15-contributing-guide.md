@@ -6,11 +6,11 @@ title: Contributing
 
 #### Finding square one
 
-Wtih a large codebase, especially one for a compiler, it's challenging to now where to start contributing. The first step is to check out the [issue page](https://github.com/sveltejs/svelte/issues) for Svelte. It's recommended to skim through some of the `Bug` labeled issues to see if any grab you attention. As of now, we don't have a label for first time contributors but a `First Time Contributor` label is being discussed to be included in the triage of issues.
+Wtih a large codebase, especially one for a compiler, it's challenging to know where to start contributing. The first step is to check out the [issues page](https://github.com/sveltejs/svelte/issues) for Svelte. It's recommended to skim through some of the `Bug` labeled issues to see if any grab your attention. As of now, we don't have a label for first time contributors but a `First Time Contributor` label is being discussed to be included in the triage of issues.
 
 #### What stage causes my error?
 
-So you've selected an issue that could be good for a first PR, now what? We need to find out where the code causing the error shows up. First step will be finding out what stage in the compile process handles the domain of our error.
+So you've selected an issue that could be good for a first PR, now what? We need to find out where the code causing the error shows up. First step will be finding out what stage in the compilation process handles the domain of our error.
 
 From here we can start to dig into `src/parse`, `src/validate`, or `src/compile` to see what code could contain clues on where the error is originating. This compile time flow diagram will give you an idea of how code in `App.html` gets compiled.
 
@@ -22,11 +22,11 @@ One of the best places to start diving into the Svelte codebase is the test dire
 
 *Words can only help so much so let's do an example.*
 
-Say we have a bug where assigning `ref:foo-bar` is invalid but not throwing a useful error, it's output "Assigining to rvalue".
+Say we have a bug where assigning `ref:foo-bar` is invalid but not throwing a useful error, its output "Assigining to rvalue".
 
 How do we replicate this? First we suspect that it occurs in the `Validate` block so let's make a new test in `test/validator/samples`. We'll name it `reference-must-be-valid-name`. Check out the various folders in the various `samples` directories to get a good idea of how to name your folders. 
 
-What do we put in our new folder? Each test folder contains an `errors.json` and a `input.html`. First off, `input.html` is the easier of the two files to make, we just need to use the same code that generated the error in our Svelte REPL!
+What do we put in our new folder? Each test folder contains an `errors.json` and an `input.html`. First off, `input.html` is the easier of the two files to make, we just need to use the same code that generated the error in our Svelte REPL!
 
 **Input.html**
 ```html
@@ -79,7 +79,7 @@ First let's take a look at the `errors.json` file and then work through the vari
 
 Now that we have our folder for the test, we want to try running the test.
 
-A quick peek in package.json tells us that there is a "test" script so let's run npm run test and
+A quick peek in `package.json` tells us that there is a "test" script so let's run `npm run test` and
 see what happens:
 
 ![npm run test output](../../assets/images/svelte_npm_run_test_output.png)
@@ -144,4 +144,4 @@ if (attribute.type === 'Ref') {
 
 Running `npm run test` again we can see we now have a passing test. Following standards, we can make our commits and then make a pull request for our new fix.
 
-All that's left to do is eagerly wait feedback and do it all over again!
+All that's left to do is eagerly await feedback and do it all over again!
