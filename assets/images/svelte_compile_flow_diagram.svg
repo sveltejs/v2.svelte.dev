@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1602px" height="2047px" viewBox="0 0 1602 2047" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>Svelte_Compile_Flow_Diagram</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="464" height="159" rx="8"></rect>
+        <rect id="path-2" x="0" y="0" width="464" height="159" rx="8"></rect>
+        <rect id="path-3" x="0" y="0" width="464" height="159" rx="8"></rect>
+        <rect id="path-4" x="0" y="0" width="464" height="159" rx="8"></rect>
+        <rect id="path-5" x="0" y="0" width="464" height="159" rx="8"></rect>
+        <rect id="path-6" x="0" y="0" width="464" height="159" rx="8"></rect>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Svelte_Compile_Flow_Diagram">
+            <g id="Diagram">
+                <g id="Arrow-Down-Copy-22" transform="translate(219.000000, 763.000000)" fill="#7D8093">
+                    <rect id="Rectangle-2" x="10" y="0" width="7" height="145"></rect>
+                    <polygon id="Triangle" transform="translate(13.500000, 142.500000) scale(1, -1) translate(-13.500000, -142.500000) " points="13.5 134 27 151 0 151"></polygon>
+                </g>
+                <g id="Arrow-Down-Copy-22" transform="translate(494.000000, 994.500000) rotate(-90.000000) translate(-494.000000, -994.500000) translate(480.500000, 963.500000)" fill="#7D8093">
+                    <rect id="Rectangle-2" x="10" y="0" width="7" height="56"></rect>
+                    <polygon id="Triangle" transform="translate(13.500000, 53.500000) scale(1, -1) translate(-13.500000, -53.500000) " points="13.5 45 27 62 0 62"></polygon>
+                </g>
+                <g id="Arrow-Down-Copy-24" transform="translate(742.000000, 1593.000000)" fill="#7D8093">
+                    <rect id="Rectangle-2" x="10" y="0" width="7" height="56"></rect>
+                    <polygon id="Triangle" transform="translate(13.500000, 53.500000) scale(1, -1) translate(-13.500000, -53.500000) " points="13.5 45 27 62 0 62"></polygon>
+                </g>
+                <g id="Arrow-Down-Copy-30" transform="translate(1019.000000, 995.500000) rotate(-90.000000) translate(-1019.000000, -995.500000) translate(1005.500000, 964.500000)" fill="#7D8093">
+                    <rect id="Rectangle-2" x="10" y="0" width="7" height="56"></rect>
+                    <polygon id="Triangle" transform="translate(13.500000, 53.500000) scale(1, -1) translate(-13.500000, -53.500000) " points="13.5 45 27 62 0 62"></polygon>
+                </g>
+                <g id="Arrow-Down-Copy-29" transform="translate(376.500000, 761.000000) rotate(90.000000) translate(-376.500000, -761.000000) translate(373.000000, 613.000000)" fill="#7D8093">
+                    <path d="M0,0 L7,0 L7,295.5 L5,295.5 C2.23857625,295.5 3.38176876e-16,293.261424 0,290.5 L0,0 Z" id="Rectangle-2"></path>
+                </g>
+                <g id="Arrow-Down-Copy-22" transform="translate(1281.500000, 1149.500000) scale(-1, -1) translate(-1281.500000, -1149.500000) translate(1278.000000, 1074.000000)" fill="#7D8093">
+                    <rect id="Rectangle-2" x="0" y="0" width="7" height="151"></rect>
+                </g>
+                <g id="Arrow-Down-Copy-29" transform="translate(1136.000000, 1227.500000) scale(-1, -1) rotate(90.000000) translate(-1136.000000, -1227.500000) translate(1122.500000, 1078.500000)" fill="#7D8093">
+                    <polygon id="Triangle" points="13.5 0 27 17 0 17"></polygon>
+                    <path d="M10,9 L17,9 L17,298 L15,298 C12.2385763,298 10,295.761424 10,293 L10,9 Z" id="Rectangle-2"></path>
+                </g>
+                <g id="Arrow-Down-Copy-25" transform="translate(742.000000, 1309.000000)" fill="#7D8093">
+                    <rect id="Rectangle-2" x="10" y="0" width="7" height="119"></rect>
+                    <polygon id="Triangle" transform="translate(13.500000, 116.500000) scale(1, -1) translate(-13.500000, -116.500000) " points="13.5 108 27 125 0 125"></polygon>
+                </g>
+                <g id="Preprocess-Copy-11" transform="translate(524.000000, 681.000000)">
+                    <rect id="Rectangle" fill="#AA1E1E" x="0" y="0" width="464" height="159" rx="8"></rect>
+                    <text id="Parse" font-family="Rajdhani-SemiBold, Rajdhani" font-size="48" font-weight="500" fill="#FFFFFF">
+                        <tspan x="177.228" y="92">Parse</tspan>
+                    </text>
+                </g>
+                <g id="Preprocess-Copy-12" transform="translate(524.000000, 914.000000)">
+                    <g id="Rectangle">
+                        <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                        <rect stroke="#AA1E1E" stroke-width="5" x="2.5" y="2.5" width="459" height="154" rx="8"></rect>
+                    </g>
+                    <text id="{tags}-and-&lt;script&gt;" font-family="Rajdhani-SemiBold, Rajdhani" font-size="48" font-weight="500" fill="#AA1E1E">
+                        <tspan x="44.676" y="64">{tags} and &lt;script&gt;</tspan>
+                        <tspan x="142.74" y="126">via Acorn</tspan>
+                    </text>
+                </g>
+                <g id="Preprocess-Copy-16" transform="translate(0.000000, 914.000000)">
+                    <g id="Rectangle">
+                        <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-2"></use>
+                        <rect stroke="#AA1E1E" stroke-width="5" x="2.5" y="2.5" width="459" height="154" rx="8"></rect>
+                    </g>
+                    <text id="markup-via-Svelte-pa" font-family="Rajdhani-SemiBold, Rajdhani" font-size="48" font-weight="500" fill="#AA1E1E">
+                        <tspan x="123.156" y="64">markup via</tspan>
+                        <tspan x="102.132" y="126">Svelte parser</tspan>
+                    </text>
+                </g>
+                <g id="Preprocess-Copy-17" transform="translate(1049.000000, 915.000000)">
+                    <g id="Rectangle">
+                        <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-3"></use>
+                        <rect stroke="#AA1E1E" stroke-width="5" x="2.5" y="2.5" width="459" height="154" rx="8"></rect>
+                    </g>
+                    <text id="&lt;style&gt;-via-css-tree" font-family="Rajdhani-SemiBold, Rajdhani" font-size="48" font-weight="500" fill="#AA1E1E">
+                        <tspan x="124.308" y="63">&lt;style&gt; via</tspan>
+                        <tspan x="154.284" y="125">css-tree</tspan>
+                    </text>
+                </g>
+                <g id="Preprocess-Copy-11" transform="translate(523.000000, 1434.000000)">
+                    <rect id="Rectangle" fill="#AA1E1E" x="0" y="0" width="464" height="159" rx="8"></rect>
+                    <text id="Compile" font-family="Rajdhani-SemiBold, Rajdhani" font-size="48" font-weight="500" fill="#FFFFFF">
+                        <tspan x="153.108" y="92">Compile</tspan>
+                    </text>
+                </g>
+                <g id="Preprocess-Copy-16" transform="translate(524.000000, 1655.000000)">
+                    <g id="Rectangle">
+                        <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-4"></use>
+                        <rect stroke="#AA1E1E" stroke-width="5" x="2.5" y="2.5" width="459" height="154" rx="8"></rect>
+                    </g>
+                    <text id="intermediate-represe" font-family="Rajdhani-SemiBold, Rajdhani" font-size="48" font-weight="500" fill="#AA1E1E">
+                        <tspan x="104.916" y="64">intermediate</tspan>
+                        <tspan x="86.412" y="126">representation</tspan>
+                    </text>
+                </g>
+                <g id="Preprocess-Copy-14" transform="translate(525.000000, 1150.000000)">
+                    <rect id="Rectangle" fill="#AA1E1E" x="0" y="0" width="464" height="159" rx="8"></rect>
+                    <text id="Validate" font-family="Rajdhani-SemiBold, Rajdhani" font-size="48" font-weight="500" fill="#FFFFFF">
+                        <tspan x="151.24" y="92">Validate</tspan>
+                    </text>
+                </g>
+                <g id="Preprocess-Copy-11" transform="translate(1138.000000, 341.000000)">
+                    <rect id="Rectangle" fill="#AA1E1E" x="0" y="0" width="464" height="220" rx="8"></rect>
+                    <text id="Preprocess-markup,-s" font-family="Rajdhani-SemiBold, Rajdhani" font-size="48" font-weight="500" fill="#FFFFFF">
+                        <tspan x="124.956" y="63">Preprocess</tspan>
+                        <tspan x="77.148" y="125">markup, scripts,</tspan>
+                        <tspan x="174.564" y="187">styles</tspan>
+                    </text>
+                </g>
+                <g id="Group-Copy-4" transform="translate(496.000000, 284.000000)">
+                    <ellipse id="Oval" fill="#7DB5E9" cx="259" cy="136" rx="259" ry="136"></ellipse>
+                    <text id="Has-options-preproce" font-family="Rajdhani-SemiBold, Rajdhani" font-size="48" font-weight="500" fill="#FFFFFF">
+                        <tspan x="143.796" y="119">Has options </tspan>
+                        <tspan x="140.94" y="181">preprocess?</tspan>
+                    </text>
+                </g>
+                <text id="Yes-Copy-4" font-family="Rajdhani-Bold, Rajdhani" font-size="48" font-weight="bold" fill="#7D8093">
+                    <tspan x="1039.224" y="390">Yes</tspan>
+                </text>
+                <text id="No-Copy" font-family="Rajdhani-Bold, Rajdhani" font-size="48" font-weight="bold" fill="#7D8093">
+                    <tspan x="773.244" y="631">No</tspan>
+                </text>
+                <g id="Arrow-Down-Copy-15" transform="translate(1075.500000, 420.500000) rotate(-90.000000) translate(-1075.500000, -420.500000) translate(1062.000000, 358.000000)" fill="#7D8093">
+                    <rect id="Rectangle-2" x="10" y="0" width="7" height="119"></rect>
+                    <polygon id="Triangle" transform="translate(13.500000, 116.500000) scale(1, -1) translate(-13.500000, -116.500000) " points="13.5 108 27 125 0 125"></polygon>
+                </g>
+                <g id="Arrow-Down-Copy-21" transform="translate(742.000000, 556.000000)" fill="#7D8093">
+                    <rect id="Rectangle-2" x="10" y="0" width="7" height="119"></rect>
+                    <polygon id="Triangle" transform="translate(13.500000, 116.500000) scale(1, -1) translate(-13.500000, -116.500000) " points="13.5 108 27 125 0 125"></polygon>
+                </g>
+                <g id="Arrow-Down-Copy-28" transform="translate(1367.000000, 561.000000)" fill="#7D8093">
+                    <path d="M0,0 L7,0 L7,198 C7,200.761424 4.76142375,203 2,203 L0,203 L0,0 Z" id="Rectangle-2"></path>
+                </g>
+                <g id="Arrow-Down-Copy-28" transform="translate(1178.500000, 760.500000) rotate(90.000000) translate(-1178.500000, -760.500000) translate(1165.000000, 570.000000)" fill="#7D8093">
+                    <rect id="Rectangle-2" x="10" y="0" width="7" height="376"></rect>
+                    <polygon id="Triangle" transform="translate(13.500000, 372.500000) scale(1, -1) translate(-13.500000, -372.500000) " points="13.5 364 27 381 0 381"></polygon>
+                </g>
+                <rect id="Rectangle-Copy-3" fill="#4D567A" x="523" y="0" width="464" height="159" rx="8"></rect>
+                <text id="App.html-Copy" font-family="Rajdhani-Bold, Rajdhani" font-size="64" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="636.012" y="96">App.html</tspan>
+                </text>
+                <g id="Group-3" transform="translate(742.000000, 159.000000)" fill="#7D8093">
+                    <rect id="Rectangle-2-Copy" x="10" y="0" width="7" height="119"></rect>
+                    <polygon id="Triangle-Copy" transform="translate(13.500000, 116.500000) scale(1, -1) translate(-13.500000, -116.500000) " points="13.5 108 27 125 0 125"></polygon>
+                </g>
+                <g id="Group" transform="translate(211.000000, 1814.000000)">
+                    <g id="Preprocess-Copy-12" transform="translate(0.000000, 74.000000)">
+                        <g id="Rectangle">
+                            <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-5"></use>
+                            <rect stroke="#AA1E1E" stroke-width="5" x="2.5" y="2.5" width="459" height="154" rx="8"></rect>
+                        </g>
+                        <text id="DOM" font-family="Rajdhani-SemiBold, Rajdhani" font-size="48" font-weight="500" fill="#AA1E1E">
+                            <tspan x="188.272" y="92">DOM</tspan>
+                        </text>
+                    </g>
+                    <g id="Preprocess-Copy-17" transform="translate(625.000000, 74.000000)">
+                        <g id="Rectangle">
+                            <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-6"></use>
+                            <rect stroke="#AA1E1E" stroke-width="5" x="2.5" y="2.5" width="459" height="154" rx="8"></rect>
+                        </g>
+                        <text id="server-side-renderin" font-family="Rajdhani-SemiBold, Rajdhani" font-size="48" font-weight="500" fill="#AA1E1E">
+                            <tspan x="123.78" y="63">server-side</tspan>
+                            <tspan x="137.58" y="125">rendering</tspan>
+                        </text>
+                    </g>
+                    <polygon id="Triangle" fill="#7D8093" transform="translate(472.500000, 153.500000) scale(1, -1) rotate(-90.000000) translate(-472.500000, -153.500000) " points="472.5 145 486 162 459 162"></polygon>
+                    <polygon id="Triangle" fill="#7D8093" transform="translate(616.500000, 153.500000) scale(1, -1) rotate(90.000000) translate(-616.500000, -153.500000) " points="616.5 145 630 162 603 162"></polygon>
+                    <path d="M541.943305,0 C542.576016,54.7697942 537.912974,92.0124171 527.954178,111.727869 C513.931613,139.488373 494.280221,153.412417 469,153.5" id="Path-2" stroke="#7D8093" stroke-width="7"></path>
+                    <path d="M614.943305,0 C615.576016,54.7697942 610.912974,92.0124171 600.954178,111.727869 C586.931613,139.488373 567.280221,153.412417 542,153.5" id="Path-2" stroke="#7D8093" stroke-width="7" transform="translate(578.500000, 76.750000) scale(-1, 1) translate(-578.500000, -76.750000) "></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
