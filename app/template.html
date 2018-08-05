@@ -10,7 +10,7 @@
 	<link rel='manifest' href='manifest.json'>
 	<link rel='icon' type='image/png' href='favicon.png'>
 
-	<style>
+	<style id="fonts">
 		@font-face {
 			font-family: 'Roboto';
 			src: url('fonts/Roboto/Roboto-LightItalic.woff2') format('woff2'),
@@ -76,7 +76,15 @@
 			font-weight: normal;
 			font-style: normal;
 		}
+	</style>
 
+	<script>
+		if (localStorage.fonts) {
+			document.querySelector('#fonts').textContent = localStorage.fonts;
+		}
+	</script>
+
+	<style>
 		* {
 			position: relative;
 			box-sizing: border-box;
