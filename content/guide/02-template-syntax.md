@@ -121,6 +121,8 @@ Iterate over lists of data:
 <ul>
 	{#each cats as cat}
 		<li><a target="_blank" href={cat.video}>{cat.name}</a></li>
+	{:else}
+		<li>No cats :(</li>
 	{/each}
 </ul>
 ```
@@ -144,6 +146,8 @@ Iterate over lists of data:
 	]
 }
 ```
+
+Else is triggered when the list is empty.
 
 You can access the index of the current element with *expression* as *name*, *index*:
 
