@@ -95,7 +95,7 @@ if (!localStorage.fonts) {
 
 	const font_files = [];
 
-	const pattern = /url\('(.+?)'\)/g;
+	const pattern = /url\(['"]?(.+?)['"]?\)/g;
 	let match;
 
 	while (match = pattern.exec(css)) {
@@ -112,10 +112,7 @@ if (!localStorage.fonts) {
 
 		results.forEach((result, i) => {
 			const { url } = font_files[i];
-
-			// const base64 = base64Encode(result);
-			const base64 = base64ArrayBuffer(result);
-			map.set(url, base64);
+			map.set(url, base64ArrayBuffer(result));
 		});
 
 		const replaced = css.replace(pattern, (m, url) => {
