@@ -22,7 +22,7 @@ One of the best places to start diving into the Svelte codebase is the test dire
 
 *Words can only help so much so let's do an example.*
 
-Say we have a bug where assigning `ref:foo-bar` is invalid but not throwing a useful error, its output "Assigining to rvalue".
+Say we have a bug where assigning `ref:foo-bar` is invalid but not throwing a useful error, it's outputting "Assigining to rvalue".
 
 How do we replicate this? First we suspect that it occurs in the `Validate` block so let's make a new test in `test/validator/samples`. We'll name it `reference-must-be-valid-name`. Check out the various folders in the various `samples` directories to get a good idea of how to name your folders. 
 
@@ -67,7 +67,7 @@ First let's take a look at the `errors.json` file and then work through the vari
 
 **end** - The location of the cursor at the end of the code causing the error.
 
-**pos** - 
+**pos** - The start position in characters instead of lines or columns.
 
 **code** - The specific code associated with the error that gets thrown.
 
@@ -98,7 +98,7 @@ Since we're dealing with the code chunk `<div ref:foo-bar></div>` we can be conf
 
 ![src/validate/html files](../../assets/images/svelte_src_validate_html.png).
 
-Great! Looks like we're getting closer to the source of the error. My first suspicion is that our fix will need to go in `validateComponent.ts` since we're validating on the component. (Spoiler: we're also going to need to add the code to `validateElement.ts`).
+Great! Looks like we're getting closer to the source of the error. Our first suspicion should be that our fix will need to go in `validateComponent.ts` since we're validating on the component. (Spoiler: we're also going to need to add the code to `validateElement.ts`).
 
 In `validateComponent.ts` we find a conditional regarding an attribute's type being "Ref". 
 
