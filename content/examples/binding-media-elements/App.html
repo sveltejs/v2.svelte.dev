@@ -1,7 +1,7 @@
 <svelte:window on:click='seek(event)' on:mousemove='seek(event)'/>
 
 <audio bind:currentTime=t bind:duration=d bind:paused>
-	<source type='audio/mp3' src='http://deepnote.surge.sh/deepnote.mp3'>
+	<source type='audio/mp3' src='https://deepnote.surge.sh/deepnote.mp3'>
 </audio>
 
 <p>THX Deep Note</p>
@@ -64,6 +64,10 @@
 	}
 
 	export default {
+		data() {
+			return { paused: true, t: 0 };
+		},
+		
 		computed: {
 			icon: ({ paused }) => {
 				return `https://icon.now.sh/${paused ? 'play' : 'pause'}_circle_filled`;
