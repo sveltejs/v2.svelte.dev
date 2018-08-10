@@ -96,7 +96,7 @@
 				if (event.buttons === 1) {
 					event.preventDefault();
 					var p = event.clientX / window.innerWidth;
-					this.set({ t: p * this.get('d') });
+					this.set({ t: p * this.get().d });
 				}
 			}
 		}
