@@ -267,7 +267,7 @@ If the expression in `{#await expression}` *isn't* a promise, Svelte skips ahead
 
 ### Directives
 
-The last place where Svelte template syntax differs from regular HTML: *directives* allow you to add special instructions for adding [event handlers](guide#event-handlers), [bindings](guide#bindings), [referencing elements](guide#refs) and so on. We'll cover each of those in later stages of this guide – for now, all you need to know is that directives can be identified by the `:` character:
+Directives allow you to add special instructions for adding [event handlers](guide#event-handlers), [bindings](guide#bindings), [referencing elements](guide#refs) and so on. We'll cover each of those in later stages of this guide – for now, all you need to know is that directives can be identified by the `:` character:
 
 ```html
 <!--{ title: 'Element directives' }-->
@@ -283,3 +283,29 @@ The last place where Svelte template syntax differs from regular HTML: *directiv
 ```
 
 > Technically, the `:` character is used to denote namespaced attributes in HTML. These will *not* be treated as directives, if encountered.
+
+
+### Debug tags
+
+To inspect data as it changes and flows through your app, use a `{@debug ...}` tag:
+
+```html
+<!--{ title: 'Debug tags' }-->
+<input bind:value=name>
+
+{@debug name}
+<h1>Hello {name}!</h1>
+```
+
+```json
+/* { hidden: true } */
+{
+	name: 'world'
+}
+```
+
+This will log the value of `name` whenever it changes. If your devtools are open, changing `name` will pause execution and open the debugger.
+
+You can debug multiple values simultaneously (`{@debug foo, bar, baz}`), or use `{@debug}` to pause execution whenever the surrounding markup is updated.
+
+> Debug tags only have an effect when compiling with the `dev: true` compiler option.
