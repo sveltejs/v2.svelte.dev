@@ -517,3 +517,49 @@ Use actions for things like:
 	}
 }
 ```
+
+#### Classes
+
+Classes let you toggle classes on and off on your elements.
+
+```html
+<!-- { title: 'Classes' } -->
+<ul class="links">
+	<li class:active="url === '/'"><a href="/" on:click="goto(event)">Home</a></li>
+	<li class:active="url.startsWith('/blog')"><a href="/blog/" on:click="goto(event)">Blog</a></li>
+	<li class:active="url.startsWith('/about')"><a href="/about/" on:click="goto(event)">About</a></li>
+</ul>
+
+<script>
+	export default {
+		methods: {
+			goto(event) {
+				event.preventDefault();
+				this.set({ url: event.target.pathname });
+			}
+		}
+	}
+</script>
+
+<style>
+	.links {
+		list-style: none;
+	}
+	.links li {
+		float: left;
+		padding: 10px;
+	}
+	.links :global(.active) {
+		background: #eee;
+	}
+</style>
+```
+
+```json
+/* { hidden: true } */
+{
+	"url": "/"
+}
+```
+
+Classes will work alongside class attributes. If you find yourself adding multiple ternary statements inside a class attribute, classes can simplify your component.
