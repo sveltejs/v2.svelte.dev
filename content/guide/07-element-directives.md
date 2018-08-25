@@ -549,7 +549,8 @@ Classes let you toggle classes on and off on your elements.
 		float: left;
 		padding: 10px;
 	}
-	.links :global(.active) {
+	/* classes added this way are processed with encapsulated styles, no need for :global() */
+	.active {
 		background: #eee;
 	}
 </style>
@@ -563,3 +564,39 @@ Classes let you toggle classes on and off on your elements.
 ```
 
 Classes will work alongside class attributes. If you find yourself adding multiple ternary statements inside a class attribute, classes can simplify your component.
+
+If your class name is the same as a component variable you can use the shorthand of a class binding.
+
+```html
+<!-- { title: 'Classes shorthand' } -->
+<div class:active class:is-selected>
+	<p>Active? {active}</p>
+	<p>Selected? {isSelected}</p>
+</div>
+<button on:click="set({ active: !active })">Toggle Active</button>
+<button on:click="set({ isSelected: !isSelected })">Toggle Selected</button>
+
+<style>
+	div {
+		width: 300px;
+		border: 1px solid #ccc;
+		background: #eee;
+		margin-bottom: 10px;
+	}
+	.active {
+		background: #fff;
+	}
+	.is-selected {
+		border-color: #99bbff;
+		box-shadow: 0 0 6px #99bbff;
+	}
+</style>
+```
+
+```json
+/* { hidden: true } */
+{
+  "active": true,
+	"isSelected": false,
+}
+```
