@@ -563,7 +563,7 @@ Classes let you toggle classes on and off on your elements.
 }
 ```
 
-Classes will work alongside class attributes. If you find yourself adding multiple ternary statements inside a class attribute, classes can simplify your component.
+Classes will work alongside class attributes. If you find yourself adding multiple ternary statements inside a class attribute, classes can simplify your component. Classes also are recognized by the compiler and <a href="#scoped-styles">scoped correctly</a>.
 
 If your class name is the same as a component variable you can use the shorthand of a class binding.
 
@@ -575,6 +575,16 @@ If your class name is the same as a component variable you can use the shorthand
 </div>
 <button on:click="set({ active: !active })">Toggle Active</button>
 <button on:click="set({ isSelected: !isSelected })">Toggle Selected</button>
+
+<script>
+export default {
+	computed: {
+		// Because shorthand relfects the var name, you must use component.set({ "is-selected": true }) or use a computed
+		// property like this. It might be better to avoid shorthand for class names which don't make good variable names.
+		"is-selected": ({ isSelected }) => isSelected
+	}
+}
+</script>
 
 <style>
 	div {
