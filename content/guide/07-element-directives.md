@@ -518,9 +518,11 @@ Use actions for things like:
 }
 ```
 
-#### Classes
+### Classes
 
-Classes let you toggle classes on and off on your elements.
+Classes let you toggle element classes on and off. To use classes add the directive `class` followed by a colon and the class name you want toggled (`class:the-class-name="anExpression"`). The expression inside the directive's quotes will be evaluated and toggle the class on and off depending on the truthiness of the expression's result. You can only add class directives to elements.
+
+This example adds the class `active` to `<li>` elements when the `url` property matches the path their links target.
 
 ```html
 <!-- { title: 'Classes' } -->
@@ -563,24 +565,27 @@ Classes let you toggle classes on and off on your elements.
 }
 ```
 
-Classes will work alongside class attributes. If you find yourself adding multiple ternary statements inside a class attribute, classes can simplify your component. Classes also are recognized by the compiler and <a href="#scoped-styles">scoped correctly</a>.
+Classes will work with an existing class attribute on your element. If you find yourself adding multiple ternary statements inside a class attribute, classes can simplify your component. Classes are recognized by the compiler and <a href="guide#scoped-styles">scoped correctly</a>.
 
-If your class name is the same as a component variable you can use the shorthand of a class binding.
+If your class name is the same as a property in your component's state, you can use the shorthand of a class binding which drops the expression (`class:myProp`).
+
+Note that class names with dashes in them do not usually make good shorthand classes since the property will also need a dash in it. The example below uses a computed property to make working with this easier, but it may be easier to not use the shorthand in cases like this.
 
 ```html
 <!-- { title: 'Classes shorthand' } -->
-<div class:active class:is-selected>
+<div class:active class:is-selected class:isAdmin>
 	<p>Active? {active}</p>
 	<p>Selected? {isSelected}</p>
 </div>
 <button on:click="set({ active: !active })">Toggle Active</button>
 <button on:click="set({ isSelected: !isSelected })">Toggle Selected</button>
+<button on:click="set({ isAdmin: !isAdmin })">Toggle Admin</button>
 
 <script>
 export default {
 	computed: {
 		// Because shorthand relfects the var name, you must use component.set({ "is-selected": true }) or use a computed
-		// property like this. It might be better to avoid shorthand for class names which don't make good variable names.
+		// property like this. It might be better to avoid shorthand for class names which are not valid variable names.
 		"is-selected": ({ isSelected }) => isSelected
 	}
 }
@@ -600,13 +605,17 @@ export default {
 		border-color: #99bbff;
 		box-shadow: 0 0 6px #99bbff;
 	}
+	.isAdmin {
+		outline: 2px solid red;
+	}
 </style>
 ```
 
 ```json
 /* { hidden: true } */
 {
-  "active": true,
+	"active": true,
 	"isSelected": false,
+	"isAdmin": false,
 }
 ```
