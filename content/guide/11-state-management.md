@@ -255,7 +255,7 @@ You can call these methods in your components, just like the built-in methods:
 <!-- { repl: false } -->
 <input
 	placeholder="Enter a stock ticker"
-	on:change="$fetchStockPrices(this.value)"
+	on:input="$fetchStockPrices(this.value)"
 >
 ```
 
