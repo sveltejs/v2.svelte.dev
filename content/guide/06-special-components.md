@@ -58,7 +58,9 @@ If you don't know what kind of component to render until the app runs — in ot
 <p style="color: blue">Blue {name}</p>
 ```
 
-> Note that `Red` and `Blue` are items in `data`, *not* `components`, unlike if we were doing `<Red>` or `<Blue>`.
+> Note that the name parameter of `<svelte:component>` is a unique identifier for this dynamic component. Without setting it, hmr will *append* the next component's content, rather than *replacing* it.
+
+> Also note that `Red` and `Blue` are items in `data`, *not* `components`, unlike if we were doing `<Red>` or `<Blue>`.
 
 The expression inside the `this="{...}"` can be any valid JavaScript expression. For example, it could be a [computed property](guide#computed-properties):
 
