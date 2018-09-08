@@ -1,6 +1,6 @@
 <Nav segment={child.segment}/>
 
-<div class={$zenMode ? 'zen-mode' : ''}>
+<div>
 	<svelte:component this={child.component} {...child.props}/>
 </div>
 
@@ -14,9 +14,6 @@
 	@media (min-width: 768px) {
 		div {
 			padding: 4em 0 0 0;
-		}
-		.zen-mode {
-			padding: 0;
 		}
 	}
 </style>

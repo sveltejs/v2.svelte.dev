@@ -10,8 +10,20 @@
 			<a class='login' on:click='login(event)' href='auth/login'>Login to save</a>
 		{/if}
 
-		<button on:click='zenMode()' title='fullscreen editor' class='icon zen-mode-icon' style='background-image: url(icons/{$zenMode ? "collapse.svg" : "expand.svg"})'>zen mode</button>
-		<button disabled={downloading} on:click='download()' title='download zip file' class=icon style='background-image: url(icons/download.svg)'>download</button>
+		<button
+			on:click='$set({ zenMode: !$zenMode })'
+			title='fullscreen editor'
+			class='icon zen-mode-icon'
+			style='background-image: url(icons/{$zenMode ? "collapse.svg" : "expand.svg"})'
+		>zen mode</button>
+
+		<button
+			disabled={downloading}
+			on:click='download()'
+			title='download zip file'
+			class=icon
+			style='background-image: url(icons/download.svg)'
+		>download</button>
 
 		{#if $user}
 			<button
@@ -303,10 +315,6 @@ export default app;` });
 				downloadBlob(doNotZip(files), 'svelte-app.zip');
 
 				this.set({ downloading: false });
-			},
-			zenMode() {
-				const { zenMode } = this.store.get();
-				this.store.set({ zenMode:  !zenMode });
 			}
 		}
 	};

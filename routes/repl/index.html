@@ -2,7 +2,7 @@
 	<title>Svelte REPL</title>
 </svelte:head>
 
-<div class='repl-outer'>
+<div class="repl-outer {$zenMode ? 'zen-mode' : ''}">
 	<AppControls
 		{examples}
 		{bundle}
@@ -104,8 +104,13 @@
 			overflow: hidden;
 		}
 
-		:global(.zen-mode) .repl-outer {
-			height: 100vh;
+		.repl-outer.zen-mode {
+			position: fixed;
+			width: 100%;
+			height: 100%;
+			top: 0;
+			left: 0;
+			z-index: 6;
 		}
 
 		section {
