@@ -1,11 +1,11 @@
 <div class='{open ? "open": "closed"} mousecatcher' on:click='set({ open: false })'></div>
 
-<div class='container'>
+<div class='container {$zenMode ? 'zen-mode' : ''}'>
 	<span class="menu-link" on:click='toggleOpen()'>{open ? 'Close' : 'Menu'}</span>
 	<a href='.' class='logo'>Svelte</a>
 </div>
 
-<nav ref:nav class='{open ? "open": "closed"}' on:click='set({ open: false })'>
+<nav ref:nav class='{open ? "open": "closed"} {$zenMode ? 'zen-mode' : ''}' on:click='set({ open: false })'>
 	<ul class='primary'>
 		<li><a rel='prefetch' class='{segment === "guide" ? "active": ""}' href='guide'>Guide</a></li>
 		<li><a rel='prefetch' class='{segment === "repl" ? "active": ""}' href='repl'>REPL</a></li>
@@ -142,6 +142,10 @@
 
 		.container {
 			height: 4em;
+		}
+		
+		.zen-mode {
+			display: none;
 		}
 
 		nav {
