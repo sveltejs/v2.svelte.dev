@@ -73,7 +73,53 @@ Styles will *only* apply to the current component, unless you opt in to cascadin
 
 ### Unused style removal
 
-Svelte will identify and remove any styles that it can guarantee are not being used in your app. It will also emit a warning so that you can remove them from the source.
+Svelte will identify and remove styles that are not being used in your app. It will also emit a warning so that you can remove them from the source.
+
+For rules *not* to be removed, they must apply to the component's markup. As Svelte is concerned `.active` is unused in the following code and should be removed:
+
+```html
+<!-- { repl: false } -->
+<div>
+	<p ref:paragraph>this text is not bold</p>
+</div>
+
+<style>
+	.active {
+		color: bold;
+	}
+</style>
+
+<script>
+	export default {
+		oncreate() {
+			const { active } = this.get();
+			if (active) this.refs.paragraph.classList.add('active');
+		}
+	};
+</script>
+```
+
+Instead of manually manipulating the DOM, you should always use the `class` attribute (or the [class directive](https://svelte.technology/guide#classes)):
+
+```html
+<!-- { repl: false } -->
+<div>
+	<p class="{active ? 'active' : ''}">this text is bold</p>
+</div>
+```
+
+If that's impossible for some reason, you can use `:global(...)`:
+
+```html
+<!-- { repl: false } -->
+<style>
+	div :global(.active) {
+		color: bold;
+	}
+</style>
+```
+
+The same applies to the contents of `{@html ...}` tags.
 
 
 ### Special selectors
