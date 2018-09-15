@@ -75,7 +75,7 @@ Styles will *only* apply to the current component, unless you opt in to cascadin
 
 Svelte will identify and remove styles that are not being used in your app. It will also emit a warning so that you can remove them from the source.
 
-For rules *not* to be removed, they must apply to the component's markup. As Svelte is concerned `.active` is unused in the following code and should be removed:
+For rules *not* to be removed, they must apply to the component's markup. As far as Svelte is concerned `.active` is unused in the following code and should be removed:
 
 ```html
 <!-- { repl: false } -->
