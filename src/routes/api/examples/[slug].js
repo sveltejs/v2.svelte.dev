@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import manifest from '../../../content/examples/manifest.json';
+import manifest from '../../../../content/examples/manifest.json';
 
 const lookup = new Map();
 const titles = new Map();

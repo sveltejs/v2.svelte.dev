@@ -98,7 +98,7 @@ if (process.env.GITHUB_CLIENT_ID) {
 
 app.use(
 	compression({ threshold: 0 }),
-	serve('assets'),
+	serve('static'),
 	sapper({
 		manifest,
 		store: req => {
