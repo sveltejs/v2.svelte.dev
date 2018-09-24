@@ -13,7 +13,7 @@
     "deploy:ci": "now --token $NOW_TOKEN && now alias --token $NOW_TOKEN",
     "prestage": "npm run update_template && npm run sapper",
     "predeploy:ci": "npm run prestage",
-    "lint": "eslint app routes"
+    "lint": "eslint src"
   },
   "repository": {
     "type": "git",
@@ -78,7 +78,7 @@
     "alias": "svelte.technology",
     "files": [
       "build",
-      "assets",
+      "static",
       "content"
     ]
   }
