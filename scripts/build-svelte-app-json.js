@@ -8,4 +8,4 @@ for (const path of process.argv.slice(2)) {
 	}
 }
 
-fs.writeFileSync('assets/svelte-app.json', JSON.stringify(files));
+fs.writeFileSync('static/svelte-app.json', JSON.stringify(files));
