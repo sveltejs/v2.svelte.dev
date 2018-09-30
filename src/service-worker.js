@@ -1,8 +1,8 @@
-import { assets, shell, routes, timestamp } from './manifest/service-worker.js';
+import { files, shell, routes, timestamp } from '../__sapper__/service-worker.js';
 
 const ASSETS = `cache${timestamp}`;
 
-const to_cache = shell.concat(assets);
+const to_cache = shell.concat(files);
 const cached = new Set(to_cache);
 
 self.addEventListener('install', event => {
