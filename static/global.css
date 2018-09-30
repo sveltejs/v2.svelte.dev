@@ -1,0 +1,180 @@
+/*
+-----------------------------------------------
+	global styles
+	NOTE – !important overrides class-definitions
+-----------------------------------------------
+*/
+
+/*	constants and calc --------------------- */
+:root {
+	--33: calc(100% / 3);      /* exactly 33% */
+	--66: calc(100% / 3 * 2);  /* exactly 66% */
+
+	/* common easings */
+	--in-cubic:    cubic-bezier(0.55, 0.055, 0.675, 0.19);
+	--out-cubic:   cubic-bezier(0.215, 0.61, 0.355, 1);
+	--inout-cubic: cubic-bezier(0.645, 0.045, 0.355, 1);
+
+	--in-expo:     cubic-bezier(0.95, 0.05, 0.795, 0.035);
+	--out-expo:    cubic-bezier(0.19, 1, 0.22, 1);
+	--inout-expo:  cubic-bezier(1, 0, 0, 1);
+
+	--in-back:     cubic-bezier(0.6, -0.28, 0.735, 0.045);
+	--out-back:    cubic-bezier(0.175, 0.885, 0.32, 1.275);
+	--inout-back:  cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/*	theme vars ----------------------------- */
+.theme-default {
+	--back:		#ffffff;
+	--prime:	#ff3e00;
+	--second:	#676778;
+	--flash:	 #44c7ff;
+	--text:		#979491;
+
+	--page-side:  6rem;  /* page-side-width   */
+	--sidebar:   22rem;  /* sidebar-width   */
+	--border-w:  .3rem;  /* border-width   */
+	--border-r:  .4rem;  /* border-radius */
+}
+
+@media screen and (min-width: 767px) {
+	.theme-default {
+		--page-side: 12rem;
+	}
+}
+
+/*	typo vars ------------------------------ */
+.typo-default {
+	--unit:  .8rem;
+	--h6:   1.3rem;
+	--h5:   1.5rem;
+	--h4:   1.9rem;
+	--h3:   2.2rem;
+	--h2:   2.4rem;
+	--h1:   3.2rem;
+	--lh:   calc(4/2.6);  /* base line-height */
+}
+
+/*	typography ----------------------------- */
+body {
+	font: 300 var(--h4) / var(--lh) var(--font);
+	background-color: var(--back);
+	color: var(--text);
+}
+
+h1, h2, h3, h4, h5, h6, p, li, blockquote {
+	margin-bottom: .8rem;
+}
+
+p, li {
+	max-width: 28em;
+}
+
+h1, h2, h3, h4, h5, h6 { font-weight: 300 }
+h6 { font-size: var(--h6) }
+h5 { font-size: var(--h5) }
+h4 { font-size: var(--h4) }
+h3 { font-size: var(--h3) }
+h2 { font-size: var(--h2) }
+h1 { font-size: var(--h1) }
+
+.b, b, strong { font-weight: 500 }
+
+::selection {
+	background: var(--flash);
+	color: white;
+}
+
+/*	opinionated styles --------------------- */
+h1, h2 {
+	font-family: var(--font-alt);
+	letter-spacing: 0.2rem;
+	text-transform: uppercase;
+	line-height: calc(4/3.3);
+	color: var(--second);
+	pointer-events: none;
+}
+
+h2 {
+	margin-top: 16rem;
+	padding: 4rem 1.6rem 3.2rem;
+	border-top: var(--border-w) solid var(--second);
+}
+
+h3 {
+	pointer-events: none;
+	font-family: var(--font-ui);
+	color: black;
+	font-size: var(--h4);
+	padding-top: 6.4rem;
+}
+
+blockquote {
+  position: relative;
+  margin: 1.6rem 0 2.4rem;
+  padding: 2.4rem 3.2rem;
+	text-align: center;
+	border-radius: var(--border-r);
+	font-family: var(--font-ui);
+	font-size: var(--h6);
+	max-width: 38em;
+}
+
+table {
+	margin: 4rem 0;
+	width: 100%;
+	font-size: var(--h5);
+}
+
+td, th {
+	text-align: left;
+	border-bottom: 1px solid #eee;
+	padding: 0.4rem 0.8rem 0.4rem 0;
+}
+
+table code,
+table span {
+	white-space: pre;
+}
+
+.filename {
+	display: inline-block;
+	/* top: 0; */
+	left: 1.6rem;
+	margin-top: 3.2rem;
+	font-family: var(--font-ui);
+	font-size: var(--h5);
+	color: var(--second);
+}
+
+.open-in-repl {
+	position: relative;
+	top: -.2rem;
+	color: var(--prime);
+	font-size: var(--h5);
+}
+
+
+
+/*
+
+h3 { max-width: 26em }
+
+.legend {
+	font-family: var(--font-mono);
+	font-size: var(--h6);
+	margin: 1.6rem 0 6.4rem 0;
+	color: black;
+}
+*/
+
+/*	theme colors --------------------------- */
+.prime			{ color: var(--prime) !important }
+.second			{ color: var(--second) !important }
+.flash			 { color: var(--flash) !important }
+
+.bg-back		{ background-color: var(--back) !important }
+.bg-prime		{ background-color: var(--prime) !important }
+.bg-second	{ background-color: var(--second) !important }
+.bg-flash		 { background-color: var(--flash) !important }

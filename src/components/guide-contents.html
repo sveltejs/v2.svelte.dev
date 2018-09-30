@@ -1,0 +1,60 @@
+<ul class='guide-toc'>
+	{#each $guide_contents as section}
+	<li>
+		<a class='section {section.slug === $activeGuideSection ? "active": ""}' href='guide#{section.slug}'>{section.metadata.title}</a>
+		{#each section.subsections as subsection}
+		<a class='subsection {subsection.slug === $activeGuideSection ? "active": ""}' href='guide#{subsection.slug}'>{subsection.title}</a>
+		{/each}
+	</li>
+	{/each}
+</ul>
+
+<style>
+	.guide-toc li {
+	  display: block;
+	  line-height: 2.4rem;
+	}
+
+	.section {
+	  display: block;
+	  font-family: var(--font-alt);
+	  text-transform: uppercase;
+	  letter-spacing: 0.1em;
+	  font-size: var(--h6);
+	  color: black;
+	  margin-top: 4.8rem;
+	}
+
+	.subsection {
+	  display: block;
+	  font-size: var(--h6);
+	}
+
+	.section.active,
+	.subsection.active {
+	  color: var(--prime);
+	}
+</style>
+
+<script>
+	export default {
+		data() {
+			return {
+				contents: []
+			}
+		},
+
+		oncreate () {
+			const onhashchange = _ => {
+				this.store.set({ activeGuideSection: window.location.hash.slice( 1 ) });
+			};
+
+			window.addEventListener( 'hashchange', onhashchange, false );
+			this.on( 'destroy', _ => {
+				window.removeEventListener( 'hashchange', onhashchange, false );
+			});
+
+			onhashchange();
+		}
+	};
+</script>

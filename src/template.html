@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang='en'>
+<html lang='en' class="theme-default typo-default">
 <head>
 	<meta charset='utf-8'>
 	<meta name='viewport' content='width=device-width'>
@@ -10,128 +10,125 @@
 	<link rel='manifest' href='manifest.json'>
 	<link rel='icon' type='image/png' href='favicon.png'>
 
-	<style id="fonts">
+	<style>
 		@font-face {
-			font-family: 'Roboto';
-			src: url('fonts/Roboto/Roboto-LightItalic.woff2') format('woff2'),
-				url('fonts/Roboto/Roboto-LightItalic.woff') format('woff');
-			font-weight: 300;
-			font-style: italic;
-		}
-
-		@font-face {
-			font-family: 'Roboto';
-			src: url('fonts/Roboto/Roboto-Light.woff2') format('woff2'),
-				url('fonts/Roboto/Roboto-Light.woff') format('woff');
+			font-family: 'barlow';
+			src: url('fonts/barlow-subset/barlow-light-web.woff2') format('woff2'),
+				url('fonts/barlow-subset/barlow-light-web.woff') format('woff');
 			font-weight: 300;
 			font-style: normal;
 		}
 
 		@font-face {
-			font-family: 'Roboto';
-			src: url('fonts/Roboto/Roboto-Bold.woff2') format('woff2'),
-				url('fonts/Roboto/Roboto-Bold.woff') format('woff');
-			font-weight: bold;
-			font-style: normal;
-		}
-
-		@font-face {
-			font-family: 'Rajdhani';
-			src: url('fonts/Rajdhani/Rajdhani-Bold.woff2') format('woff2'),
-				url('fonts/Rajdhani/Rajdhani-Bold.woff') format('woff');
-			font-weight: 700;
-			font-style: normal;
-		}
-
-		@font-face {
-			font-family: 'Rajdhani';
-			src: url('fonts/Rajdhani/Rajdhani-Medium.woff2') format('woff2'),
-				url('fonts/Rajdhani/Rajdhani-Medium.woff') format('woff');
+			font-family: 'barlow';
+			src: url('fonts/barlow-subset/barlow-medium-web.woff2') format('woff2'),
+				url('fonts/barlow-subset/barlow-medium-web.woff') format('woff');
 			font-weight: 500;
 			font-style: normal;
 		}
 
 		@font-face {
-			font-family: 'Rajdhani';
-			src: url('fonts/Rajdhani/Rajdhani-Regular.woff2') format('woff2'),
-				url('fonts/Rajdhani/Rajdhani-Regular.woff') format('woff');
-			font-weight: 300;
-			font-style: normal;
-		}
-
-		@font-face {
-			font-family: 'Inconsolata';
-			src: local('Inconsolata Bold'), local('Inconsolata-Bold'),
-				url('fonts/Inconsolata/Inconsolata-Bold.woff2') format('woff2'),
-				url('fonts/Inconsolata/Inconsolata-Bold.woff') format('woff');
-			font-weight: bold;
-			font-style: normal;
-		}
-
-		@font-face {
-			font-family: 'Inconsolata';
-			src: local('Inconsolata'), local('Inconsolata-Regular'),
-				url('fonts/Inconsolata/Inconsolata-Regular.woff2') format('woff2'),
-				url('fonts/Inconsolata/Inconsolata-Regular.woff') format('woff');
+			font-family: 'barlow-bold';
+			src: url('fonts/barlow-subset/barlow-bold-web.woff2') format('woff2'),
+				url('fonts/barlow-subset/barlow-bold-web.woff') format('woff');
 			font-weight: normal;
 			font-style: normal;
 		}
-	</style>
 
-	<script>
-		if (localStorage.fonts) {
-			document.querySelector('#fonts').textContent = localStorage.fonts;
+		@font-face {
+			font-family: 'overpass';
+			src: url('fonts/overpass-subset/overpassmono-regular-web.woff2') format('woff2'),
+				url('fonts/overpass-subset/overpassmono-regular-web.woff') format('woff');
+			font-weight: 400;
+			font-style: normal;
 		}
-	</script>
 
-	<style>
-		* {
-			position: relative;
+		@font-face {
+			font-family: 'overpass';
+			src: url('fonts/overpass-subset/overpassmono-semibold-web.woff2') format('woff2'),
+				url('fonts/overpass-subset/overpassmono-semibold-web.woff') format('woff');
+			font-weight: 600;
+			font-style: normal;
+		}
+
+		/*	base reset ----------------------------- */
+		html {
+			font-size: 62.5%;
+			-ms-text-size-adjust: 62.5%;
+			-webkit-text-size-adjust: 62.5%;
+			-ms-overflow-style: -ms-autohiding-scrollbar;
+			overflow-y: scroll;
 			box-sizing: border-box;
+			border-collapse: collapse;
 		}
+
+		* {
+			box-sizing: inherit;
+			margin: 0;
+			padding: 0;
+		}
+
+		/*	links reset ---------------------------- */
+		a, a:link {
+			/* text-decoration: none; */
+			cursor: pointer;
+			color: inherit;
+		}
+
+		a:hover, a:active { color: rgb(27, 133, 255); }
+		a:focus { outline: none }
 
 		body {
-			margin: 0;
-			background: #fff;
-			font-family: Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-			font-weight: 300;
-			color: #333;
+			--font:				sans-serif;
+			--font-alt:		Georgia, serif;
+			--font-mono:	monospace;
+			--font-ui: 		var(--font-mono); /* ui-elements: buttons, forms etc. */
+
 		}
 
-		code, pre {
-			font-family: 'Inconsolata', monospace;
-			font-weight: 400;
-			line-height: 1.2;
+		.fonts-loaded body {
+			--font:				barlow, sans-serif;
+			--font-alt:		barlow-bold, sans-serif;
+			--font-mono:	overpass, monospace;
 		}
-
-		pre {
-			overflow-x: auto;
-		}
-
-		h1, h2, h3 {
-			font-family: Rajdhani, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-			margin: 0;
-			font-weight: 300;
-			padding: 0.5em 0;
-			line-height: 1.2;
-		}
-
-		a { text-decoration: none; color: rgb(170,30,30); }
-		strong { font-weight: 800; }
-
-		.hljs, .hljs-subst { color: #333; }
-		.hljs-comment { color: #999; }
-		.hljs-tag { color: #170; }
-		.hljs-keyword { color: #708; }
-		.hljs-attr { color: #333; }
-		.hljs-number { color: #164; }
-		.hljs-type, .hljs-string, .hljs-selector-id, .hljs-selector-class, .hljs-quote, .hljs-template-tag, .hljs-deletion { color: #aa1e1e; }
-		.hljs-title, .hljs-section { color: #aa1e1e; }
-		.hljs-literal { color: #170; }
-		.hljs-meta { color: #555; }
-		.hljs-meta-string { color: #555; }
 	</style>
 
+
+	<script>
+		/*	opinionated text-styles ---------------- */
+		/*	---------------------------------------- */
+		//	------------------------------------------
+
+
+		//	------------------------------------------
+		//	I decided to use this font-loader
+		//	fonts are subsetted with font-squirrel to reduce size
+		//	see
+		//	------------------------------------------
+		(function () {
+			// Optimization for Repeat Views
+			if (sessionStorage.fontsLoadedFoutWithClass) {
+				document.documentElement.className += ' fonts-loaded';
+				return;
+			}
+
+			if ('fonts' in document) {
+				Promise.all([
+					document.fonts.load('1em barlow'),
+					document.fonts.load('500 1em barlow'),
+					document.fonts.load('1em barlow-bold'),
+					document.fonts.load('1em overpass'),
+				]).then(function () {
+					document.documentElement.className += ' fonts-loaded';
+					// Optimization for Repeat Views
+					sessionStorage.fontsLoadedFoutWithClass = true;
+				});
+			}
+		})();
+	</script>
+
+  <link rel='stylesheet' href='global.css'>
+  <link rel='stylesheet' href='prism.css'>
 	%sapper.styles%
 
 	%sapper.head%
@@ -146,6 +143,7 @@
 <body>
 	<div id='sapper'>%sapper.html%</div>
 	%sapper.scripts%
+	<!-- off while in dev
 	<script>
 		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -155,5 +153,6 @@
 		ga('create', 'UA-5602942-11', 'auto');
 		ga('send', 'pageview');
 	</script>
+	 -->
 </body>
 </html>
