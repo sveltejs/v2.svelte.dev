@@ -1,0 +1,38 @@
+<!--
+-----------------------------------------------
+	simple css-debug
+-----------------------------------------------
+-->
+
+<label {style} class:active=show>
+	<input type="checkbox" bind:checked=show> grid
+</label>
+
+<style>
+	label {
+		position: fixed;
+		padding: 0.3rem 1rem;
+		font-size: 1.2rem;
+		cursor: pointer;
+		user-select: none;
+		opacity: 0.5;
+		z-index: 3000;
+	}
+
+	label:hover	{ opacity: 1 }
+	input				{ display: none }
+	.active			{ color: var(--flash) !important }
+
+	:global(.css-debug *) {
+		outline: 1px solid hsla(202, 83%, 61%, 0.25);
+	}
+</style>
+
+<script>
+	export default {
+		onupdate({ changed, current, previous }) {
+			if (current.show) document.body.classList.add('css-debug')
+			else document.body.classList.remove('css-debug')
+		}
+	};
+</script>
