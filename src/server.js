@@ -5,11 +5,10 @@ import session from 'express-session';
 import passport from 'passport';
 import { Strategy } from 'passport-github';
 import sessionFileStore from 'session-file-store';
-import sapper from 'sapper';
 import serve from 'serve-static';
 import devalue from 'devalue';
 import { Store } from 'svelte/store.js';
-import { manifest } from './manifest/server.js';
+import * as sapper from '../__sapper__/server.js';
 
 dotenv.config();
 
@@ -99,8 +98,7 @@ if (process.env.GITHUB_CLIENT_ID) {
 app.use(
 	compression({ threshold: 0 }),
 	serve('static'),
-	sapper({
-		manifest,
+	sapper.middleware({
 		store: req => {
 			const user = req.session && req.session.passport && req.session.passport.user;
 
