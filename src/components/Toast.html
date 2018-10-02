@@ -4,23 +4,26 @@
 
 <style>
 	.toast {
-		position: fixed;
-		left: 0;
-		bottom: 0;
-		width: 100%;
-		background-color: rgb(170,30,30);
-		cursor: pointer;
-		color: white;
-		padding: 1em;
-		font-weight: 300;
-	    	text-align: left;
-	    	font-size: 16px;
-		z-index: 99;
-		animation: slide-up 0.4s ease-out;
+	  position: fixed;
+	  left: 0;
+	  bottom: 0;
+	  width: 100%;
+	  background-color: var(--prime);
+	  cursor: pointer;
+	  color: white;
+	  padding: 1.2rem 2.4rem;
+	  text-align: left;
+	  font: 300 var(--h4) var(--font-ui);
+	  z-index: 99;
+	  animation: slide-up 0.4s ease-out;
 	}
 	@keyframes slide-up {
-		0% { transform: translate(0,100%); }
-		100% { transform: translate(0,0); }
+	  0% {
+	    transform: translate(0, 100%);
+	  }
+	  100% {
+	    transform: translate(0, 0);
+	  }
 	}
 </style>
 
