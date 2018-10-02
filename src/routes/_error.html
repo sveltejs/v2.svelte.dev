@@ -2,19 +2,31 @@
 	<title>{status}</title>
 </svelte:head>
 
-<h1>{status}</h1>
-<p>{error.message}</p>
+<div class='center'>
+	<h1 class='prime'>{status}</h1>
+	<h3 class='second'>Upss. {error.message}</h3>
+</div>
 
+<!-- TO BE DONE... -->
 <style>
+	.center {
+	  display: flex;
+	  flex-wrap: wrap;
+	  align-content: center;
+	  align-items: center;
+	  width: 100vw;
+	  height: 100vh;
+	}
+
+	.center * {
+	  text-align: center;
+	  width: 100%;
+	}
+
 	h1 {
-		display: block;
-		font-family: Rajdhani, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-		color: rgb(170,30,30);
-		font-size: 30vw;
-		font-weight: 300;
-		line-height: 1;
-		margin: 0;
-		text-transform: lowercase;
-		padding: 0.5em 0 0 0;
+	  margin: 0;
+	  font: 300 10vw / 0.8 var(--font-alt);
+	  letter-spacing: 0.6rem;
+	  text-transform: lowercase;
 	}
 </style>
