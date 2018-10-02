@@ -26,21 +26,24 @@
 
 /*	theme vars ----------------------------- */
 .theme-default {
-	--back:		#ffffff;
-	--prime:	#ff3e00;
-	--second:	#676778;
-	--flash:	 #44c7ff;
-	--text:		#979491;
+	--back:    #ffffff;
+	--prime:   #ff3e00;
+	--second:  #676778;
+	--flash:    #40b3ff;
+	--text:    #a09e9b;
+	--code-bg: #f6f7f8;
 
-	--page-side:  6rem;  /* page-side-width   */
-	--sidebar:   22rem;  /* sidebar-width   */
-	--border-w:  .3rem;  /* border-width   */
-	--border-r:  .4rem;  /* border-radius */
+	--nav-side:  3.2rem;  /* page-side-padding */
+	--sidebar:    24rem;  /* sidebar-width */
+	--nav-h:      10rem;  /* navigation-height */
+	--code-w:      34em;  /* codeblock-width */
+	--border-w:   .3rem;  /* border-width */
+	--border-r:   .4rem;  /* border-radius */
 }
 
 @media screen and (min-width: 767px) {
 	.theme-default {
-		--page-side: 12rem;
+		--page-side: 5.6rem;
 	}
 }
 
@@ -49,11 +52,11 @@
 	--unit:  .8rem;
 	--h6:   1.3rem;
 	--h5:   1.5rem;
-	--h4:   1.9rem;
-	--h3:   2.2rem;
+	--h4:   1.7rem;
+	--h3:   1.8rem;
 	--h2:   2.4rem;
 	--h1:   3.2rem;
-	--lh:   calc(4/2.6);  /* base line-height */
+	--lh:   calc(4/2.4);  /* base line-height */
 }
 
 /*	typography ----------------------------- */
@@ -68,7 +71,7 @@ h1, h2, h3, h4, h5, h6, p, li, blockquote {
 }
 
 p, li {
-	max-width: 28em;
+	max-width: 28em; /* max line-length ~60 chars */
 }
 
 h1, h2, h3, h4, h5, h6 { font-weight: 300 }
@@ -80,6 +83,29 @@ h2 { font-size: var(--h2) }
 h1 { font-size: var(--h1) }
 
 .b, b, strong { font-weight: 500 }
+
+i, em {
+	color: var(--second);
+	font-style: normal;
+}
+
+a:hover > .icon {
+	stroke: var(--flash);
+}
+
+:not(pre) > p > code {
+	position: relative;
+	top: -.1rem;
+	padding: .3rem .8rem .5rem;
+	margin: 0 .2rem;
+	border-radius: 0.3em;
+	white-space: nowrap;
+	background: var(--code-bg);
+	border-top: .1rem solid #e5e5e9;
+	border-left: .1rem solid #e5e5e9;
+	/* color: inherit; */
+	color: #8f9196;
+}
 
 ::selection {
 	background: var(--flash);
@@ -96,30 +122,26 @@ h1, h2 {
 	pointer-events: none;
 }
 
-h2 {
-	margin-top: 16rem;
-	padding: 4rem 1.6rem 3.2rem;
-	border-top: var(--border-w) solid var(--second);
-}
 
-h3 {
+h3, h3 > code {
 	pointer-events: none;
 	font-family: var(--font-ui);
 	color: black;
-	font-size: var(--h4);
+	font-weight: 600;
 	padding-top: 6.4rem;
 }
 
 blockquote {
-  position: relative;
-  margin: 1.6rem 0 2.4rem;
-  padding: 2.4rem 3.2rem;
-	text-align: center;
+	position: relative;
+	margin: 1.6rem 0 2.4rem;
+	padding: 2rem 2.4rem 1.8rem 2.4rem;
 	border-radius: var(--border-r);
-	font-family: var(--font-ui);
-	font-size: var(--h6);
-	max-width: 38em;
+	font-family: var(--font);
+	font-size: var(--h5);
+	width: var(--code-w);
 }
+
+blockquote > p { max-width: none }
 
 table {
 	margin: 4rem 0;
@@ -138,43 +160,31 @@ table span {
 	white-space: pre;
 }
 
+/*	helper styles -------------------------- */
 .filename {
 	display: inline-block;
-	/* top: 0; */
-	left: 1.6rem;
-	margin-top: 3.2rem;
-	font-family: var(--font-ui);
-	font-size: var(--h5);
-	color: var(--second);
+	padding: 1.6rem 0 0 1rem;
+	font: var(--h6) var(--font-ui);
 }
 
 .open-in-repl {
-	position: relative;
-	top: -.2rem;
-	color: var(--prime);
-	font-size: var(--h5);
+	position: absolute;
+	margin-top: 5.8rem;
+	margin-left: -2.2rem;
+	width: 3.6rem;
+	height: 3.6rem;
+	padding: .8rem;
+	background-color: var(--code-bg);
+	border-radius: 50%;
+	border-left: .1rem solid #c7c6c6;
 }
-
-
-
-/*
-
-h3 { max-width: 26em }
-
-.legend {
-	font-family: var(--font-mono);
-	font-size: var(--h6);
-	margin: 1.6rem 0 6.4rem 0;
-	color: black;
-}
-*/
 
 /*	theme colors --------------------------- */
-.prime			{ color: var(--prime) !important }
-.second			{ color: var(--second) !important }
-.flash			 { color: var(--flash) !important }
+.prime      { color: var(--prime) !important }
+.second     { color: var(--second) !important }
+.flash       { color: var(--flash) !important }
 
-.bg-back		{ background-color: var(--back) !important }
-.bg-prime		{ background-color: var(--prime) !important }
-.bg-second	{ background-color: var(--second) !important }
-.bg-flash		 { background-color: var(--flash) !important }
+.bg-back    { background-color: var(--back) !important }
+.bg-prime   { background-color: var(--prime) !important }
+.bg-second  { background-color: var(--second) !important }
+.bg-flash    { background-color: var(--flash) !important }
