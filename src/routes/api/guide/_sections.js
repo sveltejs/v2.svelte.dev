@@ -3,8 +3,10 @@ import path from 'path';
 import * as fleece from 'golden-fleece';
 import process_markdown from '../_process_markdown.js';
 import marked from 'marked';
+
 import prismjs from 'prismjs'; // prism-highlighter – smaller footprint [hljs: 192.5k]
 require('prismjs/components/prism-bash');
+
 const langs = {
   'hidden-data': 'json',
   'html-no-repl': 'html',
@@ -101,14 +103,14 @@ export default function() {
 
         if (lang === 'html' && !group) {
           /* prettier-ignore
-					-----------------------------------------------
-						edit vedam
-						don't know how to access components here
-						so i hardcoded icon here
-					-----------------------------------------------
-					*/
+          -----------------------------------------------
+            edit vedam
+            don't know how to access components here
+            so i hardcoded icon here
+          -----------------------------------------------
+          */
           if (!meta || meta.repl !== false) {
-            prefix = `<a class='open-in-repl' href='repl?demo=@@${uid}' title='open in REPL'><svg class='icon prime'><use xlink:href='#maximize-2' /></svg></a>`;
+            prefix = `<a class='open-in-repl' href='repl?demo=@@${uid}' title='open in REPL'><svg class='icon'><use xlink:href='#maximize-2' /></svg></a>`;
           }
 
           group = { id: uid++, blocks: [] };
@@ -129,10 +131,10 @@ export default function() {
         if (meta && meta.hidden) return '';
 
         /* prettier-ignore
-				-----------------------------------------------
-					design-edit vedam
-					insert prism-highlighter
-				-----------------------------------------------
+        -----------------------------------------------
+          design-edit vedam
+          insert prism-highlighter
+        -----------------------------------------------
         */
         let plang = prismLang[lang];
         const highlighted = Prism.highlight(
