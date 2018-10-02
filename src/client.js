@@ -29,6 +29,6 @@ if (navigator.serviceWorker && navigator.serviceWorker.controller) {
   };
 }
 
-if (!localStorage.fonts) {
-  import('./utils/local-fonts.js');
-}
+// if (!localStorage.fonts) {
+//   import('./utils/local-fonts.js');
+// }

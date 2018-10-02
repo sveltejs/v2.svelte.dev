@@ -12,34 +12,34 @@
 
 	<style>
 		@font-face {
-			font-family: 'barlow';
-			src: url('fonts/barlow-subset/barlow-light-web.woff2') format('woff2'),
-				url('fonts/barlow-subset/barlow-light-web.woff') format('woff');
+			font-family: 'aller';
+			src: url('fonts/aller-subset/aller_lt-web.woff2') format('woff2'),
+				url('fonts/aller-subset/aller_lt-web.woff') format('woff');
 			font-weight: 300;
 			font-style: normal;
 		}
 
 		@font-face {
-			font-family: 'barlow';
-			src: url('fonts/barlow-subset/barlow-medium-web.woff2') format('woff2'),
-				url('fonts/barlow-subset/barlow-medium-web.woff') format('woff');
+			font-family: 'aller';
+			src: url('fonts/aller-subset/aller_rg-web.woff2') format('woff2'),
+				url('fonts/aller-subset/aller_rg-web.woff') format('woff');
 			font-weight: 500;
 			font-style: normal;
 		}
 
 		@font-face {
-			font-family: 'barlow-bold';
-			src: url('fonts/barlow-subset/barlow-bold-web.woff2') format('woff2'),
-				url('fonts/barlow-subset/barlow-bold-web.woff') format('woff');
+			font-family: 'asap-bold';
+			src: url('fonts/asap-subset/asap-bold-web.woff2') format('woff2'),
+				url('fonts/asap-subset/asap-bold-web.woff') format('woff');
 			font-weight: normal;
 			font-style: normal;
 		}
 
 		@font-face {
 			font-family: 'overpass';
-			src: url('fonts/overpass-subset/overpassmono-regular-web.woff2') format('woff2'),
-				url('fonts/overpass-subset/overpassmono-regular-web.woff') format('woff');
-			font-weight: 400;
+			src: url('fonts/overpass-subset/overpassmono-light-web.woff2') format('woff2'),
+				url('fonts/overpass-subset/overpassmono-light-web.woff') format('woff');
+			font-weight: 300;
 			font-style: normal;
 		}
 
@@ -49,6 +49,19 @@
 				url('fonts/overpass-subset/overpassmono-semibold-web.woff') format('woff');
 			font-weight: 600;
 			font-style: normal;
+		}
+
+		body {
+			--font:				sans-serif;
+			--font-alt:		Georgia, serif;
+			--font-mono:	monospace;
+			--font-ui: 		var(--font-mono); /* ui-elements: buttons, forms etc. */
+		}
+
+		.fonts-loaded body {
+			--font:				aller, sans-serif;
+			--font-alt:		asap-bold, sans-serif;
+			--font-mono:	overpass, monospace;
 		}
 
 		/*	base reset ----------------------------- */
@@ -75,31 +88,12 @@
 			color: inherit;
 		}
 
-		a:hover, a:active { color: rgb(27, 133, 255); }
+		a:hover, a:active { color: var(--flash); }
 		a:focus { outline: none }
-
-		body {
-			--font:				sans-serif;
-			--font-alt:		Georgia, serif;
-			--font-mono:	monospace;
-			--font-ui: 		var(--font-mono); /* ui-elements: buttons, forms etc. */
-
-		}
-
-		.fonts-loaded body {
-			--font:				barlow, sans-serif;
-			--font-alt:		barlow-bold, sans-serif;
-			--font-mono:	overpass, monospace;
-		}
 	</style>
 
 
 	<script>
-		/*	opinionated text-styles ---------------- */
-		/*	---------------------------------------- */
-		//	------------------------------------------
-
-
 		//	------------------------------------------
 		//	I decided to use this font-loader
 		//	fonts are subsetted with font-squirrel to reduce size
@@ -114,10 +108,11 @@
 
 			if ('fonts' in document) {
 				Promise.all([
-					document.fonts.load('1em barlow'),
-					document.fonts.load('500 1em barlow'),
-					document.fonts.load('1em barlow-bold'),
+					document.fonts.load('1em aller'),
+					document.fonts.load('500 1em aller'),
+					document.fonts.load('1em asap-bold'),
 					document.fonts.load('1em overpass'),
+					document.fonts.load('600 1em overpass'),
 				]).then(function () {
 					document.documentElement.className += ' fonts-loaded';
 					// Optimization for Repeat Views
