@@ -6,31 +6,31 @@
 
 /*	colors --------------------------------- */
 pre[class*='language-'] {
-	--background:	#f5f6fa;
-	--base:				#939797;
-	--comment:		#a0bfdf;
-	--keyword:		#73abd1;
-	--function:		#e48458;
-	--string:			#91b881;
+	--background:	var(--code-bg);
+	--base:				#a19e93;
+	--comment:		#afbfcf;
+	--keyword:		#5ba3d3;
+	--function:		#e4662b;
+	--string:			#86af75;
 	--tags:				var(--function);
 	--number:			var(--string);
 	--important:	var(--string);
-
-	--max-w:	34em;
 }
 
 /*	type-base ------------------------------ */
-code[class*='language-'],
-pre[class*='language-'] {
+.fonts-loaded code[class*='language-'],
+.fonts-loaded pre[class*='language-'] {
 	background: none;
 	text-align: left;
 	white-space: pre;
 	word-spacing: normal;
 	word-break: normal;
 	word-wrap: normal;
-	font: 300 1.7rem / 1.3 var(--font-mono);
-	color: var(--base);
+	font-family: var(--font-mono);
+	font-size: 1.7rem;
 	line-height: 1.3;
+	font-weight: 300;
+	color: var(--base);
 	tab-size: 2;
 	-webkit-hyphens: none;
 					hyphens: none;
@@ -41,21 +41,14 @@ pre[class*='language-'] {
 	overflow: auto;
 	padding: 3.2rem 4rem;
 	margin: .8rem 0 2.4rem;
-	max-width: var(--max-w);
+	width: var(--code-w);
 	border-radius: var(--border-r);
-	box-shadow: 0.1rem 0.1rem 0.4rem rgba(68, 68, 68, 0.2) inset;
+	box-shadow: 0.1rem 0.1rem 0.3rem rgba(68, 68, 68, 0.25) inset;
 }
 
 :not(pre) > code[class*='language-'],
 pre[class*='language-'] {
 	background: var(--background);
-}
-
-/*	inline-code ---------------------------- */
-:not(pre) > code[class*='language-'] {
-	padding: 0.1em;
-	border-radius: 0.3em;
-	white-space: normal;
 }
 
 /*	tokens --------------------------------- */
