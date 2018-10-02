@@ -30,6 +30,8 @@
 
 <script>
 	export default {
+		data: _ => ({show: false}),
+
 		onupdate({ changed, current, previous }) {
 			if (current.show) document.body.classList.add('css-debug')
 			else document.body.classList.remove('css-debug')
