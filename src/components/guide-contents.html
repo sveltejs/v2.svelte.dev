@@ -1,9 +1,17 @@
 <ul class='guide-toc'>
 	{#each $guide_contents as section}
 	<li>
-		<a class='section {section.slug === $activeGuideSection ? "active": ""}' href='guide#{section.slug}'>{section.metadata.title}</a>
+		<a class='section {section.slug === $activeGuideSection ? "active": ""}' href='guide#{section.slug}'>
+			{section.metadata.title} {#if section.slug === $activeGuideSection}
+			<Icon name='arrow-right' /> {/if}
+		</a>
+
 		{#each section.subsections as subsection}
-		<a class='subsection {subsection.slug === $activeGuideSection ? "active": ""}' href='guide#{subsection.slug}'>{subsection.title}</a>
+		<!-- see <script> below: on:click='scrollTo(event, subsection.slug)' -->
+		<a class='subsection {subsection.slug === $activeGuideSection ? "active": ""}' href='guide#{subsection.slug}'>
+			{subsection.title} {#if subsection.slug === $activeGuideSection}
+			<Icon name='arrow-right' /> {/if}
+		</a>
 		{/each}
 	</li>
 	{/each}
@@ -21,7 +29,7 @@
 	  text-transform: uppercase;
 	  letter-spacing: 0.1em;
 	  font-size: var(--h6);
-	  color: black;
+	  color: var(--second);
 	  margin-top: 4.8rem;
 	}
 
@@ -30,8 +38,15 @@
 	  font-size: var(--h6);
 	}
 
-	.section.active,
-	.subsection.active {
+	a:link {
+	  text-decoration: none;
+	}
+
+	a:hover {
+	  color: var(--flash);
+	}
+
+	.active {
 	  color: var(--prime);
 	}
 </style>
@@ -44,7 +59,28 @@
 			}
 		},
 
-		oncreate () {
+		components: {
+			Icon: './icon.html',
+		},
+
+		//	------------------------------------------
+		//	must be something that makes more sense
+		//	this one is too annoying (area too tall)
+		//	maybe svelte-transitions are a solution?
+		//	unfortunately I have no idea how. For now.
+		//	------------------------------------------
+		// methods: {
+		// 	scrollTo(e, item) {
+		// 		e.preventDefault();
+		// 		let top = document.querySelector('#' + item).getBoundingClientRect().top;
+		// 		window.scrollTo({
+  	// 			top,
+  	// 			behavior: "smooth"
+		// 		});
+		// 	}
+		// },
+
+		oncreate() {
 			const onhashchange = _ => {
 				this.store.set({ activeGuideSection: window.location.hash.slice( 1 ) });
 			};
