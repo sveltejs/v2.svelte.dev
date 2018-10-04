@@ -9,7 +9,7 @@
 			{section.metadata.title}
 			<small>
 				<a href='https://github.com/sveltejs/svelte.technology/edit/master/content/guide/{section.file}' title='edit this section'>
-					<Icon clas='prime' name='edit' /></a>
+					<Icon name='edit' /></a>
 			</small>
 		</h2>
 		{@html section.html}
@@ -17,60 +17,79 @@
 	{/each}
 </div>
 
-<div class='sidebar'>
-	<GuideContents ref:contents/>
-</div>
+<aside class='sidebar'>
+	<GuideContents ref:contents />
+</aside>
 
 <style>
 	.sidebar {
-	  position: fixed;
-	  top: 4rem;
-	  left: var(--page-side);
-	  width: var(--sidebar);
-	  height: calc(100vh - 4rem);
-	  display: none;
-	  font-family: var(--font-ui);
-	  overflow-y: auto;
+		position: fixed;
+		/* 6rem depending – see .content below */
+		top: calc(var(--nav-h) + 6rem);
+		left: var(--page-side);
+		width: var(--sidebar-w);
+		height: calc(100vh - var(--nav-h) - 4rem);
+		display: none;
+		font-family: var(--font-ui);
+		overflow-y: auto;
+		border-top: var(--border-w) solid var(--second);
 	}
 
 	.content {
-	  /* width: calc(100% - var(--page-side)); */
-	  /* padding: 0 0 0 calc(var(--page-side) + var(--sidebar)); */
-	  padding-left: calc(var(--page-side) + var(--sidebar));
-	  /* padding: 1em; */
-	  tab-size: 2;
-	}
-
-	/* icon needs :hover */
-	small {
-	  font-size: var(--h5);
-	  float: right;
-	  pointer-events: all;
-	  cursor: pointer;
-	}
-
-	section :global(blockquote) {
-	  color: var(--second);
-	  border: var(--border-w) solid currentColor;
-	  padding-left: 11%;
-	}
-
-	section :global(blockquote::before) {
-	  content: 'de';
-	  position: absolute;
-	  /* transform: translate(8%, 50%); */
-	  float: left;
-	  color: var(--prime);
-	  width: 1em;
-	  height: 1em;
-
-	  background-image: url('');
+		width: 100%;
+		/* 6rem depending – see .sidebar above */
+		padding: 6rem var(--page-side);
+		tab-size: 2;
 	}
 
 	@media (min-width: 768px) {
-	  .sidebar {
-	    display: block;
-	  }
+		.sidebar {
+			display: block;
+		}
+
+		.content {
+			padding-left: calc(var(--sidebar-w) + var(--page-side));
+		}
+	}
+
+	.content h2 {
+		margin-top: 16rem;
+		padding: 4.8rem 1.6rem 3.2rem;
+		border-top: var(--border-w) solid var(--second);
+		color: var(--second);
+	}
+
+	.content section:first-of-type>h2 {
+		margin-top: 0;
+	}
+
+	small {
+		font-size: var(--h5);
+		float: right;
+		pointer-events: all;
+		color: var(--prime);
+		cursor: pointer;
+	}
+
+	section {
+		padding-left: 4rem;
+	}
+
+	section :global(blockquote) {
+		color: var(--flash);
+		border: var(--border-w) solid currentColor;
+		padding-left: 8.8rem;
+	}
+
+	section :global(blockquote::before) {
+		content: ' ';
+		position: absolute;
+		left: 3.2rem;
+		transform: translateY(calc(50% - 0.6rem));
+		width: 3rem;
+		height: 3rem;
+		background-repeat: no-repeat;
+		background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='#40b3ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z'/%3E%3Cline x1='12' y1='9' x2='12' y2='13'/%3E%3Cline x1='12' y1='17' x2='12' y2='17'/%3E%3C/svg%3E");
 	}
 </style>
 

@@ -1,23 +1,20 @@
-
 <svelte:head>
 	<title>Svelte • The magical disappearing UI framework</title>
 </svelte:head>
 
-<div class='posts'>
+<div class='posts grid'>
 	{#each posts as post}
-		<article class='post'>
-			<a rel='prefetch' href='blog/{post.slug}'>
-				<h2>{post.metadata.title}</h2>
-				<p class='standfirst'>{post.metadata.description}</p>
-			</a>
+	<article class='post'>
+		<a rel='prefetch' href='blog/{post.slug}' title='Read the article »'>
+			<h2>{post.metadata.title}</h2>
+			<p>{post.metadata.description}</p>
+		</a>
 
-			<p class='byline'>
-				<a href='{post.metadata.authorURL}'>{post.metadata.author}</a>
-				<time datetime='{post.metadata.pubdate}'>{post.metadata.dateString}</time>
-
-				<a rel='prefetch' class='continue-reading' href='blog/{post.slug}'>continue reading &raquo;</a>
-			</p>
-		</article>
+		<p class='byline'>
+			<a href='{post.metadata.authorURL}'>{post.metadata.author}</a>
+			<time datetime='{post.metadata.pubdate}'>{post.metadata.dateString}</time>
+		</p>
+	</article>
 	{/each}
 </div>
 
@@ -25,54 +22,46 @@
 	.posts {
 		/* prevent scroll bar pop-in when navigating to post */
 		/* yes this is hacktacular */
-		min-height: calc(100vh - 3.9em);
+		min-height: calc(100vh - var(--nav-h));
+
+		padding: 10rem var(--page-side);
+		background-color: var(--back-light)
 	}
 
 	.post {
-		max-width: 48em;
-		margin: 0 auto;
-		padding: 1em;
-		/*padding: 0 0 2em 0;*/
+		display: flex;
+		flex-direction: column;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		align-items: center;
+		padding: 4rem 3.2rem 2.4rem;
+		background-color: var(--back);
+		border-radius: var(--border-r);
+		box-shadow: .2rem .2rem .8rem .1rem rgba(58, 58, 58, .25);
+		text-align: center;
 	}
 
 	h2 {
-		font-size: 1.8em;
-		margin: 0;
-		font-weight: 500;
-		color: #333;
+		margin: 1.6rem 0 2.4rem;
+		color: var(--second);
+		max-width: 15em;
 	}
 
-	.standfirst {
-		font-size: 1.4em;
-		font-family: Rajdhani, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-		line-height: 1.2;
-		color: #888;
-		font-weight: 500;
-	}
-
-	p {
-		margin: 0 0 1em 0;
-		line-height: 1.5;
+	a:hover>h2 {
+		color: var(--flash)
 	}
 
 	.byline {
-		font-size: 0.8em;
-		border-top: 1px solid #eee;
-		padding: 0.5em 0;
+		width: 100%;
+		margin-top: 4rem;
+		padding: 1.6rem 0 0 0;
+		border-top: var(--border-w) solid var(--second);
+		font: 300 1.2rem/1.7 var(--font-mono);
 	}
 
-	time {
-		/*float: right;*/
-	}
-
-	p {
-		color: #666;
-	}
-
-	@media (min-width: 768px) {
-		h2 {
-			font-size: 2.4em;
-		}
+	.byline a {
+		display: block;
+		font-weight: 500;
 	}
 </style>
 
