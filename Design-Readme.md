@@ -1,13 +1,14 @@
 **Work in progress**
 
-Hi all,
-so I've done it.
-I forked the svelte.technology-repo and styled the page along my style-drafts. Opinions are welcome.
+Hi all,  
+so I've done it.  
+I forked the svelte.technology-repo and styled the page along my [style-drafts](https://github.com/sveltejs/svelte.technology/issues/335#issuecomment-421912789).  
+Opinions are welcome.
 
-I also replied on an issue by @rich_harris concerning syntax-highlighting and wanted to throw these thought into discussion too.
+I also replied on an issue by @rich_harris concerning syntax-highlighting and wanted to throw these thought into discussion too.  
 Just have to find it again...wait...ahh...[here #316](https://github.com/sveltejs/svelte.technology/pull/316)
 
-and have fun
+and have fun  
 Achim
 
 
