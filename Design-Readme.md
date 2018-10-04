@@ -1,4 +1,4 @@
-#####Work in progress
+**Work in progress**
 
 Hi all,
 so I've done it.
@@ -14,7 +14,7 @@ Achim
 
 ---
 
-#####Still on the list
+**Still on the list**
 
 - [ ] **aarrghh. Browser-Tests** (developed with **Chrome**)
 	Just saw:
@@ -80,7 +80,7 @@ Achim
 
 ---
 
-#####Is it bad to use global.css?
+**Is it bad to use global.css?**
 
 I thought for main stuff it makes sense to define common stuff in global.css than to "overload" <style> in routes.
 
@@ -104,7 +104,7 @@ for fastest possible load.
 
 ---
 
-##### Some Questions
+**Some Questions**
 
 - Is an agressive font-subsetting OK?
 - Is this @web-font load ok?
