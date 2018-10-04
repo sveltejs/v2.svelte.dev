@@ -1,50 +1,53 @@
+<!--
+-----------------------------------------------
+	syntax-highlighting [prism]
+	NOTE
+	- just started to transfer colors from prism to codemirror
+-----------------------------------------------
+-->
 {#await codemirrorPromise}
-	<p class='loading'>loading editor...</p>
+<p class='loading'>loading editor...</p>
 {:then _}
-	<div class='codemirror-container'>
-		<textarea tabindex='2' ref:editor></textarea>
+<div class='codemirror-container'>
+	<textarea tabindex='2' ref:editor></textarea>
 
-		{#if error}
-			<p class='error message'>
-				{#if error.loc}
-					<strong>
-						{#if error.filename}
-							<span class='filename' on:click='fire("navigate", error.filename)'>{error.filename}</span>
-						{/if}
+	{#if error}
+	<p class='error message'>
+		{#if error.loc}
+		<strong>
+			{#if error.filename}
+			<span class='filename' on:click='fire("navigate", error.filename)'>{error.filename}</span>
+			{/if}
 
-						({error.loc.line}:{error.loc.column})
-					</strong>
-				{/if}
-
-				{error.message}
-			</p>
-		{:elseif warningCount > 0}
-			<p class='warning message'>
-				Compiled, but with {warningCount} {warningCount === 1 ? 'warning' : 'warnings'} — check the console for details
-			</p>
+			({error.loc.line}:{error.loc.column})
+		</strong>
 		{/if}
-	</div>
+
+		{error.message}
+	</p>
+	{:elseif warningCount > 0}
+	<p class='warning message'>
+		Compiled, but with {warningCount} {warningCount === 1 ? 'warning' : 'warnings'} — check the console for details
+	</p>
+	{/if}
+</div>
 {:catch err}
-	<p class='error'>error loading CodeMirror</p>
+<p class='error'>error loading CodeMirror</p>
 {/await}
 
 <style>
 	.codemirror-container {
 		width: 100%;
-		border-top: 1px solid #ccc;
-		border-bottom: 1px solid #ccc;
-		margin: 0 0 1em 0;
 	}
 
 	.codemirror-container :global(.CodeMirror) {
-		border-radius: 3px;
-		font-family: Inconsolata, monospace;
-		font-size: 16px;
-		line-height: 1.2;
-		font-weight: 400;
-		color: #333;
 		height: auto;
 		min-height: 60px;
+		padding: 2rem 0 2.4rem;
+		background: var(--background);
+		font: 300 1.2rem/1.7 var(--font-mono);
+		color: var(--base);
+
 	}
 
 	@media (min-width: 768px) {
@@ -59,11 +62,7 @@
 	}
 
 	.codemirror-container :global(.CodeMirror-gutters) {
-		border-right: 1px solid #eee;
-	}
-
-	textarea {
-		width: 100%;
+		padding: 0 1.6rem 0 .8rem;
 		border: none;
 	}
 
@@ -76,18 +75,24 @@
 
 	.codemirror-container :global(.error-loc) {
 		position: relative;
-		border-bottom: 2px solid rgb(200,0,0);
+		border-bottom: 2px solid rgb(255, 0, 0);
 	}
 
 	.codemirror-container :global(.error-line) {
-		background-color: rgba(200,0,0,0.05);
+		background-color: rgba(200, 0, 0, 0.05);
 	}
 
-	.loading, .error {
+	.loading,
+	.error {
 		text-align: center;
 		color: #999;
 		font-weight: 300;
 		margin: 2em 0 0 0;
+	}
+
+	textarea {
+		width: 100%;
+		border: none;
 	}
 </style>
 

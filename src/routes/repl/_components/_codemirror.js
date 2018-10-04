@@ -1,5 +1,5 @@
 const CodeMirror = require('codemirror');
-require('codemirror/lib/codemirror.css');
+require('./codemirror.css');
 require('codemirror/mode/javascript/javascript.js');
 require('codemirror/mode/shell/shell.js');
 require('codemirror/mode/handlebars/handlebars.js');

@@ -1,21 +1,14 @@
 <div ref:editorWrapper class='editor-wrapper {flip}'>
 	{#if selectedComponent}
-		{#if showGenerated}
-			<CodeMirror ref:cm mode='javascript' code='{compiled}' readonly/>
-		{:else}
-			<CodeMirror
-				ref:cm
-				mode='{selectedComponent.type === "js" ? "javascript" : "handlebars"}'
-				bind:code='selectedComponent.source'
-				{error}
-				{errorLoc}
-				{warningCount}
-				on:navigate
-			/>
-		{/if}
+	{#if showGenerated}
+	<CodeMirror ref:cm mode='javascript' code='{compiled}' readonly />
+	{:else}
+	<CodeMirror ref:cm mode='{selectedComponent.type === "js" ? "javascript" : "handlebars"}' bind:code='selectedComponent.source'
+	 {error} {errorLoc} {warningCount} on:navigate />
+	{/if}
 	{/if}
 
-	<button class='btn toggle' on:click='flip()'>
+	<button class='toggle bg-second white' on:click='flip()'>
 		<span class='flip-text'>{showGenerated ? 'output' : 'input'}</span>
 	</button>
 </div>
@@ -29,12 +22,9 @@
 
 	.toggle {
 		position: absolute;
-		bottom: 1em;
-		right: 1em;
+		bottom: 1.2rem;
+		right: 2rem;
 		z-index: 10;
-		background: white url(/icons/flip.svg) no-repeat calc(100% - 0.7em) 50%;
-		background-size: 1.4em 1em;
-		padding-right: 2.5em !important;
 	}
 
 	.flip-out {
@@ -54,13 +44,23 @@
 	}
 
 	@keyframes flip-out {
-		from { transform: rotateY(0deg); }
-		to { transform: rotateY(90deg); }
+		from {
+			transform: rotateY(0deg);
+		}
+
+		to {
+			transform: rotateY(90deg);
+		}
 	}
 
 	@keyframes flip-in {
-		from { transform: rotateY(-90deg); }
-		to { transform: rotateY(0deg); }
+		from {
+			transform: rotateY(-90deg);
+		}
+
+		to {
+			transform: rotateY(0deg);
+		}
 	}
 
 	@media (min-width: 768px) {

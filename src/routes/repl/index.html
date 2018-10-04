@@ -3,65 +3,34 @@
 </svelte:head>
 
 <div class="repl-outer {$zenMode ? 'zen-mode' : ''}">
-	<AppControls
-		{examples}
-		{bundle}
-		{components}
-		{data}
-		{json5}
-		{gist}
-		bind:name
-		on:select='set({ demo: event.slug, gist: null })'
-		on:forked='set({ gist: event.gist })'
-	/>
+	<AppControls {examples} {bundle} {components} {data} {json5} {gist} bind:name on:select='set({ demo: event.slug, gist: null })'
+	 on:forked='set({ gist: event.gist })' />
 
 	<div class='repl-inner'>
 		<SplitPane type=horizontal on:resize='resizePanes(["editor", "data"])'>
 			<section slot=a class='input'>
-				<ComponentSelector
-					ref:selector
-					{components}
-					bind:selectedComponent
-					on:create='createComponent()'
-					on:remove='removeComponent()'
-				/>
+				<ComponentSelector ref:selector {components} bind:selectedComponent on:create='createComponent()' on:remove='removeComponent()' />
 
-				<ModuleEditor
-					ref:editor
-					bind:selectedComponent
-					{compiled}
-					error='{sourceError}'
-					errorLoc='{sourceErrorLoc || runtimeErrorLoc}'
-					{warningCount}
-					on:navigate='navigate(event)'
-				/>
+				<ModuleEditor ref:editor bind:selectedComponent {compiled} error='{sourceError}' errorLoc='{sourceErrorLoc || runtimeErrorLoc}'
+				 {warningCount} on:navigate='navigate(event)' />
 			</section>
 
 			<div slot=b style='height: 100%;'>
 				<SplitPane type=vertical on:resize='resizePanes(["data"])'>
-					<div class=pane slot=a >
+					<div class=pane slot=a>
 						<h2 class='show-if-mobile'>Rendered component</h2>
 
 						{#if compilerReady}
-							<Viewer
-								{bundle}
-								{dom}
-								{ssr}
-								{data}
-								{sourceError}
-								bind:error='runtimeError'
-								on:data='updateData(event.current)'
-								on:navigate='navigate(event)'
-							/>
-						{:else}
-							<p class='loading'>loading Svelte compiler...</p>
+						<Viewer {bundle} {dom} {ssr} {data} {sourceError} bind:error='runtimeError' on:data='updateData(event.current)'
+						 on:navigate='navigate(event)' /> {:else}
+						<p class='loading'>loading Svelte compiler...</p>
 						{/if}
 					</div>
 
-					<div class=pane slot=b >
+					<div class=pane slot=b>
 						<h2 class='show-if-mobile'>data.json5</h2>
 
-						<CodeMirror ref:data mode='json' bind:code='json5' error='{dataError}' errorLoc='{dataErrorLoc}'/>
+						<CodeMirror ref:data mode='json' bind:code='json5' error='{dataError}' errorLoc='{dataErrorLoc}' />
 					</div>
 				</SplitPane>
 			</div>
@@ -71,9 +40,7 @@
 
 <style>
 	.repl-outer {
-		min-height: calc(100vh - 3em);
-		padding: 3em 0 0 0;
-		background-color: #f4f4f4;
+		min-height: calc(100vh - var(--nav-h));
 	}
 
 	.repl-inner {
@@ -99,8 +66,8 @@
 
 		.repl-outer {
 			min-height: auto;
-			height: calc(100vh - 4em);
-			background-color: white;
+			min-height: calc(100vh - var(--nav-h));
+			background-color: var(--back);
 			overflow: hidden;
 		}
 
@@ -120,7 +87,7 @@
 
 	.loading {
 		text-align: center;
-		color: #999;
+		color: var(--second);
 		font-weight: 300;
 		margin: 2em 0 0 0;
 		opacity: 0;
@@ -130,8 +97,13 @@
 	}
 
 	@keyframes fade-in {
-		0% { opacity: 0 };
-		100% { opacity: 1 };
+		0% {
+			opacity: 0;
+		}
+
+		100% {
+			opacity: 1;
+		}
 	}
 
 	.input {
@@ -144,28 +116,6 @@
 		.input {
 			perspective-origin: 50% 50%;
 		}
-	}
-
-	.repl-outer :global(button) {
-		font-family: Rajdhani, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-		font-size: inherit;
-		/* background-color: white;
-		cursor: pointer; */
-		outline: none;
-		line-height: 1;
-		border: none;
-	}
-
-	.repl-outer :global(.btn) {
-		display: block;
-		float: right;
-		padding: calc(0.5em - 1px) 1em;
-		margin: 0 0 0 0.5em;
-		border-radius: 2px;
-		color: rgb(170,30,30);
-		border: 1px solid rgba(170,30,30,0.3);
-		font-weight: 500;
-		box-sizing: border-box;
 	}
 
 	.repl-inner :global(.message) {
@@ -194,11 +144,11 @@
 	}
 
 	.repl-inner :global(.error.message) {
-		background-color: rgb(170,30,30);
+		background-color: rgb(170, 30, 30);
 	}
 
 	.repl-inner :global(.warning.message) {
-		background-color: rgb(160,100,30);
+		background-color: rgb(160, 100, 30);
 	}
 
 	.repl-inner :global(.info.message) {

@@ -2,137 +2,71 @@
 	<div class="panel-header">
 		<ul ref:files class="file-tabs" on:dblclick='fire("create")'>
 			{#each components as component}
-				<li
-					id='{component.name}'
-					class='{ selectedComponent == component ? "active" : "" }'
-					data-name='{component.name}'
-					on:dblclick='event.stopPropagation()'
-				>
-					<div
-						class='file-tabs-item {component.edit ? "edit-mode" : ""}'
-						on:click='selectComponent(component, selectedComponent)'
-					>
-						{#if component.name == 'App'}
-							<div class='uneditable'>
-								App.html
-							</div>
-						{:else}
-							{#if component.edit}
-								<input
-									autofocus
-									ref:name
-									bind:value='component.name'
-									on:focus='selectInput(this)'
-									on:blur='closeEdit(selectedComponent)'
-									on:enter='this.blur()'
-								/>
-							{:else}
-								<div class='editable' title='edit component name' on:click='editTab(component, selectedComponent)'>
-									{component.name}.{component.type}
-								</div>
-							{/if}
-							<span class='remove' on:click='remove(component)'>&times;</span>
-						{/if}
+			<li id='{component.name}' class='{ selectedComponent == component ? "active" : "" }' data-name='{component.name}'
+			 on:dblclick='event.stopPropagation()'>
+				<div class='file-tabs-item {component.edit ? "edit-mode" : ""}' on:click='selectComponent(component, selectedComponent)'>
+					{#if component.name == 'App'}
+					<div class='uneditable'>
+						App.html
 					</div>
-				</li>
+					{:else}
+					{#if component.edit}
+					<input autofocus ref:name bind:value='component.name' on:focus='selectInput(this)' on:blur='closeEdit(selectedComponent)'
+					 on:enter='this.blur()' />
+					{:else}
+					<div class='editable' title='edit component name' on:click='editTab(component, selectedComponent)'>
+						{component.name}.{component.type}
+					</div>
+					{/if}
+					<span class='remove' on:click='remove(component)'>
+						<Icon name='close' />
+						<!-- &times; -->
+					</span>
+					{/if}
+				</div>
+			</li>
 			{/each}
 		</ul>
 	</div>
 
 	<div class="btn-action-container">
-		<button class='add-new' on:click='fire("create")' title="add new component">
-			<span>+</span>
-		</button>
+		<a on:click='fire("create")' title="add new component">
+			<Icon name='plus' />
+		</a>
 	</div>
 </div>
 
 <style>
 	.component-selector {
+		--selector-height: 4.2rem;
 		position: absolute;
 		top: 0;
-		left: 0;
+		left: 3.2rem;
 		width: 100%;
 		border-bottom: 1px solid #eee;
-		height: 2.4em;
-	}
-
-	.module-name {
-		position: relative;
-		display: block;
-	}
-
-	.panel-header {
-		padding: 0 40px 0.5em 0;
+		height: var(--selector-height);
 	}
 
 	.file-tabs-item {
 		display: block;
 		padding: calc(0.5em - 1px);
 		background: white;
-		font-family: Rajdhani, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-		border-bottom: 1px solid #eee;
 		border-radius: 0;
-		color: #333;
 		position: relative;
-		padding: 0.2em 0 0 0;
 		margin: 0;
-		height: 2.4em;
-		box-sizing: border-box;
-		line-height: 1.4;
-		font-weight: 300;
-	}
-
-	.dropdown {
-		position: relative;
-		display: block;
-		float: left;
-		padding: 0 2em 0 0;
-	}
-
-	.dropdown::after {
-		content: '▼';
-		position: absolute;
-		right: 1rem;
-		top: 0.55rem;
-		font-size: 0.8em;
-		color: #999;
-		pointer-events: none;
-	}
-
-	.input-wrapper {
-		position: relative;
-		display: block;
-		float: left;
-		line-height: 1;
-		/* margin: 0 0.3em 0 0; */
+		height: var(--selector-height);
+		font: 300 1.2rem/1.5 var(--font-ui);
+		color: var(--second);
 	}
 
 	input {
 		width: 100%;
-		/* background-color: #e7e7e7; */
-		font-size: 16px;
-		font-family: Rajdhani, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+		padding: 1rem 1.2rem .5rem;
+		font-size: 1.3rem;
+		font-family: var(--font-ui);
 		border: none;
-		color: #aa1e1e;
-		padding: 0.4em 0.7em 0.4em 0.5em;
+		color: var(--flash);
 		outline: none;
-	}
-
-	.widther {
-		display: block;
-		font-family: inherit;
-		font-size: inherit;
-		border: 1px solid #eee;
-		padding: calc(0.5em - 1px) 0.25em;
-		line-height: 1;
-	}
-
-	.file-extension {
-		display: inline-block;
-		padding: calc(0.5em - 1px) 0;
-		color: #999;
-		left: -0.2em;
-		pointer-events: none;
 	}
 
 	.file-tabs {
@@ -143,52 +77,46 @@
 		white-space: nowrap;
 		overflow-x: auto;
 		overflow-y: hidden;
+
 	}
 
-	.file-tabs > li {
+	.file-tabs>li {
 		display: inline-block;
 		float: none;
 		margin-bottom: 0;
-		margin: 0 0.5em 0 0;
 		vertical-align: top;
-	}
 
-	.file-tabs li.active {
-		background-color: #fff;
 	}
 
 	.file-tabs li.active .file-tabs-item {
-		border-bottom: 1px solid #666;
+		border-bottom: var(--border-w) solid var(--prime);
 	}
 
-	/* .file-tabs-item:hover {
-		border: none;
-	} */
-
-	.file-tabs-input {
-		padding: 10px 15px;
-	}
-
-	.editable, .uneditable {
+	.editable,
+	.uneditable {
 		display: inline-block;
-		margin-right: 4px;
-		padding: 0.4em 0.7em 0.4em 0.5em;
+		margin-right: 2.4rem;
+		padding: .8rem 0.4rem;
 		position: relative;
 	}
 
 	.uneditable {
-		padding-left: 1em;
+		padding-left: 1.2rem;
 	}
 
 	.remove {
 		position: absolute;
 		display: none;
-		right: 0;
-		width: 20px;
+		right: .4rem;
+		top: .4rem;
+		width: 2.2rem;
 		text-align: right;
 		padding: 0.7em 0 0.5em 0.5em;
-		top: 0;
 		cursor: pointer;
+	}
+
+	.remove:hover {
+		color: var(--flash);
 	}
 
 	li.active .editable {
@@ -201,31 +129,10 @@
 
 	.btn-action-container {
 		position: absolute;
-		right: 0;
-		top: 0;
-	}
+		left: -2rem;
+		top: .8rem;
+		height: var(--selector-height);
 
-	button.add-new {
-		border: none;
-		width: 2.4em;
-		height: 2.4em;
-		color: #999;
-		background: none;
-	}
-
-	.add-new span {
-		position: absolute;
-		font-size: 2em;
-		font-weight: 300;
-		top: 0;
-		line-height: 1.3;
-		left: 0;
-		width: 100%;
-	}
-
-	.add-new:hover {
-		border: none;
-		color: #333;
 	}
 </style>
 
@@ -233,6 +140,10 @@
 	import { enter } from './events.js';
 
 	export default {
+		components: {
+			Icon: '../../../components/icon.html', // is this bad practise?
+		},
+
 		methods: {
 			selectComponent(component, selectedComponent) {
 				const { components } = this.get();
