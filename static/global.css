@@ -1,7 +1,9 @@
 /*
 -----------------------------------------------
 	global styles
-	NOTE – !important overrides class-definitions
+	NOTE
+	– !important overrides class-definitions
+	- some theme-vars change inside media-queries
 -----------------------------------------------
 */
 
@@ -15,10 +17,6 @@
 	--out-cubic:   cubic-bezier(0.215, 0.61, 0.355, 1);
 	--inout-cubic: cubic-bezier(0.645, 0.045, 0.355, 1);
 
-	--in-expo:     cubic-bezier(0.95, 0.05, 0.795, 0.035);
-	--out-expo:    cubic-bezier(0.19, 1, 0.22, 1);
-	--inout-expo:  cubic-bezier(1, 0, 0, 1);
-
 	--in-back:     cubic-bezier(0.6, -0.28, 0.735, 0.045);
 	--out-back:    cubic-bezier(0.175, 0.885, 0.32, 1.275);
 	--inout-back:  cubic-bezier(0.68, -0.55, 0.265, 1.55);
@@ -26,25 +24,20 @@
 
 /*	theme vars ----------------------------- */
 .theme-default {
-	--back:    #ffffff;
-	--prime:   #ff3e00;
-	--second:  #676778;
-	--flash:    #40b3ff;
-	--text:    #a09e9b;
-	--code-bg: #f6f7f8;
+	--back:       #ffffff;
+	--prime:      #ff3e00;
+	--second:     #676778;
+	--flash:       #40b3ff;
+	--text:       #a09e9b;
+	--back-light: #f6f7f8;
 
-	--nav-side:  3.2rem;  /* page-side-padding */
-	--sidebar:    24rem;  /* sidebar-width */
-	--nav-h:      10rem;  /* navigation-height */
-	--code-w:      34em;  /* codeblock-width */
-	--border-w:   .3rem;  /* border-width */
-	--border-r:   .4rem;  /* border-radius */
-}
-
-@media screen and (min-width: 767px) {
-	.theme-default {
-		--page-side: 5.6rem;
-	}
+	--nav-h:    10rem;            /* navigation-height */
+	--nav-side:  4rem;            /* nav-side-padding */
+	--page-side: var(--nav-side); /* page-side-padding */
+	--sidebar-w: 24rem;           /* sidebar-width */
+	--code-w:    48em;            /* codeblock-width */
+	--border-w:  .3rem;           /* border-width */
+	--border-r:  .4rem;           /* border-radius */
 }
 
 /*	typo vars ------------------------------ */
@@ -54,14 +47,14 @@
 	--h5:   1.5rem;
 	--h4:   1.7rem;
 	--h3:   1.8rem;
-	--h2:   2.4rem;
+	--h2:   2rem;
 	--h1:   3.2rem;
-	--lh:   calc(4/2.4);  /* base line-height */
+	--lh:   calc(4/2.2);  /* base line-height */
 }
 
 /*	typography ----------------------------- */
 body {
-	font: 300 var(--h4) / var(--lh) var(--font);
+	font: 300 var(--h4)/var(--lh) var(--font);
 	background-color: var(--back);
 	color: var(--text);
 }
@@ -70,9 +63,7 @@ h1, h2, h3, h4, h5, h6, p, li, blockquote {
 	margin-bottom: .8rem;
 }
 
-p, li {
-	max-width: 28em; /* max line-length ~60 chars */
-}
+p { max-width: 28em } /* max line-length ~60 chars */
 
 h1, h2, h3, h4, h5, h6 { font-weight: 300 }
 h6 { font-size: var(--h6) }
@@ -89,8 +80,9 @@ i, em {
 	font-style: normal;
 }
 
-a:hover > .icon {
-	stroke: var(--flash);
+
+tt, code, kbd, samp {
+	font: 300 1.2rem/1.7 var(--font-mono);
 }
 
 :not(pre) > p > code {
@@ -100,7 +92,7 @@ a:hover > .icon {
 	margin: 0 .2rem;
 	border-radius: 0.3em;
 	white-space: nowrap;
-	background: var(--code-bg);
+	background: var(--back-light);
 	border-top: .1rem solid #e5e5e9;
 	border-left: .1rem solid #e5e5e9;
 	/* color: inherit; */
@@ -112,22 +104,69 @@ a:hover > .icon {
 	color: white;
 }
 
+/*  links -------------------------------------
+		- got idea from https://up.docs.apex.sh
+		- setup for all links in section is risky/tricky
+		- maybe I'll come up with a more practicable solution
+*/
+section p > a {
+	position: relative;
+	padding: 0 .5rem .1rem;
+	border-bottom: .1rem solid hsla(15, 100%, 50%, 0.5);
+  user-select: none;
+	white-space: nowrap;
+	color: inherit;
+	transition: color .3s;
+}
+
+section p > a:before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 2.8rem;
+  bottom: -.2rem;
+  left: 0;
+	background-color: var(--flash);
+	border-radius: var(--border-r);
+  visibility: hidden;
+	mix-blend-mode: color-dodge; /* exclusion */
+	transform: scaleX(0);
+	transform-origin: left center;
+  transition: all .3s var(--out-back);
+}
+
+section p > a:hover,
+section p > a:active  {
+  color: var(--flash);
+}
+
+section p > a:hover:before  {
+  visibility: visible;
+  transform: scaleX(1);
+}
+
+a:hover > .icon {
+	stroke: var(--flash);
+}
+
 /*	opinionated styles --------------------- */
 h1, h2 {
 	font-family: var(--font-alt);
-	letter-spacing: 0.2rem;
+	letter-spacing: 0.17em;
 	text-transform: uppercase;
-	line-height: calc(4/3.3);
-	color: var(--second);
+	line-height: calc(4/3);
 	pointer-events: none;
 }
 
+h1 {
+	letter-spacing: 0.1em;
+}
 
 h3, h3 > code {
 	pointer-events: none;
 	font-family: var(--font-ui);
 	color: black;
-	font-weight: 600;
+	/* font-weight: 600; */
 	padding-top: 6.4rem;
 }
 
@@ -138,7 +177,7 @@ blockquote {
 	border-radius: var(--border-r);
 	font-family: var(--font);
 	font-size: var(--h5);
-	width: var(--code-w);
+	width: 38.3em;
 }
 
 blockquote > p { max-width: none }
@@ -161,20 +200,62 @@ table span {
 }
 
 /*	helper styles -------------------------- */
+.list-reset {
+	list-style: none;
+}
+
+li:not(.white) > h2 {
+	color: var(--second)
+}
+
+.align-c { text-align: center }
+
+.page-padding {
+	padding-left: var(--page-side);
+	padding-right: var(--page-side);
+}
+
+.grid {
+	display: grid;
+	grid-gap: 3.2rem;
+	grid-template-columns: 1fr;
+}
+
+.legend {
+	padding: 1.6rem 0 2.4rem;
+  color: var(--second);
+  font: 1rem/1.2 var(--font-ui);
+}
+
 .filename {
 	display: inline-block;
 	padding: 1.6rem 0 0 1rem;
 	font: var(--h6) var(--font-ui);
 }
 
+.box {
+  padding: 2.4rem 3.2rem;
+  border-radius: var(--border-r);
+  font-size: var(--h5);
+}
+
+.box > svg {
+  margin: 1.6rem 0 2.4rem;
+}
+
+.box > h2,
+.box > p {
+  font-size: var(--h5);
+}
+
 .open-in-repl {
 	position: absolute;
-	margin-top: 5.8rem;
+	margin-top: 5.4rem;
 	margin-left: -2.2rem;
 	width: 3.6rem;
 	height: 3.6rem;
 	padding: .8rem;
-	background-color: var(--code-bg);
+	background-color: var(--back-light);
 	border-radius: 50%;
 	border-left: .1rem solid #c7c6c6;
 }
@@ -183,8 +264,92 @@ table span {
 .prime      { color: var(--prime) !important }
 .second     { color: var(--second) !important }
 .flash       { color: var(--flash) !important }
+.black      { color: black !important }
+.white      { color: white !important }
 
-.bg-back    { background-color: var(--back) !important }
+.back       { background-color: var(--back) !important }
+.back-light { background-color: var(--back-light) !important }
 .bg-prime   { background-color: var(--prime) !important }
 .bg-second  { background-color: var(--second) !important }
 .bg-flash    { background-color: var(--flash) !important }
+
+/*  buttons -------------------------------- */
+button {
+  --btn-h: 4rem;  /* button-height */
+  --btn-outline: var(--border-w);
+  --btn-font: var(--font-ui);
+  --btn-calc-height: calc(var(--btn-h) - var(--btn-outline) * 2);
+  --btn-hover: linear-gradient(
+    to top, rgba(0,0,0,.05), rgba(0,0,0,.05)
+  );
+  --btn-active: linear-gradient(
+    to top, rgba(255,255,255,.2), rgba(255,255,255,.2)
+  );
+
+  position: relative;
+  margin: 0 .8rem .8rem 0;
+  vertical-align: middle;
+  white-space: nowrap;
+  display: inline-block;
+  zoom: 1;
+  border: none transparent;
+  /* border: none rgba(0, 0, 0, 0); */
+	font: 1.3rem var(--btn-font);
+	border-radius: var(--border-r);
+  color: currentColor;
+  letter-spacing: .05em;
+  cursor: pointer;
+}
+
+button:focus { outline: 0 }
+
+button[disabled] {
+  opacity: .55;
+  pointer-events: none;
+}
+
+button > svg {
+  position: relative;
+  top: -.1rem;
+  width: 2rem !important;
+  height: 2rem !important;
+}
+
+/*  default */
+button {
+  min-height: var(--btn-h);
+  line-height: var(--btn-h);
+  padding: 0 1.6rem;
+  transition: all .1s;
+}
+
+button:hover  { background-image: var(--btn-hover) }
+button:active { background-image: var(--btn-active) }
+
+/*  options */
+button[outline] {
+  min-height: var(--btn-calc-height);
+  line-height: var(--btn-calc-height);
+  border: var(--btn-outline) solid currentColor;
+  background-color: white;
+  color: currentColor;
+}
+
+/*  media-queries -------------------------- */
+@media (min-width: 768px) {
+  .theme-default {
+    --page-side: 12rem;
+  }
+}
+
+@media (min-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 1100px) {
+  .grid {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
