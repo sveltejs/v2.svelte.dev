@@ -19,9 +19,9 @@
 		z-index: 3000;
 	}
 
-	label:hover	{ opacity: 1 }
-	input				{ display: none }
-	.active			{ color: var(--flash) !important }
+	label:hover { opacity: 1 }
+	input       { display: none }
+	.active     { color: var(--flash) !important }
 
 	:global(.css-debug *) {
 		outline: 1px solid hsla(202, 83%, 61%, 0.25);
@@ -30,7 +30,7 @@
 
 <script>
 	export default {
-		data: _ => ({show: false}),
+		data: _ => ({ show: false }),
 
 		onupdate({ changed, current, previous }) {
 			if (current.show) document.body.classList.add('css-debug')
