@@ -29,15 +29,26 @@
   }
 
   /* input-color-reset */
-  ::-webkit-color-swatch { border: none }
-  ::-webkit-color-swatch-wrapper { padding: 0 }
+  ::-webkit-color-swatch {
+    border: none
+  }
+
+  ::-webkit-color-swatch-wrapper {
+    padding: 0
+  }
+
   ::-moz-color-swatch,
-  ::-moz-focus-inner { border: none }
-  ::-moz-focus-inner { padding: 0 }
+  ::-moz-focus-inner {
+    border: none
+  }
+
+  ::-moz-focus-inner {
+    padding: 0
+  }
 </style>
 
 <script>
-  import cssprop from './lib/css-custom-properties.js';
+  import cssprop from '../utils/css-custom-properties.js';
 
   export default {
     oncreate() {
