@@ -2,17 +2,17 @@
 <DebugCss style='bottom:1.2rem; right:2rem;' />
 
 <InlineSvg />
-<Nav segment={child.segment}/>
+<Nav segment={child.segment} />
 <main role='main'>
-	<svelte:component this={child.component} {...child.props}/>
+	<svelte:component this={child.component} {...child.props} />
 </main>
 
 <style>
 	main {
-	  position: relative;
-	  padding-top: var(--nav-h);
-	  margin: 0 auto;
-	  overflow-x: hidden;
+		position: relative;
+		padding-top: var(--nav-h);
+		margin: 0 auto;
+		overflow-x: hidden;
 	}
 </style>
 
@@ -21,7 +21,7 @@
 		components: {
 			InlineSvg: '../components/inline-svg.html',
 			DebugCss: '../components/debug-css.html',
-			Nav: '../components/nav.html',
+			Nav: '../components/top-nav.html',
 		}
 	};
 </script>
