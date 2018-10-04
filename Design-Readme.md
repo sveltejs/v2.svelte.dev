@@ -6,7 +6,7 @@ I forked the svelte.technology-repo and styled the page along my [style-drafts](
 Opinions are welcome.
 
 I also replied on an issue by @rich_harris concerning syntax-highlighting and wanted to throw these thought into discussion too.  
-Just have to find it again...wait...ahh...[here #316](https://github.com/sveltejs/svelte.technology/pull/316)
+Just have to find it again...wait...ahh...[here #316](https://github.com/sveltejs/svelte.technology/pull/316#issuecomment-425632718)
 
 and have fun  
 Achim
