@@ -1,6 +1,3 @@
 {
-  "editor.formatOnSave": true,
-  "editor.fontSize": 10,
-  "editor.insertSpaces": false,
-  "editor.wordWrap": "on"
+  "editor.formatOnSave": true
 }
