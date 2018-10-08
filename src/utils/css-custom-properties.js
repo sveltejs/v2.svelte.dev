@@ -8,7 +8,7 @@
 -----------------------------------------------
 */
 
-class CustomProperties {
+export default class CustomProperties {
   constructor() {
     this.root = document.documentElement;
   }
@@ -28,5 +28,3 @@ class CustomProperties {
     return String(getComputedStyle(el).getPropertyValue(name)).trim();
   }
 }
-
-export default new CustomProperties(); // init
