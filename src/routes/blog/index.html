@@ -2,7 +2,7 @@
 	<title>Svelte • The magical disappearing UI framework</title>
 </svelte:head>
 
-<div class='posts grid'>
+<div class='posts grid stretch'>
 	{#each posts as post}
 	<article class='post'>
 		<a rel='prefetch' href='blog/{post.slug}' title='Read the article »'>
@@ -10,10 +10,10 @@
 			<p>{post.metadata.description}</p>
 		</a>
 
-		<p class='byline'>
+		<div class='byline'>
 			<a href='{post.metadata.authorURL}'>{post.metadata.author}</a>
 			<time datetime='{post.metadata.pubdate}'>{post.metadata.dateString}</time>
-		</p>
+		</div>
 	</article>
 	{/each}
 </div>
@@ -42,14 +42,25 @@
 	}
 
 	h2 {
-		margin: 1.6rem 0 2.4rem;
+		display: inline-block;
+		margin: 1.6rem 0;
 		color: var(--second);
-		max-width: 15em;
+		max-width: 18em;
 	}
 
-	a:hover>h2 {
+	.post > p {
+		font-size: var(--h5);
+		max-width: 30em;
+	}
+
+	/* fast link-reset */
+	.posts a { all: unset; cursor: pointer }
+	
+	.posts a:hover,
+	.posts a:hover > h2 {
 		color: var(--flash)
 	}
+
 
 	.byline {
 		width: 100%;
@@ -61,8 +72,11 @@
 
 	.byline a {
 		display: block;
-		font-weight: 500;
+		color: var(--second);
+		font-weight: 600;
 	}
+
+	.byline a:hover { color: var(--flash) }
 </style>
 
 <script>

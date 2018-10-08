@@ -14,10 +14,7 @@
 
 <style>
 	.post {
-		max-width: 48em;
-		margin: 0 auto 4em auto;
-		padding: 1em;
-		/*padding: 0 0 2em 0;*/
+		padding: var(--top-offset) var(--side-page);
 	}
 
 	.byline {
@@ -26,33 +23,26 @@
 		padding: 0.5em 0;
 	}
 
-	.post .standfirst {
-		font-size: 1.4em;
-		font-family: Rajdhani, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-		line-height: 1.2;
-		color: #888;
-		font-weight: 500;
+	.post h1 {
+		color: var(--second);
+		max-width: 20em;
 	}
 
+	.post :global(h2) {
+		margin-top: 16rem;
+		padding: 4rem 1.6rem 5.6rem;
+		border-top: var(--border-w) solid var(--prime);
+		color: var(--second);
+	}
+
+	.post p,
 	.post :global(p) {
-		margin: 0 0 1em 0;
-		line-height: 1.5;
-		font-weight: 300;
-		color: #333;
+		max-width: var(--linemax)
 	}
 
-	.post :global(p):last-child {
-		margin: 0;
-	}
-
-	.post :global(ul), .post :global(ol) {
-		color: #333;
-		line-height: 1.5;
-	}
-
-	.post :global(strong) {
-		color: #333;
-		font-weight: 700;
+	.post :global(i),
+	.post :global(em) {
+		color: var(--prime);
 	}
 
 	.post :global(figure) {
@@ -68,54 +58,8 @@
 		width: 100%;
 	}
 
-	.post {
-		padding: 1em;
-	}
-
-	.post :global(code) {
-		background-color: #f9f9f9;
-		padding: 0.2em 0.4em;
-		border-radius: 3px;
-	}
-
-	h1, .post :global(h2) {
-		font-size: 1.8em;
-		margin: 0;
-		font-weight: 500;
-	}
-
-	.post :global(h2) {
-		color: #333;
-	}
-
 	.standfirst {
-		font-size: 1.4em;
-		font-family: Rajdhani, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-		line-height: 1.2;
-		color: #888;
-		font-weight: 500;
-	}
-
-	.post :global(blockquote) {
-		color: #999;
-		margin: 1em 0;
-		padding: 0.5em 0 0.5em 1em;
-		max-width: 48em;
-		background-color: #f9f9f9;
-		border-left: 2px solid #ddd;
-		/*border-top: 1px solid #eee;
-		border-bottom: 1px solid #eee;*/
-	}
-
-	.post :global(blockquote) :global(p) {
-		color: #666;
-	}
-
-	.post :global(blockquote) :global(strong) {
-		display: block;
-		font-weight: 300;
-		font-style: italic;
-		color: #666;
+		font-size: var(--h2);
 	}
 
 	.post :global(aside) {
@@ -148,13 +92,6 @@
 	}
 
 	@media (min-width: 48em) {
-		h1 {
-			font-size: 2.4em;
-		}
-
-		.post :global(h2) {
-			font-size: 1.8em;
-		}
 	}
 
 	@media (min-width: 70em) {
