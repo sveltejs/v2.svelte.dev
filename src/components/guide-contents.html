@@ -18,6 +18,10 @@
 </ul>
 
 <style>
+	.guide-toc {
+		--section-clr: white;
+	}
+
 	.guide-toc li {
 		display: block;
 		line-height: 2;
@@ -25,32 +29,32 @@
 
 	.section {
 		display: block;
-		font-family: var(--font-alt);
+		margin: 5.6rem 0 .8rem 0;
+		font: 300 var(--h6) var(--font-alt);
+		color: var(--section-clr);
 		text-transform: uppercase;
-		letter-spacing: 0.1em;
-		font-size: var(--h6);
-		color: var(--second);
+		letter-spacing: 0.2em;
+	}
+	
+	.section:first-of-type {
 		margin-top: 4.8rem;
 	}
 
 	.subsection {
 		display: block;
-		font-size: var(--h6);
+		font-size: 1.2rem;
 	}
 
-	a:link {
-		/* darken --text for accesibility */
-		--text: hsl(36, 3%, 44%);
-		text-decoration: none;
+	section:hover,
+	subsection:hover { color: var(--flash) }
+	.active          { color: var(--prime) }
+
+	@media screen and (min-width: 768px) {
+		.guide-toc {
+			--section-clr: black;
+		}
 	}
 
-	a:hover {
-		color: var(--flash);
-	}
-
-	.active {
-		color: var(--prime);
-	}
 </style>
 
 <script>
