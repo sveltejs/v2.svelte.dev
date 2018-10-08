@@ -2,69 +2,69 @@
 	<title>Svelte • The magical disappearing UI framework</title>
 </svelte:head>
 
-<section>
+<section class='container'>
 	<div class='logo'>
-		<Logo size='9rem' />
+		<Logo size={90} />
 		<h1>SVELTE</h1>
 		<h2>The magical disappearing<br />UI framework</h2>
 	</div>
 
 	<!-- possibly not the best solution - better use classes for button? -->
-	<a rel='prefetch' href='guide' class='learn'>
+	<a rel='prefetch' href='guide' class='learn-btn'>
 		<button class='bg-prime white'>Learn Svelte
 			<Icon name='arrow-right' /></button>
 	</a>
 </section>
 
-<section class='align-c' style='padding: 0 var(--page-side)'>
-	<ul class='grid list-reset'>
+<section class='container py0 align-c'>
+	<ul class='grid'>
 		<li class='box bg-prime white'>
-			<Logo size='8rem' outer='none' inner='fill:none; stroke:white;' />
+			<Logo size={88} outer='none' inner='fill:none; stroke:white;' />
 			<h2>Solved: The web's JavaScript bloat crisis</h2>
 			<p>Svelte turns your templates into tiny, framework-less vanilla JavaScript</p>
 		</li>
 		<li class='box bg-flash white'>
-			<Logo size='8rem' outer='none' inner='fill:none; stroke:white;' />
+			<Logo size={88} outer='none' inner='fill:none; stroke:white;' />
 			<h2>Simple and familiar</h2>
 			<p>Build apps out of composable, easy-to-write blocks using languages you already know</p>
 		</li>
 		<li class='box bg-second white'>
-			<Logo size='8rem' outer='none' inner='fill:none; stroke:white;' />
+			<Logo size={88} outer='none' inner='fill:none; stroke:white;' />
 			<h2>Super fast, rock solid</h2>
 			<p>Compile-time static analysis ensures the browser does no more work than it needs to</p>
 		</li>
 	</ul>
 </section>
 
-<section class=''>
-	<ul class='grid list-reset'>
+<section class='container'>
+	<ul class='grid'>
 		<li>
 			<h2>The why-headline here</h2>
-			<b>Copyplat</b> – We captured the WHAT? above. Why another framework. Some facts, the reasons behind. Why is svelte
-			better. OK, we link to @Richs post on this for more Details, but here we extract it in three sentences and some
-			illustrations or charts.
+			<p><b>Copyplat</b> – We captured the WHAT? above. Why another framework. Some facts, the reasons behind. Why is
+				svelte
+				better. OK, we link to @Richs post on this for more Details, but here we extract it in three sentences and some
+				illustrations or charts.</p>
 		</li>
 		<li class='align-c' style='grid-column: 2 / 4; transform:translateY(10rem)'>
-			<Iso size='18rem' style='fill:var(--flash);stroke:var(--second)' />
-			<Iso size='18rem' style='fill:#ccc;stroke:var(--second)' />
-			<Iso size='18rem' style='fill:var(--prime);stroke:var(--second)' />
+			<Iso size={180} style='fill:var(--flash);stroke:var(--second)' />
+			<Iso size={180} style='fill:#ccc;stroke:var(--second)' />
+			<Iso size={180} style='fill:var(--prime);stroke:var(--second)' />
 			<p class='legend'><b>– fig 1 –</b><br />informative grafics here</p>
 		</li>
 	</ul>
-	<h6 class='bg-second white'>NOTE<br /> I didn't spend much time on contents or the right Illustrations here.
-		Let's
+	<h6 class='bg-second white'>NOTE<br /> I didn't spend much time on contents or the right Illustrations here. Let's
 		discuss look'n'feel first.</h6>
 </section>
 
-<section class=' back-light'>
-	<ul class='grid list-reset'>
+<section class='container back-light'>
+	<ul class='grid'>
 		<li class='align-c'>
-			<Iso size='14rem' style='fill:var(--flash);stroke:var(--second)' />
-			<Iso size='14rem' style='fill:#ccc;stroke:var(--second)' />
-			<Iso size='14rem' style='fill:var(--prime);stroke:var(--second)' />
+			<Iso size={140} style='fill:var(--flash);stroke:var(--second)' />
+			<Iso size={140} style='fill:#ccc;stroke:var(--second)' />
+			<Iso size={140} style='fill:var(--prime);stroke:var(--second)' />
 			<p class='legend'><b>– fig 2 –</b><br />informative grafics here</p>
 		</li>
-		<li style='grid-column: 2 / 4; transform:translateY(8rem)'>
+		<li style='grid-column: 2 / 4'>
 			<h2>The how-headline here</h2>
 			<p>
 				<b>Copyplat</b> – How did svelte accomplish this? Why better than others?
@@ -75,8 +75,8 @@
 	</ul>
 </section>
 
-<section class=''>
-	<ul class='grid list-reset'>
+<section class='container'>
+	<ul class='grid'>
 		<li style='grid-column: 1 / 3'>
 			<h2>The benefits-headline here</h2>
 			<p>
@@ -86,57 +86,80 @@
 			</p>
 		</li>
 		<li class='align-c'>
-			<Iso size='12rem' style='fill:var(--flash);stroke:var(--second) ' />
-			<Iso size='8rem' style='fill:#ccc;stroke:var(--second) ' />
-			<Iso size='5rem' style='fill:var(--prime);stroke:var(--second) ' />
+			<Iso size={120} style='fill:var(--flash);stroke:var(--second) ' />
+			<Iso size={80} style='fill:#ccc;stroke:var(--second) ' />
+			<Iso size={50} style='fill:var(--prime);stroke:var(--second) ' />
 			<p class='legend'><b>– fig 3 –</b><br />informative grafics here</p>
 		</li>
 	</ul>
 </section>
 
-<section class='bg-second'>
-	<h2 class='align-c white' style='font-size:var(--h6) padding:12rem 0;'>more to come...</h2>
+<section class='container bg-second'>
+	<h2 class='align-c white' style='font-size:1.2rem; padding:8rem 0;'>more to come...</h2>
 </section>
 
 
 <style>
-	section {
-		padding: 10.4rem var(--page-side);
+	.container {
+		padding: 10rem var(--side-page);
+		/* padding: var(--nav-h) var(--side-page) 0; */
 	}
 
-	.learn {
-		display: block;
-		margin-top: 4rem;
-		text-align: center;
+	.container ul {
+		list-style: none
+	}
+
+	/* max line-length ~60 chars */
+	li:not(.box) > p { max-width: var(--linemax) }
+
+	/* darken text for accesibility */
+	:global(.back-light) {
+		--text: hsl(36, 3%, 44%);
 	}
 
 	.logo {
-		display: flex;
-		align-items: center;
-		justify-content: center;
+		text-align: center;
+		/* display: flex; */
+		/* flex-wrap: wrap; */
+		/* align-items: center; */
+		/* justify-content: center; */
 	}
 
 	.logo> :global(svg) {
 		position: relative;
-		margin-top: -0.9rem;
-		margin-right: 1.2rem;
+		margin-top: var(--top-offset);
+		/* margin: -6rem 0 0 0; */
+		/* margin: -.9rem 1.2rem 0 0; */
 	}
 
 	.logo>h1 {
-		font-size: 5.6rem;
-		margin-right: 2.4rem;
+		margin: 2rem 0;
+		font-size: 4.8rem;
+		/* font-size: 5.6rem; */
+		/* margin: 2rem 4rem 0; */
 		color: var(--second);
 	}
 
 	.logo>h2 {
 		position: relative;
-		top: 0.1rem;
+		/* top: .1rem; */
 		font-size: 1.7rem;
+		text-align: center;
 		animation: slow-fade-demo 6s var(--inout-cubic) infinite;
 	}
 
-	.legend {
-		padding-top: 4rem;
+	.learn-btn {
+		display: block;
+		margin-top: 4rem;
+		text-align: center;
+	}
+
+	.legend  { padding-top: 4rem }
+
+	.box>svg { margin: 1.6rem 0 2.4rem }
+
+	.box>h2, .box>p {
+		font-size: var(--h5);
 	}
 
 	h6 {

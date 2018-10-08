@@ -3,37 +3,70 @@
 </svelte:head>
 
 <div class="repl-outer {$zenMode ? 'zen-mode' : ''}">
-	<AppControls {examples} {bundle} {components} {data} {json5} {gist} bind:name on:select='set({ demo: event.slug, gist: null })'
-	 on:forked='set({ gist: event.gist })' />
+	<AppControls
+		{examples}
+		{bundle}
+		{components}
+		{data}
+		{json5}
+		{gist}
+		bind:name
+		on:select='set({ demo: event.slug, gist: null })'
+		on:forked='set({ gist: event.gist })'
+	/>
 
 	<div class='repl-inner'>
 		<SplitPane type=horizontal on:resize='resizePanes(["editor", "data"])'>
 			<section slot=a class='input'>
-				<ComponentSelector ref:selector {components} bind:selectedComponent on:create='createComponent()' on:remove='removeComponent()' />
+				<ComponentSelector
+				ref:selector
+				{components}
+				bind:selectedComponent
+				on:create='createComponent()'
+				on:remove='removeComponent()'
+			/>
 
-				<ModuleEditor ref:editor bind:selectedComponent {compiled} error='{sourceError}' errorLoc='{sourceErrorLoc || runtimeErrorLoc}'
-				 {warningCount} on:navigate='navigate(event)' />
-			</section>
+			<ModuleEditor
+				ref:editor
+				bind:selectedComponent
+				{compiled}
+				error='{sourceError}'
+				errorLoc='{sourceErrorLoc || runtimeErrorLoc}'
+				{warningCount} on:navigate='navigate(event)'
+			/>
+		</section>
 
-			<div slot=b style='height: 100%;'>
-				<SplitPane type=vertical on:resize='resizePanes(["data"])'>
-					<div class=pane slot=a>
-						<h2 class='show-if-mobile'>Rendered component</h2>
-
-						{#if compilerReady}
-						<Viewer {bundle} {dom} {ssr} {data} {sourceError} bind:error='runtimeError' on:data='updateData(event.current)'
-						 on:navigate='navigate(event)' /> {:else}
-						<p class='loading'>loading Svelte compiler...</p>
-						{/if}
-					</div>
-
-					<div class=pane slot=b>
-						<h2 class='show-if-mobile'>data.json5</h2>
-
-						<CodeMirror ref:data mode='json' bind:code='json5' error='{dataError}' errorLoc='{dataErrorLoc}' />
-					</div>
-				</SplitPane>
-			</div>
+		<div slot=b style='height: 100%;'>
+			<SplitPane type=vertical on:resize='resizePanes(["data"])'>
+				<div class=pane slot=a>
+					<h3 class='show-if-mobile'>Rendered component</h3>
+					{#if compilerReady}
+					<Viewer
+						{bundle}
+						{dom}
+						{ssr}
+						{data}
+						{sourceError}
+						bind:error='runtimeError'
+						on:data='updateData(event.current)'
+						on:navigate='navigate(event)'
+					/>
+					{:else}
+					<p class='loading'>loading Svelte compiler...</p>
+					{/if}
+				</div>
+				<div class=pane slot=b>
+					<h3 class='show-if-mobile'>data.json5</h3>
+					<CodeMirror
+						ref:data
+						mode='json'
+						bind:code='json5'
+						error='{dataError}'
+						errorLoc='{dataErrorLoc}'
+					/>
+				</div>
+			</SplitPane>
+		</div>
 		</SplitPane>
 	</div>
 </div>
@@ -43,26 +76,17 @@
 		min-height: calc(100vh - var(--nav-h));
 	}
 
-	.repl-inner {
-		height: 100%;
-	}
+	.repl-inner { height: 100% }
+	.pane       { width: 100%; height: 100% }
 
-	.pane {
-		width: 100%;
-		height: 100%;
-	}
-
-	h2 {
-		margin: 1em 0 0 0;
-		padding: 0 8px;
-		font-weight: 500;
-		font-size: 1.2em;
+	h3 {
+		margin: 4rem 0 0 0;
+		padding: 0 2.4rem .8rem;
+		font-size: 1.3rem;
 	}
 
 	@media (min-width: 768px) {
-		.show-if-mobile {
-			display: none;
-		}
+		.show-if-mobile { display: none }
 
 		.repl-outer {
 			min-height: auto;
@@ -80,9 +104,7 @@
 			z-index: 6;
 		}
 
-		section {
-			height: 100%;
-		}
+		section { height: 100% }
 	}
 
 	.loading {
@@ -91,24 +113,19 @@
 		font-weight: 300;
 		margin: 2em 0 0 0;
 		opacity: 0;
-		animation: fade-in 0.4s;
-		animation-delay: 0.2s;
+		animation: fade-in .4s;
+		animation-delay: .2s;
 		animation-fill-mode: both;
 	}
 
 	@keyframes fade-in {
-		0% {
-			opacity: 0;
-		}
-
-		100% {
-			opacity: 1;
-		}
+		0%   { opacity: 0 }
+		100% { opacity: 1 }
 	}
 
 	.input {
 		padding: 2.4em 0 0 0;
-		perspective: 1500px;
+		perspective: 1800px;
 		perspective-origin: 50% 0%;
 	}
 
@@ -120,40 +137,40 @@
 
 	.repl-inner :global(.message) {
 		position: relative;
-		border-radius: 0.2em;
+		border-radius: var(--border-r);
 		margin: 0;
-		padding: 0.5em 0.5em 0.5em 2.5em;
+		padding: 1.2rem 1.6rem 1.2rem 4.4rem;
+		vertical-align: middle;
+		font: 300 1.2rem/1.7 var(--font-ui);
 		color: white;
 	}
-
+	
 	.repl-inner :global(.message::before) {
 		content: '!';
 		position: absolute;
-		left: 0.7em;
-		top: 0.55em;
-		font-size: 0.8em;
-		font-weight: 800;
-		width: 1em;
-		height: 1em;
+		left: 1.2rem;
+		top: 1.1rem;
+		width: 1rem;
+		height: 1rem;
 		text-align: center;
 		line-height: 1;
-		padding: 0.2em 0.15em 0.1em 0.15em;
+		padding: .4rem;
 		border-radius: 50%;
 		color: white;
-		border: 2px solid white;
+		border: .2rem solid white;
 	}
 
 	.repl-inner :global(.error.message) {
-		background-color: rgb(170, 30, 30);
+		background-color: #da106e;
 	}
 
 	.repl-inner :global(.warning.message) {
-		background-color: rgb(160, 100, 30);
+		background-color: #e47e0a;
 	}
 
 	.repl-inner :global(.info.message) {
-		background-color: #666;
-		animation: fade-in 0.4s 0.2s both;
+		background-color: var(--second);
+		animation: fade-in .4s .2s both;
 	}
 
 	.repl-inner :global(.error) :global(.filename) {
@@ -191,15 +208,14 @@
 		}
 	}
 
-	const workerPromise = process.browser && import('workerize-loader!./_worker.js').then(async ({ default: getWorker }) => getWorker());
+	const workerPromise = process.browser && import('workerize-loader!./_worker.js')
+		.then(async ({ default: getWorker }) => getWorker());
 
 	export default {
 		async preload({ query }) {
 			return {
 				examples,
-
 				version: query.version || 'latest',
-
 				components: [],
 				data: {},
 				name: 'loading...',
