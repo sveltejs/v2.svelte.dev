@@ -41,16 +41,15 @@
 	--second:     #676778;
 	--flash:       #40b3ff;
 	--text:       #a19e9b; /* hsl(36, 3%, 62%) */
-	--border-w:   .3rem; /* border-width  */
-	--border-r:   .4rem; /* border-radius */
+	--border-w:   .3rem;     /* border-width  */
+	--border-r:   .4rem;     /* border-radius */
 }
 
 /*	typo vars ------------------------------ */
 .typo-default {
 	--unit:     .8rem;
-	--code:      1.3rem;
 	--h6:      1.3rem;
-	--h5:      1.5rem;
+	--h5:      1.6rem;
 	--h4:      1.8rem;
 	--h3:      1.6rem;
 	--h2:        2rem;
@@ -113,9 +112,9 @@ tt, code, kbd, samp {
 		- setup for all links in section is risky/tricky
 		- maybe I'll come up with a better solution
 */
-section p > a {
+a {
 	position: relative;
-	padding: 0 .5rem .1rem;
+	padding: 0 .7rem .1rem;
 	border-bottom: .1rem solid hsla(15, 100%, 50%, 0.5);
   user-select: none;
 	white-space: nowrap;
@@ -123,28 +122,30 @@ section p > a {
 	transition: color .3s;
 }
 
-section p > a:before {
+a:before {
   content: '';
   position: absolute;
   width: 100%;
   height: 2.8rem;
   bottom: -.2rem;
-  left: 0;
-	background-color: var(--flash);
+	left: 0;
+	white-space: nowrap;
+	background: var(--prime);
 	border-radius: var(--border-r);
   visibility: hidden;
-	mix-blend-mode: color-dodge; /* exclusion */
 	transform: scaleX(0);
 	transform-origin: left center;
   transition: all .3s var(--out-back);
+  z-index: -1;
 }
 
-section p > a:hover,
-section p > a:active  {
-  color: var(--flash);
+a:hover,
+a:active  {
+  /* color: var(--flash); */
+  color: white;
 }
 
-section p > a:hover:before  {
+a:hover:before  {
   visibility: visible;
   transform: scaleX(1);
 }
@@ -166,11 +167,8 @@ li:not(.white) > h2 {
 	color: var(--second)
 }
 
-h3, h3 > code {
-	pointer-events: none;
+h3 {
 	font-family: var(--font-ui);
-	color: black;
-	padding: 6.4rem 0 1.6rem 0;
 }
 
 blockquote {
@@ -266,15 +264,7 @@ table span {
 	white-space: pre;
 }
 
-/*	helper styles -------------------------- */
-.flex-auto { flex: 1 0 auto }
-.align-c  { text-align: center }
-
-.py0 {
-	padding-top: 0 !important;
-	padding-bottom: 0 !important;
-}
-
+/*	grid ----------------------------------- */
 .grid,
 .grid.half {
 	display: grid;
@@ -285,10 +275,18 @@ table span {
 
 .grid.stretch { align-items: stretch }
 
-
 .grid > .cols-2,
 .grid > .cols-3 { grid-column: span 1 }
 
+
+/*	helper styles -------------------------- */
+.flex-auto { flex: 1 0 auto }
+.align-c  { text-align: center }
+
+.py0 {
+	padding-top: 0 !important;
+	padding-bottom: 0 !important;
+}
 
 .legend {
 	max-width: none;
@@ -349,7 +347,8 @@ table span {
 	.desktop-hide { display: none !important }
 
 	:root {
-		--side-page: 14vw;
+		--side-page:  14vw;
+		--top-offset: 10rem;
 	}
 }
 
