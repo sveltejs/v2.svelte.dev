@@ -17,7 +17,7 @@
 </section>
 
 <section class='container py0 align-c'>
-	<ul class='grid'>
+	<ul class='grid stretch'>
 		<li class='box bg-prime white'>
 			<Logo size={88} outer='none' inner='fill:none; stroke:white;' />
 			<h2>Solved: The web's JavaScript bloat crisis</h2>
@@ -37,18 +37,15 @@
 </section>
 
 <section class='container'>
-	<ul class='grid'>
+	<ul class='grid half'>
 		<li>
 			<h2>The why-headline here</h2>
-			<p><b>Copyplat</b> – We captured the WHAT? above. Why another framework. Some facts, the reasons behind. Why is
-				svelte
-				better. OK, we link to @Richs post on this for more Details, but here we extract it in three sentences and some
-				illustrations or charts.</p>
+			<p><b>Copyplat</b> – We captured the WHAT? above. Why another framework. Some facts, the reasons behind. Why is svelte better. OK, we link to @Richs post on this for more Details, but here we extract it in three sentences and some illustrations or charts.</p>
 		</li>
-		<li class='align-c' style='grid-column: 2 / 4; transform:translateY(10rem)'>
-			<Iso size={180} style='fill:var(--flash);stroke:var(--second)' />
-			<Iso size={180} style='fill:#ccc;stroke:var(--second)' />
-			<Iso size={180} style='fill:var(--prime);stroke:var(--second)' />
+		<li class='align-c cols-2'>
+			<Iso size={180} style='fill:var(--flash); stroke:var(--second)' />
+			<Iso size={180} style='fill:#ccc; stroke:var(--second)' />
+			<Iso size={180} style='fill:var(--prime); stroke:var(--second)' />
 			<p class='legend'><b>– fig 1 –</b><br />informative grafics here</p>
 		</li>
 	</ul>
@@ -58,13 +55,13 @@
 
 <section class='container back-light'>
 	<ul class='grid'>
-		<li class='align-c'>
-			<Iso size={140} style='fill:var(--flash);stroke:var(--second)' />
-			<Iso size={140} style='fill:#ccc;stroke:var(--second)' />
-			<Iso size={140} style='fill:var(--prime);stroke:var(--second)' />
+		<li class='align-c cols-2'>
+			<Iso size={140} style='fill:var(--flash); stroke:var(--second)' />
+			<Iso size={140} style='fill:#ccc; stroke:var(--second)' />
+			<Iso size={140} style='fill:var(--prime); stroke:var(--second)' />
 			<p class='legend'><b>– fig 2 –</b><br />informative grafics here</p>
 		</li>
-		<li style='grid-column: 2 / 4'>
+		<li>
 			<h2>The how-headline here</h2>
 			<p>
 				<b>Copyplat</b> – How did svelte accomplish this? Why better than others?
@@ -76,26 +73,26 @@
 </section>
 
 <section class='container'>
-	<ul class='grid'>
-		<li style='grid-column: 1 / 3'>
+	<ul class='grid half'>
+		<li>
 			<h2>The benefits-headline here</h2>
 			<p>
-				<b>Copyplat</b> – Blindtext. Fera voluptatis debitis aut laut harum sitiandus. Ant labo. Nequod modisquia illabo.
-				Nametur sequis ut
-				entiberibeat facerfe rovitatemqui beatis minvenis consequi quid quo et.
+				<b>Copyplat</b> – Blindtext. Fera voluptatis debitis aut laut harum sitiandus. Ant labo. Nequod modisquia illabo. Nametur sequis ut entiberibeat facerfe rovitatemqui beatis minvenis consequi quid quo et.
 			</p>
 		</li>
 		<li class='align-c'>
-			<Iso size={120} style='fill:var(--flash);stroke:var(--second) ' />
-			<Iso size={80} style='fill:#ccc;stroke:var(--second) ' />
-			<Iso size={50} style='fill:var(--prime);stroke:var(--second) ' />
+			<Iso size={120} style='fill:var(--flash); stroke:var(--second)' />
+			<Iso size={80} style='fill:#ccc; stroke:var(--second)' />
+			<Iso size={50} style='fill:var(--prime); stroke:var(--second)' />
 			<p class='legend'><b>– fig 3 –</b><br />informative grafics here</p>
 		</li>
 	</ul>
 </section>
 
 <section class='container bg-second'>
-	<h2 class='align-c white' style='font-size:1.2rem; padding:8rem 0;'>more to come...</h2>
+	<h2 class='align-c white'
+		style='font-size:1.2rem; padding:8rem 0;'>more to come...
+	</h2>
 </section>
 
 
@@ -158,7 +155,8 @@
 
 	.box>svg { margin: 1.6rem 0 2.4rem }
 
-	.box>h2, .box>p {
+	.box>h2,
+	.box>p {
 		font-size: var(--h5);
 	}
 
