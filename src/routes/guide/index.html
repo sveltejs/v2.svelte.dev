@@ -28,8 +28,8 @@
 		left: 0;
 		top: var(--nav-h);
 		width: var(--sidebar-w);
-		height: calc(100vh - var(--nav-h) - var(--top-offset));
-		padding: var(--top-offset) 0 0 0;
+		height: calc(100vh - var(--nav-h));
+		padding: var(--top-offset) 0;
 		font-family: var(--font-ui);
 		overflow-y: auto;
 	}
@@ -39,10 +39,6 @@
 		padding: var(--top-offset) var(--side-page);
 		tab-size: 2;
 	}
-
-	/* max line-length ~60 chars */
-	section > :global(p) { max-width: var(--linemax) }
-
 
 	@media (min-width: 768px) {
 		.sidebar {
@@ -62,8 +58,21 @@
 		color: var(--second);
 	}
 
-	.content section:first-of-type>h2 {
+	.content section:first-of-type > h2 {
 		margin-top: 0;
+	}
+
+	.content :global(h3),
+	.content :global(h3 > code) {
+		pointer-events: none;
+		font: 300 var(--h3) var(--font-ui);
+		color: black;
+		padding: 6.4rem 0 1.6rem 0;
+	}
+
+	/* max line-length ~60 chars */
+	section > :global(p) {
+		max-width: var(--linemax)
 	}
 
 	small {
@@ -93,6 +102,10 @@
 </style>
 
 <script>
+	// NOT YET
+	// get offset from css-vars (for smooth-scroll)
+	// import CustomProperties from '../../utils/css-custom-properties.js'
+
 	export default {
 		components: {
 			GuideContents: '../../components/guide-contents.html',
@@ -108,6 +121,11 @@
 		oncreate() {
 			const anchors = this.refs.container.querySelectorAll('[id]');
 			let positions;
+			
+			// NOT YET – see import above
+			// const cssprop = new CustomProperties()
+			// const offset = parseInt(cssprop.get('nav-h')) + parseInt(cssprop.get('top-offset')) + 'rem'
+			// console.log(offset);
 
 			const onresize = () => {
 				const { top } = this.refs.container.getBoundingClientRect();
