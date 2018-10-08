@@ -7,7 +7,7 @@ credentials.json
 src/manifest
 build
 yarn-error.log
-.vscode
+.vscode/settings.json
 .env
 .sessions
 _snippets
