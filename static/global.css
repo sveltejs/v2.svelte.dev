@@ -1,18 +1,29 @@
 /*
 -----------------------------------------------
 	global styles
+
 	NOTE
 	– !important overrides class-definitions
-	- some theme-vars change inside media-queries
+	- some vars change inside media-queries!
 -----------------------------------------------
 */
 
-/*	constants and calc --------------------- */
+/*	constants and calc -----------------------
+	- commonly used values
+	- under normal conditions, there's no need to touch these
+	- look confusing/cluttering at first,
+		but they simplify life immensely
+-----------------------------------------------
+*/
 :root {
-	--33: calc(100% / 3);      /* exactly 33% */
-	--66: calc(100% / 3 * 2);  /* exactly 66% */
+	--nav-h:      10rem;
+	--top-offset:  6rem;
+	--sidebar-w:  24rem;
+	--code-w:      48em;
+	--side-nav:    6rem;
+	--side-page:   var(--side-nav);
 
-	/* common easings */
+	/* easings */
 	--in-cubic:    cubic-bezier(0.55, 0.055, 0.675, 0.19);
 	--out-cubic:   cubic-bezier(0.215, 0.61, 0.355, 1);
 	--inout-cubic: cubic-bezier(0.645, 0.045, 0.355, 1);
@@ -25,31 +36,27 @@
 /*	theme vars ----------------------------- */
 .theme-default {
 	--back:       #ffffff;
+	--back-light: #f6f7f8;
 	--prime:      #ff3e00;
 	--second:     #676778;
 	--flash:       #40b3ff;
-	--text:       #a09e9b;
-	--back-light: #f6f7f8;
-
-	--nav-h:    10rem;            /* navigation-height */
-	--nav-side:  4rem;            /* nav-side-padding */
-	--page-side: var(--nav-side); /* page-side-padding */
-	--sidebar-w: 24rem;           /* sidebar-width */
-	--code-w:    48em;            /* codeblock-width */
-	--border-w:  .3rem;           /* border-width */
-	--border-r:  .4rem;           /* border-radius */
+	--text:       #a19e9b; /* hsl(36, 3%, 62%) */
+	--border-w:   .3rem; /* border-width  */
+	--border-r:   .4rem; /* border-radius */
 }
 
 /*	typo vars ------------------------------ */
 .typo-default {
-	--unit:  .8rem;
-	--h6:   1.3rem;
-	--h5:   1.5rem;
-	--h4:   1.7rem;
-	--h3:   1.8rem;
-	--h2:   2rem;
-	--h1:   3.2rem;
-	--lh:   calc(4/2.2);  /* base line-height */
+	--unit:     .8rem;
+	--code:      1.3rem;
+	--h6:      1.3rem;
+	--h5:      1.5rem;
+	--h4:      1.8rem;
+	--h3:      1.6rem;
+	--h2:        2rem;
+	--h1:      3.2rem;
+	--linemax:   32em;      /* max line-length */
+	--lh:      calc(4/2.2); /* base line-height */
 }
 
 /*	typography ----------------------------- */
@@ -62,8 +69,6 @@ body {
 h1, h2, h3, h4, h5, h6, p, li, blockquote {
 	margin-bottom: .8rem;
 }
-
-p { max-width: 28em } /* max line-length ~60 chars */
 
 h1, h2, h3, h4, h5, h6 { font-weight: 300 }
 h6 { font-size: var(--h6) }
@@ -79,7 +84,6 @@ i, em {
 	color: var(--second);
 	font-style: normal;
 }
-
 
 tt, code, kbd, samp {
 	font: 300 1.2rem/1.7 var(--font-mono);
@@ -105,9 +109,9 @@ tt, code, kbd, samp {
 }
 
 /*  links -------------------------------------
-		- got idea from https://up.docs.apex.sh
+		- idea from https://up.docs.apex.sh
 		- setup for all links in section is risky/tricky
-		- maybe I'll come up with a more practicable solution
+		- maybe I'll come up with a better solution
 */
 section p > a {
 	position: relative;
@@ -145,9 +149,7 @@ section p > a:hover:before  {
   transform: scaleX(1);
 }
 
-a:hover > .icon {
-	stroke: var(--flash);
-}
+a:hover > .icon { stroke: var(--flash) }
 
 /*	opinionated styles --------------------- */
 h1, h2 {
@@ -158,16 +160,17 @@ h1, h2 {
 	pointer-events: none;
 }
 
-h1 {
-	letter-spacing: 0.1em;
+h1 { letter-spacing: 0.1em }
+
+li:not(.white) > h2 {
+	color: var(--second)
 }
 
 h3, h3 > code {
 	pointer-events: none;
 	font-family: var(--font-ui);
 	color: black;
-	/* font-weight: 600; */
-	padding-top: 6.4rem;
+	padding: 6.4rem 0 1.6rem 0;
 }
 
 blockquote {
@@ -177,11 +180,75 @@ blockquote {
 	border-radius: var(--border-r);
 	font-family: var(--font);
 	font-size: var(--h5);
-	width: 38.3em;
+	max-width: 38.3em;
 }
 
-blockquote > p { max-width: none }
 
+/*  buttons -------------------------------- */
+button {
+  --bttn-h: 4rem;
+  --bttn-outline: var(--border-w);
+  --bttn-font: var(--font-ui);
+  --bttn-calc-h: calc(var(--bttn-h) - var(--bttn-outline) * 2);
+  --bttn-hover: linear-gradient(
+    to top, rgba(0,0,0,.05), rgba(0,0,0,.05)
+  );
+  --bttn-active: linear-gradient(
+    to top, rgba(255,255,255,.1), rgba(255,255,255,.1)
+  );
+
+  position: relative;
+  margin: 0 .8rem .8rem 0;
+  vertical-align: middle;
+  white-space: nowrap;
+  display: inline-block;
+  zoom: 1;
+  border: none transparent;
+	font: 1.3rem var(--bttn-font);
+	border-radius: var(--border-r);
+  color: currentColor;
+  letter-spacing: .05em;
+  cursor: pointer;
+}
+
+button:focus { outline: 0 }
+
+button[disabled] {
+  opacity: .55;
+  pointer-events: none;
+}
+
+button > svg {
+  position: relative;
+  top: -.1rem;
+  width: 2rem !important;
+  height: 2rem !important;
+}
+
+/*  default */
+button {
+  min-height: var(--bttn-h);
+  line-height: var(--bttn-h);
+  padding: 0 1.6rem;
+  transition: all .1s;
+}
+
+button:hover  { background-image: var(--bttn-hover) }
+button:active {
+	mix-blend-mode: overlay;
+	background-image: var(--bttn-active)
+}
+
+/*  options */
+button[outline] {
+  min-height: var(--bttn-calc-h);
+  line-height: var(--bttn-calc-h);
+  border: var(--bttn-outline) solid currentColor;
+  background-color: white;
+  color: currentColor;
+}
+
+/*  tables --------------------------------- */
 table {
 	margin: 4rem 0;
 	width: 100%;
@@ -200,30 +267,35 @@ table span {
 }
 
 /*	helper styles -------------------------- */
-.list-reset {
-	list-style: none;
+.flex-auto { flex: 1 0 auto }
+.align-c  { text-align: center }
+
+.py0 {
+	padding-top: 0 !important;
+	padding-bottom: 0 !important;
 }
 
-li:not(.white) > h2 {
-	color: var(--second)
+
+/*
+.full {
+	margin-left: calc(var(--side-page) * -1);
+	margin-right: calc(var(--side-page) * -1);
+	padding-left: var(--side-page);
+	padding-right: var(--side-page);
 }
 
-.align-c { text-align: center }
-
-.page-padding {
-	padding-left: var(--page-side);
-	padding-right: var(--page-side);
-}
 
 .grid {
 	display: grid;
 	grid-gap: 3.2rem;
 	grid-template-columns: 1fr;
 }
+*/
 
 .legend {
+	max-width: none;
+	margin: 0 auto;
 	padding: 1.6rem 0 2.4rem;
-  color: var(--second);
   font: 1rem/1.2 var(--font-ui);
 }
 
@@ -236,16 +308,6 @@ li:not(.white) > h2 {
 .box {
   padding: 2.4rem 3.2rem;
   border-radius: var(--border-r);
-  font-size: var(--h5);
-}
-
-.box > svg {
-  margin: 1.6rem 0 2.4rem;
-}
-
-.box > h2,
-.box > p {
-  font-size: var(--h5);
 }
 
 .open-in-repl {
@@ -273,83 +335,32 @@ li:not(.white) > h2 {
 .bg-second  { background-color: var(--second) !important }
 .bg-flash    { background-color: var(--flash) !important }
 
-/*  buttons -------------------------------- */
-button {
-  --btn-h: 4rem;  /* button-height */
-  --btn-outline: var(--border-w);
-  --btn-font: var(--font-ui);
-  --btn-calc-height: calc(var(--btn-h) - var(--btn-outline) * 2);
-  --btn-hover: linear-gradient(
-    to top, rgba(0,0,0,.05), rgba(0,0,0,.05)
-  );
-  --btn-active: linear-gradient(
-    to top, rgba(255,255,255,.2), rgba(255,255,255,.2)
-  );
 
-  position: relative;
-  margin: 0 .8rem .8rem 0;
-  vertical-align: middle;
-  white-space: nowrap;
-  display: inline-block;
-  zoom: 1;
-  border: none transparent;
-  /* border: none rgba(0, 0, 0, 0); */
-	font: 1.3rem var(--btn-font);
-	border-radius: var(--border-r);
-  color: currentColor;
-  letter-spacing: .05em;
-  cursor: pointer;
+/*
+-----------------------------------------------
+  media-queries
+-----------------------------------------------
+*/
+@media screen and (max-width: 767px) {
+  .mobile-show { display: initial !important }
+  .mobile-hide { display: none !important }
 }
 
-button:focus { outline: 0 }
+@media screen and (min-width: 768px) {
+  .desktop-show { display: initial !important }
+	.desktop-hide { display: none !important }
 
-button[disabled] {
-  opacity: .55;
-  pointer-events: none;
-}
+	:root {
+		--side-page:  14vw;
+	}
 
-button > svg {
-  position: relative;
-  top: -.1rem;
-  width: 2rem !important;
-  height: 2rem !important;
-}
-
-/*  default */
-button {
-  min-height: var(--btn-h);
-  line-height: var(--btn-h);
-  padding: 0 1.6rem;
-  transition: all .1s;
-}
-
-button:hover  { background-image: var(--btn-hover) }
-button:active { background-image: var(--btn-active) }
-
-/*  options */
-button[outline] {
-  min-height: var(--btn-calc-height);
-  line-height: var(--btn-calc-height);
-  border: var(--btn-outline) solid currentColor;
-  background-color: white;
-  color: currentColor;
-}
-
-/*  media-queries -------------------------- */
-@media (min-width: 768px) {
-  .theme-default {
-    --page-side: 12rem;
+	.grid {
+    /* grid-template-columns: 1fr 1fr; */
   }
 }
 
-@media (min-width: 900px) {
-  .grid {
+@media (min-width: 1024px) {
+	.grid {
     grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (min-width: 1100px) {
-  .grid {
-    grid-template-columns: 1fr 1fr 1fr;
   }
 }

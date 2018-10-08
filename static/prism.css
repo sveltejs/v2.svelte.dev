@@ -38,7 +38,7 @@ pre[class*='language-'] {
 	overflow: auto;
 	padding: 3.2rem 4rem;
 	margin: .8rem 0 2.4rem;
-	width: var(--code-w);
+	max-width: var(--code-w);
 	border-radius: var(--border-r);
 	box-shadow: 0.1rem 0.1rem 0.3rem rgba(68, 68, 68, 0.25) inset;
 }
