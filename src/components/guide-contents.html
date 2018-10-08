@@ -19,35 +19,37 @@
 
 <style>
 	.guide-toc li {
-	  display: block;
-	  line-height: 2.4rem;
+		display: block;
+		line-height: 2;
 	}
 
 	.section {
-	  display: block;
-	  font-family: var(--font-alt);
-	  text-transform: uppercase;
-	  letter-spacing: 0.1em;
-	  font-size: var(--h6);
-	  color: var(--second);
-	  margin-top: 4.8rem;
+		display: block;
+		font-family: var(--font-alt);
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		font-size: var(--h6);
+		color: var(--second);
+		margin-top: 4.8rem;
 	}
 
 	.subsection {
-	  display: block;
-	  font-size: var(--h6);
+		display: block;
+		font-size: var(--h6);
 	}
 
 	a:link {
-	  text-decoration: none;
+		/* darken --text for accesibility */
+		--text: hsl(36, 3%, 44%);
+		text-decoration: none;
 	}
 
 	a:hover {
-	  color: var(--flash);
+		color: var(--flash);
 	}
 
 	.active {
-	  color: var(--prime);
+		color: var(--prime);
 	}
 </style>
 
@@ -64,6 +66,7 @@
 		},
 
 		//	------------------------------------------
+		//	TODO – smooth-scroll
 		//	must be something that makes more sense
 		//	this one is too annoying (area too tall)
 		//	maybe svelte-transitions are a solution?
@@ -74,20 +77,20 @@
 		// 		e.preventDefault();
 		// 		let top = document.querySelector('#' + item).getBoundingClientRect().top;
 		// 		window.scrollTo({
-  	// 			top,
-  	// 			behavior: "smooth"
+		// 			top,
+		// 			behavior: "smooth"
 		// 		});
 		// 	}
 		// },
 
 		oncreate() {
 			const onhashchange = _ => {
-				this.store.set({ activeGuideSection: window.location.hash.slice( 1 ) });
+				this.store.set({ activeGuideSection: window.location.hash.slice(1) });
 			};
 
-			window.addEventListener( 'hashchange', onhashchange, false );
-			this.on( 'destroy', _ => {
-				window.removeEventListener( 'hashchange', onhashchange, false );
+			window.addEventListener('hashchange', onhashchange, false);
+			this.on('destroy', _ => {
+				window.removeEventListener('hashchange', onhashchange, false);
 			});
 
 			onhashchange();

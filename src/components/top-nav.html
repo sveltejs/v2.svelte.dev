@@ -7,21 +7,21 @@
 		<Icon name='menu' /> {/if}
 	</span>
 
-	<a href='.' class='logo'>
-		<Logo size='4rem' />
-		<h2>SVELTE</h2>
+	<a href='.' class='logo' title='Homepage'>
+		<Logo size={40} />
+		<h2 class='logotype'>Svelte</h2>
 	</a>
 
-	<div style='flex: 1 0 auto' />
+	<div class='flex-auto' />
 
-	<ul class='primary' style='font-size:var(--h6)'>
+	<ul class='primary'>
 		<li><a rel='prefetch' class='{segment === "guide" ? "active": ""}' href='guide'>Guide</a></li>
 		<li><a rel='prefetch' class='{segment === "repl" ? "active": ""}' href='repl'>REPL</a></li>
 		<li><a rel='prefetch' class='{segment === "blog" ? "active": ""}' href='blog'>Blog</a></li>
 		<li><a href='https://sapper.svelte.technology'>Sapper</a></li>
 	</ul>
 
-	<div style='flex: 1 0 auto' />
+	<div class='flex-auto' />
 
 	<ul class='primary'>
 		<li><a href='https://discord.gg/yy75DKs' title='Discord Chat'>
@@ -46,117 +46,112 @@
 <style>
 	/* Unfortunately I'm not able to  understand mousecatcher */
 	.mousecatcher {
-	  position: fixed;
-	  left: 0;
-	  top: 0;
-	  width: 100vw;
-	  height: 100vh;
-	  background-color: black;
-	  pointer-events: none;
-	  opacity: 0;
-	  transition: opacity 0.4s;
-	  z-index: 3;
+		position: fixed;
+		left: 0;
+		top: 0;
+		width: 100vw;
+		height: 100vh;
+		background-color: black;
+		pointer-events: none;
+		opacity: 0;
+		transition: opacity 0.4s;
+		z-index: 3;
 	}
 
 	.mousecatcher.open {
-	  pointer-events: all;
-	  opacity: 0.3;
+		pointer-events: all;
+		opacity: 0.3;
 	}
 
 	header {
-	  position: fixed;
-	  display: flex;
-	  align-items: center;
-	  justify-content: space-between;
-	  width: 100vw;
-	  height: var(--nav-h);
-	  padding: 0 var(--nav-side);
-	  background-color: rgba(255, 255, 255, 0.93);
-	  box-shadow: 0 0.3rem 0.9rem -0.2rem rgba(0, 0, 0, 0.35);
-	  font-family: var(--font-ui);
-	  z-index: 5;
+		position: fixed;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+		height: var(--nav-h);
+		padding: 0 var(--side-nav);
+		margin: 0 auto;
+		background-color: rgba(255, 255, 255, 0.93);
+		box-shadow: 0 0.3rem 0.9rem -0.2rem rgba(0, 0, 0, 0.35);
+		font-family: var(--font-ui);
+		z-index: 5;
 	}
 
 	.primary {
-	  list-style: none;
+		list-style: none;
+		font-size: var(--h6);
 	}
 
 	.primary li {
-	  display: inline;
-	  padding: 0;
-	  margin: 0;
+		display: inline;
+		padding: 0;
+		margin: 0;
 	}
 
 	.primary li a {
-	  padding: 0 0.8rem;
-	  margin: 0;
+		padding: 0 0.8rem;
+		margin: 0;
+	}
+
+	.primary :global(svg) {
+		width: 2rem;
+		height: 2rem;
+	}
+
+
+	/* !!!! temporary ------------------------------------ */
+	.secondary {
+		display: none;
 	}
 
 	a,
 	a:link {
-	  text-decoration: none;
+		text-decoration: none;
 	}
-
-	/* nav { */
-	/* display: flex; */
-	/* justify-content: space-between; */
-	/* z-index: 5; */
-	/* user-select: none; */
-	/* } */
 
 	.active {
-	  color: var(--prime);
+		color: var(--prime);
 	}
 
-	/* .open { */
-	/* transform: translate(0, 0); */
-	/* transition: transform 0.3s cubic-bezier(0.17, 0.67, 0.24, 0.99); */
-	/* overflow-y: auto; */
-	/* } */
-
 	.menu-link {
-	  cursor: pointer;
-	  -webkit-tap-highlight-color: transparent;
-	  -webkit-touch-callout: none;
+		cursor: pointer;
+		-webkit-tap-highlight-color: transparent;
+		-webkit-touch-callout: none;
 	}
 
 	.logo {
-	  width: 16rem;
-	  color: var(--second);
-	  -webkit-tap-highlight-color: transparent;
-	  -webkit-touch-callout: none;
+		width: 16rem;
+		color: var(--second);
+		-webkit-tap-highlight-color: transparent;
+		-webkit-touch-callout: none;
 	}
 
-	.logo > h2 {
-	  position: relative;
-	  top: 0.3rem;
-	  font-size: 2.8rem;
-	  letter-spacing: 0.12em;
+	.logotype {
+		display: none;
+		position: relative;
+		top: 0.3rem;
+		font-size: 2.8rem;
+		letter-spacing: 0.12em;
 	}
 
 	.logo :global(svg) {
-	  float: left;
-	  margin-right: 0.6rem;
+		float: left;
+		margin-right: 0.6rem;
 	}
 
+	/*  media-queries -------------------------- */
 	@media (min-width: 768px) {
-	  .mousecatcher,
-	  .menu-link {
-	    display: none;
-	  }
 
-	  /* nav { */
-	  /* width: 100%; */
-	  /* height: 4em; */
-	  /* padding: 0 1.5em 0 0; */
-	  /* transform: none; */
-	  /* transition: none; */
-	  /* height: 0; */
-	  /* } */
+		.mousecatcher,
+		.menu-link,
+		.secondary {
+			display: none;
+		}
 
-	  .secondary {
-	    display: none;
-	  }
+		.logotype {
+			display: block;
+		}
 	}
 </style>
 
