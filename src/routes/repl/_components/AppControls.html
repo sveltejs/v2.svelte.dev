@@ -19,10 +19,8 @@
 
 		<a class='icon' on:click='$set({ zenMode: !$zenMode })' title='fullscreen editor'>
 			{#if $zenMode}
-			<!-- should set --nav-h here [smaller] -->
 			<Icon name='close' />
 			{:else}
-			<!-- should set --nav-h here [back] -->
 			<Icon name='maximize' />
 			{/if}
 		</a>
@@ -63,25 +61,27 @@
 		align-items: center;
 		justify-content: space-between;
 		width: 100%;
-		padding: .6rem var(--nav-side);
+		padding: .6rem var(--side-nav);
 		background-color: var(--second);
 		color: white;
 		height: 5.6rem;
 	}
 
 	.icon {
-		padding: 0 0.8rem;
-		opacity: 0.5;
+		padding: 0 .8rem;
+		opacity: .5;
 		transition: opacity .3s;
 	}
 
-	.icon:hover {
-		opacity: 1;
+	.icon:hover    { opacity: 1 }
+	.icon:disabled { opacity: .3 }
+	
+	.icon[title^='fullscreen'] { display: none }
+
+	@media (min-width: 768px) {
+		.icon[title^='fullscreen'] { display: inline }
 	}
 
-	.icon:disabled {
-		opacity: 0.3;
-	}
 </style>
 
 <script>

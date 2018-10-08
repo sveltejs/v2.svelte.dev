@@ -5,7 +5,7 @@
 }
 
 .panel-header {
-	/* padding: 0 40px 0.5em 0; */
+	/* padding: 0 40px .5em 0; */
 	background-color: #ff00d4;
 }
 
@@ -21,8 +21,8 @@
 	content: '▼';
 	position: absolute;
 	right: 1rem;
-	top: 0.55rem;
-	font-size: 0.8em;
+	top: .55rem;
+	font-size: .8em;
 	color: #999;
 	pointer-events: none;
 	background-color: #ff00d4;
@@ -33,7 +33,7 @@
 	display: block;
 	float: left;
 	line-height: 1;
-	/* margin: 0 0.3em 0 0; */
+	/* margin: 0 .3em 0 0; */
 	background-color: #ff00d4;
 }
 
@@ -47,16 +47,16 @@
 	font-family: inherit;
 	font-size: inherit;
 	border: 1px solid #eee;
-	padding: calc(0.5em - 1px) 0.25em;
+	padding: calc(.5em - 1px) .25em;
 	line-height: 1;
 	background-color: #ff00d4;
 }
 
 .file-extension {
 	display: inline-block;
-	padding: calc(0.5em - 1px) 0;
+	padding: calc(.5em - 1px) 0;
 	color: var(--prime);
-	left: -0.2em;
+	left: -.2em;
 	pointer-events: none;
 	background-color: #ff00d4;
 }
