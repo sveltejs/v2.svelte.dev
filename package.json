@@ -9,7 +9,7 @@
     "update_template": "sh ./scripts/update_template.sh",
     "stage": "now",
     "deploy": "npm run stage && now alias",
-    "predeploy": "git-branch-is master && git diff --exit-code && npm run sapper",
+    "predeploy": "git-branch-is design && git diff --exit-code && npm run sapper",
     "deploy:ci": "now --token $NOW_TOKEN && now alias --token $NOW_TOKEN",
     "prestage": "npm run update_template && npm run sapper",
     "predeploy:ci": "npm run prestage",
