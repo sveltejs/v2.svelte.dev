@@ -322,11 +322,12 @@ table span {
 	padding-bottom: 0 !important;
 }
 
-.legend {
+.legend, figcaption,
+.post aside {
 	max-width: none;
 	margin: 0 auto;
-	padding: 1.6rem 0 2.4rem;
-  font: 1rem/1.2 var(--font-ui);
+	padding: 1.6rem 0 4rem .8rem;
+  font: 1.2rem/1.6 var(--font-ui);
 }
 
 .filename {
@@ -371,15 +372,7 @@ table span {
   media-queries
 -----------------------------------------------
 */
-@media screen and (max-width: 767px) {
-  .mobile-show { display: initial !important }
-  .mobile-hide { display: none !important }
-}
-
 @media screen and (min-width: 768px) {
-  .desktop-show { display: initial !important }
-	.desktop-hide { display: none !important }
-
 	:root {
 		--side-page:  14vw;
 		--top-offset: 10rem;

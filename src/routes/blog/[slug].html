@@ -41,12 +41,11 @@
 	}
 
 	.post :global(figure) {
-		margin: 0 0 2em 0;
+		margin-top: 1.6rem
 	}
 
 	.post :global(figcaption) {
-		font-size: 14px;
-		color: #999;
+		color: var(--second)
 	}
 
 	.post :global(video) {
@@ -60,42 +59,9 @@
 	.post :global(aside) {
 		float: right;
 		margin: 0 0 1em 1em;
-		width: 10em;
-		font-size: 0.8em;
-		line-height: 1.4;
-		color: #999;
+		width: 16rem;
+		color: var(--second);
 		z-index: 2;
-	}
-
-	.post :global(pre) {
-		background-color: #f9f9f9;
-		padding: 0.5em;
-		border-radius: 2px;
-		font-size: 16px;
-	}
-
-	.post :global(pre).lang-bash {
-		background-color: #666;
-		color: white;
-	}
-
-	.post :global(pre) :global(code) {
-		background: none;
-		padding: 0;
-		font-size: 1em;
-		font-weight: 300;
-	}
-
-	@media (min-width: 48em) {
-	}
-
-	@media (min-width: 70em) {
-		.post :global(aside) {
-			position: absolute;
-			padding: 0.5em 0 0 0;
-			width: 10em;
-			right: -10em;
-		}
 	}
 </style>
 
