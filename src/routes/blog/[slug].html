@@ -3,7 +3,7 @@
 	<title>{post.metadata.title}</title>
 </svelte:head>
 
-<article class='post'>
+<article class='post linkify listify'>
 	<h1>{post.metadata.title}</h1>
 	<p class='standfirst'>{post.metadata.description}</p>
 
@@ -31,18 +31,13 @@
 	.post :global(h2) {
 		margin-top: 16rem;
 		padding: 4rem 1.6rem 5.6rem;
-		border-top: var(--border-w) solid var(--prime);
+		border-top: var(--border-w) solid var(--second);
 		color: var(--second);
 	}
 
 	.post p,
 	.post :global(p) {
 		max-width: var(--linemax)
-	}
-
-	.post :global(i),
-	.post :global(em) {
-		color: var(--prime);
 	}
 
 	.post :global(figure) {

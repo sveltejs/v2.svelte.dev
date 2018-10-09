@@ -80,7 +80,7 @@ h1 { font-size: var(--h1) }
 .b, b, strong { font-weight: 500 }
 
 i, em {
-	color: var(--second);
+	color: var(--prime);
 	font-style: normal;
 }
 
@@ -106,51 +106,6 @@ tt, code, kbd, samp {
 	background: var(--flash);
 	color: white;
 }
-
-/*  links -------------------------------------
-		- idea from https://up.docs.apex.sh
-		- setup for all links in section is risky/tricky
-		- maybe I'll come up with a better solution
-*/
-a {
-	position: relative;
-	padding: 0 .7rem .1rem;
-	border-bottom: .1rem solid hsla(15, 100%, 50%, 0.5);
-  user-select: none;
-	white-space: nowrap;
-	color: inherit;
-	transition: color .3s;
-}
-
-a:before {
-  content: '';
-  position: absolute;
-  width: 100%;
-  height: 2.8rem;
-  bottom: -.2rem;
-	left: 0;
-	white-space: nowrap;
-	background: var(--prime);
-	border-radius: var(--border-r);
-  visibility: hidden;
-	transform: scaleX(0);
-	transform-origin: left center;
-  transition: all .3s var(--out-back);
-  z-index: -1;
-}
-
-a:hover,
-a:active  {
-  /* color: var(--flash); */
-  color: white;
-}
-
-a:hover:before  {
-  visibility: visible;
-  transform: scaleX(1);
-}
-
-a:hover > .icon { stroke: var(--flash) }
 
 /*	opinionated styles --------------------- */
 h1, h2 {
@@ -246,6 +201,85 @@ button[outline] {
   color: currentColor;
 }
 
+/*  links -------------------------------------
+		- idea from https://up.docs.apex.sh
+		
+		How can this be solved?
+		Setup for all links is risky/tricky
+
+		We need global <a>-styles and <ul>-styles inside markdown.
+		These bleed into places, where not wanted (i.e. nav, homepage)
+		Same with lists - see below
+
+		THIS WAY IS SHITTY!!
+		I'm too blind to see...
+*/
+.linkify a:not(.open-in-repl) {
+	position: relative;
+	padding: 0 .4rem .1rem;
+	border-bottom: .1rem solid hsla(15, 100%, 50%, 0.5); /* muted --prime */
+  user-select: none;
+	white-space: nowrap;
+	color: inherit;
+	transition: color .2s;
+}
+
+.linkify a:not(.open-in-repl):hover  {
+  color: var(--flash);
+}
+
+.linkify a:not(.open-in-repl):before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: .2rem;
+  bottom: -.2rem;
+	left: 0;
+	white-space: nowrap;
+	background: var(--prime);
+	border-radius: var(--border-r);
+  visibility: hidden;
+	transform: scaleX(0);
+	transform-origin: left center;
+  transition: all .3s var(--out-back);
+  z-index: -1;
+}
+
+.linkify a:not(.open-in-repl):hover:before  {
+  visibility: visible;
+  transform: scaleX(1);
+}
+
+a:hover > .icon { stroke: var(--flash) }
+
+/*  lists ---------------------------------- */
+.listify ol,
+.listify ul {
+  --list-padding: 2.9rem;
+
+  list-style: none;
+  color: currentColor;
+  margin-left: var(--list-padding);
+}
+
+.listify ol > li,
+.listify ul > li {
+  margin-bottom: 0.8rem;
+  max-width: calc(var(--linemax) - var(--list-padding));
+}
+
+.listify ul > li:before {
+	content: '';
+	position: absolute;
+	margin-top: 1.4rem;
+	margin-left: calc(var(--list-padding) * -1);
+	background-color: currentColor;
+	width: .8em;
+	height: .2rem;
+}
+
+.listify ol { list-style: decimal }
+
 /*  tables --------------------------------- */
 table {
 	margin: 4rem 0;
@@ -309,10 +343,10 @@ table span {
 .open-in-repl {
 	position: absolute;
 	margin-top: 5.4rem;
-	margin-left: -2.2rem;
+	margin-left: -2.5rem;
 	width: 3.6rem;
 	height: 3.6rem;
-	padding: .8rem;
+	padding: .9rem;
 	background-color: var(--back-light);
 	border-radius: 50%;
 	border-left: .1rem solid #c7c6c6;
