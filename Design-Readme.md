@@ -17,67 +17,38 @@ Achim
 
 **Still on the list**
 
-- [ ] **aarrghh. Browser-Tests** (developed with **Chrome**)
-	Just saw:
-
-	- Firefox dislikes my svgs
-
-	- Safari doesn't want my link-styles
-
-	- No one knows what Explorer will do...
-
-		So please, watch in Chrome for now
-
-- [ ] **figure out mobile styles**
-
-- [ ] **nav (see above)**
-
-- [ ] blog-post single-page
-
-- [ ] offset for #anchors. They're below nav. 
-
-- [ ] smooth-scroll solution? 
-
-- [ ] REPL – "click to run"
-
 - [ ] REPL – lost SplitPanes (css)
-
 - [ ] REPL – user menu
-  not able to login/load/check
-
+	not able to login/load/check
 - [ ] REPL – wrong viewer-height
-
+- [x] <strike>REPL – "click to run"</strike>
+- [ ] right top-offset for #anchors. (smooth-scroll solution?)
 - [ ] some mindful/helpful animations?
-
-- [ ] code cleanup
-
-- [ ] list-styles
-
+- [ ] Browser-testing
+  - [x] <strike>Firefox dislikes my svgs</strike>
+  - [x]  <strike>Safari doesn't want my link-styles</strike>
+  - [ ] No one knows what Explorer will do...
+- [ ] make Link- and List-solution more practicable
+	see Notes in global.css
+- [x] <strike>figure out mobile styles</strike>
+- [x] <strike>nav</strike>
+- [x] <strike>blog-post single-page (rough)</strike>
+- [x] <strike>list-styles</strike>
 - [x] <strike>REPL – fix file-edit (css)</strike>
-
 - [x] <strike>links</strike>
-
 - [x] <strike>replace hljs with prism (smaller footprint)</strike>
-
 - [x] <strike>fix guide-padding</strike>
-
 - [x] <strike>site icons</strike>
-
 - [x] <strike>current section icon</strike>
-
 - [x] <strike>fix blockquotes</strike>
-
 - [x] <strike>wrong font in syntax-highlighter</strike>
-
 - [x] <strike>bigger h3</strike>
-
 - [x] <strike>Home-/Landing-page just rough</strike>
-
 - [x] <strike>blog (rough list-page)</strike>
-
 - [x] <strike>repl (rough)</strike>
-
 - [x] <strike>error (very, very rough)</strike>
+
+
 
 ---
 

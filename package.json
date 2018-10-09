@@ -71,10 +71,9 @@
   },
   "now": {
     "env": {
-      "NODE_ENV": "production",
-      "BASEURL": "https://svelte.technology"
+      "NODE_ENV": "production"
     },
-    "alias": "svelte.technology.redesign",
+    "alias": "svelte-redesign",
     "files": [
       "build",
       "static",

@@ -20,17 +20,17 @@
 	<ul class='grid stretch'>
 		<li class='box bg-prime white'>
 			<Logo size={88} outer='none' inner='fill:none; stroke:white;' />
-			<h2>Solved: The web's JavaScript bloat crisis</h2>
+			<h2 style='padding:2.4rem 0 0 0'>Solved: The web's JavaScript bloat crisis</h2>
 			<p>Svelte turns your templates into tiny, framework-less vanilla JavaScript</p>
 		</li>
 		<li class='box bg-flash white'>
 			<Logo size={88} outer='none' inner='fill:none; stroke:white;' />
-			<h2>Simple and familiar</h2>
+			<h2 style='padding:2.4rem 0 0 0'>Simple and familiar</h2>
 			<p>Build apps out of composable, easy-to-write blocks using languages you already know</p>
 		</li>
 		<li class='box bg-second white'>
 			<Logo size={88} outer='none' inner='fill:none; stroke:white;' />
-			<h2>Super fast, rock solid</h2>
+			<h2 style='padding:2.4rem 0 0 0'>Super fast, rock solid</h2>
 			<p>Compile-time static analysis ensures the browser does no more work than it needs to</p>
 		</li>
 	</ul>
@@ -99,15 +99,16 @@
 <style>
 	.container {
 		padding: 10rem var(--side-page);
-		/* padding: var(--nav-h) var(--side-page) 0; */
 	}
 
 	.container ul {
-		list-style: none
+		list-style: none;
 	}
 
 	/* max line-length ~60 chars */
-	li:not(.box) > p { max-width: var(--linemax) }
+	li:not(.box) > p {
+		max-width: var(--linemax)
+	}
 
 	/* darken text for accesibility */
 	:global(.back-light) {
@@ -116,47 +117,41 @@
 
 	.logo {
 		text-align: center;
-		/* display: flex; */
-		/* flex-wrap: wrap; */
-		/* align-items: center; */
-		/* justify-content: center; */
 	}
 
-	.logo> :global(svg) {
+	.logo > :global(svg) {
 		position: relative;
-		margin-top: var(--top-offset);
-		/* margin: -6rem 0 0 0; */
-		/* margin: -.9rem 1.2rem 0 0; */
 	}
 
-	.logo>h1 {
+	.logo > h1 {
 		margin: 2rem 0;
 		font-size: 4.8rem;
-		/* font-size: 5.6rem; */
-		/* margin: 2rem 4rem 0; */
 		color: var(--second);
 	}
 
-	.logo>h2 {
+	.logo > h2 {
 		position: relative;
-		/* top: .1rem; */
 		font-size: 1.7rem;
 		text-align: center;
 		animation: slow-fade-demo 6s var(--inout-cubic) infinite;
 	}
 
 	.learn-btn {
+		all: unset;
+  	cursor: pointer;
 		display: block;
 		margin-top: 4rem;
 		text-align: center;
 	}
 
-	.legend  { padding-top: 4rem }
+	.legend { padding-top: 4rem }
 
-	.box>svg { margin: 1.6rem 0 2.4rem }
+	.box > svg {
+		margin: 1.6rem 0 2.4rem
+	}
 
-	.box>h2,
-	.box>p {
+	.box > h2,
+	.box > p {
 		font-size: var(--h5);
 	}
 
@@ -170,15 +165,28 @@
 
 	/* simple placeholder-animation */
 	@keyframes slow-fade-demo {
+		0%, 75%, 100% { opacity: 1 }
+		85% { opacity: 0 }
+	}
 
-		0%,
-		75%,
-		100% {
-			opacity: 1;
+	@media screen and (min-width: 870px) {
+		.logo {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			justify-content: center;
+		}
+		
+		.logo > h1 {
+			position: relative;
+			top: -.8rem;
+			font-size: 5.6rem;
+			margin: 2rem 2rem 0 1rem;
 		}
 
-		85% {
-			opacity: 0;
+		.logo > h2 {
+			top: .6rem;
+			text-align: left;
 		}
 	}
 </style>
