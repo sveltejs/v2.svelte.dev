@@ -83,6 +83,11 @@
 		cursor: pointer;
 	}
 
+	/* no linkify on these */
+	small a        { all: unset }
+	small a:before { all: unset }
+
+
 	section :global(blockquote) {
 		color: var(--flash);
 		border: var(--border-w) solid currentColor;
@@ -122,11 +127,6 @@
 			const anchors = this.refs.container.querySelectorAll('[id]');
 			let positions;
 			
-			// NOT YET – see import above
-			// const cssprop = new CustomProperties()
-			// const offset = parseInt(cssprop.get('nav-h')) + parseInt(cssprop.get('top-offset')) + 'rem'
-			// console.log(offset);
-
 			const onresize = () => {
 				const { top } = this.refs.container.getBoundingClientRect();
 				positions = [].map.call(anchors, anchor => {
