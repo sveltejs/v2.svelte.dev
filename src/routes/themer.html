@@ -1,0 +1,84 @@
+<svelte:head>
+	<title>Svelte • Themer</title>
+</svelte:head>
+
+<div class='wrap'>
+	<h2>theme colors</h2>
+	<p>One of my first little component-experiments. Just change colors or values and zap through pages and see what happens. 🤪<br>
+	Most styling is done with css-vars. So we're able to change on-the-fly.
+	
+	</p>
+	<h6 style='margin-bottom: 3.2rem; color:var(--prime)'>NOTE: During my local-playing Chrome sometimes crashes on closing color-fields!</h6>
+	<section class='grid'>
+		{#each themecolors as color (color)}
+		<div class="swatch" style="background-color: var(--{color})">
+			<h6>{color}</h6>
+			<ThemeInput {color} />
+		</div>
+		{/each}
+	</section>
+
+	<h2>styling values</h2>
+	<section class='grid'>
+		{#each styling as text (text)}
+		<div class="">
+			<label>
+				<ThemeInput {text} /> <h6>{text}</h6>
+			</label>
+		</div>
+		{/each}
+	</section>
+</div>
+
+<style>
+	.wrap {
+		padding: var(--top-offset) var(--side-page) 0;
+	}
+
+	.grid {
+    display: grid;
+    grid-gap: 2rem 2.4rem;
+    grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+		width: 100%;
+  }
+
+  .swatch {
+    padding: 0.8rem 1.6rem;
+    color: white;
+    height: 14rem;
+    overflow: hidden;
+    box-shadow: 0.2rem 0.2rem 0.6rem 0.05rem rgba(95, 95, 97, 0.3);
+	}
+	
+	h2 {
+		margin-top: 16rem;
+		padding: 4rem 1.6rem 5.6rem;
+		border-top: var(--border-w) solid var(--second);
+		color: var(--second)
+	}
+
+	h2:first-of-type {
+		margin-top: 0;
+	}
+
+	p {
+		max-width: var(--linemax);
+		margin-bottom: 3.2rem;
+	}
+</style>
+
+<script>
+	export default {
+		components: {
+			Icon: '../components/icon.html',
+			Logo: '../components/logo.html',
+			Iso: '../components/isometry.html',
+			ThemeInput: '../components/theme-input.html',
+		},
+
+		data: _ => ({
+      themecolors: ['back', 'prime', 'second', 'flash', 'text'],
+      styling: ['nav-h', 'h2', 'h4'],
+    })
+	}
+</script>
