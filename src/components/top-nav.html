@@ -52,13 +52,13 @@
 		background-color: black;
 		pointer-events: none;
 		opacity: 0;
-		transition: opacity 0.4s;
+		transition: opacity .4s;
 		z-index: 3;
 	}
 
 	.mousecatcher.open {
 		pointer-events: all;
-		opacity: 0.3;
+		opacity: .3;
 	}
 
 	@keyframes fadein {
@@ -75,7 +75,7 @@
 		height: var(--nav-h);
 		padding: 0 var(--side-nav);
 		margin: 0 auto;
-		background-color: rgba(255, 255, 255, 0.93);
+		background-color: rgba(255, 255, 255, .93);
 		box-shadow: 0 .3rem .9rem -.2rem rgba(0,0,0,.5);
 		font-family: var(--font-ui);
 		z-index: 10;
@@ -126,6 +126,7 @@
 
 	.logo {
 		position: relative;
+		top: .3rem;
 		width: 16rem;
 		color: var(--second);
 		-webkit-tap-highlight-color: transparent;
@@ -135,15 +136,13 @@
 
 	.logotype {
 		display: none;
-		position: relative;
-		top: 0.3rem;
 		font-size: 2.8rem;
-		letter-spacing: 0.12em;
+		letter-spacing: .12em;
 	}
 
 	.logo :global(svg) {
 		float: left;
-		margin-right: 0.6rem;
+		margin-right: .6rem;
 	}
 
 	.active {

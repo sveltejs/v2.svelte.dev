@@ -48,7 +48,8 @@
 /*	typo vars ------------------------------ */
 .typo-default {
 	--unit:     .8rem;
-	--h6:      1.3rem;
+	--code-fs: 1.3rem;
+	--h6:      1.4rem;
 	--h5:      1.6rem;
 	--h4:      1.8rem;
 	--h3:      1.6rem;
@@ -85,7 +86,7 @@ i, em {
 }
 
 tt, code, kbd, samp {
-	font: 300 1.2rem/1.7 var(--font-mono);
+	font: 300 var(--code-fs)/1.7 var(--font-mono);
 }
 
 :not(pre) > p > code {
@@ -112,7 +113,7 @@ h1, h2 {
 	font-family: var(--font-alt);
 	letter-spacing: 0.17em;
 	text-transform: uppercase;
-	line-height: calc(4/3);
+	line-height: calc(4/2.5);
 	pointer-events: none;
 }
 
