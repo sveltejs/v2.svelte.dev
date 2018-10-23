@@ -56,7 +56,7 @@ module.exports = {
 			extensions: ['.js', '.json', '.html'],
 			mainFields: ['svelte', 'module', 'browser', 'main']
 		},
-		externals: Object.keys(pkg.dependencies),
+		externals: Object.keys(pkg.dependencies).concat('encoding'),
 		module: {
 			rules: [
 				{
