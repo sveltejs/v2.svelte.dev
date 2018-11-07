@@ -167,6 +167,13 @@ You can also bind to certain values — so far `innerWidth`, `outerWidth`, `inne
 ```
 
 
+### `<svelte:document>`
+
+The `<svelte:document>` tag, just like `<svelte:window>`, gives you a convenient way to declaratively add event listeners to the `document` object. Also, listeners are automatically removed when the component is destroyed. Currently useful only for listening to `mouseenter` and `mouseleave` events.
+
+Available since [2.15.0](https://github.com/sveltejs/svelte/blob/master/CHANGELOG.md#2150).
+
+
 ### `<svelte:head>`
 
 If you're building an application with Svelte — particularly if you're using [Sapper](https://sapper.svelte.technology) — then it's likely you'll need to add some content to the `<head>` of your page, such as adding a `<title>` element.
