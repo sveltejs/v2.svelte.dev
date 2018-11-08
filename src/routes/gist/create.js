@@ -27,6 +27,9 @@ export async function post(req, res) {
 		};
 		components.forEach(component => {
 			const file = `${component.name}.${component.type}`;
+			if (!component.source.trim()) {
+				throw new Error(`GitHub does not allow saving gists with empty files - ${file}`);
+			}
 			files[file] = { content: component.source };
 		});
 

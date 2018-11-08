@@ -241,6 +241,9 @@
 
 					components.forEach(module => {
 						const file = `${module.name}.${module.type}`;
+						if (!module.source.trim()) {
+							throw new Error(`GitHub does not allow saving gists with empty files - ${file}`);
+						}
 
 						if (!gist.files[files] || module.source !== gist.files[file].content) {
 							files[file] = { content: module.source };
