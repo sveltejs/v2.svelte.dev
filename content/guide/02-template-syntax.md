@@ -41,6 +41,14 @@ You can also use tags in attributes:
 ```
 [Boolean attributes](https://www.w3.org/TR/html5/infrastructure.html#sec-boolean-attributes) like `hidden` will be omitted if the tag expression evaluates to false.
 
+Sometimes you might want to omit an attribute which is not a boolen attribute, depending on values in data. In that case you may use the spread operator inside a tag. The tag below
+
+```html
+<div {...foo}> </div>
+```
+
+will set the keys/values of `foo` as attributes on the `div` element.
+
 
 ### HTML
 
