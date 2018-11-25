@@ -131,7 +131,7 @@
 <script>
 	import ExampleSelector from './ExampleSelector.html';
 	import UserMenu from './UserMenu.html';
-	import doNotZip from 'do-not-zip';
+	import * as doNotZip from 'do-not-zip';
 	import downloadBlob from '../_utils/downloadBlob.js';
 
 	const isMac = typeof navigator !== 'undefined' && navigator.platform === 'MacIntel';
@@ -241,6 +241,9 @@
 
 					components.forEach(module => {
 						const file = `${module.name}.${module.type}`;
+						if (!module.source.trim()) {
+							throw new Error(`GitHub does not allow saving gists with empty files - ${file}`);
+						}
 
 						if (!gist.files[files] || module.source !== gist.files[file].content) {
 							files[file] = { content: module.source };
@@ -312,7 +315,7 @@ var app = new App({
 
 export default app;` });
 
-				downloadBlob(doNotZip(files), 'svelte-app.zip');
+				downloadBlob(doNotZip.toBlob(files), 'svelte-app.zip');
 
 				this.set({ downloading: false });
 			}

@@ -24,7 +24,7 @@ module.exports = {
 						options: {
 							dev,
 							hydratable: true,
-							hotReload: true
+							hotReload: dev,
 						}
 					}
 				},
