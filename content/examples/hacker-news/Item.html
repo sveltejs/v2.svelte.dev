@@ -1,4 +1,17 @@
-<a href='#/top/1' on:click='back(event)'>&laquo; back</a>
+<script>
+	import Comment from './Comment.html';
+
+	export let item;
+
+	// [svelte-upgrade suggestion]
+	// review these functions and remove unnecessary 'export' keywords
+	export function back(event) {
+		event.preventDefault();
+		window.history.back();
+	}
+</script>
+
+<a href='#/top/1' on:click='{back}'>&laquo; back</a>
 
 <article>
 	<a href='{item.url}'>
@@ -30,18 +43,3 @@
 		margin: 0;
 	}
 </style>
-
-<script>
-	import Comment from './Comment.html';
-
-	export default {
-		components: { Comment },
-
-		methods: {
-			back(event) {
-				event.preventDefault();
-				window.history.back();
-			}
-		}
-	};
-</script>

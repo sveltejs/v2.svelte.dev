@@ -1,3 +1,26 @@
+<script>
+	import { beforeUpdate } from 'svelte';
+	import Summary from './Summary.html';
+
+	const PAGE_SIZE = 20;
+
+	export let items;
+	export let offset;
+	export let page;
+
+	let previous_page;
+
+	beforeUpdate(async () => {
+		if (page !== previous_page) {
+			previous_page = page;
+
+			items = await fetch(`https://node-hnapi.herokuapp.com/news?page=${page}`).then(r => r.json())
+			offset = PAGE_SIZE * (page - 1);
+			window.scrollTo(0, 0);
+		}
+	});
+</script>
+
 {#if items}
 	{#each items as item, i}
 		<Summary {item} {i} {offset}/>
@@ -24,29 +47,3 @@
 		to { opacity: 1; }
 	}
 </style>
-
-<script>
-	import Summary from './Summary.html';
-
-	const PAGE_SIZE = 20;
-
-	export default {
-		async onstate({ changed, current }) {
-			if (changed.page) {
-				const { page } = current;
-				const items =  await fetch(`https://node-hnapi.herokuapp.com/news?page=${page}`).then(r => r.json());
-
-				this.set({
-					items,
-					offset: PAGE_SIZE * (page - 1)
-				});
-
-				window.scrollTo(0,0);
-			}
-		},
-
-		components: {
-			Summary
-		}
-	};
-</script>
