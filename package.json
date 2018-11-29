@@ -42,7 +42,7 @@
     "now": "^11.3.8",
     "sapper": "^0.23.1",
     "style-loader": "^0.22.0",
-    "svelte": "^2.9.11",
+    "svelte": "^2.15.3",
     "svelte-loader": "^2.10.1",
     "webpack": "^4.16.5",
     "workerize-loader": "^1.0.2"

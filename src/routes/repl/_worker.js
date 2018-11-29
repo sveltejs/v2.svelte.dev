@@ -14,6 +14,11 @@ function loadSvelte(version) {
 	if (!svelteCache.has(version)) {
 		if (version === 'local') {
 			svelteCache.set(version, import(/* webpackChunkName: "svelte" */ 'svelte'));
+		} else if (version === 'alpha' || version[0] === '3') {
+			svelteCache.set(version, new Promise((fulfil => {
+				importScripts(`https://unpkg.com/svelte@${version}/compiler.js`);
+				fulfil(global.svelte);
+			})))
 		} else {
 			svelteCache.set(version, new Promise((fulfil => {
 				importScripts(`https://unpkg.com/svelte@${version}/compiler/svelte.js`);
@@ -45,6 +50,8 @@ let cached = {
 
 let currentToken;
 
+const is_svelte_module = id => id === 'svelte' || id.startsWith('svelte/');
+
 async function getBundle(mode, cache, lookup) {
 	let bundle;
 	let error;
@@ -56,13 +63,24 @@ async function getBundle(mode, cache, lookup) {
 		bundle = await rollup.rollup({
 			input: './App.html',
 			external: id => {
-				return id[0] !== '.';
+				return id[0] !== '.' && !is_svelte_module(id);
 			},
 			plugins: [{
 				resolveId(importee, importer) {
+					// v3 hack
+					if (is_svelte_module(importee)) return importee;
+
 					if (importee in lookup) return importee;
 				},
 				load(id) {
+					if (id === 'svelte') {
+						return fetch('https://unpkg.com/svelte@alpha/index.js').then(r => r.text());
+					}
+
+					if (id.startsWith('svelte/')) {
+						return fetch(id.replace('svelte', 'https://unpkg.com/svelte@alpha')).then(r => r.text());
+					}
+
 					if (id in lookup) return lookup[id].source;
 				},
 				transform(code, id) {
@@ -72,7 +90,7 @@ async function getBundle(mode, cache, lookup) {
 
 					const { js, css, stats } = svelte.compile(code, Object.assign({
 						generate: mode,
-						format: 'es',
+						format: svelte.VERSION > '3' ? 'esm' : 'es',
 						name: name,
 						filename: name + '.html',
 						onwarn: warning => {

@@ -216,7 +216,11 @@
 						if (toDestroy) {
 							removeStyles();
 
-							toDestroy.destroy();
+							if (toDestroy.$destroy) {
+								toDestroy.$destroy();
+							} else {
+								toDestroy.destroy();
+							}
 							toDestroy = null;
 						}
 
@@ -280,12 +284,14 @@
 
 							component = window.app = window.component = iframe.contentWindow.component;
 
-							component.on('state', ({ current }) => {
-								if (updating) return;
-								updating = true;
-								this.fire('data', { current });
-								updating = false;
-							});
+							if (component.on) {
+								component.on('state', ({ current }) => {
+									if (updating) return;
+									updating = true;
+									this.fire('data', { current });
+									updating = false;
+								});
+							}
 						} catch (error) {
 							// TODO show in UI
 							component = null;
@@ -346,7 +352,11 @@
 						if (component) {
 							this.set({ error: null });
 							updating = true;
-							component.set(data);
+							if (component.$set) {
+								component.$set(data);
+							} else {
+								component.set(data);
+							}
 							updating = false;
 						} else {
 							init();
