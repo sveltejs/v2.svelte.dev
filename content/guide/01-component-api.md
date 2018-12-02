@@ -9,12 +9,16 @@ As we saw above, you create a component instance with the `new` keyword:
 import MyComponent from './MyComponent.html';
 
 const component = new MyComponent({
-	// `target` is the only required option – the element
-	// to render the component to
+	// `target` is the only required option - a DOM element.
+	// The component will be appended at the bottom of this element.
 	target: document.querySelector('main'),
 
-	// `data` is optional. A component can also have
-	// default data – we'll learn about that later.
+	// `anchor` is optional - an child element of the target.
+	// The component will become a sibling of the anchor, preceding it.
+	anchor: document.querySelector('main #child'),
+
+	// `data` is optional.
+	// A component can have default data – we'll learn about that later.
 	data: {
 		questions: [
 			'life',
@@ -24,6 +28,21 @@ const component = new MyComponent({
 		answer: 42
 	}
 });
+```
+
+```html
+<!-- { repl: false } -->
+<body>
+	<main>
+		<div></div>
+
+		<!-- rendered here if we use `target` and `anchor` -->
+		<div id="child"></div>
+
+		<div></div>
+		<!-- rendered here if we only use `target` -->
+	</main>
+<body>
 ```
 
 Every Svelte component instance has a small number of methods you can use to control it, in addition to any [custom methods](guide#custom-methods) you add.
