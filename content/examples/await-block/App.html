@@ -15,9 +15,9 @@
 		methods: {
 			findAnswer() {
 				this.set({
-					promise: new Promise(fulfil => {
+					promise: new Promise(fulfill => {
 						const delay = 1000 + Math.random() * 3000;
-						setTimeout(() => fulfil(42), delay);
+						setTimeout(() => fulfill(42), delay);
 					})
 				});
 			}
