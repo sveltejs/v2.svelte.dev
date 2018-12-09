@@ -1,5 +1,5 @@
 <script>
-	import { ondestroy, onmount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 
 	// [svelte-upgrade suggestion]
 	// manually refactor all references to __this
@@ -9,7 +9,7 @@
 	export let duration = 5000;
 	export let start;
 
-	onmount(() => {
+	onMount(() => {
 		reset();
 
 		const update = () => {
@@ -24,7 +24,7 @@
 		update();
 	});
 
-	ondestroy(() => {
+	onDestroy(() => {
 		if (__this.frame) {
 			cancelAnimationFrame(__this.frame);
 		}
