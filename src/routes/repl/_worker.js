@@ -52,6 +52,20 @@ let currentToken;
 
 const is_svelte_module = id => id === 'svelte' || id.startsWith('svelte/');
 
+const cache = new Map();
+function fetch_if_uncached(url) {
+	if (!cache.has(url)) {
+		cache.set(url, fetch(url)
+			.then(r => r.text())
+			.catch(err => {
+				console.error(err);
+				cache.delete(url);
+			}));
+	}
+
+	return cache.get(url);
+}
+
 async function getBundle(mode, cache, lookup) {
 	let bundle;
 	let error;
@@ -63,23 +77,25 @@ async function getBundle(mode, cache, lookup) {
 		bundle = await rollup.rollup({
 			input: './App.html',
 			external: id => {
-				return id[0] !== '.' && !is_svelte_module(id);
+				if (id[0] === '.') return false;
+				if (is_svelte_module(id)) return false;
+				if (id.startsWith('https://')) return false;
+				return true;
 			},
 			plugins: [{
 				resolveId(importee, importer) {
 					// v3 hack
-					if (is_svelte_module(importee)) return importee;
+					if (importee === `svelte`) return `https://unpkg.com/svelte@alpha/index.js`;
+					if (importee.startsWith(`svelte`)) return `https://unpkg.com/svelte@alpha/${importee.slice(7)}`;
+
+					if (importer && importer.startsWith(`https://`)) {
+						return new URL(importee, importer).href;
+					}
 
 					if (importee in lookup) return importee;
 				},
 				load(id) {
-					if (id === 'svelte') {
-						return fetch('https://unpkg.com/svelte@alpha/index.js').then(r => r.text());
-					}
-
-					if (id.startsWith('svelte/')) {
-						return fetch(id.replace('svelte', 'https://unpkg.com/svelte@alpha')).then(r => r.text());
-					}
+					if (id.startsWith(`https://`)) return fetch_if_uncached(id);
 
 					if (id in lookup) return lookup[id].source;
 				},
