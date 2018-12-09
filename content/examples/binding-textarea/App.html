@@ -4,8 +4,8 @@
 	export let markdown;
 </script>
 
-<textarea bind:value='markdown' resize='none'></textarea>
-<div class='output'>{@html marked(markdown)}</div>
+<textarea bind:value={markdown} resize="none"></textarea>
+<div class="output">{@html marked(markdown)}</div>
 
 <style>
 	textarea {

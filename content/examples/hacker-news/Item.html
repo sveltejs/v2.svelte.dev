@@ -1,28 +1,26 @@
 <script>
-	import Comment from './Comment.html';
+	import Comment from "./Comment.html";
 
 	export let item;
 
-	// [svelte-upgrade suggestion]
-	// review these functions and remove unnecessary 'export' keywords
-	export function back(event) {
+	function back(event) {
 		event.preventDefault();
 		window.history.back();
 	}
 </script>
 
-<a href='#/top/1' on:click='{back}'>&laquo; back</a>
+<a href="#/top/1" on:click={back}>&laquo; back</a>
 
 <article>
-	<a href='{item.url}'>
+	<a href="{item.url}">
 		<h1>{item.title}</h1>
 		<small>{item.domain}</small>
 	</a>
 
-	<p class='meta'>submitted by {item.user} {item.time_ago}
+	<p class="meta">submitted by {item.user} {item.time_ago}
 </article>
 
-<div class='comments'>
+<div class="comments">
 	{#each item.comments as comment}
 		<Comment {comment}/>
 	{/each}

@@ -6,23 +6,20 @@
 
 	export let todos;
 
-	// [svelte-upgrade suggestion]
-	// review these functions and remove unnecessary 'export' keywords
-	export function toggle(id) {
-
+	function toggle(id) {
 		todos = todos.map(todo => {
-				if (todo.id === id) {
-					// return a new object
-					return {
-						id,
-						done: !todo.done,
-						text: todo.text
-					};
-				}
+			if (todo.id === id) {
+				// return a new object
+				return {
+					id,
+					done: !todo.done,
+					text: todo.text
+				};
+			}
 
-				// return the same object
-				return todo;
-			});
+			// return the same object
+			return todo;
+		});
 	}
 </script>
 

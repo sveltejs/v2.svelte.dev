@@ -11,29 +11,25 @@
 		hashchange();
 	});
 
-	// [svelte-upgrade suggestion]
-	// review these functions and remove unnecessary 'export' keywords
-	export function hashchange() {
+	async function hashchange() {
 		// the poor man's router!
 		const path = window.location.hash.slice(1);
 
 		if (path.startsWith('/item')) {
 			const id = path.slice(6);
-			const item = await fetch(`https://node-hnapi.herokuapp.com/item/${id}`).then(r => r.json());
-
-			item = item;
+			item = await fetch(`https://node-hnapi.herokuapp.com/item/${id}`).then(r => r.json());
 
 			window.scrollTo(0,0);
 		} else if (path.startsWith('/top')) {
-			const page = +path.slice(5);
-			item = null, page = page;
+			page = +path.slice(5);
+			item = null;
 		} else {
 			window.location.hash = '/top/1';
 		}
 	}
 </script>
 
-<svelte:window on:hashchange='{hashchange}'/>
+<svelte:window on:hashchange={hashchange}/>
 
 <main>
 	{#if item}

@@ -22,10 +22,10 @@
 	};
 </script>
 
-<input type='checkbox' bind:checked=visible> visible
+<input type=checkbox bind:checked={visible}> visible
 
 {#if visible}
-	<div class='centered' in:wheee='{{duration: 8000}}' out:fade>
+	<div class="centered" in:wheee="{{duration: 8000}}" out:fade>
 		<span>wheeee!!!!!</span>
 	</div>
 {/if}

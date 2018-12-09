@@ -1,100 +1,79 @@
 <script>
 	import { onMount } from 'svelte';
-
-	export let svg;
-
 	import { scaleLinear } from 'd3-scale';
 
-	const xScale = scaleLinear();
-	const yScale = scaleLinear();
-
 	export let points;
-	export let padding = { top: 20, right: 15, bottom: 20, left: 25 };
-	export let width = 500;
-	export let height = 200;
-	export let yTicks = [0, 2, 4, 6, 8];
-	export let xTicks = [1980, 1990, 2000, 2010];
-	export let formatMobile = (tick) {
+
+	const yTicks = [0, 2, 4, 6, 8];
+	const xTicks = [1980, 1990, 2000, 2010];
+	const padding = { top: 20, right: 15, bottom: 20, left: 25 };
+
+	let svg;
+	let width = 500;
+	let height = 200;
+
+	let xScale;
+	let yScale;
+	let minX;
+	let maxX;
+	let path;
+	let area;
+
+	$: xScale = scaleLinear()
+		.domain([minX, maxX])
+		.range([padding.left, width - padding.right]);
+
+	$: yScale = scaleLinear
+		.domain([Math.min.apply(null, yTicks), Math.max.apply(null, yTicks)])
+		.range([height - padding.bottom, padding.top]);
+
+	$: minX = points[0].x;
+	$: maxX = points[points.length - 1].x;
+	$: path = `M${points.map(p => `${xScale(p.x)},${yScale(p.y)}`).join('L')}`;
+	$: area = `${path}L${xScale(maxX)},${yScale(0)}L${xScale(minX)},${yScale(0)}Z`;
+
+	function formatMobile (tick) {
 		return "'" + tick % 100;
-	};
-
-	function minX() {
-		return points[0].x;
 	}
 
-	function maxX() {
-		return points[points.length - 1].x;
+	function resize() {
+		const bcr = svg.getBoundingClientRect();
+		width = bcr.width;
+		height = bcr.height;
 	}
 
-	function xScale() {
-		return xScale()
-			.domain([minX(), maxX()])
-			.range([padding.left, width - padding.right]);
-	}
-
-	function yScale() {
-		return yScale()
-			.domain([Math.min.apply(null, yTicks), Math.max.apply(null, yTicks)])
-			.range([height - padding.bottom, padding.top]);
-	}
-
-	function path() {
-		return 'M' + points
-			.map(function (point, i) {
-				return xScale()(point.x) + ',' + yScale()(point.y);
-			})
-			.join('L');
-	}
-
-	function area() {
-		return path() + (
-			'L' + xScale()(maxX()) + ',' + yScale()(0) +
-			'L' + xScale()(minX()) + ',' + yScale()(0) +
-			'Z'
-		);
-	}
-
-	onMount(() => {
-		resize();
-	});
-
-	// [svelte-upgrade suggestion]
-	// review these functions and remove unnecessary 'export' keywords
-	export function resize() {
-		const { width, height } = svg.getBoundingClientRect();
-		width = width, height = height;
-	}
+	onMount(resize);
 </script>
 
 <svelte:window on:resize='{resize}'/>
 
-<div class='chart'>
+<div class="chart">
 	<h2>Arctic sea ice minimum</h2>
 
 	<svg ref:svg>
 		<!-- y axis -->
-		<g class='axis y-axis' transform='translate(0, {padding.top})'>
+		<g class="axis y-axis" transform="translate(0, {padding.top})">
 			{#each yTicks as tick}
-				<g class='tick tick-{tick}' transform='translate(0, {yScale()(tick) - padding.bottom})'>
-					<line x2='100%'></line>
-					<text y='-4'>{tick} {tick === 8 ? ' million sq km' : ''}</text>
+				<g class="tick tick-{tick}" transform="translate(0, {yScale(tick) - padding.bottom})">
+					<line x2="100%"></line>
+					<text y="-4">{tick} {tick === 8 ? ' million sq km' : ''}</text>
 				</g>
 			{/each}
 		</g>
 
 		<!-- x axis -->
-		<g class='axis x-axis'>
+		<g class="axis x-axis">
 			{#each xTicks as tick}
-				<g class='tick tick-{ tick }' transform='translate({xScale()(tick)},{height})'>
-					<line y1='-{height}' y2='-{padding.bottom}' x1='0' x2='0'></line>
-					<text y='-2'>{width > 380 ? tick : formatMobile(tick)}</text>
+				<g class="tick tick-{ tick }" transform="translate({xScale(tick)},{height})">
+					<line y1="-{height}" y2="-{padding.bottom}" x1="0" x2="0"></line>
+					<text y="-2">{width > 380 ? tick : formatMobile(tick)}</text>
 				</g>
 			{/each}
 		</g>
 
 		<!-- data -->
-		<path class='path-area' d='{area()}'></path>
-		<path class='path-line' d='{path()}'></path>
+		<path class="path-area" d={area}></path>
+		<path class="path-line" d={path}></path>
 	</svg>
 
 	<p>Average September extent. Source: <a href='https://climate.nasa.gov/vital-signs/arctic-sea-ice/'>NSIDC/NASA</a>

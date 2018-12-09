@@ -1,9 +1,9 @@
 <script>
+	// TODO this example needs updating
 	import { onMount } from 'svelte';
+	import { scaleLinear } from 'd3-scale';
 
 	export let svg;
-
-	import { scaleLinear } from 'd3-scale';
 
 	const xScale = scaleLinear();
 	const yScale = scaleLinear();
@@ -43,9 +43,7 @@
 		resize();
 	});
 
-	// [svelte-upgrade suggestion]
-	// review these functions and remove unnecessary 'export' keywords
-	export function resize() {
+	function resize() {
 		const { width, height } = svg.getBoundingClientRect();
 		width = width, height = height;
 	}
