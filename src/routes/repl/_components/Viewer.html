@@ -158,6 +158,8 @@
 
 	export default {
 		oncreate() {
+			const v3 = /version=3/.test(window.location.search) || /version=alpha/.test(window.location.search);
+
 			let component;
 
 			this.refs.child.addEventListener('load', () => {
@@ -216,7 +218,7 @@
 						if (toDestroy) {
 							removeStyles();
 
-							if (toDestroy.$destroy) {
+							if (v3) {
 								toDestroy.$destroy();
 							} else {
 								toDestroy.destroy();
@@ -279,12 +281,12 @@
 
 								var component = new SvelteComponent({
 									target: document.body,
-									data: ${JSON.stringify(data)}
+									${v3 ? 'props' : 'data'}: ${JSON.stringify(data)}
 								});`);
 
 							component = window.app = window.component = iframe.contentWindow.component;
 
-							if (component.on) {
+							if (!v3) {
 								component.on('state', ({ current }) => {
 									if (updating) return;
 									updating = true;

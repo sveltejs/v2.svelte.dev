@@ -100,7 +100,7 @@ async function getBundle(mode, cache, lookup) {
 						},
 					}, commonCompilerOptions));
 
-					if (stats) {
+					if (stats && stats.hooks) {
 						if (Object.keys(stats.hooks).filter(hook => stats.hooks[hook]).length > 0) info.usesHooks = true;
 					} else if (/[^_]oncreate/.test(code)) {
 						info.usesHooks = true;
