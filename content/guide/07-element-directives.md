@@ -424,7 +424,7 @@ Some bindings are *one-way*, meaning that the values are read-only. Most are *tw
 | Name                                                            | Applies to                                   | Kind                 |
 |-----------------------------------------------------------------|----------------------------------------------|----------------------|
 | `value`                                                         | `<input>` `<textarea>` `<select>`            | <span>Two-way</span> |
-| `checked`                                                       | `<input type=checkbox>`                      | <span>Two-way</span> |
+| `checked` `indeterminate`                                       | `<input type=checkbox>`                      | <span>Two-way</span> |
 | `group` (see note)                                              | `<input type=checkbox>` `<input type=radio>` | <span>Two-way</span> |
 | `currentTime` `paused` `played` `volume`                        | `<audio>` `<video>`                          | <span>Two-way</span> |
 | `buffered` `duration` `seekable`                                | `<audio>` `<video>`                          | <span>One-way</span> |
