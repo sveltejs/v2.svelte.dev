@@ -76,83 +76,49 @@ The target node can be referenced as `this`, meaning you can do this sort of thi
 <input on:focus="this.select()" value="click to select">
 ```
 
-### Event handlers modifiers
+### Event handler modifiers
 
-If we need to change a single behaviour of the event we can invoke the correspondent method on the event like this:
+While you can invoke methods like `event.stopPropagation` directly...
 
 ```html
 <!-- { repl: false } -->
-<a on:click="event.stopPropagation()"></a>
+<div on:click="event.stopPropagation()">...</div>
 ```
 
-Should we need to invoke multiple methods on the event, though, setting up a method just for that would be unnecessarily verbose:
+...it gets annoying if you want to combine that with some other behaviour:
 
 ```html
 <!-- { repl: false } -->
-<a on:click="handleClick(event)"></a>
+<div on:click="setFoo(event)">...</div>
 
 <script>
 	export default {
 		methods: {
-			handleClick(event) {
+			setFoo(event) {
 				event.stopPropagation();
 				event.preventDefault();
+				this.set({ foo: true });
 			}
 		}
 	};
 </script>
 ```
 
-On the other hand, if we actually have an event handler, modifiers are not visible in the template:
+For that reason, Svelte lets you use *event modifiers*:
 
-```html
-<!-- { repl: false } -->
-<a on:click="doSomething(event)"></a>
-
-<script>
-	export default {
-		methods: {
-			doSomething(event) {
-				event.stopPropagation();
-				event.preventDefault();
-
-				// use the event
-			}
-		}
-	};
-</script>
-```
-
-To help with this, Svelte lets you *pipe* 5 event modifiers:
 - [`preventDefault`](https://developer.mozilla.org/en-US/docs/Web/API/Event/preventDefault)
 - [`stopPropagation`](https://developer.mozilla.org/en-US/docs/Web/API/Event/stopPropagation)
-- the 3 [`addEventListener` options](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#Parameters)):
-   - `passive` (only applies to touch/wheel events, and is applied automatically where it makes sense)
-   - `once`, `capture` (these aren't implemented in legacy mode — the compiler will throw an error in this situation. That could be fixed in future).
+- [`passive`](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#Parameters) — improves scrolling performance on touch/wheel events (Svelte will add it automatically where it's safe to do so)
+- [`once`](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#Parameters) — removes the listener after the first invocation
+- [`capture`](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#Parameter)
 
-Here the `submit` event has to flow through the `preventDefault` step on the way to `handleSubmit()`.
-Also, you can use event modifiers without an event handler.
+> `passive` and `once` are not implemented in `legacy` mode
+
+The example above can be achieved with modifiers — no need for a custom method:
 
 ```html
-<!-- { title: 'Calling node methods' } -->
-<svelte:document on:click="handleClick()" />
-<form on:submit|preventDefault="handleSubmit()">
-	<input>
-	<button type=submit on:click|stopPropagation>submit</button>
-</form>
-
-<script>
-	export default {
-		methods: {
-			handleSubmit() {
-				alert('Form was submitted, page did not reload');
-			},
-			handleClick() {
-				alert('Clicked on the document');
-			}
-		}
-	};
-</script>
+<!-- { repl: false } -->
+<div on:click|stopPropagation|preventDefault="set({ foo: true })">...</div>
 ```
 
 ### Custom events
