@@ -465,6 +465,8 @@ Here is a complete example of using two way bindings with a form:
 }
 ```
 
+> 'two way' bindings allow you to update a value in a nested property as seen in [checkbox input](repl?demo=binding-input-checkbox).
+
 ### Actions
 
 Actions let you decorate elements with additional functionality. Actions are functions which may return an object with lifecycle methods, `update` and `destroy`. The action will be called when its element is added to the DOM.
