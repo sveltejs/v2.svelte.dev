@@ -41,13 +41,6 @@ You can also use tags in attributes:
 ```
 [Boolean attributes](https://www.w3.org/TR/html5/infrastructure.html#sec-boolean-attributes) like `hidden` will be omitted if the tag expression evaluates to false. Attributes will be removed from the element if their value is `undefined` or `null`.
 
-```html
-<div {...foo}> </div>
-```
-
-will set the keys/values of `foo` as attributes on the `div` element.
-
-
 ### HTML
 
 Ordinary tags render expressions as plain text. If you need your expression interpreted as HTML, wrap it in a special `@html` tag:
