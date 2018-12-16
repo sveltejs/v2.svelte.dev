@@ -14,6 +14,11 @@ function loadSvelte(version) {
 	if (!svelteCache.has(version)) {
 		if (version === 'local') {
 			svelteCache.set(version, import(/* webpackChunkName: "svelte" */ 'svelte'));
+		} else if (version === 'alpha' || version[0] === '3') {
+			svelteCache.set(version, new Promise((fulfil => {
+				importScripts(`https://unpkg.com/svelte@${version}/compiler.js`);
+				fulfil(global.svelte);
+			})))
 		} else {
 			svelteCache.set(version, new Promise((fulfil => {
 				importScripts(`https://unpkg.com/svelte@${version}/compiler/svelte.js`);
@@ -45,6 +50,22 @@ let cached = {
 
 let currentToken;
 
+const is_svelte_module = id => id === 'svelte' || id.startsWith('svelte/');
+
+const cache = new Map();
+function fetch_if_uncached(url) {
+	if (!cache.has(url)) {
+		cache.set(url, fetch(url)
+			.then(r => r.text())
+			.catch(err => {
+				console.error(err);
+				cache.delete(url);
+			}));
+	}
+
+	return cache.get(url);
+}
+
 async function getBundle(mode, cache, lookup) {
 	let bundle;
 	let error;
@@ -56,13 +77,26 @@ async function getBundle(mode, cache, lookup) {
 		bundle = await rollup.rollup({
 			input: './App.html',
 			external: id => {
-				return id[0] !== '.';
+				if (id[0] === '.') return false;
+				if (is_svelte_module(id)) return false;
+				if (id.startsWith('https://')) return false;
+				return true;
 			},
 			plugins: [{
 				resolveId(importee, importer) {
+					// v3 hack
+					if (importee === `svelte`) return `https://unpkg.com/svelte@alpha/index.js`;
+					if (importee.startsWith(`svelte`)) return `https://unpkg.com/svelte@alpha/${importee.slice(7)}`;
+
+					if (importer && importer.startsWith(`https://`)) {
+						return new URL(importee, importer).href;
+					}
+
 					if (importee in lookup) return importee;
 				},
 				load(id) {
+					if (id.startsWith(`https://`)) return fetch_if_uncached(id);
+
 					if (id in lookup) return lookup[id].source;
 				},
 				transform(code, id) {
@@ -72,7 +106,7 @@ async function getBundle(mode, cache, lookup) {
 
 					const { js, css, stats } = svelte.compile(code, Object.assign({
 						generate: mode,
-						format: 'es',
+						format: svelte.VERSION > '3' ? 'esm' : 'es',
 						name: name,
 						filename: name + '.html',
 						onwarn: warning => {
@@ -82,7 +116,7 @@ async function getBundle(mode, cache, lookup) {
 						},
 					}, commonCompilerOptions));
 
-					if (stats) {
+					if (stats && stats.hooks) {
 						if (Object.keys(stats.hooks).filter(hook => stats.hooks[hook]).length > 0) info.usesHooks = true;
 					} else if (/[^_]oncreate/.test(code)) {
 						info.usesHooks = true;

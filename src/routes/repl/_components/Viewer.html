@@ -158,6 +158,8 @@
 
 	export default {
 		oncreate() {
+			const v3 = /version=3/.test(window.location.search) || /version=alpha/.test(window.location.search);
+
 			let component;
 
 			this.refs.child.addEventListener('load', () => {
@@ -216,7 +218,11 @@
 						if (toDestroy) {
 							removeStyles();
 
-							toDestroy.destroy();
+							if (v3) {
+								toDestroy.$destroy();
+							} else {
+								toDestroy.destroy();
+							}
 							toDestroy = null;
 						}
 
@@ -275,17 +281,19 @@
 
 								var component = new SvelteComponent({
 									target: document.body,
-									data: ${JSON.stringify(data)}
+									${v3 ? 'props' : 'data'}: ${JSON.stringify(data)}
 								});`);
 
 							component = window.app = window.component = iframe.contentWindow.component;
 
-							component.on('state', ({ current }) => {
-								if (updating) return;
-								updating = true;
-								this.fire('data', { current });
-								updating = false;
-							});
+							if (!v3) {
+								component.on('state', ({ current }) => {
+									if (updating) return;
+									updating = true;
+									this.fire('data', { current });
+									updating = false;
+								});
+							}
 						} catch (error) {
 							// TODO show in UI
 							component = null;
@@ -346,7 +354,11 @@
 						if (component) {
 							this.set({ error: null });
 							updating = true;
-							component.set(data);
+							if (component.$set) {
+								component.$set(data);
+							} else {
+								component.set(data);
+							}
 							updating = false;
 						} else {
 							init();
