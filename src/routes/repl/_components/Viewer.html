@@ -223,26 +223,24 @@
 					this.createHtml = () => {
 						const { data } = this.get();
 
-						try {
-							evalInIframe(`${ssr.code}
-								var rendered = SvelteComponent.render(${JSON.stringify(data)});
+						replProxy.eval(`${ssr.code}
+							var rendered = SvelteComponent.render(${JSON.stringify(data)});
 
-								if (rendered.css.code) {
-									var style = document.createElement('style');
-									style.textContent = rendered.css.code;
-									document.head.appendChild(style);
-								}
+							if (rendered.css.code) {
+								var style = document.createElement('style');
+								style.textContent = rendered.css.code;
+								document.head.appendChild(style);
+							}
 
-								document.body.innerHTML = rendered.html;
-								`)
-						} catch (error) {
+							document.body.innerHTML = rendered.html;
+						`).catch((error) => {
 							const loc = getLocationFromStack(error.stack, ssr.map);
 							if (loc) {
 								error.filename = loc.source;
 								error.loc = { line: loc.line, column: loc.column };
 							}
 							this.set({ error });
-						}
+						});
 					};
 
 					this.createComponent = () => {
