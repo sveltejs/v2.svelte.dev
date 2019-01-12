@@ -273,7 +273,7 @@
 						});
 
 						// Download the imports (sets them on iframe window when complete)
-						{
+						if (missingImports.length) {
 							let cancelled = false;
 							promise = replProxy.fetchImports(bundle);
 							promise.cancel = () => { cancelled = true };
