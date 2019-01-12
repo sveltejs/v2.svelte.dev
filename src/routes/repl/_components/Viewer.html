@@ -263,10 +263,10 @@
 							// TODO show in UI
 							hasComponent = false;
 
-							const loc = getLocationFromStack(e.stack, dom.map);
+							const loc = getLocationFromStack(error.stack, dom.map);
 							if (loc) {
-								e.filename = loc.source;
-								e.loc = { line: loc.line, column: loc.column };
+								error.filename = loc.source;
+								error.loc = { line: loc.line, column: loc.column };
 							}
 
 							this.set({ error });
