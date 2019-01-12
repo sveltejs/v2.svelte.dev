@@ -1,5 +1,10 @@
 <div class='iframe-container'>
-	<iframe title='Result' ref:child class='{error || pending || pendingImports ? "greyed-out" : ""}' srcdoc='
+	<iframe
+		title='Result'
+		ref:child
+		sandbox="allow-scripts allow-popups"
+		class='{error || pending || pendingImports ? "greyed-out" : ""}'
+		srcdoc='
 		<!doctype html>
 		<html>
 			<head>
@@ -8,6 +13,7 @@
 			<body>
 				<script src="/curl.js"></script>
 				<script>curl.config(&#123; dontAddFileExt: /./ });</script>
+				<script src="/repl-runner.js"></script>
 			</body>
 		</html>
 	'></iframe>
@@ -103,21 +109,12 @@
 <script>
 	import { observe } from 'svelte-extras';
 	import getLocationFromStack from '../_utils/getLocationFromStack.js';
+	import ReplProxy from '../_utils/ReplProxy.js';
 	import { decode } from 'sourcemap-codec';
 
 	let importCache = {};
-
-	function fetchImport(id, curl) {
-		return new Promise((fulfil, reject) => {
-			curl([`https://bundle.run/${id}`]).then(module => {
-				importCache[id] = module;
-				fulfil(module);
-			}, err => {
-				console.error(err.stack);
-				reject(new Error(`Error loading ${id} from bundle.run`));
-			});
-		});
-	}
+	let replProxy;
+	let hasComponent;
 
 	const namespaceSpecifier = /\*\s+as\s+(\w+)/;
 	const namedSpecifiers = /\{(.+)\}/;
@@ -158,38 +155,21 @@
 
 	export default {
 		oncreate() {
-			let component;
+			replProxy = new ReplProxy(this.refs.child);
 
 			this.refs.child.addEventListener('load', () => {
-				const iframe = this.refs.child;
-				const body = iframe.contentDocument.body;
-				const evalInIframe = iframe.contentWindow.eval;
+				replProxy.onPropUpdate = (prop, value) => {
+					dispatch('binding', { prop, value });
+					values_store.update(values => Object.assign({}, values, {
+						[prop]: value
+					}));
+				};
 
-				// intercept links, so that we can use #hashes inside the iframe
-				body.addEventListener('click', event => {
-					if (event.which !== 1) return;
-					if (event.metaKey || event.ctrlKey || event.shiftKey) return;
-					if (event.defaultPrevented) return;
+				replProxy.onFetchProgress = (progress) => {
+					pendingImports = progress;
+				};
 
-					// ensure target is a link
-					let el = event.target;
-					while (el && el.nodeName !== 'A') el = el.parentNode;
-					if (!el || el.nodeName !== 'A') return;
-
-					if (el.hasAttribute('download') || el.getAttribute('rel') === 'external' || el.target) return;
-
-					event.preventDefault();
-
-					if (el.href.startsWith(top.location.href)) {
-						const hash = el.href.replace(top.location.href, '');
-						if (hash[0] === '#') {
-							iframe.contentWindow.location.hash = hash;
-							return;
-						}
-					}
-
-					window.open(el.href, '_blank');
-				});
+				replProxy.handleLinks();
 
 				let promise = null;
 				let updating = false;
@@ -205,9 +185,20 @@
 					const missingImports = bundle.imports.filter(x => !importCache[x]);
 
 					const removeStyles = () => {
-						const styles = iframe.contentDocument.querySelectorAll('style');
-						let i = styles.length;
-						while (i--) styles[i].parentNode.removeChild(styles[i]);
+						replProxy.eval(`
+							const styles = document.querySelectorAll('style.svelte');
+							let i = styles.length;
+							while (i--) styles[i].parentNode.removeChild(styles[i]);
+						`);
+					};
+
+					const destroyComponent = () => {
+						replProxy.eval(`
+							if (window.component) {
+								window.component.\$destroy();
+								window.component = null
+							}
+						`);
 					};
 
 					const ready = () => {
@@ -215,17 +206,10 @@
 
 						if (toDestroy) {
 							removeStyles();
+							destroyComponent();
 
-							toDestroy.destroy();
 							toDestroy = null;
 						}
-
-						bundle.imports.forEach(x => {
-							const module = importCache[x];
-							const name = bundle.importMap.get(x);
-
-							iframe.contentWindow[name] = module;
-						});
 
 						if (ssr) { // this only gets generated if component uses lifecycle hooks
 							this.set({ pending: true });
@@ -267,35 +251,41 @@
 
 						const { data } = this.get();
 
-						try {
-							evalInIframe(`${dom.code}
-								document.body.innerHTML = '';
-								window.location.hash = '';
-								window._svelteTransitionManager = null;
+						replProxy.eval(`${dom.code}
+							document.body.innerHTML = '';
+							window.location.hash = '';
+							window._svelteTransitionManager = null;
 
-								var component = new SvelteComponent({
-									target: document.body,
-									data: ${JSON.stringify(data)}
-								});`);
-
-							component = window.app = window.component = iframe.contentWindow.component;
-
-							component.on('state', ({ current }) => {
-								if (updating) return;
-								updating = true;
-								this.fire('data', { current });
-								updating = false;
+							window.component = new SvelteComponent({
+								target: document.body,
+								data: ${JSON.stringify(data)}
 							});
-						} catch (error) {
+						`)
+						.catch(error => {
 							// TODO show in UI
-							component = null;
+							hasComponent = false;
 
-							const loc = getLocationFromStack(error.stack, dom.map);
+							const loc = getLocationFromStack(e.stack, dom.map);
 							if (loc) {
-								error.filename = loc.source;
-								error.loc = { line: loc.line, column: loc.column };
+								e.filename = loc.source;
+								e.loc = { line: loc.line, column: loc.column };
 							}
+
 							this.set({ error });
+						});
+
+						// Download the imports (sets them on iframe window when complete)
+						{
+							let cancelled = false;
+							promise = replProxy.fetchImports(bundle);
+							promise.cancel = () => { cancelled = true };
+							promise.then(() => {
+								if (cancelled) return;
+								ready();
+							}).catch(error => {
+								if (cancelled) return;
+								this.set({ error });
+							});
 						}
 					};
 
@@ -332,34 +322,15 @@
 					if (!bundle) return; // TODO can this ever happen?
 					if (promise) promise.cancel();
 
-					toDestroy = component;
-					component = null;
+					toDestroy = hasComponent;
+					hasComponent = false;
 
 					const { data } = this.get();
 					if (data !== undefined) init();
 				});
 
 				this.observe('data', data => {
-					if (updating) return;
-
-					try {
-						if (component) {
-							this.set({ error: null });
-							updating = true;
-							component.set(data);
-							updating = false;
-						} else {
-							init();
-						}
-					} catch (error) {
-						const { bundle } = this.get();
-						const loc = getLocationFromStack(error.stack, bundle.map);
-						if (loc) {
-							error.filename = loc.source;
-							error.loc = { line: loc.line, column: loc.column };
-						}
-						this.set({ error });
-					}
+					replProxy.bindProps(props)
 				});
 			});
 		},
