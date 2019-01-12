@@ -39,7 +39,7 @@
     "git-branch-is": "^2.0.0",
     "glob": "^7.1.2",
     "html-entities": "^1.2.1",
-    "now": "^11.3.8",
+    "now": "^13.0.4",
     "sapper": "^0.23.1",
     "style-loader": "^0.22.0",
     "svelte": "^2.9.11",
