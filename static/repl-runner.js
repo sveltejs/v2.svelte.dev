@@ -59,13 +59,12 @@
 				return;
 			}
 
-			props.forEach(prop => {
-				// TODO should there be a public API for binding?
-				// e.g. `component.$watch(prop, handler)`?
-				// (answer: probably)
-				window.component.$$.bound[prop] = value => {
-					sendMessage({ action:"prop_update", args: { prop, value } })
-				};
+			window.component.on('state', ({ changed, current }) => {
+				for (let prop in changed) {
+					if (prop in props) {
+						sendMessage({ action:"prop_update", args: { prop, value: current[prop] } })
+					}
+				}
 			});
 		}
 

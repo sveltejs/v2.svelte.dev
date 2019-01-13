@@ -159,14 +159,12 @@
 
 			this.refs.child.addEventListener('load', () => {
 				replProxy.onPropUpdate = (prop, value) => {
-					dispatch('binding', { prop, value });
-					values_store.update(values => Object.assign({}, values, {
-						[prop]: value
-					}));
+					const current = { [prop]: value };
+					this.fire('data', { current });
 				};
 
-				replProxy.onFetchProgress = (progress) => {
-					pendingImports = progress;
+				replProxy.onFetchProgress = pendingImports => {
+					this.set({ pendingImports });
 				};
 
 				replProxy.handleLinks();
@@ -195,7 +193,7 @@
 					const destroyComponent = () => {
 						replProxy.eval(`
 							if (window.component) {
-								window.component.\$destroy();
+								window.component.\destroy();
 								window.component = null
 							}
 						`);
@@ -249,6 +247,8 @@
 
 						const { data } = this.get();
 
+						console.log('createComponent');
+
 						replProxy.eval(`${dom.code}
 							document.body.innerHTML = '';
 							window.location.hash = '';
@@ -271,35 +271,17 @@
 
 							this.set({ error });
 						});
-
-						// Download the imports (sets them on iframe window when complete)
-						if (missingImports.length) {
-							let cancelled = false;
-							promise = replProxy.fetchImports(bundle);
-							promise.cancel = () => { cancelled = true };
-							promise.then(() => {
-								if (cancelled) return;
-								ready();
-							}).catch(error => {
-								if (cancelled) return;
-								this.set({ error });
-							});
-						}
 					};
 
-					let pendingImports = missingImports.length;
-					this.set({ pendingImports });
+					this.set({ pendingImports: missingImports.length });
 
 					if (missingImports.length) {
 						let cancelled = false;
 
-						promise = Promise.all(
-							missingImports.map(id => fetchImport(id, iframe.contentWindow.curl).then(module => {
-								pendingImports -= 1;
-								this.set({ pendingImports });
-								return module;
-							}))
-						);
+						promise = replProxy.fetchImports(bundle, pendingImports => {
+							this.set({ pendingImports });
+						});
+
 						promise.cancel = () => cancelled = true;
 
 						promise
