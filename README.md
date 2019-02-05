@@ -2,6 +2,10 @@
 
 The website for Svelte.
 
+## Note
+
+**This is the repo for the Svelte v2 site.** The Svelte v3 site lives in [the `site` directory of the main Svelte repo](https://github.com/sveltejs/svelte/tree/master/site).
+
 ## Running locally
 
 This project uses [yarn](https://yarnpkg.com) to manage dependencies.
