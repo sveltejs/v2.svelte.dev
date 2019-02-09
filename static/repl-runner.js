@@ -31,77 +31,97 @@
 		}
 	}
 
+	let prop_update_handler = ()=>{};
+
 	function handleMessage(ev) {
 		let { action, cmdId } = ev.data;
 		const sendMessage = (payload) => parent.postMessage( { ...payload }, ev.origin);
 		const sendReply = (payload) => sendMessage({ ...payload, cmdId })
 		const sendOk = () => sendReply({ action: "cmdOk" });
 		const sendError = (message, stack) => sendReply({ action: "cmdError", message, stack })
-
-		parent.postMessage({ action: "test" }, ev.origin);
-
+		
+		
 		if (action == "eval") {
 			let { script } = ev.data.args;
 			try {
 				eval(script);
 				sendOk();
 			} catch (e) {
-				sendError(e.message, e.stack)
+				sendError(e.message, e.stack);
 			}
 		}
 
 		if (action == "bind_props") {
 			let { props } = ev.data.args
-
 			if (!window.component) {
 				// TODO can this happen?
-				console.error(`no component to bind to`);
+				console.warn('no component to bind to');
+				sendOk();
 				return;
 			}
 
-			window.component.on('state', ({ changed, current }) => {
-				for (let prop in changed) {
-					if (prop in props) {
-						sendMessage({ action:"prop_update", args: { prop, value: current[prop] } })
-					}
+			try {
+				if (!window.component.__replbound__) {
+					window.component.on('state', prop_update_handler);
+					window.component.__replbound__ = true;
 				}
-			});
-		}
-
-		if (action == "set_prop") {
-			if (!window.component) {
-				return;
+				prop_update_handler = ({ changed, current }) => {
+					for (let prop in changed) {
+						if (prop in props) {
+							sendMessage({ action:"prop_update", args: { prop, value: current[prop] } })
+						}
+					}
+				};
+				sendOk();
+			} catch (e) {
+				sendError(e.message, e.stack);
 			}
-			let { prop, value } = ev.data.args;
-			component[prop] = value;
 		}
-
+	
+		if (action == "set_props") {
+			try {
+				if (!window.component) {
+					return;
+				}
+				let { props } = ev.data.args;
+				component.set(props);
+				sendOk();
+			} catch (e) {
+				sendError(e.message, e.stack);
+			}
+		}
+		
 		if (action == "catch_clicks") {
-			let topOrigin = ev.origin;
-			document.body.addEventListener('click', event => {
-				if (event.which !== 1) return;
-				if (event.metaKey || event.ctrlKey || event.shiftKey) return;
-				if (event.defaultPrevented) return;
-
-				// ensure target is a link
-				let el = event.target;
-				while (el && el.nodeName !== 'A') el = el.parentNode;
-				if (!el || el.nodeName !== 'A') return;
-
-				if (el.hasAttribute('download') || el.getAttribute('rel') === 'external' || el.target) return;
-
-				event.preventDefault();
-
-				if (el.href.startsWith(topOrigin)) {
-					const url = new URL(el.href);
-					if (url.hash[0] === '#') {
-						window.location.hash = url.hash;
-						return;
+			try {
+				let topOrigin = ev.origin;
+				document.body.addEventListener('click', event => {
+					if (event.which !== 1) return;
+					if (event.metaKey || event.ctrlKey || event.shiftKey) return;
+					if (event.defaultPrevented) return;
+				
+					// ensure target is a link
+					let el = event.target;
+					while (el && el.nodeName !== 'A') el = el.parentNode;
+					if (!el || el.nodeName !== 'A') return;
+				
+					if (el.hasAttribute('download') || el.getAttribute('rel') === 'external' || el.target) return;
+				
+					event.preventDefault();
+				
+					if (el.href.startsWith(topOrigin)) {
+						const url = new URL(el.href);
+						if (url.hash[0] === '#') {
+							window.location.hash = url.hash;
+							return;
+						}
 					}
-				}
-
-				window.open(el.href, '_blank');
-			});
+				
+					window.open(el.href, '_blank');
+				});
+				sendOk();
+			} catch(e) {
+				sendError(e.message, e.stack);
+			}
 		}
 
 

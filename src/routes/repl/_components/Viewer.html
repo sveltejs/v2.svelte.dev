@@ -2,7 +2,7 @@
 	<iframe
 		title='Result'
 		ref:child
-		sandbox="allow-scripts allow-popups"
+		sandbox="allow-scripts allow-popups allow-forms allow-pointer-lock allow-top-navigation allow-modals"
 		class='{error || pending || pendingImports ? "greyed-out" : ""}'
 		srcdoc='
 		<!doctype html>
@@ -154,6 +154,11 @@
 	}
 
 	export default {
+		ondestroy() {
+			if (replProxy) {
+				replProxy.destroy();
+			}
+		},
 		oncreate() {
 			replProxy = new ReplProxy(this.refs.child);
 
@@ -193,7 +198,7 @@
 					const destroyComponent = () => {
 						replProxy.eval(`
 							if (window.component) {
-								window.component.\destroy();
+								window.component.destroy();
 								window.component = null
 							}
 						`);
@@ -247,8 +252,6 @@
 
 						const { data } = this.get();
 
-						console.log('createComponent');
-
 						replProxy.eval(`${dom.code}
 							document.body.innerHTML = '';
 							window.location.hash = '';
@@ -259,6 +262,9 @@
 								data: ${JSON.stringify(data)}
 							});
 						`)
+						.then(()=> {
+							replProxy.bindProps(data);
+						})
 						.catch(error => {
 							// TODO show in UI
 							hasComponent = false;
@@ -310,7 +316,8 @@
 				});
 
 				this.observe('data', data => {
-					replProxy.bindProps(data)
+					replProxy.bindProps(data);
+					replProxy.setProps(data);
 				});
 			});
 		},
