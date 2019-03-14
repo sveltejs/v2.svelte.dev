@@ -631,7 +631,7 @@ Note that class names with dashes in them do not usually make good shorthand cla
 <script>
 export default {
 	computed: {
-		// Because shorthand relfects the var name, you must use component.set({ "is-selected": true }) or use a computed
+		// Because shorthand reflects the var name, you must use component.set({ "is-selected": true }) or use a computed
 		// property like this. It might be better to avoid shorthand for class names which are not valid variable names.
 		"is-selected": ({ isSelected }) => isSelected
 	}
