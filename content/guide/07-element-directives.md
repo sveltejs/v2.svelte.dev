@@ -372,8 +372,42 @@ Of these, `duration` is required, as is *either* `css` or `tick`. The rest are o
 	};
 </script>
 ```
+#### Conditional transisions
+
+If you need to run a transistion only during a given condition (say, on mobile), then you can wrap the transition: 
+
+```html
+<!-- { title: 'Fade transition' } -->
+<input type=checkbox bind:checked=visible> visible
+<label>Here is the condition that you want to decide if a transition is needed:
+	<input type=checkbox bind:checked=isMobile> isMobile
+</label
+
+{#if visible}
+	<p transition:myFade='{delay: 1000}'>fades in and out</p>
+{/if}
+
+<script>
+	import { fade } from 'svelte-transitions'
+	
+	export default {
+		transitions: {
+			myFade(node, options) {
+			   const {isMobile} = this.get();
+	  		   if (isMobile) {
+	 			return fade(node,options);
+			   }
+			   return {delay: 0, css: ''}		
+			}
+		}
+	};
+</script>
+```
+
+
 
 > If the `css` option is used, Svelte will create a CSS animation that runs efficiently off the main thread. Therefore if you can achieve an effect using `css` rather than `tick`, you should.
+
 
 
 ### Bindings
