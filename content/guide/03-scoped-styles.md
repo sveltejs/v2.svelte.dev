@@ -99,7 +99,7 @@ For rules *not* to be removed, they must apply to the component's markup. As far
 </script>
 ```
 
-Instead of manually manipulating the DOM, you should always use the `class` attribute (or the [class directive](https://svelte.technology/guide#classes)):
+Instead of manually manipulating the DOM, you should always use the `class` attribute (or the [class directive](guide#classes)):
 
 ```html
 <!-- { repl: false } -->

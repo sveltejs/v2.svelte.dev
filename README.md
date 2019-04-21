@@ -1,6 +1,6 @@
-# [svelte.technology](https://svelte.technology)
+# [v2.svelte.dev](https://v2.svelte.dev)
 
-The website for Svelte.
+The website for Svelte v2.
 
 ## Note
 
@@ -13,8 +13,8 @@ This project uses [yarn](https://yarnpkg.com) to manage dependencies.
 Set up the project:
 
 ```bash
-git clone git@github.com:sveltejs/svelte.technology.git
-cd svelte.technology
+git clone git@github.com:sveltejs/v2.svelte.dev.git
+cd v2.svelte.dev
 yarn
 ```
 
@@ -29,7 +29,7 @@ cd /path/to/svelte
 yarn link
 yarn dev # rebuild Svelte on changes
 
-cd /path/to/svelte.technology
+cd /path/to/v2.svelte.dev
 yarn link svelte
 yarn dev
 ```

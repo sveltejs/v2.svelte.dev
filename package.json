@@ -1,5 +1,5 @@
 {
-  "name": "svelte.technology",
+  "name": "v2.svelte.dev",
   "version": "1.0.0",
   "description": "Docs and examples for Svelte",
   "scripts": {
@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sveltejs/svelte.technology.git"
+    "url": "git+https://github.com/sveltejs/v2.svelte.dev.git"
   },
   "keywords": [
     "svelte"
@@ -25,9 +25,9 @@
   "author": "Rich Harris",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/sveltejs/svelte.technology/issues"
+    "url": "https://github.com/sveltejs/v2.svelte.dev/issues"
   },
-  "homepage": "https://github.com/sveltejs/svelte.technology#readme",
+  "homepage": "https://github.com/sveltejs/v2.svelte.dev#readme",
   "devDependencies": {
     "chalk": "^2.0.1",
     "clean-css": "^4.2.1",
@@ -68,19 +68,5 @@
     "shelljs": "^0.8.3",
     "sourcemap-codec": "^1.4.1",
     "svelte-extras": "^2.0.0"
-  },
-  "now": {
-    "env": {
-      "NODE_ENV": "production",
-      "BASEURL": "https://svelte.technology",
-      "GITHUB_CLIENT_ID": "@svelte-gist-client-id",
-      "GITHUB_CLIENT_SECRET": "@svelte-gist-client-secret"
-    },
-    "alias": "svelte.technology",
-    "files": [
-      "__sapper__/build",
-      "static",
-      "content"
-    ]
   }
 }
