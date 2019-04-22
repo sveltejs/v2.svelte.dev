@@ -248,7 +248,7 @@
 			return {
 				examples,
 
-				version: query.version || 'latest',
+				version: query.version || '2',
 
 				components: [],
 				data: {},
@@ -277,7 +277,7 @@
 
 			url: ({ version, gist, query, demo }) => {
 				const params = [];
-				if (version !== 'latest') params.push(`version=${version}`);
+				if (version !== '2') params.push(`version=${version}`);
 				if (gist) params.push(`gist=${gist.id}`);
 				else if (demo) params.push(`demo=${demo}`);
 				else if (query.gist) params.push(`gist=${query.gist}`);
