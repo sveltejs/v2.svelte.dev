@@ -1,7 +1,5 @@
 .DS_Store
 node_modules
-static/svelte-app.json
-scripts/svelte-app
 credentials.json
 __sapper__
 yarn-error.log

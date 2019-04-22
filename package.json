@@ -6,12 +6,11 @@
     "dev": "sapper dev",
     "start": "node __sapper__/build",
     "sapper": "sapper build",
-    "update_template": "node scripts/update_template.js",
     "stage": "now",
     "deploy": "npm run stage && now alias",
     "predeploy": "git-branch-is master && git diff --exit-code && npm run sapper",
     "deploy:ci": "now --token $NOW_TOKEN && now alias --token $NOW_TOKEN",
-    "prestage": "npm run update_template && npm run sapper",
+    "prestage": "npm run sapper",
     "predeploy:ci": "npm run prestage",
     "lint": "eslint src"
   },
