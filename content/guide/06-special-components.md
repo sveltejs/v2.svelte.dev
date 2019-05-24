@@ -174,7 +174,7 @@ The `<svelte:document>` tag, just like `<svelte:window>`, gives you a convenient
 
 ### `<svelte:head>`
 
-If you're building an application with Svelte — particularly if you're using [Sapper](https://sapper.svelte.technology) — then it's likely you'll need to add some content to the `<head>` of your page, such as adding a `<title>` element.
+If you're building an application with Svelte — particularly if you're using [Sapper](https://sapper-legacy.svelte.dev) — then it's likely you'll need to add some content to the `<head>` of your page, such as adding a `<title>` element.
 
 You can do that with the `<svelte:head>` tag:
 

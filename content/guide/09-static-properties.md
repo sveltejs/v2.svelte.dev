@@ -32,6 +32,6 @@ In some situations, you might want to add static properties to your component co
 
 ### preload
 
-If your component definition includes a `preload` function, it will be attached to the component constructor as a static method. It doesn't change the behaviour of your component in any way — instead, it's a convention that allows systems like [Sapper](https://sapper.svelte.technology) to delay rendering of a component until its data is ready.
+If your component definition includes a `preload` function, it will be attached to the component constructor as a static method. It doesn't change the behaviour of your component in any way — instead, it's a convention that allows systems like [Sapper](https://sapper-legacy.svelte.dev) to delay rendering of a component until its data is ready.
 
-See the section on [preloading](https://sapper.svelte.technology/guide#preloading) in the Sapper docs for more information.
+See the section on [preloading](https://sapper-legacy.svelte.dev/guide#preloading) in the Sapper docs for more information.

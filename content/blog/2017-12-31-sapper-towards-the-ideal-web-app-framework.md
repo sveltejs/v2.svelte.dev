@@ -6,7 +6,7 @@ author: Rich Harris
 authorURL: https://twitter.com/Rich_Harris
 ---
 
-> Quickstart for the impatient: [the Sapper docs](https://sapper.svelte.technology), and the [starter template](https://github.com/sveltejs/sapper-template)
+> Quickstart for the impatient: [the Sapper docs](https://sapper-legacy.svelte.dev), and the [starter template](https://github.com/sveltejs/sapper-template)
 
 If you had to list the characteristics of the perfect Node.js web application framework, you'd probably come up with something like this:
 
@@ -48,9 +48,9 @@ What happens if we use the new model as a starting point?
 
 ## Introducing Sapper
 
-<aside>The [name comes from](https://sapper.svelte.technology/guide#why-the-name-) the term for combat engineers, and is also short for <strong>S</strong>velte <strong>app</strong> mak<strong>er</strong></aside>
+<aside>The [name comes from](https://sapper-legacy.svelte.dev/guide#why-the-name-) the term for combat engineers, and is also short for <strong>S</strong>velte <strong>app</strong> mak<strong>er</strong></aside>
 
-[Sapper](https://sapper.svelte.technology) is the answer to that question. **Sapper is a Next.js-style framework that aims to meet the eleven criteria at the top of this article while dramatically reducing the amount of code that gets sent to the browser.** It's implemented as Express-compatible middleware, meaning it's easy to understand and customise.
+[Sapper](https://sapper-legacy.svelte.dev) is the answer to that question. **Sapper is a Next.js-style framework that aims to meet the eleven criteria at the top of this article while dramatically reducing the amount of code that gets sent to the browser.** It's implemented as Express-compatible middleware, meaning it's easy to understand and customise.
 
 The same 'hello world' app that took 204kb with React and Next weighs just 7kb with Sapper. That number is likely to fall further in the future as we explore the space of optimisation possibilities, such as not shipping any JavaScript *at all* for pages that aren't interactive, beyond the tiny Sapper runtime that handles client-side routing.
 
