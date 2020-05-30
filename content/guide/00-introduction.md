@@ -111,4 +111,4 @@ svelte compile -f umd -n CustomName MyComponent.html > MyComponent.js
 svelte compile -i src/components -o build/components
 ```
 
-> You can also use [npx](https://medium.com/@maybekatz/introducing-npx-an-npm-package-runner-55f7d4bd282b) to use the CLI without installing Svelte globally — just prefix your command with `npx`: `npx svelte compile ...`
+> Update from 2020: with Svelte 3 the CLI was deprecated and we now use [sirv-cli](https://www.npmjs.com/package/sirv-cli). These commands are only here as a reference of what is done internally.
