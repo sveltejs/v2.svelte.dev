@@ -55,7 +55,7 @@
     "express": "^4.16.3",
     "express-session": "^1.15.6",
     "golden-fleece": "^1.0.9",
-    "highlight.js": "^9.12.0",
+    "highlight.js": "^10.4.1",
     "locate-character": "^2.0.5",
     "marked": "^0.4.0",
     "node-fetch": "^2.1.2",
