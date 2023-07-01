@@ -4,7 +4,7 @@ The website for Svelte v2.
 
 ## Note
 
-**This is the repo for the Svelte v2 site.** The Svelte v3 site lives in [the `site` directory of the main Svelte repo](https://github.com/sveltejs/svelte/tree/master/site).
+**This is the repo for the Svelte v2 site.** The Svelte v3 site lives in [the `sites` directory of the main Svelte repo](https://github.com/sveltejs/svelte/tree/master/sites/).
 
 ## Running locally
 
