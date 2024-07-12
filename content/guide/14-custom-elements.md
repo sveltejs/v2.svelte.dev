@@ -56,7 +56,7 @@ You can dispatch events inside custom elements to pass data out:
 const event = new CustomEvent('message', {
 	detail: 'Hello parent!',
 	bubbles: true,
-	cancelable: true,
+	cancellable: true,
 	composed: true // makes the event jump shadow DOM boundary
 });
 
